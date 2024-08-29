@@ -1,0 +1,112 @@
+// ajax-functions.js
+
+function initializeDataTable(tableId, ajaxUrl, columns) {
+    $(tableId).DataTable({
+      processing: true,
+      serverSide: true,
+      ajax: ajaxUrl,
+      columns: columns
+    });
+  }
+  
+   function ajaxCall(url, method, functionsOnSuccess = [], form = null) {
+    $.ajaxSetup({
+      headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      }
+    });
+  
+    if (form === null) {
+      form = new FormData();
+    }
+  
+    console.log('before ajax', form.values);
+  
+    $.ajax({
+      url: url,
+      type: method,
+      async: true,
+      data: form,
+      processData: false,
+      contentType: false,
+      dataType: 'json',
+      error: function(xhr, textStatus, error) {
+        console.error('Error:', xhr.responseText);
+        console.error('Status:', xhr.statusText);
+        console.error('Text Status:', textStatus);
+        console.error('Error Thrown:', error);
+      },
+      success: function(response) {
+        functionsOnSuccess.forEach(function(funcArray) {
+          funcArray[1] = funcArray[1].map(arg => arg === "response" ? response : arg);
+          funcArray[0].apply(this, funcArray[1]);
+        });
+      }
+    });
+  }
+  // Define the success callback function
+  const onSuccess = (response) => {
+    if (response.success) {
+        window.location.href = response.redirect_url;
+    } else {
+        console.error(response.message);
+    }
+  };
+
+  const updateStatesDropdown = (response, stateDropdownId) => {
+    var statesDropdown = $('#' + stateDropdownId);
+    // Save the "Select State" option
+    var selectStateOption = statesDropdown.find('option[value=""]').prop('outerHTML');
+    
+    // Clear only the dynamically added options
+    statesDropdown.find('option:not([value=""])').remove();
+    
+    // Re-add the "Select State" option
+    // statesDropdown.append(selectStateOption); // Clear the dropdown before appending new options
+
+    $.each(response, function (key, state) {
+        statesDropdown.append('<option value="' + state.id + '">' + state.name + '</option>');
+    });
+  };
+
+  window.ajaxCall = ajaxCall;
+  window.onSuccess = onSuccess;
+  window.updateStatesDropdown = updateStatesDropdown;
+  window.initializeDataTable = initializeDataTable;
+  
+  $(document).ready(function() {
+    // Example usage: Initialize DataTable for a specific table with dynamic columns
+    // initializeDataTable('#dataTable', '/get-data', [
+    //   { data: 'id', name: 'id' },
+    //   { data: 'name', name: 'name' },
+    //   { data: 'email', name: 'email' },
+    //   { data: 'created_at', name: 'created_at' }
+    // ]);
+  
+    // Form submission
+    $('#submitForm').on('submit', function(e) {
+      e.preventDefault();
+  
+      let form = new FormData(this);
+  
+      ajax('/submit-form', 'POST', [
+        [handleSuccess, ["response"]]
+      ], form);
+    });
+  
+    function handleSuccess(response) {
+      alert(response.message);
+      $('#dataTable').DataTable().ajax.reload(); // Reload DataTable after form submission
+    }
+  });
+// example datatable call 
+// initializeDataTable('#anotherTable', '/another-data-url', [
+//     { data: 'id', name: 'id' },
+//     { data: 'title', name: 'title' },
+//     { data: 'description', name: 'description' }
+// ]);  
+// return response example 
+// return response()->json([
+//     'message' => 'Data saved successfully!',
+//     'data' => $yourModel
+// ]);
