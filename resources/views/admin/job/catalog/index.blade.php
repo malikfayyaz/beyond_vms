@@ -22,7 +22,7 @@
              </div>
            </div>
            <table
-             class="min-w-full bg-white shadow-md rounded-lg overflow-hidden" id="example"
+             class="min-w-full bg-white shadow-md rounded-lg overflow-hidden data-table" id="example"
            >
              <thead class="bg-gray-200 text-gray-700">
                <tr>
@@ -59,7 +59,7 @@
                </tr>
              </thead>
              <tbody>
-                </tbody>
+             </tbody>
            </table>
 
           
@@ -76,7 +76,8 @@
                     { data: 'job_title', name: 'job_title' },
                     { data: 'cat_id', name: 'cat_id' },
                     { data: 'profile_worker_type_id', name: 'profile_worker_type_id' },
-                    { data: 'status', name: 'status' }
+                    { data: 'status', name: 'status' },
+                    {data: 'action', name: 'action', orderable: false, searchable: false}
                   ]);
                 }
                
