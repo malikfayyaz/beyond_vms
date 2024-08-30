@@ -143,14 +143,15 @@
 function reasonList() {
     return {
         reasons: @json($setting_category),
+        activeGlobalValues: {},
+        inactiveGlobalValues: {},
         newValue: "",
         slideWindowOpen: false,
         selectedReason: "",
         loading: false,
         selectedReasonId: "",
         newGlobalValue: "",
-        activeGlobalValues: {},
-        inactiveGlobalValues: {},
+       
         
       
         addReason() {
@@ -171,19 +172,16 @@ function reasonList() {
                 ], formData);
             }
         },
-        openSlideWindow(id, name) {
-            this.fetchGlobalValues(id);
-            setTimeout(() => {
-        this.selectedReason = name;
-        this.selectedReasonId = id;
-        this.slideWindowOpen = true;
-    }, 2000); // Delay in milliseconds (e.g., 2000ms = 2 seconds)
+        async openSlideWindow(id, name) {
+              this.fetchGlobalValues(id);
+           
+                this.selectedReason = name;
+                this.selectedReasonId = id;
+                this.slideWindowOpen = true;
 
 
         },
-        closeSlideWindow() {
-            this.slideWindowOpen = false;
-        },
+        
         addGlobalValue() {
             if (this.newGlobalValue.trim() !== "") {
                 const formData = new FormData();
@@ -194,35 +192,30 @@ function reasonList() {
                     [onSuccess, ['response']]
                 ], formData);
                 this.newGlobalValue = "";
+                  this.fetchGlobalValues(this.selectedReasonId);
             }
         },
-        deactivateGlobalValue(index, settingId) {
-            const value = this.activeGlobalValues.splice(index, 1)[0];
-            this.inactiveGlobalValues.push(value);
+        deactivateGlobalValue(id) {
+            
             // Call backend to update the status to inactive
-            this.updateSettingStatus(settingId, 'inactive');
+            this.updateSettingStatus(id, 'inactive');
         },
-        activateGlobalValue(index, settingId) {
-            const value = this.inactiveGlobalValues.splice(index, 1)[0];
-            this.activeGlobalValues.push(value);
+        activateGlobalValue(id) {
+            
             // Call backend to update the status to active
-            this.updateSettingStatus(settingId, 'active');
+            this.updateSettingStatus(id, 'active');
         },
-        fetchGlobalValues(categoryId) {
-            const url = `/admin/setting/fetch/${categoryId}`;
-
-            // Fetch the active and inactive settings from the backend
-            ajaxCall(url, 'GET', [
-                [this.populateGlobalValues, ['response']]
-            ]);
-            //  console.log(this.activeGlobalValues);
-
+      
+        async fetchGlobalValues(categoryId) {
+            // Simulate an AJAX call
+            let response = await fetch(`/admin/setting/fetch/${categoryId}`).then(res => res.json());
+            this.populateGlobalValues(response);
         },
         populateGlobalValues(response) {
             console.log(response);
             
               // Convert response.active to an object with key-value pairs
-                this.activeGlobalValues = Object.fromEntries(
+              this.activeGlobalValues = Object.fromEntries(
                     Object.entries(response.active).map(([id, value]) => [id, value])
                 );
 
@@ -230,10 +223,14 @@ function reasonList() {
                 this.inactiveGlobalValues = Object.fromEntries(
                     Object.entries(response.inactive).map(([id, value]) => [id, value])
                 );
-                this.activeGlobalValues =this.activeGlobalValues;
-                this.inactiveGlobalValues =this.inactiveGlobalValues;
+                
             // this.loading = false; // Set loading to false after data is fetched
-            console.log('Data loaded:', this.activeGlobalValues, this.inactiveGlobalValues);
+            console.log('Data loaded populateGlobalValues:', this.activeGlobalValues, this.inactiveGlobalValues);
+        },
+        closeSlideWindow() {
+            
+            console.log('Data loaded closeSlideWindow:', this.activeGlobalValues, this.inactiveGlobalValues);
+            this.slideWindowOpen = false;
         },
 
         updateSettingStatus(settingId, status) {
@@ -245,6 +242,7 @@ function reasonList() {
             ajaxCall(url, 'POST', [
                 [onSuccess, ['response']]
             ], formData);
+            this.fetchGlobalValues(this.selectedReasonId);
         },
     };
 }

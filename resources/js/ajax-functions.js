@@ -47,7 +47,11 @@ function initializeDataTable(tableId, ajaxUrl, columns) {
   // Define the success callback function
   const onSuccess = (response) => {
     if (response.success) {
+      if(response.redirect_url) {
         window.location.href = response.redirect_url;
+      }else {
+        document.getElementById('success-message').innerText = response.message;
+      }
     } else {
       $('#error-messages').empty().show();
                     // Check if errors is an array

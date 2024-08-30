@@ -219,7 +219,11 @@ class GenericDataController extends BaseController
         $setting->status = $request->status;
         $setting->save();
 
-        return response()->json(['success' => 'Setting status updated successfully']);
+        return response()->json([
+            'success' => true,
+            'message' => 'Setting status updated successfully!',
+        ]);
+
     }
 
     public function storeSetting(Request $request)
