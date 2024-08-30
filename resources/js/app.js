@@ -13,7 +13,7 @@ import jobCatalog from "./widgets/add-job-catalog";
 import flatpickr from "flatpickr";
 import "flatpickr/dist/flatpickr.min.css";
 
-import './bootstrap';
+// import './bootstrap';
 import 'laravel-datatables-vite';
 // import 'datatables.net';
 // import "datatables.net/css/jquery.dataTables.min.css";

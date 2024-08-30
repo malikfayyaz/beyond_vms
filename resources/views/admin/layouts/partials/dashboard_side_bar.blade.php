@@ -54,8 +54,8 @@
               </button>
               <ul x-show="open" class="py-2 space-y-2" x-cloak>
                 <!-- Job create -->
-                <li class="{{ request()->routeIs('jobs.create') ? 'active' : '' }}">
-                  <a href="{{ route('jobs.create') }}"
+                <li class="{{ request()->routeIs('admin.jobs.create') ? 'active' : '' }}">
+                  <a href="{{ route('admin.jobs.create') }}"
                       class="flex items-center w-full p-2 text-white transition duration-75 pl-11 hover:bg-gray-700">
                       Create Job
                   </a>
@@ -251,6 +251,13 @@
                   <a href="{{ route('admin.data.location') }}"
                       class="flex items-center w-full p-2 text-white transition duration-75 pl-11 hover:bg-gray-700">
                       Location
+                  </a>
+              </li>
+               <!-- Setting Menu Item -->
+               <li class="{{ request()->routeIs('admin.setting.info') ? 'active' : '' }}">
+                  <a href="{{ route('admin.setting.info') }}"
+                      class="flex items-center w-full p-2 text-white transition duration-75 pl-11 hover:bg-gray-700">
+                      Setting
                   </a>
               </li>
                
