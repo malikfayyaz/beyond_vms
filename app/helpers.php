@@ -5,7 +5,7 @@ use App\Models\GenericData;
 if (!function_exists('getActiveRoles')) {
     function getActiveRoles(User $user): array
     {
-       
+
 
         $activeRoles = [];
 
@@ -16,21 +16,21 @@ if (!function_exists('getActiveRoles')) {
                 $activeRoles['admin'] = true;
             }
         }
-    
+
         if ($user->is_client) {
             $client = $user->client; // Assuming a relationship is defined
             if ($client && $client->profile_status == 1) {
                 $activeRoles['client'] = true;
             }
         }
-    
+
         if ($user->is_vendor) {
-            $vendor = $user->vendor; // Assuming a relationship is defined
+            $vendor = $user->vendor;
             if ($vendor && $vendor->status === 'Active') {
                 $activeRoles['vendor'] = true;
             }
         }
-    
+
         if ($user->is_consultant) {
             $consultant = $user->consultant; // Assuming a relationship is defined
             if ($consultant && $consultant->profile_status == 1) {
@@ -64,7 +64,7 @@ if (!function_exists('redirectToDashboard')) {
 }
 
 if (!function_exists('jobLevelsList')) {
-   
+
     function jobLevelsList()
     {
         return [

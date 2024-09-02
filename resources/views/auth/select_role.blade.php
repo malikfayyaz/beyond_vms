@@ -12,8 +12,8 @@
   </head>
   <body class="bg-gray-100">
     <div
-      x-data="{ 
-      miniSidebar: true, 
+      x-data="{
+      miniSidebar: true,
       currentTheme: localStorage.getItem('theme') || 'theme-1',
       darkMode: localStorage.getItem('darkMode') === 'true',
       setTheme(theme) {
@@ -28,10 +28,10 @@
       :class="[currentTheme, {'dark-mode': darkMode}]"
     >
       <!-- Sidebar -->
-     
+
 
       <div class="ml-16">
-   
+
 
         <div class="bg-white mx-4 my-8 rounded p-8">
           <!-- Select Account Type -->
@@ -108,25 +108,25 @@
       </div>
     </div>
     <script>
-   
-       
+
+
              // Example usage
               // Example usage
-             
-        
+
+
       document.addEventListener("alpine:init", () => {
         function capitalizeFirstLetter(str) {
         return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
         }
         const accountsObject = @json($roles);
-         
+
         const accounts = Object.keys(accountsObject).map(key => ({
-            type: key, 
+            type: key,
             title: capitalizeFirstLetter(key), // Set title if needed
             id: capitalizeFirstLetter(key), // Set ID if needed
             color: '' // Will be set later
         }));
-                
+
             // Define colors
             const colors = [
                 'bg-blue-500',
@@ -147,7 +147,7 @@
         Alpine.store("accountSelection", {
           searchTerm: "",
           selectedAccount: null,
-          
+
           accounts: accounts,
           get filteredAccounts() {
             return this.accounts.filter((account) =>
@@ -178,11 +178,11 @@
                         const formData = new FormData();
                         formData.append('role', this.selectedAccount.type);
 
-                        
+
 
                         // Call the custom ajax function
                         ajaxCall('/selectrolepost', 'POST', [[onSuccess, ['response']]], formData);
-                    
+
                 }
             },
 

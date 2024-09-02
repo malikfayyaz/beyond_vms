@@ -21,10 +21,10 @@ Route::get('/login', function () {
 });
 
 Route::get('/', [AuthController::class, 'index'])->name('login');
-Route::post('post-login', [AuthController::class, 'postLogin'])->name('login.post'); 
+Route::post('post-login', [AuthController::class, 'postLogin'])->name('login.post');
 Route::get('registration', [AuthController::class, 'registration'])->name('register');
-Route::post('post-registration', [AuthController::class, 'postRegistration'])->name('register.post'); 
-Route::get('dashboard', [AuthController::class, 'dashboard']); 
+Route::post('post-registration', [AuthController::class, 'postRegistration'])->name('register.post');
+Route::get('dashboard', [AuthController::class, 'dashboard']);
 Route::post('logout', [AuthController::class, 'logout'])->name('logout');
 Route::get('/select-role', [AuthController::class, 'showRoleSelectionForm'])->name('type.select');
 Route::post('selectrolepost', [AuthController::class, 'selectRole'])->name('type.selectpost');
@@ -34,7 +34,7 @@ Route::get('forgot-password', [ForgotPasswordController::class, 'showForgotPassw
 
 // Handle the form submission for sending the reset link (POST request)
 Route::post('forgot-password', [ForgotPasswordController::class, 'submitForgotPasswordForm'])->name('password.email');
-// reset password code 
+// reset password code
 Route::get('reset-password/{token}', [ResetPasswordController::class, 'showResetPasswordForm'])->name('password.reset');
 Route::post('reset-password', [ResetPasswordController::class, 'submitResetPasswordForm'])->name('password.update');
 
@@ -65,7 +65,7 @@ Route::middleware(['ensure_role_is_selected'])->group(function () {
         'value' => 'text',
         'status' => 'select',
     ]);
-   
+
     Route::match(['get', 'post'], '/admin/two/{type}', [GenericDataController::class, 'manageData'])
     ->name('admin.data.two')
     ->defaults('fields', [
@@ -81,14 +81,17 @@ Route::middleware(['ensure_role_is_selected'])->group(function () {
         Route::resource('job/catalog', CatalogController::class);
     });
 
-  
 
-    
-    
+
+
+
     });
 
     Route::middleware(['user_role:client'])->group(function () {
         Route::get('/client/dashboard', [ClientController::class, 'index'])->name('client.dashboard');
     });
-    
+    Route::middleware(['user_role:vendor'])->group(function () {
+        Route::get('/vendor/dashboard', [ClientController::class, 'index'])->name('vendor.dashboard');
+    });
+
 });
