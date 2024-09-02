@@ -18,7 +18,7 @@
               Job catalog is added successfully.
             </div> -->
             <form @submit.prevent="submitForm" id="generalformwizard" method="POST" >
-                @if(isset($job))
+                @if(isset($job->job_title))
                 @method('PUT')
                 @endif
                 <!-- First row -->
@@ -159,9 +159,11 @@
                                     Job Level <span class="text-red-500">*</span>
                                 </label>
                                 <div class="relative">
-                                    <select x-model="newEntry.jobLevel" name="level_id" class="w-full select2-single custom-style"
-                                        class="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
-                                        id="job-level">
+                                <select
+                          x-model="newEntry.jobLevel"
+                          class="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                          id="job-level"
+                        >
                                         <option value="">Select Job Level</option>
                                         @foreach (checksetting(1) as $key => $value)
                                         <option value="{{ $key }}">{{ $value }}</option>
@@ -202,9 +204,11 @@
                             <div class="w-full md:w-1/4 px-3 mb-6 md:mb-0" >
                                 <label class="block mb-2"> Currency </label>
                                 <div class="relative">
-                                    <select x-model="newEntry.currency" name="currency" class="w-full select2-single custom-style"
-                                        class="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
-                                        id="currency">
+                                <select
+                                                x-model="newEntry.currency"
+                                                class="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                                                id="currency"
+                                                >
                                         <option value="">Select Currency</option>
                                         @foreach (checksetting(2) as $key => $value)
                                         <option value="{{ $key }}">{{ $value }}</option>
@@ -330,7 +334,7 @@ function jobCatalogRateCard() {
         addEntry() {
             console.log("addEntry function called");
             console.log("Current newEntry:", this.newEntry);
-            return false;
+            // return false;
             this.errors.minBillRate = "";
             this.errors.maxBillRate = "";
 
@@ -372,7 +376,7 @@ function jobCatalogRateCard() {
                 this.$dispatch("rate-card-updated", this.entries);
 
                 this.newEntry = {
-                    jobLevel: "Entry Level",
+                    jobLevel: "",
                     minBillRate: "",
                     maxBillRate: "",
                     currency: "",

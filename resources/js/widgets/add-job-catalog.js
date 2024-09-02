@@ -154,14 +154,14 @@ export default function jobCatalog(job = {}) {
     submitForm() {
       this.showErrors = true;
       if (this.validateForm()) {
-        let form = document.getElementById('addjobformwizard');
+        let form = document.getElementById('generalformwizard');
         let formRecord = new FormData(form);
         console.log("Form submitted:", formRecord);
         let jobCatalogRateCardsJson = JSON.stringify(this.formData.jobCatalogRateCards);
         // Append the JSON string to FormData
         formRecord.append('jobCatalogRateCards', jobCatalogRateCardsJson);
         ajaxCall(
-          this.formData.jobTitle ? `/admin/job-catalogs/${job.id}` : '/admin/job-catalogs',
+          job.job_title ? `/admin/job/catalog/${job.id}` : '/admin/job/catalog',
                      'POST', [[onSuccess, ['response']]], formRecord);
         this.showSuccessMessage = true;
         this.resetForm();

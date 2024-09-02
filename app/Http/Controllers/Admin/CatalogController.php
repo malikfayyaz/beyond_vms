@@ -33,8 +33,8 @@ class CatalogController extends BaseController
                      >
                        <i class="fas fa-edit"></i>
                      </a>
-                            <a href=""
-                       @click="deleteItem($row->id)"
+                            <a href="#"
+                       @click="deleteItem(' .$row->id. ')"
                        class="text-red-500 hover:text-red-700 bg-transparent hover:bg-transparent"
                      >
                        <i class="fas fa-trash"></i>
