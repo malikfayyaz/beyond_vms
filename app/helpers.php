@@ -84,8 +84,14 @@ if (!function_exists('getActiveRecordsByType')) {
 
 if (!function_exists('checksetting')) {
     function checksetting($id) {
+        
         $category = SettingCategory::find($id);
-        $settings =  $category->settings()->where('status', 'active')->pluck('title','id');
+        $settings = [];
+        // dd($category);
+        if(isset($category->settings)) {
+            $settings = $category->settings()->where('status', 'active')->pluck('title','id');
+        }
+       
         return $settings;
     }
 }
