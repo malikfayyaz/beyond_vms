@@ -124,6 +124,7 @@ Route::middleware(['ensure_role_is_selected'])->group(function () {
                 ->name('setting.store');
             Route::resource('job/catalog', CatalogController::class);
             Route::get('load-market-job-template/{category}/{type}', [CatalogController::class, 'loadMarketJobTemplate']);
+            Route::post('load-job-template', [CatalogController::class, 'loadJobTemplate'])->name('loadJobTemplate');
 
     });
  
