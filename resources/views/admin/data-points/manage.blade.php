@@ -27,6 +27,11 @@
                                         <option value="{{ $country->id }}">{{ $country->name }}</option>
                                     @endforeach
                                 </select>
+                                <p
+                                x-show="{{ $field.'Error' }}"
+                                class="text-red-500 text-sm mt-1"
+                                x-text="{{ $field.'Error' }}"
+                                ></p>
                         @elseif ($type === 'select' && $field === 'symbol')
                                 <!-- Dropdown for Symbol -->
                                 <select id="{{ $field }}" name="{{ $field }}" x-model="{{ $field }}" class="w-full p-2 border rounded h-10 bg-white">
@@ -36,6 +41,11 @@
                                     <option value="3">£ (Pound)</option>
                                     <option value="4">₹ (Rupee)</option>
                                 </select>
+                                <p
+                                x-show="{{ $field.'Error' }}"
+                                class="text-red-500 text-sm mt-1"
+                                x-text="{{ $field.'Error' }}"
+                                ></p>
                         @elseif ($type === 'select')
                             <select id="{{ $field }}" name="{{ $field }}" x-model="{{ $field }}" class="w-full p-2 border rounded h-10 bg-white">
                                 <option value="" disabled>Select</option>
@@ -133,7 +143,8 @@
                         validateFields() {
                             
                             this.error = 0; // Reset error count before validation
-                                @foreach ($fields as $fieldValide => $typeValide)
+                                @foreach ($fields as $fieldValide => $type)
+                               
                                     if ('{{ $type }}' === 'text') {
                                         if (this.{{ $fieldValide }}.trim() === "") {
                                             this.{{ $fieldValide.'Error' }} = `Please fill this field`;
@@ -141,7 +152,7 @@
                                         } else {
                                             this.{{ $fieldValide.'Error' }} = "";
                                         }
-                                    } else if ('{{ $type }}' === 'select') {
+                                    } else if ('{{ $type }}' === 'select' ) {
                                         if (this.{{ $fieldValide }} === "") {
                                             this.{{ $fieldValide.'Error' }} = `Please select a Dropdown`;
                                             this.error += 1;
