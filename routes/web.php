@@ -21,10 +21,10 @@ Route::get('/login', function () {
 });
 
 Route::get('/', [AuthController::class, 'index'])->name('login');
-Route::post('post-login', [AuthController::class, 'postLogin'])->name('login.post'); 
+Route::post('post-login', [AuthController::class, 'postLogin'])->name('login.post');
 Route::get('registration', [AuthController::class, 'registration'])->name('register');
-Route::post('post-registration', [AuthController::class, 'postRegistration'])->name('register.post'); 
-Route::get('dashboard', [AuthController::class, 'dashboard']); 
+Route::post('post-registration', [AuthController::class, 'postRegistration'])->name('register.post');
+Route::get('dashboard', [AuthController::class, 'dashboard']);
 Route::post('logout', [AuthController::class, 'logout'])->name('logout');
 Route::get('/select-role', [AuthController::class, 'showRoleSelectionForm'])->name('type.select');
 Route::post('selectrolepost', [AuthController::class, 'selectRole'])->name('type.selectpost');
@@ -34,13 +34,13 @@ Route::get('forgot-password', [ForgotPasswordController::class, 'showForgotPassw
 
 // Handle the form submission for sending the reset link (POST request)
 Route::post('forgot-password', [ForgotPasswordController::class, 'submitForgotPasswordForm'])->name('password.email');
-// reset password code 
+// reset password code
 Route::get('reset-password/{token}', [ResetPasswordController::class, 'showResetPasswordForm'])->name('password.reset');
 Route::post('reset-password', [ResetPasswordController::class, 'submitResetPasswordForm'])->name('password.update');
 
 // Protected routes requiring role selection
 Route::middleware(['ensure_role_is_selected'])->group(function () {
-    
+
     // Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
     // Routes for Roles
@@ -60,6 +60,22 @@ Route::middleware(['ensure_role_is_selected'])->group(function () {
         Route::prefix('admin')->name('admin.')->group(function () {
             Route::get('dashboard', [AdminController::class, 'index'])->name('dashboard');
 
+    Route::match(['get', 'post'], '/admin/three/{type}', [GenericDataController::class, 'manageData'])
+    ->name('admin.data.three')
+    ->defaults('fields', [
+        'name' => 'text',
+        'value' => 'text',
+        'status' => 'select',
+    ]);
+
+    Route::match(['get', 'post'], '/admin/two/{type}', [GenericDataController::class, 'manageData'])
+    ->name('admin.data.two')
+    ->defaults('fields', [
+        'name' => 'text',
+        'status' => 'select',
+    ]);
+    Route::get('/get-states/{country}', [GenericDataController::class, 'getStates']);
+    Route::match(['get', 'post'], '/admin/location/info', [GenericDataController::class, 'locationDetail'])->name('admin.data.location');
             Route::match(['get', 'post'], 'three/{type}', [GenericDataController::class, 'manageData'])
             ->name('data.three')
             ->defaults('fields', [
@@ -67,7 +83,7 @@ Route::middleware(['ensure_role_is_selected'])->group(function () {
                 'value' => 'text',
                 'status' => 'select',
             ]);
-        
+
             Route::match(['get', 'post'], 'two/{type}', [GenericDataController::class, 'manageData'])
             ->name('data.two')
             ->defaults('fields', [
@@ -81,7 +97,7 @@ Route::middleware(['ensure_role_is_selected'])->group(function () {
 
             // job routes
             Route::get('job/create', [JobController::class, 'create'])->name('jobs.create');
-   
+
             Route::match(['get', 'post'], 'setting/info', [GenericDataController::class, 'settingDetail'])->name('setting.info');
             // Route to fetch settings based on category
             Route::get('/setting/fetch/{categoryId}', [GenericDataController::class, 'fetchSettings'])
@@ -93,18 +109,21 @@ Route::middleware(['ensure_role_is_selected'])->group(function () {
 
             // Route to store a new setting (if you want to add new settings as well)
             Route::post('/setting/store', [GenericDataController::class, 'storeSetting'])
-                ->name('admin.setting.store'); 
+                ->name('admin.setting.store');
             Route::resource('job/catalog', CatalogController::class);
     });
+ 
 
-  
 
-    
-    
+
+
     });
 
     Route::middleware(['user_role:client'])->group(function () {
         Route::get('/client/dashboard', [ClientController::class, 'index'])->name('client.dashboard');
     });
-    
+    Route::middleware(['user_role:vendor'])->group(function () {
+        Route::get('/vendor/dashboard', [ClientController::class, 'index'])->name('vendor.dashboard');
+    });
+
 });

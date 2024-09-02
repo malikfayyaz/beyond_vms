@@ -6,7 +6,7 @@ use App\Models\SettingCategory;
 if (!function_exists('getActiveRoles')) {
     function getActiveRoles(User $user): array
     {
-       
+
 
         $activeRoles = [];
 
@@ -17,21 +17,21 @@ if (!function_exists('getActiveRoles')) {
                 $activeRoles['admin'] = true;
             }
         }
-    
+
         if ($user->is_client) {
             $client = $user->client; // Assuming a relationship is defined
             if ($client && $client->profile_status == 1) {
                 $activeRoles['client'] = true;
             }
         }
-    
+
         if ($user->is_vendor) {
-            $vendor = $user->vendor; // Assuming a relationship is defined
+            $vendor = $user->vendor;
             if ($vendor && $vendor->status === 'Active') {
                 $activeRoles['vendor'] = true;
             }
         }
-    
+
         if ($user->is_consultant) {
             $consultant = $user->consultant; // Assuming a relationship is defined
             if ($consultant && $consultant->profile_status == 1) {
@@ -63,11 +63,6 @@ if (!function_exists('redirectToDashboard')) {
         }
     }
 }
-
-
-
-
-
 if (!function_exists('getActiveRecordsByType')) {
  /**
      * Get active records by type.
@@ -84,14 +79,14 @@ if (!function_exists('getActiveRecordsByType')) {
 
 if (!function_exists('checksetting')) {
     function checksetting($id) {
-        
+
         $category = SettingCategory::find($id);
         $settings = [];
         // dd($category);
         if(isset($category->settings)) {
             $settings = $category->settings()->where('status', 'active')->pluck('title','id');
         }
-       
+
         return $settings;
     }
 }

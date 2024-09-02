@@ -24,7 +24,7 @@ class RoleController extends BaseController
     {
         $request->validate([
             'name' => 'required|string|unique:roles,name',
-           
+
         ]);
 
         $role = Role::create([
