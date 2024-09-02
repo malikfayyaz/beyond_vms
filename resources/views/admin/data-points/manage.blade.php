@@ -14,10 +14,10 @@
         
             <div x-data="accountManager()" class="container mx-auto p-4">
             <h1>{{ ucfirst(str_replace('-', ' ', $formtype)) }} Management</h1>
-                <div class="flex mb-4">
+                <div class="flex flex-wrap mb-4">
                 @foreach ($fields as $field => $type)
               
-                  <div class="w-1/2 pr-2">
+                  <div class="w-1/2 mt-2 pr-2">
                         <label for="{{ $field }}" class="block mb-2">{{ ucfirst($field) }} <span class="text-red-500">*</span></label>
                         @if ($type === 'select' && $field === 'country')
                                 <!-- Dropdown for Country -->
