@@ -282,4 +282,58 @@ class CatalogController extends BaseController
 
         return redirect()->route('admin.catalog.index')->with('success', 'Catalog item deleted successfully.');
     }
+
+    public function loadMarketJobTemplate($labourType,$type)
+    {   
+        // Query the JobTemplate model
+            $jobTemplates = JobTemplates::where([
+                ['cat_id', $labourType],
+                ['profile_worker_type_id', $type],
+                ['status', 'Active']
+            ])->get(['id', 'job_title']);
+
+            // Map the results to rename 'job_title' as 'name'
+            $formattedTemplates = $jobTemplates->map(function ($template) {
+                return [
+                    'id' => $template->id,
+                    'name' => $template->job_title,
+                ];
+            });
+       // Return JSON response
+        return response()->json($formattedTemplates);
+    }
+
+    // For loading job template
+    public function loadJobTemplate(Request $request){
+        $id = $request->input('template_id');
+        $level_id = $request->input('level_id');
+        $jobTemplate = JobTemplates::find($id);
+        $response = [];
+       
+       
+        
+           
+            $response['job_description'] =  $jobTemplate->job_description;
+            $response['job_family_id'] = $jobTemplate->job_family_id;
+            $response['cat_id'] = $jobTemplate->cat_id;
+            $response['worker_type'] = $jobTemplate->worker_type_id;
+            $response['job_code'] = $jobTemplate->job_code;
+            if($level_id > 0) {
+            // $location_id = $_REQUEST['location'];
+            $template_rates = TemplateRatecard::where('template_id', $id)
+            ->where('level_id', $level_id)
+            ->first();
+            $response['min_bill_rate'] = $template_rates->min_bill_rate;
+            $response['max_bill_rate'] = $template_rates->bill_rate;
+            $response['currency'] = $template_rates->currency;
+            // $currencySetting = Setting::model()->findByPk($template_rates->currency);
+            // $response['currency_class'] = $currencySetting->value;
+            }
+
+        
+
+        
+
+        echo json_encode($response);
+    }
 }
