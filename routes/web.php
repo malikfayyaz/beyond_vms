@@ -74,8 +74,20 @@ Route::middleware(['ensure_role_is_selected'])->group(function () {
         'name' => 'text',
         'status' => 'select',
     ]);
-    Route::get('get-states/{country}', [GenericDataController::class, 'getStates']);
+    Route::get('/get-states/{country}', [GenericDataController::class, 'getStates']);
     Route::match(['get', 'post'], 'location/info', [GenericDataController::class, 'locationDetail'])->name('data.location');
+
+
+            Route::match(['get', 'post'], 'four/{type}', [GenericDataController::class, 'manageData'])
+            ->name('data.four')
+            ->defaults('fields', [
+            'name' => 'text',
+            'value' => 'text',
+            'country' => 'select',
+            'symbol' => 'select',
+            'status' => 'select',
+            ]);
+
             Route::match(['get', 'post'], 'three/{type}', [GenericDataController::class, 'manageData'])
             ->name('data.three')
             ->defaults('fields', [
