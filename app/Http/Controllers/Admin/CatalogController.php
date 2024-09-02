@@ -56,7 +56,9 @@ class CatalogController extends BaseController
      */
     public function create()
     {
-        return view('admin.job.catalog.create'); // Assumes you have a corresponding Blade view
+        return view('admin.job.catalog.create', [
+            'job' => [],'ratecards' => []
+        ]); // Assumes you have a corresponding Blade view
     }
 
     /**
