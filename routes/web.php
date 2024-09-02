@@ -60,6 +60,8 @@ Route::middleware(['ensure_role_is_selected'])->group(function () {
         Route::prefix('admin')->name('admin.')->group(function () {
             Route::get('dashboard', [AdminController::class, 'index'])->name('dashboard');
 
+    
+
     Route::match(['get', 'post'], '/admin/three/{type}', [GenericDataController::class, 'manageData'])
     ->name('admin.data.three')
     ->defaults('fields', [
@@ -76,6 +78,18 @@ Route::middleware(['ensure_role_is_selected'])->group(function () {
     ]);
     Route::get('/get-states/{country}', [GenericDataController::class, 'getStates']);
     Route::match(['get', 'post'], '/admin/location/info', [GenericDataController::class, 'locationDetail'])->name('admin.data.location');
+
+
+            Route::match(['get', 'post'], 'four/{type}', [GenericDataController::class, 'manageData'])
+            ->name('data.four')
+            ->defaults('fields', [
+            'name' => 'text',
+            'value' => 'text',
+            'country' => 'select',
+            'symbol' => 'select',
+            'status' => 'select',
+            ]);
+
             Route::match(['get', 'post'], 'three/{type}', [GenericDataController::class, 'manageData'])
             ->name('data.three')
             ->defaults('fields', [

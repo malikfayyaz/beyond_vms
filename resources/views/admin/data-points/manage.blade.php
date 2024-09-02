@@ -19,7 +19,24 @@
               
                   <div class="w-1/2 pr-2">
                         <label for="{{ $field }}" class="block mb-2">{{ ucfirst($field) }} <span class="text-red-500">*</span></label>
-                        @if ($type === 'select')
+                        @if ($type === 'select' && $field === 'country')
+                                <!-- Dropdown for Country -->
+                                <select id="{{ $field }}" name="{{ $field }}" x-model="{{ $field }}" class="w-full p-2 border rounded h-10 bg-white">
+                                    <option value="" disabled>Select Country</option>
+                                    @foreach ($countries as $country)
+                                        <option value="{{ $country->id }}">{{ $country->name }}</option>
+                                    @endforeach
+                                </select>
+                        @elseif ($type === 'select' && $field === 'symbol')
+                                <!-- Dropdown for Symbol -->
+                                <select id="{{ $field }}" name="{{ $field }}" x-model="{{ $field }}" class="w-full p-2 border rounded h-10 bg-white">
+                                    <option value="" disabled>Select Symbol</option>
+                                    <option value="1">$ (Dollar)</option>
+                                    <option value="2">€ (Euro)</option>
+                                    <option value="3">£ (Pound)</option>
+                                    <option value="4">₹ (Rupee)</option>
+                                </select>
+                        @elseif ($type === 'select')
                             <select id="{{ $field }}" name="{{ $field }}" x-model="{{ $field }}" class="w-full p-2 border rounded h-10 bg-white">
                                 <option value="" disabled>Select</option>
                                 <option value="active">Active</option>

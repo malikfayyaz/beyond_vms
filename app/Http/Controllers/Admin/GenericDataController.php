@@ -15,7 +15,7 @@ class GenericDataController extends BaseController
 
     public function manageData(Request $request, $formtype = null)
     {
-       
+        $countries = Country::all();
         $fields = $request->route()->defaults['fields'] ?? [];
        
         if ($request->isMethod('get')) {
@@ -26,7 +26,8 @@ class GenericDataController extends BaseController
             return view('admin.data-points.manage', [
                 'formtype' => $formtype,
                 'data' => $data,
-                'fields' => $fields
+                'fields' => $fields,
+                'countries' => $countries
             ]);
         } elseif ($request->isMethod('post')) {
             $fields = array_keys($request->route()->defaults['fields']);
