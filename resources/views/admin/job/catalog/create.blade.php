@@ -17,7 +17,7 @@
             >
               Job catalog is added successfully.
             </div> -->
-            <form @submit.prevent="submitForm" id="addjobformwizard" method="POST" >
+            <form @submit.prevent="submitForm" id="generalformwizard" method="POST" >
                 @if(isset($job))
                 @method('PUT')
                 @endif
@@ -159,7 +159,7 @@
                                     Job Level <span class="text-red-500">*</span>
                                 </label>
                                 <div class="relative">
-                                    <select x-model="newEntry.jobLevel" name="level_id"
+                                    <select x-model="newEntry.jobLevel" name="level_id" class="w-full select2-single custom-style"
                                         class="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                                         id="job-level">
                                         <option value="">Select Job Level</option>
@@ -199,10 +199,10 @@
                                 <p class="text-red-500 text-xs italic mt-1" x-show="errors.maxBillRate"
                                     x-text="errors.maxBillRate"></p>
                             </div>
-                            <div class="w-full md:w-1/4 px-3 mb-6 md:mb-0">
+                            <div class="w-full md:w-1/4 px-3 mb-6 md:mb-0" >
                                 <label class="block mb-2"> Currency </label>
                                 <div class="relative">
-                                    <select x-model="newEntry.currency" name="currency"
+                                    <select x-model="newEntry.currency" name="currency" class="w-full select2-single custom-style"
                                         class="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                                         id="currency">
                                         <option value="">Select Currency</option>
