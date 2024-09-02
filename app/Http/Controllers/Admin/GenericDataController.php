@@ -8,6 +8,8 @@ use App\Models\GenericData;
 use App\Models\Location;
 use App\Models\Country;
 use App\Models\State;
+use App\Models\Setting;
+use App\Models\SettingCategory;
 class GenericDataController extends BaseController
 {
 
@@ -153,4 +155,120 @@ class GenericDataController extends BaseController
         // Return the states as a JSON response
         return response()->json($states);
     }
+
+    public function settingDetail(Request $request)
+    {
+        // dd($request);
+        if ($request->isMethod('get')) {
+            $setting_category = SettingCategory::all()->map(function($item) {
+                return ['id' => $item->id, 'name' => $item->name];
+            });
+            return view('admin.data-points.setting', [
+                'setting_category' => $setting_category,
+            ]);
+        }elseif ($request->isMethod('post')) {
+            $rules = [
+                'name' => 'required|string|max:255',
+               
+            ];
+    
+            // Custom error messages (optional)
+            $messages = [
+               'name' => 'The Category field is Required.',
+                // Add more custom messages as needed
+            ];
+    
+            // Validate the request data
+            $validator = Validator::make($request->all(), $rules, $messages);
+    
+            if ($validator->fails()) {
+                return response()->json([
+                    'success' => false,
+                    'errors' => $validator->errors()->all(),
+                ]);
+            }
+            $validatedData = $validator->validated(); // Get validated data
+
+            SettingCategory::create($validatedData);
+            $successMessage = 'Category saved successfully!';
+            return response()->json([
+                'success' => true,
+                'message' => $successMessage,
+                'redirect_url' => url()->previous() // Redirect back URL for AJAX
+            ]);
+
+        }
+    }
+
+    public function fetchSettings($categoryId)
+    {
+        $settings = Setting::where('category_id', $categoryId)->get();
+        
+        $activeSettings = $settings->where('status', 'Active')->pluck('title','id');
+        $inactiveSettings = $settings->where('status', 'Inactive')->pluck('title','id');
+        
+        return response()->json([
+            'active' => $activeSettings,
+            'inactive' => $inactiveSettings,
+        ]);
+    }
+
+    public function updateSettingStatus(Request $request, $settingId)
+    {
+        $setting = Setting::findOrFail($settingId);
+        $setting->status = $request->status;
+        $setting->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Setting status updated successfully!',
+        ]);
+
+    }
+
+    public function storeSetting(Request $request)
+    {
+        // Validation rules
+        $rules = [
+            'title' => 'required|string|max:255',
+            'category_id' => 'required|exists:setting_categories,id',
+        ];
+
+        // Custom error messages (optional)
+        $messages = [
+            'title.required' => 'The setting title field is required.',
+            'category_id.required' => 'The category ID is required.',
+            'category_id.exists' => 'The selected category ID is invalid.',
+        ];
+
+        // Validate the request data
+        $validator = Validator::make($request->all(), $rules, $messages);
+
+        // Handle validation failure
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'errors' => $validator->errors()->all(),
+            ]);
+        }
+
+        // Get validated data
+        $validatedData = $validator->validated();
+
+        // Create a new setting record
+        $setting = Setting::create([
+            'title' => $validatedData['title'],
+            'category_id' => $validatedData['category_id'],
+            'status' => "Active", // Assuming new settings are active by default
+        ]);
+
+        // Success response
+        return response()->json([
+            'success' => true,
+            'message' => 'Setting saved successfully!',
+            'setting' => $setting, // Send back the created setting for any frontend updates
+        ]);
+    }
+
+
 }

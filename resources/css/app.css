@@ -4,10 +4,11 @@
 
 /* Add some padding to the input */
 .select2-container--default
-  .select2-selection--single
-  .select2-selection__rendered {
-  padding-left: 1rem;
-  padding-right: 2rem;
+    .select2-selection--single
+    .select2-selection__rendered {
+    padding-left: 1rem !important;
+    padding-right: 2rem !important;
+    line-height: 48px !important;
 }
 
 /* Adjust the font size if needed */
@@ -15,55 +16,55 @@
 .select2-dropdown,
 .select2-search,
 .select2-results {
-  font-size: 1rem;
+    font-size: 1rem;
 }
 
 /* Custom style for form fields */
 .custom-form-field {
-  height: 48px; /* Consistent height for all fields */
-  border: 1px solid #d1d0d4;
-  border-radius: 4px;
-  transition: all 0.3s ease;
+    height: 48px !important; /* Consistent height for all fields */
+    border: 1px solid #d1d0d4;
+    border-radius: 4px;
+    transition: all 0.3s ease;
 }
 
 /* Hover state */
 .custom-form-field:hover {
-  border-color: #82808b;
+    border-color: #82808b;
 }
 
 /* Focus and selected state */
 .custom-form-field:focus,
 .custom-form-field:focus-within,
 .custom-form-field.selected {
-  border-color: #1e40af;
-  box-shadow: 0 2px 6px 0 rgba(115, 103, 240, 0.3);
-  outline: none;
+    border-color: #1e40af;
+    box-shadow: 0 2px 6px 0 rgba(115, 103, 240, 0.3);
+    outline: none;
 }
 
 /* Apply to select2 fields */
 .select2-container--default .select2-selection--single {
-  height: 48px;
-  border: 1px solid #d1d0d4;
-  border-radius: 4px;
-  transition: all 0.3s ease;
+    height: 48px !important;
+    border: 1px solid #d1d0d4;
+    border-radius: 4px;
+    transition: all 0.3s ease;
 }
 
 .select2-container--default .select2-selection--single:hover {
-  border-color: #82808b;
+    border-color: #82808b;
 }
 
 .select2-container--default.select2-container--open .select2-selection--single,
 .select2-container--default.select2-container--focus
-  .select2-selection--single {
-  border-color: #1e40af;
-  box-shadow: 0 2px 6px 0 rgba(115, 103, 240, 0.3);
+    .select2-selection--single {
+    border-color: #1e40af;
+    box-shadow: 0 2px 6px 0 rgba(115, 103, 240, 0.3);
 }
 
 /* Adjust the height of the select2 arrow */
 .select2-container--default
-  .select2-selection--single
-  .select2-selection__arrow {
-  height: 46px;
+    .select2-selection--single
+    .select2-selection__arrow {
+    height: 46px !important;
 }
 
 /* Base styles for all form fields */
@@ -74,35 +75,35 @@
 #addjobformwizard input[type="password"],
 #addjobformwizard select,
 #addjobformwizard .select2-container .select2-selection--single {
-  height: 48px;
-  border: 1px solid #d1d0d4;
-  border-radius: 4px;
-  transition: all 0.3s ease;
-  padding: 0 12px;
-  width: 100%;
-  font-size: 16px;
-  line-height: 48px;
+    height: 48px !important;
+    border: 1px solid #d1d0d4;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+    padding: 0 12px !important;
+    width: 100%;
+    font-size: 16px;
+    line-height: 48px !important;
 }
 
 /* Hover state */
 #addjobformwizard input:hover,
 #addjobformwizard select:hover,
 #addjobformwizard .select2-container--default .select2-selection--single:hover {
-  border-color: #82808b;
+    border-color: #82808b;
 }
 
 /* Focus and selected state */
 #addjobformwizard input:focus,
 #addjobformwizard select:focus,
 #addjobformwizard
-  .select2-container--default.select2-container--focus
-  .select2-selection--single,
+    .select2-container--default.select2-container--focus
+    .select2-selection--single,
 #addjobformwizard
-  .select2-container--default.select2-container--open
-  .select2-selection--single {
-  border-color: #1e40af;
-  box-shadow: 0 2px 6px 0 rgba(115, 103, 240, 0.3);
-  outline: none;
+    .select2-container--default.select2-container--open
+    .select2-selection--single {
+    border-color: #1e40af;
+    box-shadow: 0 2px 6px 0 rgba(115, 103, 240, 0.3);
+    outline: none;
 }
 
 /* Base styles for all form fields */
@@ -114,173 +115,174 @@
 #addjobformwizard select,
 #addjobformwizard .select2-container .select2-selection--single,
 #addjobformwizard .relative input {
-  height: 52px;
-  border: 1px solid #d1d0d4;
-  border-radius: 4px;
-  transition: all 0.3s ease;
-  padding: 0 12px;
-  width: 100%;
-  font-size: 16px;
-  line-height: 48px;
-  background-color: #ffffff;
+    height: 52px !important;
+    border: 1px solid #d1d0d4;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+    padding: 0 12px !important;
+    width: 100%;
+    font-size: 16px;
+    line-height: 48px !important;
+    background-color: #ffffff;
 }
 
 /* Hover state */
 #addjobformwizard input:not(:disabled):hover,
 #addjobformwizard select:not(:disabled):hover,
 #addjobformwizard .select2-container--default .select2-selection--single:hover {
-  border-color: #82808b;
+    border-color: #82808b;
 }
 
 /* Focus and selected state */
 #addjobformwizard input:not(:disabled):focus,
 #addjobformwizard select:not(:disabled):focus,
 #addjobformwizard
-  .select2-container--default.select2-container--focus
-  .select2-selection--single,
+    .select2-container--default.select2-container--focus
+    .select2-selection--single,
 #addjobformwizard
-  .select2-container--default.select2-container--open
-  .select2-selection--single {
-  border-color: #1e40af;
-  box-shadow: 0 2px 6px 0 rgba(115, 103, 240, 0.3);
-  outline: none;
+    .select2-container--default.select2-container--open
+    .select2-selection--single {
+    border-color: #1e40af;
+    box-shadow: 0 2px 6px 0 rgba(115, 103, 240, 0.3);
+    outline: none;
 }
 
 /* Styles for input fields with left icons */
 #addjobformwizard .relative {
-  position: relative;
+    position: relative;
 }
 
 #addjobformwizard .relative span {
-  position: absolute;
-  left: 12px;
-  top: 50%;
-  transform: translateY(-50%);
-  color: #6b7280;
-  pointer-events: none;
-  z-index: 1;
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #6b7280;
+    pointer-events: none;
+    z-index: 1;
 }
 
 #addjobformwizard .relative input {
-  padding-left: 30px;
+    padding-left: 30px;
 }
 
 /* Placeholder style */
 #addjobformwizard input::placeholder {
-  color: #9ca3af;
+    color: #9ca3af;
 }
 
 /* Adjust the height of the select2 arrow */
 #addjobformwizard
-  .select2-container--default
-  .select2-selection--single
-  .select2-selection__arrow {
-  height: 46px;
+    .select2-container--default
+    .select2-selection--single
+    .select2-selection__arrow {
+    height: 46px !important;
 }
 
 /* Style for select2 dropdown */
 #addjobformwizard
-  .select2-container--default
-  .select2-results__option--highlighted[aria-selected] {
-  background-color: #1e40af;
+    .select2-container--default
+    .select2-results__option--highlighted[aria-selected] {
+    background-color: #1e40af;
 }
 
 /* Ensure consistent text alignment and size for select2 */
 #addjobformwizard
-  .select2-container
-  .select2-selection--single
-  .select2-selection__rendered {
-  line-height: 48px;
-  padding-left: 12px;
-  padding-right: 12px;
+    .select2-container
+    .select2-selection--single
+    .select2-selection__rendered {
+    line-height: 48px !important;
+    padding-left: 12px !important;
+    padding-right: 12px !important;
+    line-height: 48px !important;
 }
 
 /* Style for disabled fields */
 #addjobformwizard input:disabled,
 #addjobformwizard select:disabled,
 #addjobformwizard
-  .select2-container--default.select2-container--disabled
-  .select2-selection--single {
-  background-color: #f3f4f6;
-  cursor: not-allowed;
-  opacity: 0.7;
-  height: 48px;
+    .select2-container--default.select2-container--disabled
+    .select2-selection--single {
+    background-color: #f3f4f6;
+    cursor: not-allowed;
+    opacity: 0.7;
+    height: 48px !important;
 }
 
 /* Ensure disabled fields maintain consistent appearance */
 #addjobformwizard input:disabled,
 #addjobformwizard select:disabled {
-  color: #6b7280;
-  border-color: #d1d0d4;
+    color: #6b7280;
+    border-color: #d1d0d4;
 }
 
 /* Adjust relative positioning for disabled fields with icons */
 #addjobformwizard .relative input:disabled + span {
-  opacity: 0.7;
+    opacity: 0.7;
 }
 
 [x-cloak] {
-  display: none !important;
+    display: none !important;
 }
 
 .theme-1 {
-  --primary-color: #3b82f6;
-  --primary-hover: #2563eb;
-  --secondary-color: #e5e7eb;
-  --text-color: #000000;
-  --bg-color: #ffffff;
-  /* --input-bg: #ffffff; */
-  --border-color: #d1d5db;
+    --primary-color: #3b82f6;
+    --primary-hover: #2563eb;
+    --secondary-color: #e5e7eb;
+    --text-color: #000000;
+    --bg-color: #ffffff;
+    /* --input-bg: #ffffff; */
+    --border-color: #d1d5db;
 }
 
 .theme-2 {
-  --primary-color: #10b981;
-  --primary-hover: #059669;
-  --secondary-color: #d1fae5;
-  --text-color: #064e3b;
-  --bg-color: #ffffff;
-  /* --input-bg: #ffffff; */
-  --border-color: #a7f3d0;
+    --primary-color: #10b981;
+    --primary-hover: #059669;
+    --secondary-color: #d1fae5;
+    --text-color: #064e3b;
+    --bg-color: #ffffff;
+    /* --input-bg: #ffffff; */
+    --border-color: #a7f3d0;
 }
 
 .theme-3 {
-  --primary-color: #8b5cf6;
-  --primary-hover: #7c3aed;
-  --secondary-color: #ede9fe;
-  --text-color: #5b21b6;
-  --bg-color: #ffffff;
-  /* --input-bg: #ffffff; */
-  --border-color: #c4b5fd;
+    --primary-color: #8b5cf6;
+    --primary-hover: #7c3aed;
+    --secondary-color: #ede9fe;
+    --text-color: #5b21b6;
+    --bg-color: #ffffff;
+    /* --input-bg: #ffffff; */
+    --border-color: #c4b5fd;
 }
 
 .dark-mode {
-  --bg-color: #252a3c;
-  --input-bg: #2f3349;
-  --text-color: #cfcde4;
-  --border-color: #4b5563;
+    --bg-color: #252a3c;
+    --input-bg: #2f3349;
+    --text-color: #cfcde4;
+    --border-color: #4b5563;
 }
 
 body {
-  background-color: var(--bg-color);
-  color: var(--text-color);
+    background-color: var(--bg-color);
+    color: var(--text-color);
 }
 
 input,
 select,
 .select2-container--default .select2-selection--single {
-  background-color: var(--input-bg) !important;
-  border-color: var(--border-color) !important;
-  color: var(--text-color) !important;
+    background-color: var(--input-bg) !important;
+    border-color: var(--border-color) !important;
+    color: var(--text-color) !important;
 }
 
 button {
-  background-color: var(--primary-color);
+    background-color: var(--primary-color);
 }
 
 button:hover {
-  background-color: var(--primary-hover);
+    background-color: var(--primary-hover);
 }
 
 .custom-placeholder::placeholder {
-  color: rgba(255, 255, 255, 0.8); /* White with 80% opacity */
+    color: rgba(255, 255, 255, 0.8); /* White with 80% opacity */
 }

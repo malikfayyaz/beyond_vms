@@ -47,9 +47,32 @@ function initializeDataTable(tableId, ajaxUrl, columns) {
   // Define the success callback function
   const onSuccess = (response) => {
     if (response.success) {
+      if(response.redirect_url) {
         window.location.href = response.redirect_url;
+      }else {
+        document.getElementById('success-message').innerText = response.message;
+      }
     } else {
-        console.error(response.message);
+      $('#error-messages').empty().show();
+                    // Check if errors is an array
+                    if (Array.isArray(response.errors)) {
+                        response.errors.forEach(function(error) {
+                            $('#error-messages').append('<div>' + error + '</div>');
+                        });
+                    } else if (typeof response.errors === 'object') {
+                        // Handle errors if response.errors is an object
+                        $.each(response.errors, function(field, messages) {
+                            if (Array.isArray(messages)) {
+                                messages.forEach(function(message) {
+                                    $('#error-messages').append('<div>' + message + '</div>');
+                                });
+                            } else {
+                                $('#error-messages').append('<div>' + messages + '</div>');
+                            }
+                        });
+                    } else {
+                        $('#error-messages').append('<div>Unknown error format.</div>');
+                    }
     }
   };
 

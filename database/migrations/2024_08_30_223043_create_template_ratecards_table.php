@@ -15,11 +15,12 @@ return new class extends Migration
             $table->id();
             $table->foreignId('template_id')->constrained('job_templates')->onDelete('cascade');
             // $table->unsignedBigInteger('experience_id');
-            // $table->foreignId('location_id')->constrained('locations')->onDelete('cascade'); 
-            $table->unsignedBigInteger('level_id')->nullable();
+            $table->foreignId('level_id')->constrained('settings')->onDelete('cascade'); 
+            // $table->unsignedBigInteger('level_id')->nullable();
             $table->decimal('bill_rate', 10, 2);
             $table->decimal('min_bill_rate', 10, 2);
-            $table->unsignedInteger('currency');
+            $table->foreignId('currency')->constrained('generic_data')->onDelete('cascade'); 
+            // $table->unsignedInteger('currency');
 
 
             $table->timestamps();

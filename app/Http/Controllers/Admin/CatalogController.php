@@ -23,22 +23,22 @@ class CatalogController extends BaseController
                     ->addIndexColumn()
                     ->addColumn('action', function($row){
        
-                            $btn = ' <button
+                            $btn = ' <a href=""
                        class="text-blue-500 hover:text-blue-700 mr-2 bg-transparent hover:bg-transparent"
                      >
                        <i class="fas fa-eye"></i>
-                     </button>
-                     <button
+                     </a>
+                     <a href="' . route('admin.catalog.edit', $row->id) . '"
                        class="text-green-500 hover:text-green-700 mr-2 bg-transparent hover:bg-transparent"
                      >
                        <i class="fas fa-edit"></i>
-                     </button>
-                            <button
-                       @click="deleteItem($row->id)"
+                     </a>
+                            <a href="#"
+                       @click="deleteItem(' .$row->id. ')"
                        class="text-red-500 hover:text-red-700 bg-transparent hover:bg-transparent"
                      >
                        <i class="fas fa-trash"></i>
-                     </button>';
+                     </a>';
       
                             return $btn;
                     })
@@ -56,7 +56,9 @@ class CatalogController extends BaseController
      */
     public function create()
     {
-        return view('admin.job.catalog.create'); // Assumes you have a corresponding Blade view
+        return view('admin.job.catalog.create', [
+            'job' => [],'ratecards' => []
+        ]); // Assumes you have a corresponding Blade view
     }
 
     /**
@@ -150,8 +152,8 @@ class CatalogController extends BaseController
     public function show($id)
     {
         // Logic to show a specific catalog item
-        $catalog = Catalog::findOrFail($id);
-        return view('admin.catalog.show', compact('catalog'));
+        $job = JobTemplates::findOrFail($id);
+        return view('admin.catalog.show', compact('job'));
     }
 
     /**
@@ -163,8 +165,23 @@ class CatalogController extends BaseController
     public function edit($id)
     {
         // Logic to get the catalog item to edit
-        $catalog = Catalog::findOrFail($id);
-        return view('admin.catalog.edit', compact('catalog'));
+        $job = JobTemplates::findOrFail($id);
+        $ratecards  =  $job->templateratecard;
+       
+         // Format the rate cards data if necessary
+        $ratecardsArray = $ratecards->map(function ($ratecard) {
+            return [
+                'jobLevel' => $ratecard->level_id,
+                'minBillRate' => $ratecard->min_bill_rate,
+                'maxBillRate' => $ratecard->bill_rate,
+                'currency' => $ratecard->currency,
+            ];
+        });
+        // dd($ratecardsArray);
+      
+        return view('admin.job.catalog.create', [
+            'job' => $job,'ratecards' => $ratecardsArray
+        ] );
     }
 
     /**

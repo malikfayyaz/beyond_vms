@@ -32,3 +32,10 @@
                     {{ request()->query('error') }}
                 </div>
             @endif
+
+            <!-- Display Errors -->
+            <div id="error-messages" class="bg-red-100 text-red-600 p-4 mb-4 rounded error-messages" style="display: none;">
+                            <!-- Error messages will be injected here by JavaScript -->
+                        </div>
+
+                        <div id="success-message" class="text-green-500"></div>

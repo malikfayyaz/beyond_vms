@@ -4,7 +4,7 @@ import {
   isFieldValid,
 } from "./validationMessages.js";
 
-export default function jobCatalog() {
+export default function jobCatalog(job = {}) {
   return {
     showErrors: false,
     showSuccessMessage: false,
@@ -18,14 +18,14 @@ export default function jobCatalog() {
     },
 
     formData: {
-      jobTitle: "",
-      laborCategory: "",
-      profileWorkerType: "",
-      workerType: "",
-      jobCode: "",
-      jobFamily: "",
-      jobCatalogStatus: "",
-      jobDescription: "",
+      jobTitle: job.job_title || "",
+      laborCategory: job.cat_id || "",
+      profileWorkerType: job.profile_worker_type_id || "",
+      workerType: job.worker_type_id || "",
+      jobCode: job.job_code || "",
+      jobFamily: job.job_family_id || "",
+      jobCatalogStatus: job.status || "Active",
+      jobDescription: job.description || "",
       jobCatalogRateCards: [],
     },
 
@@ -154,13 +154,15 @@ export default function jobCatalog() {
     submitForm() {
       this.showErrors = true;
       if (this.validateForm()) {
-        let form = document.getElementById('addjobformwizard');
+        let form = document.getElementById('generalformwizard');
         let formRecord = new FormData(form);
         console.log("Form submitted:", formRecord);
         let jobCatalogRateCardsJson = JSON.stringify(this.formData.jobCatalogRateCards);
         // Append the JSON string to FormData
         formRecord.append('jobCatalogRateCards', jobCatalogRateCardsJson);
-        ajaxCall('/admin/job/catalog', 'POST', [[onSuccess, ['response']]], formRecord);
+        ajaxCall(
+          job.job_title ? `/admin/job/catalog/${job.id}` : '/admin/job/catalog',
+                     'POST', [[onSuccess, ['response']]], formRecord);
         this.showSuccessMessage = true;
         this.resetForm();
         this.formSubmitted = true;
