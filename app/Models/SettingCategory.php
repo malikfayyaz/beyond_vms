@@ -11,4 +11,9 @@ class SettingCategory extends Model
         // List attributes you want to guard from mass assignment
         // e.g., 'id', 'created_at', 'updated_at'
     ];
+
+    public function settings()
+    {
+        return $this->hasMany(Setting::class, 'category_id');
+    }
 }

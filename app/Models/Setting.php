@@ -12,4 +12,9 @@ class Setting extends Model
         // List attributes you want to guard from mass assignment
         // e.g., 'id', 'created_at', 'updated_at'
     ];
+
+    public function settingcategory()
+    {
+        return $this->belongsTo(SettingCategory::class, 'category_id');
+    }
 }

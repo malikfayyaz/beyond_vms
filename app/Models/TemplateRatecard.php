@@ -11,4 +11,9 @@ class TemplateRatecard extends Model
         // List attributes you want to guard from mass assignment
         // e.g., 'id', 'created_at', 'updated_at'
     ];
+
+    public function jobtemplates()
+    {
+        return $this->belongsTo(JobTemplates::class, 'template_id');
+    }
 }
