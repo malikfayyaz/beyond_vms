@@ -60,22 +60,22 @@ Route::middleware(['ensure_role_is_selected'])->group(function () {
         Route::prefix('admin')->name('admin.')->group(function () {
             Route::get('dashboard', [AdminController::class, 'index'])->name('dashboard');
 
-    Route::match(['get', 'post'], '/admin/three/{type}', [GenericDataController::class, 'manageData'])
-    ->name('admin.data.three')
+    Route::match(['get', 'post'], 'three/{type}', [GenericDataController::class, 'manageData'])
+    ->name('data.three')
     ->defaults('fields', [
         'name' => 'text',
         'value' => 'text',
         'status' => 'select',
     ]);
 
-    Route::match(['get', 'post'], '/admin/two/{type}', [GenericDataController::class, 'manageData'])
-    ->name('admin.data.two')
+    Route::match(['get', 'post'], 'two/{type}', [GenericDataController::class, 'manageData'])
+    ->name('data.two')
     ->defaults('fields', [
         'name' => 'text',
         'status' => 'select',
     ]);
-    Route::get('/get-states/{country}', [GenericDataController::class, 'getStates']);
-    Route::match(['get', 'post'], '/admin/location/info', [GenericDataController::class, 'locationDetail'])->name('admin.data.location');
+    Route::get('get-states/{country}', [GenericDataController::class, 'getStates']);
+    Route::match(['get', 'post'], 'location/info', [GenericDataController::class, 'locationDetail'])->name('data.location');
             Route::match(['get', 'post'], 'three/{type}', [GenericDataController::class, 'manageData'])
             ->name('data.three')
             ->defaults('fields', [
@@ -92,7 +92,7 @@ Route::middleware(['ensure_role_is_selected'])->group(function () {
             ]);
             Route::match(['get', 'post'], 'setting/info', [GenericDataController::class, 'locationDetail'])->name('data.location');
 
-            Route::get('/get-states/{country}', [GenericDataController::class, 'getStates']);
+            Route::get('get-states/{country}', [GenericDataController::class, 'getStates']);
             Route::match(['get', 'post'], 'location/info', [GenericDataController::class, 'locationDetail'])->name('data.location');
 
             // job routes
@@ -100,17 +100,19 @@ Route::middleware(['ensure_role_is_selected'])->group(function () {
 
             Route::match(['get', 'post'], 'setting/info', [GenericDataController::class, 'settingDetail'])->name('setting.info');
             // Route to fetch settings based on category
-            Route::get('/setting/fetch/{categoryId}', [GenericDataController::class, 'fetchSettings'])
-            ->name('admin.setting.fetch');
+            Route::get('setting/fetch/{categoryId}', [GenericDataController::class, 'fetchSettings'])
+            ->name('setting.fetch');
 
             // Route to update the status of a specific setting
-            Route::post('/setting/update-status/{settingId}', [GenericDataController::class, 'updateSettingStatus'])
-                ->name('admin.setting.update-status');
+            Route::post('setting/update-status/{settingId}', [GenericDataController::class, 'updateSettingStatus'])
+                ->name('setting.update-status');
 
             // Route to store a new setting (if you want to add new settings as well)
-            Route::post('/setting/store', [GenericDataController::class, 'storeSetting'])
-                ->name('admin.setting.store');
+            Route::post('setting/store', [GenericDataController::class, 'storeSetting'])
+                ->name('setting.store');
             Route::resource('job/catalog', CatalogController::class);
+            Route::get('load-market-job-template/{category}/{type}', [CatalogController::class, 'loadMarketJobTemplate']);
+
     });
  
 
