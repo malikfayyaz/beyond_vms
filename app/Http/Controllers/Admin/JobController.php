@@ -1,4 +1,4 @@
-<?php 
+<?php
 namespace App\Http\Controllers\Admin;
 
 use Illuminate\Routing\Controller as BaseController;
@@ -13,5 +13,5 @@ class JobController extends BaseController
         return view('admin.job.create');
     }
 
-  
+
 }

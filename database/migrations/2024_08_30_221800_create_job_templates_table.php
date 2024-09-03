@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('job_templates', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('created_by_id')->constrained('users')->onDelete('cascade'); 
+            $table->foreignId('created_by_id')->constrained('users')->onDelete('cascade');
             $table->string('created_from', 25)->nullable();
             $table->enum('is_workflow', ['Yes', 'No']);
             $table->string('job_code', 30)->nullable();
@@ -26,9 +26,10 @@ return new class extends Migration
             $table->foreignId('worker_type_id')->constrained('settings')->onDelete('cascade');
             $table->foreignId('profile_worker_type_id')->constrained('settings')->onDelete('cascade');
             $table->foreignId('job_family_id')->constrained('generic_data')->onDelete('cascade');
-           
+
 
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

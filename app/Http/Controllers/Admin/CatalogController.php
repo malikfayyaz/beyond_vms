@@ -22,8 +22,8 @@ class CatalogController extends BaseController
             return Datatables::of($data)
                     ->addIndexColumn()
                     ->addColumn('action', function($row){
-       
-                            $btn = ' <a href=""
+
+                            $btn = ' <a href="' . route('admin.catalog.show', $row->id) . '"
                        class="text-blue-500 hover:text-blue-700 mr-2 bg-transparent hover:bg-transparent"
                      >
                        <i class="fas fa-eye"></i>
@@ -33,13 +33,12 @@ class CatalogController extends BaseController
                      >
                        <i class="fas fa-edit"></i>
                      </a>
-                            <a href="#"
-                       @click="deleteItem(' .$row->id. ')"
+                            <a href="' . route('admin.catalog.destroy', $row->id) . '"
                        class="text-red-500 hover:text-red-700 bg-transparent hover:bg-transparent"
                      >
                        <i class="fas fa-trash"></i>
                      </a>';
-      
+
                             return $btn;
                     })
                     ->rawColumns(['action'])
@@ -69,7 +68,7 @@ class CatalogController extends BaseController
      */
     public function store(Request $request)
     {
-       
+
         $validatedData = $request->validate([
             'job_title' => 'required|string|max:255',
             'cat_id' => 'required|integer', // Assuming 'categories' is your table and 'id' is the primary key
@@ -98,7 +97,7 @@ class CatalogController extends BaseController
         $catalog = new JobTemplates($dataToSave);
         $catalog->save();
         $modelId = $catalog->id;
-       
+
 
         if (!empty($jobCatalogRateCards) && is_array($jobCatalogRateCards)) {
             foreach ($jobCatalogRateCards as $key => $rateCardData) {
@@ -107,11 +106,11 @@ class CatalogController extends BaseController
                     ['level_id', '=', $rateCardData['jobLevel']],
                     ['template_id', '=', $modelId]
                 ])->count();
-        
+
                 if ($existingRecordCount > 0) {
                     continue;
                 }
-        
+
                 // Create a new instance of TemplateRatecard
                 $rateCardModel = new TemplateRatecard();
                 $rateCardModel->template_id = $modelId;
@@ -120,11 +119,11 @@ class CatalogController extends BaseController
                 $rateCardModel->bill_rate = str_replace(",", "", $rateCardData['maxBillRate']);
                 $rateCardModel->min_bill_rate = str_replace(",", "", $rateCardData['minBillRate']);
                 // $rateCardModel->date_created = now();
-        
+
                 // Ensure default values if empty
                 $rateCardModel->bill_rate = ($rateCardModel->bill_rate == '') ? 0.00 : $rateCardModel->bill_rate;
                 $rateCardModel->min_bill_rate = ($rateCardModel->min_bill_rate == '') ? 0.00 : $rateCardModel->min_bill_rate;
-        
+
                 // Save the model
                 if (!$rateCardModel->save()) {
                     // Handle save failure, if needed
@@ -152,8 +151,11 @@ class CatalogController extends BaseController
     public function show($id)
     {
         // Logic to show a specific catalog item
+        $templateratecard = JobTemplates::with('templateratecard.jobLevel', 'templateratecard.currency')->findOrFail($id);
         $job = JobTemplates::findOrFail($id);
-        return view('admin.catalog.show', compact('job'));
+        $categoryTitle = $job->category->title;
+        $profileWorkerTypeTitle = $job->profileWorkerType->title;
+        return view('admin.job.catalog.view', compact('job', 'categoryTitle', 'profileWorkerTypeTitle', 'templateratecard'));
     }
 
     /**
@@ -164,10 +166,11 @@ class CatalogController extends BaseController
      */
     public function edit($id)
     {
+
         // Logic to get the catalog item to edit
         $job = JobTemplates::findOrFail($id);
         $ratecards  =  $job->templateratecard;
-       
+
          // Format the rate cards data if necessary
         $ratecardsArray = $ratecards->map(function ($ratecard) {
             return [
@@ -178,7 +181,7 @@ class CatalogController extends BaseController
             ];
         });
         // dd($ratecardsArray);
-      
+
         return view('admin.job.catalog.create', [
             'job' => $job,'ratecards' => $ratecardsArray
         ] );
@@ -217,8 +220,9 @@ class CatalogController extends BaseController
      */
     public function destroy($id)
     {
+        dd($id);
         // Logic to delete the catalog item
-        $catalog = Catalog::findOrFail($id);
+        $catalog = JobTemplates::findOrFail($id);
         $catalog->delete();
 
         return redirect()->route('admin.catalog.index')->with('success', 'Catalog item deleted successfully.');
