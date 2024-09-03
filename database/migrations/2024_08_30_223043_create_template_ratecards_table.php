@@ -19,7 +19,7 @@ return new class extends Migration
             // $table->unsignedBigInteger('level_id')->nullable();
             $table->decimal('bill_rate', 10, 2);
             $table->decimal('min_bill_rate', 10, 2);
-            $table->foreignId('currency')->constrained('generic_data')->onDelete('cascade'); 
+            $table->foreignId('currency_id')->constrained('generic_data')->onDelete('cascade'); 
             // $table->unsignedInteger('currency');
 
 

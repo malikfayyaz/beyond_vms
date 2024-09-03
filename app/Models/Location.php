@@ -22,4 +22,17 @@ class Location extends Model
     {
         return $this->belongsTo(State::class, 'state_id');
     }
+
+     /**
+     * Scope a query to only include records of a given type and status.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param string $type
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeByStatus($query)
+    {
+        return $query->where('status', 'active')
+                     ->get();
+    }
 }

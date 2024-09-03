@@ -1,5 +1,5 @@
 // ajax-functions.js
-
+import quill from './widgets/add-job-wizard-form';
 function initializeDataTable(tableId, ajaxUrl, columns) {
     $(tableId).DataTable({
       processing: true,
@@ -102,7 +102,7 @@ function initializeDataTable(tableId, ajaxUrl, columns) {
 
           switch (updateType.type) {
               case 'wysihtml5':
-                  element.data("quil").editor.setValue(data[updateType.field]);
+                  element.data("wysihtml5").editor.setValue(data[updateType.field]);
                   break;
               case 'html':
                   element.html(data[updateType.field]);

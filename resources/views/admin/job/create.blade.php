@@ -194,6 +194,9 @@
                  <label class="block mb-2"
                    >Hiring Manager <span class="text-red-500">*</span></label
                  >
+                 @php $clients_hiring = \App\Models\Client::where('profile_status', 1)
+                            ->orderBy('first_name', 'ASC')
+                            ->get(); @endphp
                  <select
                    x-ref="hiringManager"
                    x-model="formData.hiringManager"
@@ -202,11 +205,9 @@
                    id="hiringManager"
                  >
                    <option value="">Select Hiring Manager</option>
-                   <option value="javascript">JavaScript</option>
-                   <option value="python">Python</option>
-                   <option value="java">Java</option>
-                   <option value="csharp">C#</option>
-                   <option value="ruby">Ruby</option>
+                   @foreach ($clients_hiring as $key => $value)
+                    <option value="{{ $value->id }}">{{  $value->first_name.' '.$value->last_name; }}</option>
+                    @endforeach
                  </select>
                  <p
                    x-show="showErrors && !isFieldValid('hiringManager')"
@@ -243,6 +244,7 @@
                  <label class="block mb-2"
                    >Work Location <span class="text-red-500">*</span></label
                  >
+                 @php $location =  \App\Models\Location::byStatus(); @endphp
                  <select
                    x-ref="workLocation"
                    x-model="formData.workLocation"
@@ -251,11 +253,10 @@
                    id="workLocation"
                  >
                    <option value="">Select Work Location</option>
-                   <option value="javascript">JavaScript</option>
-                   <option value="python">Python</option>
-                   <option value="java">Java</option>
-                   <option value="csharp">C#</option>
-                   <option value="ruby">Ruby</option>
+                  
+                   @foreach ($location as $key => $value)
+                    <option value="{{ $value->id }}">{{ locationName($value->id) }}</option>
+                    @endforeach
                  </select>
                  <p
                    x-show="showErrors && !isFieldValid('workLocation')"
@@ -274,12 +275,10 @@
                    data-field="currency"
                    id="currency"
                  >
-                   <option value="">Select a job title</option>
-                   <option value="javascript">JavaScript</option>
-                   <option value="python">Python</option>
-                   <option value="java">Java</option>
-                   <option value="csharp">C#</option>
-                   <option value="ruby">Ruby</option>
+                   <option value="">Select a Currency</option>
+                   @foreach (getActiveRecordsByType('currency') as $record)
+                            <option value="{{ $record->id }}">{{ $record->name }}</option>
+                            @endforeach
                  </select>
                  <p
                    x-show="showErrors && !isFieldValid('currency')"
@@ -557,11 +556,9 @@
                    id="laborType"
                  >
                    <option value="">Select a category</option>
-                   <option value="javascript">JavaScript</option>
-                   <option value="python">Python</option>
-                   <option value="java">Java</option>
-                   <option value="csharp">C#</option>
-                   <option value="ruby">Ruby</option>
+                   @foreach (checksetting(6) as $key => $value)
+                    <option value="{{ $key }}">{{ $value }}</option>
+                    @endforeach
                  </select>
                  <p
                    x-show="showErrors && !isFieldValid('laborType')"

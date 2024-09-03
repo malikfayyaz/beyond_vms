@@ -1,6 +1,7 @@
 <?php
 use App\Models\User;
 use App\Models\GenericData;
+use App\Models\Location;
 use App\Models\SettingCategory;
 
 if (!function_exists('getActiveRoles')) {
@@ -90,6 +91,20 @@ if (!function_exists('checksetting')) {
         return $settings;
     }
 }
+
+if (!function_exists('locationName')) {
+    function locationName($id) {
+
+        $location_query = Location::find($id);
+        
+            
+        return $location_query->name . '-' . $location_query->address1 . '-' . $location_query->city . '-' . $location_query->state->name . '-' . $location_query->zip_code;
+    }
+}
+
+
+
+
 
 
 

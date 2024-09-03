@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('locations', function (Blueprint $table) {
                 $table->id(); // Auto-increment primary key
                 $table->string('name', 255);
-                $table->integer('zone_id')->unsigned();
+                // $table->integer('zone_id')->unsigned();
                 $table->string('code', 30)->nullable();
                 $table->string('address1', 100)->nullable();
                 $table->string('address2', 100)->nullable();
