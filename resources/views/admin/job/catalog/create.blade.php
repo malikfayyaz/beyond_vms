@@ -55,7 +55,7 @@
                             <span class="text-red-500">*</span></label>
                         <select x-ref="profileWorkerType" x-model="formData.profileWorkerType"
                             name="profile_worker_type_id" class="w-full select2-single custom-style"
-                            data-field="profileWorkerType" id="profileWorkerType" 
+                            data-field="profileWorkerType" id="profileWorkerType"
                             x-init="$nextTick(() => {
             let select2Element = $refs.profileWorkerType;
             $(select2Element).select2().on('select2:select', function(event) {

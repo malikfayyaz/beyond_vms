@@ -59,6 +59,7 @@ Route::middleware(['ensure_role_is_selected'])->group(function () {
     Route::middleware(['user_role:admin'])->group(function () {
         Route::prefix('admin')->name('admin.')->group(function () {
             Route::get('dashboard', [AdminController::class, 'index'])->name('dashboard');
+            Route::get('/admin/catalog/{id}', [CatalogController::class, 'view'])->name('admin.catalog.view');
 
     Route::match(['get', 'post'], 'three/{type}', [GenericDataController::class, 'manageData'])
     ->name('data.three')
@@ -127,7 +128,7 @@ Route::middleware(['ensure_role_is_selected'])->group(function () {
             Route::post('load-job-template', [CatalogController::class, 'loadJobTemplate'])->name('loadJobTemplate');
 
     });
- 
+
 
 
 

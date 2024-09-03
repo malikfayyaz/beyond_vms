@@ -31,7 +31,7 @@ class GenericDataController extends BaseController
             ]);
         } elseif ($request->isMethod('post')) {
             $fields = array_keys($request->route()->defaults['fields']);
-            
+           
             // Handle POST request: Save or update data
             $validatedData = $request->only($fields);
             // dd($validatedData, $fields);
@@ -62,6 +62,7 @@ class GenericDataController extends BaseController
                 $validatedData = $request->only($fields);
                 // Create a new record
                 GenericData::create(array_merge($validatedData, ['type' => $formtype]));
+                
 
                 // Set a success message in the session
                 $successMessage = ucfirst(str_replace('-', ' ', $formtype)) . ' saved successfully!';

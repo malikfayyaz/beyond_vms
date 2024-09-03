@@ -9,7 +9,7 @@
          <div >
            <div class="mb-4 flex justify-between items-center">
              <div class="w-full flex items-center justify-between">
-              
+
                <div>
                  <button
                    class="px-4 py-2 bg-blue-500 capitalize text-white rounded disabled:opacity-50 ml-2"
@@ -28,32 +28,32 @@
                <tr>
                  <th class="py-3 px-4 text-left">ID</th>
                  <th
-                 
+
                    class="py-3 px-4 text-left cursor-pointer"
                  >
                    Catalog Name
-                  
+
                  </th>
                  <th
-                  
+
                    class="py-3 px-4 text-left cursor-pointer"
                  >
                    Category
-                 
+
                  </th>
                  <th
-                   
+
                    class="py-3 px-4 text-left cursor-pointer"
                  >
                    Profile Worker Type
-                   
+
                  </th>
                  <th
-                  
+
                    class="py-3 px-4 text-left cursor-pointer"
                  >
                    Status
-                  
+
                  </th>
                  <th class="py-3 px-4 text-left">Action</th>
                </tr>
@@ -62,11 +62,11 @@
              </tbody>
            </table>
 
-          
+
          </div>
        </div>
      </div>
-  
+
    <script>
       document.addEventListener('DOMContentLoaded', function() {
                  console.log(window.$); // Verify jQuery is available
@@ -80,7 +80,36 @@
                     {data: 'action', name: 'action', orderable: false, searchable: false}
                   ]);
                 }
-               
+
       });
    </script>
-    @endsection
+    <script>
+        function deleteItem(url) {
+            console.log(window.$); // Verify jQuery is available
+            if (confirm('Are you sure you want to delete this record?')) {
+                fetch(url, {
+                    method: 'DELETE',
+                    headers: {
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                        'Accept': 'application/json',
+                    },
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            alert('Record deleted successfully');
+                            // Reload the DataTable to reflect changes
+                            $('#example').DataTable().ajax.reload();
+                        } else {
+                            alert('Error deleting record');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('Error deleting record');
+                    });
+            }
+        }
+    </script>
+
+@endsection
