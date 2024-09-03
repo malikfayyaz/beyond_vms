@@ -25,7 +25,7 @@ export default function jobCatalog(job = {}) {
       jobCode: job.job_code || "",
       jobFamily: job.job_family_id || "",
       jobCatalogStatus: job.status || "Active",
-      jobDescription: job.description || "",
+      jobDescription: job.job_description || "",
       jobCatalogRateCards: [],
     },
 
@@ -95,6 +95,11 @@ export default function jobCatalog(job = {}) {
             },
           });
 
+           // Set the initial content of the editor if it exists in formData
+          if (this.formData && this.formData.jobDescription) {
+            this.quill[editorId].root.innerHTML = this.formData.jobDescription;
+          }
+
           this.quill[editorId].on("text-change", () => {
             switch (editorId) {
               case "jobDescription":
@@ -160,6 +165,7 @@ export default function jobCatalog(job = {}) {
         let jobCatalogRateCardsJson = JSON.stringify(this.formData.jobCatalogRateCards);
         // Append the JSON string to FormData
         formRecord.append('jobCatalogRateCards', jobCatalogRateCardsJson);
+        formRecord.append('job_description', this.formData.jobDescription);
         ajaxCall(
           job.job_title ? `/admin/job/catalog/${job.id}` : '/admin/job/catalog',
                      'POST', [[onSuccess, ['response']]], formRecord);

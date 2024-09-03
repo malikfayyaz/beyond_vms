@@ -1,5 +1,5 @@
 @extends('admin.layouts.app')
-
+@vite([ 'resources/js/job/job.js'])
 @section('content')
     <!-- Sidebar -->
     @include('admin.layouts.partials.dashboard_side_bar')
@@ -130,11 +130,11 @@
                    id="jobLaborCategory"
                  >
                    <option value="">Select a category</option>
+                   @foreach (checksetting(5) as $key => $value)
                    <option value="javascript">JavaScript</option>
-                   <option value="python">Python</option>
-                   <option value="java">Java</option>
-                   <option value="csharp">C#</option>
-                   <option value="ruby">Ruby</option>
+                   <option value="{{ $key }}">{{ $value }}</option>
+                    @endforeach
+                 
                  </select>
                  <p
                    x-show="showErrors && !isFieldValid('jobLaborCategory')"
@@ -154,11 +154,7 @@
                    id="jobTitle"
                  >
                    <option value="">Select a job title</option>
-                   <option value="javascript">JavaScript</option>
-                   <option value="python">Python</option>
-                   <option value="java">Java</option>
-                   <option value="csharp">C#</option>
-                   <option value="ruby">Ruby</option>
+                   
                  </select>
                  <p
                    x-show="showErrors && !isFieldValid('jobTitle')"
@@ -171,8 +167,8 @@
                  <div class="relative">
                    <input
                      type="text"
-                     id="disabledInput"
-                     name="disabledInput"
+                     id="job_code"
+                     name="job_code"
                      disabled
                      class="w-full h-12 px-4 bg-gray-100 text-gray-500 border border-gray-300 rounded-md shadow-sm focus:outline-none cursor-not-allowed appearance-none"
                    />
@@ -230,11 +226,9 @@
                    id="jobLevel"
                  >
                    <option value="">Select a job title</option>
-                   <option value="javascript">JavaScript</option>
-                   <option value="python">Python</option>
-                   <option value="java">Java</option>
-                   <option value="csharp">C#</option>
-                   <option value="ruby">Ruby</option>
+                   @foreach (checksetting(1) as $key => $value)
+                    <option value="{{ $key }}">{{ $value }}</option>
+                    @endforeach
                  </select>
                  <p
                    x-show="showErrors && !isFieldValid('jobLevel')"

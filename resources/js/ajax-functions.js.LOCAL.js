@@ -76,11 +76,11 @@ function initializeDataTable(tableId, ajaxUrl, columns) {
     }
   };
 
-  // that response is for dropdown append options
   const updateStatesDropdown = (response, stateDropdownId) => {
     var statesDropdown = $('#' + stateDropdownId);
     // Save the "Select State" option
     var selectStateOption = statesDropdown.find('option[value=""]').prop('outerHTML');
+
     // Clear only the dynamically added options
     statesDropdown.find('option:not([value=""])').remove();
 
@@ -92,40 +92,8 @@ function initializeDataTable(tableId, ajaxUrl, columns) {
     });
   };
 
-  // that response is for dynamic record update in fields
-
-    function updateElements(data, updates) {
-      Object.entries(updates).forEach(([selector, updateType]) => {
-          const element = $(selector);
-
-          if (!element.length) return; // Skip if element does not exist
-
-          switch (updateType.type) {
-              case 'wysihtml5':
-                  element.data("quil").editor.setValue(data[updateType.field]);
-                  break;
-              case 'html':
-                  element.html(data[updateType.field]);
-                  break;
-              case 'value':
-                  element.val(data[updateType.field]);
-                  break;
-              case 'select2':
-                  element.select2('val', data[updateType.field]);
-                  break;
-              case 'disabled':
-                  element.prop('disabled', updateType.value);
-                  break;
-
-              // Add more cases as needed
-          }
-      });
-    }
-
-// for ajax call post and get
   window.ajaxCall = ajaxCall;
   window.onSuccess = onSuccess;
-  window.updateElements = updateElements;
   window.updateStatesDropdown = updateStatesDropdown;
   window.initializeDataTable = initializeDataTable;
 

@@ -11,7 +11,7 @@ class GenericData extends Model
 
     protected $table = 'generic_data'; // Specify the table name
 
-    protected $fillable = ['name', 'status','value', 'type']; // Define the fillable attributes
+    protected $fillable = ['name', 'status','value', 'symbol','country','type']; // Define the fillable attributes
 
 
     /**

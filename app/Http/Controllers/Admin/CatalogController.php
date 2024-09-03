@@ -88,6 +88,7 @@ class CatalogController extends BaseController
         $additionalData = [
             'created_by_id' => auth()->id(), // or $request->user()->id
             'created_from' => 'Program', // Static value
+            'job_description'=>$request->job_description,
         ];
 
         // Merge the validated data with the additional data
@@ -196,20 +197,78 @@ class CatalogController extends BaseController
      */
     public function update(Request $request, $id)
     {
+        // dd($request);
         // Validate and update the catalog item
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'required|string',
-            'price' => 'required|numeric',
+        $validatedData = $request->validate([
+            'job_title' => 'required|string|max:255',
+            'cat_id' => 'required|integer', // Assuming 'categories' is your table and 'id' is the primary key
+            'profile_worker_type_id' => 'required|integer', // Assuming 'worker_types' is your table and 'id' is the primary key
+            'worker_type_id' => 'required|integer', // Assuming 'worker_types' is your table and 'id' is the primary key
+            'job_code' => 'required', // Assuming 'jobs' is your table and 'job_code' is a unique field
+            'job_family_id' => 'required|integer', // Assuming 'job_families' is your table and 'id' is the primary key
+            'status' => 'required|string|in:Active,Inactive', // Validate that status is either 'Active' or 'Inactive'
         ]);
 
-        $catalog = Catalog::findOrFail($id);
-        $catalog->name = $request->input('name');
-        $catalog->description = $request->input('description');
-        $catalog->price = $request->input('price');
-        $catalog->save();
+        // Decode the JSON string to an array
+        $jobCatalogRateCardsJson = $request->input('jobCatalogRateCards');
+        $jobCatalogRateCards = json_decode($jobCatalogRateCardsJson, true);
+        $additionalData = [
+           
+            'job_description' => $request->job_description,
+        ];
 
-        return redirect()->route('admin.catalog.index')->with('success', 'Catalog item updated successfully.');
+        // Merge the validated data with the additional data
+        $dataToUpdate = array_merge($validatedData, $additionalData);
+
+        // Find the existing JobTemplates record and update it
+        $catalog = JobTemplates::findOrFail($id);
+        $catalog->update($dataToUpdate);
+
+        // Remove existing rate cards associated with this template
+        TemplateRatecard::where('template_id', $catalog->id)->delete();
+
+        if (!empty($jobCatalogRateCards) && is_array($jobCatalogRateCards)) {
+            foreach ($jobCatalogRateCards as $key => $rateCardData) {
+                // Check if the record already exists (for future edits where rate cards need to be preserved)
+                $existingRecordCount = TemplateRatecard::where([
+                    ['level_id', '=', $rateCardData['jobLevel']],
+                    ['template_id', '=', $catalog->id]
+                ])->count();
+    
+                if ($existingRecordCount > 0) {
+                    continue;
+                }
+    
+                // Create a new instance of TemplateRatecard
+                $rateCardModel = new TemplateRatecard();
+                $rateCardModel->template_id = $catalog->id;
+                $rateCardModel->level_id = $rateCardData['jobLevel'];
+                $rateCardModel->currency = $rateCardData['currency'];
+                $rateCardModel->bill_rate = str_replace(",", "", $rateCardData['maxBillRate']);
+                $rateCardModel->min_bill_rate = str_replace(",", "", $rateCardData['minBillRate']);
+    
+                // Ensure default values if empty
+                $rateCardModel->bill_rate = ($rateCardModel->bill_rate == '') ? 0.00 : $rateCardModel->bill_rate;
+                $rateCardModel->min_bill_rate = ($rateCardModel->min_bill_rate == '') ? 0.00 : $rateCardModel->min_bill_rate;
+    
+                // Save the model
+                if (!$rateCardModel->save()) {
+                    // Handle save failure, if needed
+                    Log::error('Failed to save Catalog', ['rateCardModel' => $rateCardModel]);
+                }
+            }
+        }
+       
+
+                $successMessage = 'Job catalog is updated successfully!';
+                session()->flash('success', $successMessage);
+                return response()->json([
+                    'success' => true,
+                    'message' => $successMessage,
+                    'redirect_url' => route('admin.catalog.index') // Redirect back URL for AJAX
+                ]);
+      
+
     }
 
     /**
@@ -226,5 +285,59 @@ class CatalogController extends BaseController
         $catalog->delete();
 
         return redirect()->route('admin.catalog.index')->with('success', 'Catalog item deleted successfully.');
+    }
+
+    public function loadMarketJobTemplate($labourType,$type)
+    {   
+        // Query the JobTemplate model
+            $jobTemplates = JobTemplates::where([
+                ['cat_id', $labourType],
+                ['profile_worker_type_id', $type],
+                ['status', 'Active']
+            ])->get(['id', 'job_title']);
+
+            // Map the results to rename 'job_title' as 'name'
+            $formattedTemplates = $jobTemplates->map(function ($template) {
+                return [
+                    'id' => $template->id,
+                    'name' => $template->job_title,
+                ];
+            });
+       // Return JSON response
+        return response()->json($formattedTemplates);
+    }
+
+    // For loading job template
+    public function loadJobTemplate(Request $request){
+        $id = $request->input('template_id');
+        $level_id = $request->input('level_id');
+        $jobTemplate = JobTemplates::find($id);
+        $response = [];
+       
+       
+        
+           
+            $response['job_description'] =  $jobTemplate->job_description;
+            $response['job_family_id'] = $jobTemplate->job_family_id;
+            $response['cat_id'] = $jobTemplate->cat_id;
+            $response['worker_type'] = $jobTemplate->worker_type_id;
+            $response['job_code'] = $jobTemplate->job_code;
+            if($level_id > 0) {
+            // $location_id = $_REQUEST['location'];
+            $template_rates = TemplateRatecard::where('template_id', $id)
+            ->where('level_id', $level_id)
+            ->first();
+            $response['min_bill_rate'] = $template_rates->min_bill_rate;
+            $response['max_bill_rate'] = $template_rates->bill_rate;
+            $response['currency'] = $template_rates->currency;
+            // $currencySetting = Setting::model()->findByPk($template_rates->currency);
+            // $response['currency_class'] = $currencySetting->value;
+            }
+
+        
+
+        
+
+        echo json_encode($response);
     }
 }

@@ -8,20 +8,20 @@ function initializeDataTable(tableId, ajaxUrl, columns) {
       columns: columns
     });
   }
-
+  
    function ajaxCall(url, method, functionsOnSuccess = [], form = null) {
     $.ajaxSetup({
       headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
       }
     });
-
+  
     if (form === null) {
       form = new FormData();
     }
-
+  
     console.log('before ajax', form.values);
-
+  
     $.ajax({
       url: url,
       type: method,
@@ -80,10 +80,10 @@ function initializeDataTable(tableId, ajaxUrl, columns) {
   const updateStatesDropdown = (response, stateDropdownId) => {
     var statesDropdown = $('#' + stateDropdownId);
     // Save the "Select State" option
-    var selectStateOption = statesDropdown.find('option[value=""]').prop('outerHTML');
+    
     // Clear only the dynamically added options
     statesDropdown.find('option:not([value=""])').remove();
-
+    
     // Re-add the "Select State" option
     // statesDropdown.append(selectStateOption); // Clear the dropdown before appending new options
 
@@ -116,7 +116,7 @@ function initializeDataTable(tableId, ajaxUrl, columns) {
               case 'disabled':
                   element.prop('disabled', updateType.value);
                   break;
-
+               
               // Add more cases as needed
           }
       });
@@ -128,7 +128,7 @@ function initializeDataTable(tableId, ajaxUrl, columns) {
   window.updateElements = updateElements;
   window.updateStatesDropdown = updateStatesDropdown;
   window.initializeDataTable = initializeDataTable;
-
+  
   $(document).ready(function() {
     // Example usage: Initialize DataTable for a specific table with dynamic columns
     // initializeDataTable('#dataTable', '/get-data', [
@@ -137,30 +137,30 @@ function initializeDataTable(tableId, ajaxUrl, columns) {
     //   { data: 'email', name: 'email' },
     //   { data: 'created_at', name: 'created_at' }
     // ]);
-
+  
     // Form submission
     $('#submitForm').on('submit', function(e) {
       e.preventDefault();
-
+  
       let form = new FormData(this);
-
+  
       ajax('/submit-form', 'POST', [
         [handleSuccess, ["response"]]
       ], form);
     });
-
+  
     function handleSuccess(response) {
       alert(response.message);
       $('#dataTable').DataTable().ajax.reload(); // Reload DataTable after form submission
     }
   });
-// example datatable call
+// example datatable call 
 // initializeDataTable('#anotherTable', '/another-data-url', [
 //     { data: 'id', name: 'id' },
 //     { data: 'title', name: 'title' },
 //     { data: 'description', name: 'description' }
-// ]);
-// return response example
+// ]);  
+// return response example 
 // return response()->json([
 //     'message' => 'Data saved successfully!',
 //     'data' => $yourModel

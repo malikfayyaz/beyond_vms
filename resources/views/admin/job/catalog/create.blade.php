@@ -120,14 +120,14 @@
                 <div class="flex space-x-4 mt-4">
                     <div class="flex-1">
                         <label class="block mb-2">Status <span class="text-red-500">*</span></label>
-                        <select name="status" x-ref="jobCatalogStatus " x-model="formData.status"
+                        <select name="status" x-ref="jobCatalogStatus " x-model="formData.jobCatalogStatus"
                             class="w-full select2-single custom-style" data-field="jobCatalogStatus"
                             id="jobCatalogStatus"                 x-init="$nextTick(() => {
-            let select2Element = $refs.jobCatalogStatus;
-            $(select2Element).select2().on('select2:select', function(event) {
-                formData.jobCatalogStatus = event.target.value;
-            });
-        })">
+                            let select2Element = $refs.jobCatalogStatus;
+                            $(select2Element).select2().on('select2:select', function(event) {
+                                formData.jobCatalogStatus = event.target.value;
+                            });
+                        })">
                             <option value="">Select status</option>
                             <option value="Active">Active</option>
                             <option value="Inactive">Inactive</option>

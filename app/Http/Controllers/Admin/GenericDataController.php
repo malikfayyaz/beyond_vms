@@ -15,7 +15,7 @@ class GenericDataController extends BaseController
 
     public function manageData(Request $request, $formtype = null)
     {
-       
+        $countries = Country::all();
         $fields = $request->route()->defaults['fields'] ?? [];
        
         if ($request->isMethod('get')) {
@@ -26,11 +26,12 @@ class GenericDataController extends BaseController
             return view('admin.data-points.manage', [
                 'formtype' => $formtype,
                 'data' => $data,
-                'fields' => $fields
+                'fields' => $fields,
+                'countries' => $countries
             ]);
         } elseif ($request->isMethod('post')) {
             $fields = array_keys($request->route()->defaults['fields']);
-            
+           
             // Handle POST request: Save or update data
             $validatedData = $request->only($fields);
             // dd($validatedData, $fields);
@@ -61,6 +62,7 @@ class GenericDataController extends BaseController
                 $validatedData = $request->only($fields);
                 // Create a new record
                 GenericData::create(array_merge($validatedData, ['type' => $formtype]));
+                
 
                 // Set a success message in the session
                 $successMessage = ucfirst(str_replace('-', ' ', $formtype)) . ' saved successfully!';
