@@ -32,14 +32,15 @@ class CatalogController extends BaseController
                        class="text-green-500 hover:text-green-700 mr-2 bg-transparent hover:bg-transparent"
                      >
                        <i class="fas fa-edit"></i>
-                     </a>
-                            <a href="' . route('admin.catalog.destroy', $row->id) . '"
-                       class="text-red-500 hover:text-red-700 bg-transparent hover:bg-transparent"
-                     >
-                       <i class="fas fa-trash"></i>
                      </a>';
+                     $deleteBtn = '<form action="' . route('admin.catalog.destroy', $row->id) . '" method="POST" style="display: inline-block;" onsubmit="return confirm(\'Are you sure?\');">
+                     ' . csrf_field() . method_field('DELETE') . '
+                     <button type="submit" class="text-red-500 hover:text-red-700 bg-transparent hover:bg-transparent">
+                         <i class="fas fa-trash"></i>
+                     </button>
+                   </form>';
 
-                            return $btn;
+                            return $btn .$deleteBtn;
                     })
                     ->rawColumns(['action'])
                     ->make(true);
@@ -279,7 +280,7 @@ class CatalogController extends BaseController
      */
     public function destroy($id)
     {
-        dd($id);
+        // dd($id);
         // Logic to delete the catalog item
         $catalog = JobTemplates::findOrFail($id);
         $catalog->delete();
