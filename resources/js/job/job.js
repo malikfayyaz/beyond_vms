@@ -38,7 +38,8 @@ document.addEventListener('DOMContentLoaded', function() {
               
             }
         }
-
+        
+        
         function loadTemplate() {
             var template_id = $('#jobTitle').find(':selected').val();
            
@@ -48,9 +49,9 @@ document.addEventListener('DOMContentLoaded', function() {
             const updates = {
                 '#jobDescriptionEditor': { type: 'quill', field: 'job_description' },
                 '#job_family_value': { type: 'value', field: 'job_family_id' },
-                '#Job_worker_type': { type: 'disabled', value: true },
+                // '#Job_worker_type': { type: 'disabled', value: true },
                 '#Job_worker_type': { type: 'select2', field: 'worker_type' },
-                '#worker_type_value': { type: 'value', field: 'worker_type' },
+                // '#worker_type_value': { type: 'value', field: 'worker_type' },
                 '#job_code': { type: 'value', field: 'job_code' },
                 // Add more mappings as needed
             };
