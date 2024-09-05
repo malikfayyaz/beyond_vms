@@ -21,10 +21,9 @@
                             x-model="job_family"
                         >
                             <option value="" disabled>Select Job Family</option>
-                            <option value="1">option1</option>
-                            <option value="2">option2</option>
-                            <option value="3">option3</option>
-                            <option value="4">option4</option>
+                        @foreach ($jobfamily as $family)
+                            <option value="{{ $family->id }}">{{ $family->name }}</option>
+                        @endforeach
                         </select>
                         <p class="text-red-500 text-sm mt-1" x-text="job_familyError"></p>
                     </div>
@@ -39,10 +38,9 @@
                             x-model="job_family_group"
                         >
                             <option value="" disabled>Select Job Family Group</option>
-                            <option value="1">option1</option>
-                            <option value="2">option2</option>
-                            <option value="3">option3</option>
-                            <option value="4">option4</option>
+                        @foreach ($jobfamilygrp as $group)
+                            <option value="{{ $group->id }}">{{ $group->name }}</option>
+                        @endforeach
                         </select>
                         <p class="text-red-500 text-sm mt-1" x-text="job_family_groupError"></p>
                     </div>

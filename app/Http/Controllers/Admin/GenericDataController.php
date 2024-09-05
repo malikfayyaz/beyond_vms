@@ -18,18 +18,9 @@ class GenericDataController extends BaseController
     {
         // dd($formtype);
         $countries = Country::all();
-        if ($formtype === 'job-family-group-configuration') {
-            $fields = [
-                'jobFamily' => 'select',
-                'jobFamilyGroup' => 'select'
-            ];
-            $labels = [
-                'jobFamily' => 'Job Family',
-                'jobFamilyGroup' => 'Job Family Group'
-            ];
-        } else {
+       
             $fields = $request->route()->defaults['fields'] ?? [];
-        }
+        
         if ($request->isMethod('get')) {
             
             // Handle GET request: Show form and data
@@ -40,7 +31,7 @@ class GenericDataController extends BaseController
                 'data' => $data,
                 'fields' => $fields,
                 'countries' => $countries,
-                'labels' => $labels,
+                
             ]);
         } elseif ($request->isMethod('post')) {
             $fields = array_keys($request->route()->defaults['fields']);
@@ -94,9 +85,13 @@ class GenericDataController extends BaseController
     {
         if ($request->isMethod('get')) {
             $data = JobFamilyGroupConfig::all(); // Ensure you're retrieving data from the correct model
-            
+            $jobfamily = GenericData::where('type', 'job-family')->get();
+            $jobfamilygrp = GenericData::where('type', 'job-family-group')->get();
+           
             return view('admin.data-points.jobgroupcofig', [
                 'data' => $data,
+                'jobfamily' => $jobfamily,
+                'jobfamilygrp' => $jobfamilygrp,
             ]);
         } elseif ($request->isMethod('post')) {
             $validatedData = $request->only([
