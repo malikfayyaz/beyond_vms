@@ -236,6 +236,14 @@
                   </a>
               </li>
 
+              <li class="{{ request()->routeIs('admin.data.division_branch_zone_config') ? 'active' : '' }}">
+                  <a href="{{ route('admin.data.division_branch_zone_config') }}"
+                      class="flex items-center w-full p-2 text-white transition duration-75 pl-11 hover:bg-gray-700">
+                      Division Branch Zone Configuration
+                  </a>
+              </li>
+
+              
                <!-- Brand Menu Item -->
                <li class="{{ request()->routeIs('admin.data.two') && request()->route('type') === 'brand' ? 'active' : '' }}">
                   <a href="{{ route('admin.data.two', ['type' => 'brand']) }}"

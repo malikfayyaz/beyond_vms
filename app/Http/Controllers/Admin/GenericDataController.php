@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Models\GenericData;
 use App\Models\JobFamilyGroupConfig;
+use App\Models\DivisionBranchZoneConfig;
 use App\Models\Location;
 use App\Models\Country;
 use App\Models\State;
@@ -130,6 +131,53 @@ class GenericDataController extends BaseController
                 return response()->json([
                     'success' => true,
                     'message' => 'Job Family Group configuration saved successfully!',
+                    'redirect_url' => url()->previous()
+                ]);
+            }
+        }
+    }
+
+    public function divisionBranchZoneConfig(Request $request)
+    {
+        if ($request->isMethod('get')) {
+            $data = DivisionBranchZoneConfig::all();  // Ensure you're retrieving data from the correct model
+            $divisions = GenericData::where('type', 'division')->get();
+            $branches = GenericData::where('type', 'branch')->get();
+            $zones = GenericData::where('type', 'region-zone')->get();
+            $bus = GenericData::where('type', 'busines-unit')->get(); // Assuming you have a type for BU
+
+            return view('admin.data-points.division_branch_zone_config', [
+                'data' => $data,
+                'divisions' => $divisions,
+                'branches' => $branches,
+                'zones' => $zones,
+                'bus' => $bus, // Pass the BU data to the view
+            ]);
+        } elseif ($request->isMethod('post')) {
+            $validatedData = $request->only([
+                'division',
+                'branch',
+                'zone',
+                'bu',        // Include Business Unit
+                'status',    // Include Status
+            ]);
+
+            if ($request->has('id') && $request->input('id')) {
+                $data = DivisionBranchZoneConfig::find($request->input('id'));
+                
+                if ($data) {
+                    $data->update($validatedData);
+                    return response()->json([
+                        'success' => true,
+                        'message' => 'Division Branch Zone configuration updated successfully!',
+                        'redirect_url' => url()->previous()
+                    ]);
+                }
+            } else {
+                DivisionBranchZoneConfig::create($validatedData);
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Division Branch Zone configuration saved successfully!',
                     'redirect_url' => url()->previous()
                 ]);
             }
