@@ -5,6 +5,7 @@ use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Models\GenericData;
+use App\Models\JobFamilyGroupConfig;
 use App\Models\Location;
 use App\Models\Country;
 use App\Models\State;
@@ -15,9 +16,20 @@ class GenericDataController extends BaseController
 
     public function manageData(Request $request, $formtype = null)
     {
+        // dd($formtype);
         $countries = Country::all();
-        $fields = $request->route()->defaults['fields'] ?? [];
-       
+        if ($formtype === 'job-family-group-configuration') {
+            $fields = [
+                'jobFamily' => 'select',
+                'jobFamilyGroup' => 'select'
+            ];
+            $labels = [
+                'jobFamily' => 'Job Family',
+                'jobFamilyGroup' => 'Job Family Group'
+            ];
+        } else {
+            $fields = $request->route()->defaults['fields'] ?? [];
+        }
         if ($request->isMethod('get')) {
             
             // Handle GET request: Show form and data
@@ -27,7 +39,8 @@ class GenericDataController extends BaseController
                 'formtype' => $formtype,
                 'data' => $data,
                 'fields' => $fields,
-                'countries' => $countries
+                'countries' => $countries,
+                'labels' => $labels,
             ]);
         } elseif ($request->isMethod('post')) {
             $fields = array_keys($request->route()->defaults['fields']);
@@ -76,6 +89,45 @@ class GenericDataController extends BaseController
           
         }
     }
+
+    public function checkData(Request $request)
+    {
+        if ($request->isMethod('get')) {
+            $data = JobFamilyGroupConfig::all(); // Ensure you're retrieving data from the correct model
+            
+            return view('admin.data-points.jobgroupcofig', [
+                'data' => $data,
+            ]);
+        } elseif ($request->isMethod('post')) {
+            $validatedData = $request->only([
+                'job_family',
+                'job_family_group'
+            ]);
+            // dd($validatedData);
+            if ($request->has('id') && $request->input('id')) {
+                $data = JobFamilyGroupConfig::find($request->input('id'));
+                
+                if ($data) {
+                    $data->update($validatedData);
+                    return response()->json([
+                        'success' => true,
+                        'message' => 'Job Family Group configuration updated successfully!',
+                        'redirect_url' => url()->previous()
+                    ]);
+                }
+            } else {
+                // dd($validatedData);
+                JobFamilyGroupConfig::create($validatedData);
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Job Family Group configuration saved successfully!',
+                    'redirect_url' => url()->previous()
+                ]);
+            }
+        }
+    }
+
+    
 
     public function locationDetail(Request $request)
     {

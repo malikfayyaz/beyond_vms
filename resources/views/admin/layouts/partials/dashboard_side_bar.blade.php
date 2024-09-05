@@ -141,7 +141,7 @@
                   </a>
               </li>
 
-              <li class="{{ request()->routeIs('admin.data.four') && request()->route('type') === 'spend-category-code' ? 'active' : '' }}">
+              <li class="{{ request()->routeIs('admin.data.four') && request()->route('type') === 'currency' ? 'active' : '' }}">
                   <a href="{{ route('admin.data.four', ['type' => 'currency']) }}"
                       class="flex items-center w-full p-2 text-white transition duration-75 pl-11 hover:bg-gray-700">
                       Currency
@@ -202,6 +202,13 @@
                   <a href="{{ route('admin.data.two', ['type' => 'job-family-group']) }}"
                       class="flex items-center w-full p-2 text-white transition duration-75 pl-11 hover:bg-gray-700">
                       Job Family Group
+                  </a>
+              </li>
+
+              <li class="{{ request()->routeIs('admin.data.test') ? 'active' : '' }}">
+                  <a href="{{ route('admin.data.test') }}"
+                      class="flex items-center w-full p-2 text-white transition duration-75 pl-11 hover:bg-gray-700">
+                      Job Family Group Configuration
                   </a>
               </li>
 
