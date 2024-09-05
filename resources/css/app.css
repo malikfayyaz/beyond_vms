@@ -163,7 +163,7 @@
 }
 
 #addjobformwizard .relative input {
-    padding-left: 30px;
+    padding-left: 30px !important;
 }
 
 /* Placeholder style */
