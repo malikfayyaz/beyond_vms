@@ -16,29 +16,43 @@ class GenericDataController extends BaseController
 
     public function manageData(Request $request, $formtype = null)
     {
-        // dd($formtype);
+       
         $countries = Country::all();
        
             $fields = $request->route()->defaults['fields'] ?? [];
-        
+            // dd($request);
         if ($request->isMethod('get')) {
-            
-            // Handle GET request: Show form and data
-            $data = GenericData::where('type', $formtype)->get();
+           
+            $data = GenericData::with(['country','setting'])->where('type', $formtype)->get();
 
             return view('admin.data-points.manage', [
                 'formtype' => $formtype,
                 'data' => $data,
                 'fields' => $fields,
                 'countries' => $countries,
+               
                 
             ]);
         } elseif ($request->isMethod('post')) {
-            $fields = array_keys($request->route()->defaults['fields']);
+            // Get all the input fields from the request
+            $input = $request->all();
+            
+            // Rename 'country' to 'country_id' and 'symbol' to 'symbol_id' in the input data
+            if (isset($input['country'])) {
+                $input['country_id'] = $input['country'];
+                unset($input['country']); // Remove the original 'country' field
+            }
+
+            if (isset($input['symbol'])) {
+                $input['symbol_id'] = $input['symbol'];
+                unset($input['symbol']); // Remove the original 'symbol' field
+            }
            
-            // Handle POST request: Save or update data
-            $validatedData = $request->only($fields);
-            // dd($validatedData, $fields);
+            $validatedData =$input;
+
+            
+           
+            // dd($validatedData, array_keys($input));
             // dd($validatedData);
             // Check if the request has an 'id' to determine whether to create or update
             if ($request->has('id') && $request->input('id')) {
@@ -61,9 +75,9 @@ class GenericDataController extends BaseController
                     ]);
                 }
             } else {
-                $fields = array_keys($request->route()->defaults['fields']);
+                // $fields = array_keys($request->route()->defaults['fields']);
                 // Handle POST request: Save or update data
-                $validatedData = $request->only($fields);
+                // $validatedData = $request->only($fields);
                 // Create a new record
                 GenericData::create(array_merge($validatedData, ['type' => $formtype]));
                 

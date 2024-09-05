@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('job_family_group_config', function (Blueprint $table) {
             $table->id(); // Primary key
-            $table->integer('job_family');
-            $table->integer('job_family_group');
+            $table->foreignId('job_family_id')->constrained('generic_data')->onDelete('cascade');
+            $table->foreignId('job_family_group_id')->constrained('generic_data')->onDelete('cascade');
             $table->timestamps(); // Adds created_at and updated_at columns
         });
     }

@@ -11,7 +11,7 @@ class GenericData extends Model
 
     protected $table = 'generic_data'; // Specify the table name
 
-    protected $fillable = ['name', 'status','value', 'symbol','country','type']; // Define the fillable attributes
+    protected $fillable = ['name', 'status','value', 'symbol_id','country_id','type']; // Define the fillable attributes
 
 
     /**
@@ -26,6 +26,16 @@ class GenericData extends Model
         return $query->where('type', $type)
                      ->where('status', 'active')
                      ->get(['id', 'name']);
+    }
+
+    public function country()
+    {
+        return $this->belongsTo(Country::class, 'country_id', 'id');
+    }
+
+    public function setting()
+    {
+        return $this->belongsTo(Setting::class, 'symbol_id', 'id');
     }
 }
 

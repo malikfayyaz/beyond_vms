@@ -8,7 +8,7 @@
         <div
             class="bg-white mx-4 my-8 rounded p-8"
             x-data="accountManager()"
-           
+          
         >
         @include('admin.layouts.partials.alerts') <!-- Include the partial view -->
         
@@ -105,20 +105,31 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <template x-for="(item, index) in filteredItems" :key="index">
-                            <tr>
-                                <td class="border p-2 text-center" x-text="index + 1"></td>
-                                <template x-for="(field, fieldName) in fields" :key="fieldName">
-                                <td class="border p-2 text-center" x-text="item[fieldName]"></td>
-                            </template>
-                                <td class="border p-2 text-center">
-                                    <span @click="editItem(item)" class="text-gray-600 cursor-pointer">
-                                        <i class="fa-regular fa-pen-to-square"></i>
-                                    </span>
-                                </td>
-                            </tr>
-                        </template>
-                    </tbody>
+    <template x-for="(item, index) in items" :key="index">
+        <tr>
+            <td class="border p-2 text-center" x-text="index + 1"></td>
+            <template x-for="(field, fieldName) in fields" :key="fieldName">
+                <td class="border p-2 text-center">
+                    <template x-if="fieldName === 'country'">
+                        <span x-text="item.country.name" ></span>
+                    </template>
+                    <template x-if="fieldName === 'symbol'">
+                        <span x-text="item.setting.title" ></span>
+                    </template>
+                    <template x-if="fieldName !== 'country' && fieldName !== 'symbol'">
+                        <span x-text="item[fieldName]" ></span>
+                    </template>
+                </td>
+            </template>
+            <td class="border p-2 text-center">
+                <span @click="editItem(item)" class="text-gray-600 cursor-pointer">
+                    <i class="fa-regular fa-pen-to-square"></i>
+                </span>
+            </td>
+        </tr>
+    </template>
+</tbody>
+
                 </table>
             </div>
 
@@ -129,10 +140,10 @@
                         @foreach ($fields as $fielderror => $typeerror)
                           {{ $fielderror }}: "",
                           {{ $fielderror.'Error' }}: "",
-                      @endforeach
-                      fields: @json($fields), // Pass fields to Alpine.js
+                        @endforeach
+                        fields: @json($fields), // Pass fields to Alpine.js
                         items: @json($data), // Initialize items with the data passed from the controller
-                        searchTerm: "",
+                       searchTerm: "",
                         editIndex: null,
                         nameError: "",
                         statusError: "",
@@ -197,7 +208,13 @@
 
                         editItem(item) {
                           @foreach ($fields as $fieldEdit => $typeEdit)
+                          @if ($fieldEdit === 'country')
+                                this.{{ $fieldEdit }} = item.country_id; // If country is already set in item, use it directly
+                            @elseif ($fieldEdit === 'symbol')
+                                this.{{ $fieldEdit }} = item.symbol_id; // If symbol is already set in item, use it directly
+                            @else
                               this.{{ $fieldEdit }} = item.{{ $fieldEdit }};
+                              @endif
                           @endforeach
                           this.editIndex = this.items.indexOf(item);
                         },

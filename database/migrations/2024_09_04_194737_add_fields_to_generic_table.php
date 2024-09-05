@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('generic_data', function (Blueprint $table) {
-            $table->foreignId('symbol_id')->constrained('job_templates')->onDelete('cascade'); 
+            $table->foreignId('symbol_id')->nullable()->constrained('settings')->onDelete('cascade')->after('country_id'); 
         });
     }
 
@@ -22,7 +22,10 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('generic_data', function (Blueprint $table) {
-            //
+            $table->dropForeign(['symbol_id']);
+    
+            // Now you can safely drop the column
+            $table->dropColumn('symbol_id');
         });
     }
 };
