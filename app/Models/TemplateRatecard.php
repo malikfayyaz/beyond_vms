@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class TemplateRatecard extends Model
 {
-    use SoftDeletes;
+    // use SoftDeletes;
     protected $guarded = [
         // List attributes you want to guard from mass assignment
         // e.g., 'id', 'created_at', 'updated_at'

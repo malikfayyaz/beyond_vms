@@ -102,7 +102,7 @@ function initializeDataTable(tableId, ajaxUrl, columns) {
 
           switch (updateType.type) {
               case 'wysihtml5':
-                  element.data("quil").editor.setValue(data[updateType.field]);
+                  element.data("wysihtml5").editor.setValue(data[updateType.field]);
                   break;
               case 'html':
                   element.html(data[updateType.field]);
@@ -111,10 +111,22 @@ function initializeDataTable(tableId, ajaxUrl, columns) {
                   element.val(data[updateType.field]);
                   break;
               case 'select2':
-                  element.select2('val', data[updateType.field]);
+                element.val(data[updateType.field]).trigger("change.select2");
+                  // element.select2('val', data[updateType.field]);
                   break;
               case 'disabled':
                   element.prop('disabled', updateType.value);
+                  break;
+
+                  case 'quill':
+                    const editorId = element.attr('id'); // Get the editor ID from the element
+                    
+                    if (window.Quill && window.Quill[editorId]) {
+                      console.log(data[updateType.field]);
+                      window.Quill[editorId].root.innerHTML = data[updateType.field];
+                      window.Quill[editorId].setText(data[updateType.field]);
+                  }
+
                   break;
 
               // Add more cases as needed

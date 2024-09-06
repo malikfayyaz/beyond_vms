@@ -270,7 +270,7 @@
                 if (window.$) {
                     $('#country-select').on('change', function () {
                             var countryId = $(this).val();
-                            let url = `/get-states/${countryId}`;
+                            let url = `/admin/get-states/${countryId}`;
 
                             ajaxCall(url, 'GET', [[updateStatesDropdown, ['response', 'state-select']]]);
                         });

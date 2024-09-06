@@ -194,6 +194,9 @@
                  <label class="block mb-2"
                    >Hiring Manager <span class="text-red-500">*</span></label
                  >
+                 @php $clients_hiring = \App\Models\Client::where('profile_status', 1)
+                            ->orderBy('first_name', 'ASC')
+                            ->get(); @endphp
                  <select
                    x-ref="hiringManager"
                    x-model="formData.hiringManager"
@@ -202,11 +205,9 @@
                    id="hiringManager"
                  >
                    <option value="">Select Hiring Manager</option>
-                   <option value="javascript">JavaScript</option>
-                   <option value="python">Python</option>
-                   <option value="java">Java</option>
-                   <option value="csharp">C#</option>
-                   <option value="ruby">Ruby</option>
+                   @foreach ($clients_hiring as $key => $value)
+                    <option value="{{ $value->id }}">{{  $value->first_name.' '.$value->last_name; }}</option>
+                    @endforeach
                  </select>
                  <p
                    x-show="showErrors && !isFieldValid('hiringManager')"
@@ -243,6 +244,7 @@
                  <label class="block mb-2"
                    >Work Location <span class="text-red-500">*</span></label
                  >
+                 @php $location =  \App\Models\Location::byStatus(); @endphp
                  <select
                    x-ref="workLocation"
                    x-model="formData.workLocation"
@@ -251,11 +253,10 @@
                    id="workLocation"
                  >
                    <option value="">Select Work Location</option>
-                   <option value="javascript">JavaScript</option>
-                   <option value="python">Python</option>
-                   <option value="java">Java</option>
-                   <option value="csharp">C#</option>
-                   <option value="ruby">Ruby</option>
+                  
+                   @foreach ($location as $key => $value)
+                    <option value="{{ $value->id }}">{{ locationName($value->id) }}</option>
+                    @endforeach
                  </select>
                  <p
                    x-show="showErrors && !isFieldValid('workLocation')"
@@ -274,12 +275,10 @@
                    data-field="currency"
                    id="currency"
                  >
-                   <option value="">Select a job title</option>
-                   <option value="javascript">JavaScript</option>
-                   <option value="python">Python</option>
-                   <option value="java">Java</option>
-                   <option value="csharp">C#</option>
-                   <option value="ruby">Ruby</option>
+                   <option value="">Select a Currency</option>
+                   @foreach (getActiveRecordsByType('currency') as $record)
+                            <option value="{{ $record->id }}">{{ $record->name }}</option>
+                            @endforeach
                  </select>
                  <p
                    x-show="showErrors && !isFieldValid('currency')"
@@ -557,11 +556,9 @@
                    id="laborType"
                  >
                    <option value="">Select a category</option>
-                   <option value="javascript">JavaScript</option>
-                   <option value="python">Python</option>
-                   <option value="java">Java</option>
-                   <option value="csharp">C#</option>
-                   <option value="ruby">Ruby</option>
+                   @foreach (checksetting(6) as $key => $value)
+                    <option value="{{ $key }}">{{ $value }}</option>
+                    @endforeach
                  </select>
                  <p
                    x-show="showErrors && !isFieldValid('laborType')"
@@ -608,6 +605,7 @@
                </div>
              </div>
              <!-- Step 2: Third row - Text Editor -->
+              
              <div class="mt-4">
                <label class="block mb-2"
                  >Job Description <span class="text-red-500">*</span></label
@@ -680,22 +678,9 @@
                      data-field="businessUnit"
                    >
                      <option value="">Select Business Unit</option>
-                     <option value="101804">
-                       101804 - 2850 Golf Operating
-                     </option>
-                     <option value="102001">
-                       102001 - Office of the President
-                     </option>
-                     <option value="102004">
-                       102004 - Corp Communications
-                     </option>
-                     <option value="102016">102016 - Early Talent</option>
-                     <option value="102021">
-                       102021 - Corp Finance & Planning
-                     </option>
-                     <option value="102043">
-                       102043 - GGB LatAm Marketing
-                     </option>
+                     @foreach (getActiveRecordsByType('busines-unit') as $record)
+                            <option value="{{ $record->id }}">{{ $record->name }}</option>
+                            @endforeach
                    </select>
                  </div>
                  <div class="flex-1">
@@ -773,10 +758,7 @@
                    id="division"
                  >
                    <option value="">Select Division</option>
-                   <option value="python">Python</option>
-                   <option value="java">Java</option>
-                   <option value="csharp">C#</option>
-                   <option value="ruby">Ruby</option>
+                  
                  </select>
                  <p
                    x-show="showErrors && !isFieldValid('division')"
@@ -795,10 +777,7 @@
                    id="regionZone"
                  >
                    <option value="">Select Region/Zone</option>
-                   <option value="python">Python</option>
-                   <option value="java">Java</option>
-                   <option value="csharp">C#</option>
-                   <option value="ruby">Ruby</option>
+               
                  </select>
                  <p
                    x-show="showErrors && !isFieldValid('regionZone')"
@@ -817,10 +796,7 @@
                    id="branch"
                  >
                    <option value="">Select Branch</option>
-                   <option value="python">Python</option>
-                   <option value="java">Java</option>
-                   <option value="csharp">C#</option>
-                   <option value="ruby">Ruby</option>
+                  
                  </select>
                  <p
                    x-show="showErrors && !isFieldValid('branch')"
@@ -883,10 +859,9 @@
                    id="glCode"
                  >
                    <option value="">Select GL Code</option>
-                   <option value="python">Python</option>
-                   <option value="java">Java</option>
-                   <option value="csharp">C#</option>
-                   <option value="ruby">Ruby</option>
+                   @foreach (getActiveRecordsByType('gl-code') as $record)
+                            <option value="{{ $record->id }}">{{ $record->name }}</option>
+                            @endforeach
                  </select>
                  <p
                    x-show="showErrors && !isFieldValid('glCode')"
@@ -904,7 +879,11 @@
                    class="w-full select2-single custom-style"
                    data-field="subLedgerType"
                  >
+                 
                    <option value="">Select Sub Ledger Type</option>
+                   @foreach (checksetting(7) as $key => $value)
+                            <option value="{{ $key }}">{{ $value }}</option>
+                            @endforeach
                    <!-- Add options here -->
                  </select>
                </div>
@@ -921,12 +900,16 @@
                    >Worker Type <span class="text-red-500">*</span></label
                  >
                  <select
+                 id="Job_worker_type"
                    x-model="formData.workerType"
                    class="w-full select2-single custom-style"
                    data-field="workerType"
-                   disabled
+                   
                  >
                    <option value="default">Default Worker Type</option>
+                   @foreach (checksetting(3) as $key => $value)
+                            <option value="{{ $key }}">{{ $value }}</option>
+                            @endforeach
                  </select>
                </div>
              </div>

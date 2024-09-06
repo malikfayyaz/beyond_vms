@@ -5,6 +5,8 @@ use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Models\GenericData;
+use App\Models\JobFamilyGroupConfig;
+use App\Models\DivisionBranchZoneConfig;
 use App\Models\Location;
 use App\Models\Country;
 use App\Models\State;
@@ -15,26 +17,43 @@ class GenericDataController extends BaseController
 
     public function manageData(Request $request, $formtype = null)
     {
-        $countries = Country::all();
-        $fields = $request->route()->defaults['fields'] ?? [];
        
+        $countries = Country::all();
+       
+            $fields = $request->route()->defaults['fields'] ?? [];
+            // dd($request);
         if ($request->isMethod('get')) {
-            
-            // Handle GET request: Show form and data
-            $data = GenericData::where('type', $formtype)->get();
+           
+            $data = GenericData::with(['country','setting'])->where('type', $formtype)->get();
 
             return view('admin.data-points.manage', [
                 'formtype' => $formtype,
                 'data' => $data,
                 'fields' => $fields,
-                'countries' => $countries
+                'countries' => $countries,
+               
+                
             ]);
         } elseif ($request->isMethod('post')) {
-            $fields = array_keys($request->route()->defaults['fields']);
+            // Get all the input fields from the request
+            $input = $request->all();
+            
+            // Rename 'country' to 'country_id' and 'symbol' to 'symbol_id' in the input data
+            if (isset($input['country'])) {
+                $input['country_id'] = $input['country'];
+                unset($input['country']); // Remove the original 'country' field
+            }
+
+            if (isset($input['symbol'])) {
+                $input['symbol_id'] = $input['symbol'];
+                unset($input['symbol']); // Remove the original 'symbol' field
+            }
            
-            // Handle POST request: Save or update data
-            $validatedData = $request->only($fields);
-            // dd($validatedData, $fields);
+            $validatedData =$input;
+
+            
+           
+            // dd($validatedData, array_keys($input));
             // dd($validatedData);
             // Check if the request has an 'id' to determine whether to create or update
             if ($request->has('id') && $request->input('id')) {
@@ -57,9 +76,9 @@ class GenericDataController extends BaseController
                     ]);
                 }
             } else {
-                $fields = array_keys($request->route()->defaults['fields']);
+                // $fields = array_keys($request->route()->defaults['fields']);
                 // Handle POST request: Save or update data
-                $validatedData = $request->only($fields);
+                // $validatedData = $request->only($fields);
                 // Create a new record
                 GenericData::create(array_merge($validatedData, ['type' => $formtype]));
                 
@@ -76,6 +95,96 @@ class GenericDataController extends BaseController
           
         }
     }
+
+    public function checkData(Request $request)
+    {
+        if ($request->isMethod('get')) {
+            $data = JobFamilyGroupConfig::all(); // Ensure you're retrieving data from the correct model
+            $jobfamily = GenericData::where('type', 'job-family')->get();
+            $jobfamilygrp = GenericData::where('type', 'job-family-group')->get();
+           
+            return view('admin.data-points.jobgroupcofig', [
+                'data' => $data,
+                'jobfamily' => $jobfamily,
+                'jobfamilygrp' => $jobfamilygrp,
+            ]);
+        } elseif ($request->isMethod('post')) {
+            $validatedData = $request->only([
+                'job_family',
+                'job_family_group'
+            ]);
+            // dd($validatedData);
+            if ($request->has('id') && $request->input('id')) {
+                $data = JobFamilyGroupConfig::find($request->input('id'));
+                
+                if ($data) {
+                    $data->update($validatedData);
+                    return response()->json([
+                        'success' => true,
+                        'message' => 'Job Family Group configuration updated successfully!',
+                        'redirect_url' => url()->previous()
+                    ]);
+                }
+            } else {
+                // dd($validatedData);
+                JobFamilyGroupConfig::create($validatedData);
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Job Family Group configuration saved successfully!',
+                    'redirect_url' => url()->previous()
+                ]);
+            }
+        }
+    }
+
+    public function divisionBranchZoneConfig(Request $request)
+    {
+        if ($request->isMethod('get')) {
+            $data = DivisionBranchZoneConfig::all();  // Ensure you're retrieving data from the correct model
+            $divisions = GenericData::where('type', 'division')->get();
+            $branches = GenericData::where('type', 'branch')->get();
+            $zones = GenericData::where('type', 'region-zone')->get();
+            $bus = GenericData::where('type', 'busines-unit')->get(); // Assuming you have a type for BU
+
+            return view('admin.data-points.division_branch_zone_config', [
+                'data' => $data,
+                'divisions' => $divisions,
+                'branches' => $branches,
+                'zones' => $zones,
+                'bus' => $bus, // Pass the BU data to the view
+            ]);
+        } elseif ($request->isMethod('post')) {
+            $validatedData = $request->only([
+                'division',
+                'branch',
+                'zone',
+                'bu',        // Include Business Unit
+                'status',    // Include Status
+            ]);
+
+            if ($request->has('id') && $request->input('id')) {
+                $data = DivisionBranchZoneConfig::find($request->input('id'));
+                
+                if ($data) {
+                    $data->update($validatedData);
+                    return response()->json([
+                        'success' => true,
+                        'message' => 'Division Branch Zone configuration updated successfully!',
+                        'redirect_url' => url()->previous()
+                    ]);
+                }
+            } else {
+                DivisionBranchZoneConfig::create($validatedData);
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Division Branch Zone configuration saved successfully!',
+                    'redirect_url' => url()->previous()
+                ]);
+            }
+        }
+    }
+
+    
 
     public function locationDetail(Request $request)
     {
