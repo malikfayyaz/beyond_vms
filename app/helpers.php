@@ -3,6 +3,15 @@ use App\Models\User;
 use App\Models\GenericData;
 use App\Models\SettingCategory;
 
+ function userType(){
+    $array = array(
+        '1' => 'Admin',
+        '2' => 'Client',
+        '3' => 'Vendor',
+        '4' => 'Consultant'
+    );
+    return $array;
+}
 if (!function_exists('getActiveRoles')) {
     function getActiveRoles(User $user): array
     {

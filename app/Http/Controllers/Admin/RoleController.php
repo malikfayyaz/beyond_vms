@@ -9,6 +9,15 @@ use App\Models\User;
 
 class RoleController extends BaseController
 {
+/*    public function __construct()
+    {
+        // Apply middleware to specific methods
+        $this->middleware('permission:job-create', ['only' => ['create', 'store']]);
+        $this->middleware('permission:job-view', ['only' => ['index', 'show']]);
+
+        // Apply middleware to all methods except 'index' and 'show'
+        $this->middleware('auth');
+    }*/
     public function index()
     {
         $roles = Role::all();
@@ -22,17 +31,20 @@ class RoleController extends BaseController
 
     public function store(Request $request)
     {
+        // Validate the request
         $request->validate([
             'name' => 'required|string|unique:roles,name',
-
+            'user_type' => 'required', // Validate role name
         ]);
-
-        $role = Role::create([
+        Role::create([
             'name' => $request->input('name'),
+            'user_type_id' => $request->input('user_type'),
         ]);
 
         return redirect()->back()->with('success', 'Role created successfully.');
     }
+
+
 
     public function edit(Role $role)
     {

@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 class JobController extends BaseController
 {
 
-    public function create() 
+    public function create()
     {
         return view('admin.job.create');
     }

@@ -1,4 +1,4 @@
-<?php 
+<?php
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
@@ -19,7 +19,7 @@ class UserController extends Controller
     //  {
     //      $roles = Role::all();
     //      $permissions = Permission::all();
- 
+
     //      return view('users.assign', compact('user', 'roles', 'permissions', 'team'));
     //  }
 
@@ -44,10 +44,25 @@ class UserController extends Controller
 
     public function assignRoleForm(User $user)
     {
-        $roles = Role::all();
+        $user_type = getActiveRoles($user);
+        $userTypeMapping = userType();
+        $user_type_ids = [];
+        foreach ($user_type as $role => $isActive) {
+            if ($isActive) {
+                $roleFormatted = ucfirst($role); // Convert 'admin' to 'Admin'
+                $roleId = array_search($roleFormatted, $userTypeMapping);
+                if ($roleId) {
+                    $user_type_ids[] = $roleId; // Collect the corresponding user_type_id
+                }
+            }
+        }
+        $roles = Role::whereIn('user_type_id', $user_type_ids)->get();
         $permissions = Permission::all();
-        return view('users.assign', compact('user', 'roles','permissions'));
+
+        return view('users.assign', compact('user', 'roles', 'permissions'));
     }
+
+
 
     public function assignRole(Request $request, User $user)
     {
@@ -55,9 +70,9 @@ class UserController extends Controller
             // 'role' => 'required|exists:roles,name',
             'roles' => 'array',
             'permissions' => 'array',
-            
+
         ]);
-       
+
         //  dd($role);
         if ($request->has('roles')) {
             $user->syncRoles($request->input('roles'));
@@ -75,8 +90,8 @@ class UserController extends Controller
                 $role->syncPermissions($request->input('permissions')); // Sync the permissions with the role
             }
         }
-       
-    
+
+
 
             return redirect()->back()->with('success', 'Role assigned successfully.');
         }

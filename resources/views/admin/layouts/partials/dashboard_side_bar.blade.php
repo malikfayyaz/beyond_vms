@@ -54,21 +54,78 @@
               </button>
               <ul x-show="open" class="py-2 space-y-2" x-cloak>
                 <!-- Job create -->
-                <li class="{{ request()->routeIs('admin.jobs.create') ? 'active' : '' }}">
-                  <a href="{{ route('admin.jobs.create') }}"
-                      class="flex items-center w-full p-2 text-white transition duration-75 pl-11 hover:bg-gray-700">
-                      Create Job
-                  </a>
-                </li>
-                <li class="{{ request()->routeIs('admin.catalog.index') ? 'active' : '' }}">
+                  @can('job-create')
+                      <li class="{{ request()->routeIs('admin.jobs.create') ? 'active' : '' }}">
+                          <a href="{{ route('admin.jobs.create') }}"
+                             class="flex items-center w-full p-2 text-white transition duration-75 pl-11 hover:bg-gray-700">
+                              Create Job
+                          </a>
+                      </li>
+                  @endcan
+                  @can('catalog-index')
+                  <li class="{{ request()->routeIs('admin.catalog.index') ? 'active' : '' }}">
                   <a href="{{ route('admin.catalog.index') }}"
                       class="flex items-center w-full p-2 text-white transition duration-75 pl-11 hover:bg-gray-700">
                        Job Catalog
                   </a>
                 </li>
+                  @endcan
               </ul>
+
             </li>
-            
+
+
+
+
+
+
+              <li x-data="{ open: false }">
+                  <button
+                      @click="open = !open"
+                      class="flex items-center w-full p-2 text-white rounded-lg hover:bg-gray-700 overflow-hidden"
+                      :class="{'justify-center': miniSidebar}"
+                  >
+                      <i class="fas fa-cog w-6 h-6"></i>
+                      <span
+                          class="flex-1 ml-3 text-left whitespace-nowrap"
+                          x-show="!miniSidebar"
+                          x-cloak
+                      >Roles & Permission</span
+                      >
+                      <i
+                          class="fas fa-chevron-down ml-auto"
+                          x-show="!miniSidebar"
+                          x-cloak
+                      ></i>
+                  </button>
+                  <ul x-show="open" class="py-2 space-y-2" x-cloak>
+
+                      <li class="{{ request()->routeIs('users') ? 'active' : '' }}">
+                          <a href="{{ route('users.index') }}"
+                             class="flex items-center w-full p-2 text-white transition duration-75 pl-11 hover:bg-gray-700">
+                              Assign Roles
+                          </a>
+                      </li>
+                      @can('roles-index')
+                      <li class="{{ request()->routeIs('roles.index') ? 'active' : '' }}">
+                          <a href="{{ route('roles.index') }}"
+                             class="flex items-center w-full p-2 text-white transition duration-75 pl-11 hover:bg-gray-700">
+                              Roles
+                          </a>
+                      </li>
+                      @endcan
+                      @can('permissions-index')
+                      <li class="{{ request()->routeIs('permissions.index') ? 'active' : '' }}">
+                          <a href="{{ route('permissions.index') }}"
+                             class="flex items-center w-full p-2 text-white transition duration-75 pl-11 hover:bg-gray-700">
+                              Permission
+                          </a>
+                      </li>
+                      @endcan
+                  </ul>
+
+              </li>
+
             <!-- <li>
               <a
                 href="#"
@@ -164,7 +221,7 @@
                   </a>
               </li>
 
-              
+
               <!-- Departments Menu Item -->
               <li class="{{ request()->is('admin/three/departments') ? 'active' : '' }}">
                   <a href="{{ url('admin/three/departments') }}"
@@ -267,7 +324,7 @@
                       Setting
                   </a>
               </li>
-               
+
               </ul>
             </li>
           </ul>
