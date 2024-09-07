@@ -96,46 +96,53 @@ class GenericDataController extends BaseController
         }
     }
 
-    public function checkData(Request $request)
-    {
-        if ($request->isMethod('get')) {
-            $data = JobFamilyGroupConfig::all(); // Ensure you're retrieving data from the correct model
-            $jobfamily = GenericData::where('type', 'job-family')->get();
-            $jobfamilygrp = GenericData::where('type', 'job-family-group')->get();
-           
-            return view('admin.data-points.jobgroupcofig', [
-                'data' => $data,
-                'jobfamily' => $jobfamily,
-                'jobfamilygrp' => $jobfamilygrp,
-            ]);
-        } elseif ($request->isMethod('post')) {
-            $validatedData = $request->only([
-                'job_family',
-                'job_family_group'
-            ]);
-            // dd($validatedData);
-            if ($request->has('id') && $request->input('id')) {
-                $data = JobFamilyGroupConfig::find($request->input('id'));
-                
-                if ($data) {
-                    $data->update($validatedData);
-                    return response()->json([
-                        'success' => true,
-                        'message' => 'Job Family Group configuration updated successfully!',
-                        'redirect_url' => url()->previous()
-                    ]);
-                }
-            } else {
-                // dd($validatedData);
-                JobFamilyGroupConfig::create($validatedData);
+    public function jobGroupConfig(Request $request)
+{
+    if ($request->isMethod('get')) {
+        // Retrieve all JobFamilyGroupConfig entries
+        $data = JobFamilyGroupConfig::with(['jobFamily', 'jobFamilyGroup'])->get();
+        
+        // Retrieve job families and job family groups
+        $jobfamily = GenericData::where('type', 'job-family')->get();
+        $jobfamilygrp = GenericData::where('type', 'job-family-group')->get();
+       
+        // Pass data to the view
+        return view('admin.data-points.jobgroupcofig', [
+            'data' => $data,
+            'jobfamily' => $jobfamily,
+            'jobfamilygrp' => $jobfamilygrp,
+        ]);
+    } elseif ($request->isMethod('post')) {
+        // Validate request data
+        $validatedData = $request->validate([
+            'job_family' => 'required|exists:generic_data,id',
+            'job_family_group' => 'required|exists:generic_data,id'
+        ]);
+
+        if ($request->has('id') && $request->input('id')) {
+            // Update existing JobFamilyGroupConfig entry
+            $data = JobFamilyGroupConfig::find($request->input('id'));
+            
+            if ($data) {
+                $data->update($validatedData);
                 return response()->json([
                     'success' => true,
-                    'message' => 'Job Family Group configuration saved successfully!',
+                    'message' => 'Job Family Group configuration updated successfully!',
                     'redirect_url' => url()->previous()
                 ]);
             }
+        } else {
+            // Create new JobFamilyGroupConfig entry
+            JobFamilyGroupConfig::create($validatedData);
+            return response()->json([
+                'success' => true,
+                'message' => 'Job Family Group configuration saved successfully!',
+                'redirect_url' => url()->previous()
+            ]);
         }
     }
+}
+
 
     public function divisionBranchZoneConfig(Request $request)
     {

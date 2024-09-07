@@ -80,19 +80,18 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <!-- Loop through items (Assuming items are passed from the controller) -->
-                        @foreach ($data as $index => $item)
+                        <template x-for="(item, index) in filteredItems" :key="index">
                             <tr>
-                                <td class="border p-2 text-center">{{ $index + 1 }}</td>
-                                <td class="border p-2 text-center">{{ $item->job_family }}</td>
-                                <td class="border p-2 text-center">{{ $item->job_family_group }}</td>
+                                <td class="border p-2 text-center" x-text="index + 1"></td>
+                                <td class="border p-2 text-center" x-text="item.job_family.name ?? 'N/A'"></td>
+                                <td class="border p-2 text-center" x-text="item.job_family_group.name ?? 'N/A'"></td>
                                 <td class="border p-2 text-center">
-                                    <a href="#" @click.prevent="editItem({{ json_encode($item) }})" class="text-gray-600 cursor-pointer">
-                                        <i class="fa-regular fa-pen-to-square"></i> Edit
-                                    </a>
+                                    <span @click="editItem(item)" class="text-gray-600 cursor-pointer">
+                                        <i class="fa-regular fa-pen-to-square"></i>
+                                    </span>
                                 </td>
                             </tr>
-                        @endforeach
+                        </template>
                     </tbody>
                 </table>
             </div>
