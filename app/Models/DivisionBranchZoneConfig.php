@@ -9,34 +9,42 @@ class DivisionBranchZoneConfig extends Model
 {
     use HasFactory;
 
-    protected $table = 'division_branch_zone_config'; // Define the table name
+    protected $table = 'division_branch_zone_config'; // Corrected table name
 
     protected $fillable = [
-        'division',
-        'branch',
-        'zone',
-        'bu',
+        'bu_id',
+        'division_id',
+        'branch_id',
+        'zone_id',
         'status',
     ];
 
-    // Define relationships if necessary
+    public function bu()
+    {
+        return $this->belongsTo(GenericData::class, 'bu_id', 'id');
+    }
+
+    // Define other relationships
     public function division()
     {
-       return $this->belongsTo(GenericData::class, 'division');
+        return $this->belongsTo(GenericData::class, 'division_id', 'id');
     }
 
     public function branch()
     {
-        return $this->belongsTo(GenericData::class, 'branch');
+        return $this->belongsTo(GenericData::class, 'branch_id', 'id');
     }
 
     public function zone()
     {
-        return $this->belongsTo(GenericData::class, 'region-zone');
+        return $this->belongsTo(GenericData::class, 'zone_id', 'id');
     }
 
-    public function bu()
+    /**
+     * Scope to filter active records.
+     */
+    public function scopeByStatus($query)
     {
-        return $this->belongsTo(GenericData::class, 'busines-unit');
+        return $query->where('status', 'Active');
     }
 }

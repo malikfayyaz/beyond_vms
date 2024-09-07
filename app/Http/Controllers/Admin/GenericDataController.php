@@ -140,47 +140,79 @@ class GenericDataController extends BaseController
     public function divisionBranchZoneConfig(Request $request)
     {
         if ($request->isMethod('get')) {
-            $data = DivisionBranchZoneConfig::all();  // Ensure you're retrieving data from the correct model
+            // Handle GET request: Show form and data
+            $data = DivisionBranchZoneConfig::with(['division', 'branch', 'zone', 'bu'])->get(); // Fetch all config data
+
             $divisions = GenericData::where('type', 'division')->get();
             $branches = GenericData::where('type', 'branch')->get();
             $zones = GenericData::where('type', 'region-zone')->get();
-            $bus = GenericData::where('type', 'busines-unit')->get(); // Assuming you have a type for BU
+            $businessUnits = GenericData::where('type', 'busines-unit')->get();
 
-            return view('admin.data-points.division_branch_zone_config', [
+            return view('admin.data-points.bu-config', [
                 'data' => $data,
                 'divisions' => $divisions,
                 'branches' => $branches,
                 'zones' => $zones,
-                'bus' => $bus, // Pass the BU data to the view
+                'businessUnits' => $businessUnits,
             ]);
         } elseif ($request->isMethod('post')) {
-            $validatedData = $request->only([
-                'division',
-                'branch',
-                'zone',
-                'bu',        // Include Business Unit
-                'status',    // Include Status
-            ]);
+            // Validation rules
+            $rules = [
+                'division_id' => 'required|exists:generic_data,id',
+                'branch_id' => 'required|exists:generic_data,id',
+                'zone_id' => 'required|exists:generic_data,id',
+                'bu_id' => 'required|exists:generic_data,id',
+                'status' => 'required|in:Active,Inactive',
+            ];
 
+            // Custom error messages (optional)
+            $messages = [
+                'division_id.exists' => 'The selected division is invalid.',
+                'branch_id.exists' => 'The selected branch is invalid.',
+                'zone_id.exists' => 'The selected zone is invalid.',
+                'bu_id.exists' => 'The selected business unit is invalid.',
+                // Add more custom messages as needed
+            ];
+
+            // Validate the request data
+            $validator = Validator::make($request->all(), $rules, $messages);
+
+            if ($validator->fails()) {
+                return response()->json([
+                    'success' => false,
+                    'errors' => $validator->errors(),
+                ]);
+            }
+
+            $validatedData = $validator->validated(); // Get validated data
+
+            // Check if the request has an 'id' to determine whether to create or update
             if ($request->has('id') && $request->input('id')) {
-                $data = DivisionBranchZoneConfig::find($request->input('id'));
-                
-                if ($data) {
-                    $data->update($validatedData);
+                // Update the existing record
+                $config = DivisionBranchZoneConfig::find($request->input('id'));
+                $successMessage = 'Configuration updated successfully!';
+
+                if ($config) {
+                    $config->update($validatedData);
+                } else {
                     return response()->json([
-                        'success' => true,
-                        'message' => 'Division Branch Zone configuration updated successfully!',
-                        'redirect_url' => url()->previous()
+                        'success' => false,
+                        'message' => 'Configuration not found!',
                     ]);
                 }
             } else {
+                // Create a new record
                 DivisionBranchZoneConfig::create($validatedData);
-                return response()->json([
-                    'success' => true,
-                    'message' => 'Division Branch Zone configuration saved successfully!',
-                    'redirect_url' => url()->previous()
-                ]);
+                $successMessage = 'Configuration saved successfully!';
             }
+
+            // Set a success message in the session and return a JSON response
+            session()->flash('success', $successMessage);
+            return response()->json([
+                'success' => true,
+                'message' => $successMessage,
+                'redirect_url' => url()->previous() // Redirect back URL for AJAX
+            ]);
         }
     }
 
