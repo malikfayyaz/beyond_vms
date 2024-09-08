@@ -21,8 +21,8 @@
                             x-model="job_family"
                         >
                             <option value="" disabled>Select Job Family</option>
-                        @foreach ($jobfamily as $family)
-                            <option value="{{ $family->id }}">{{ $family->name }}</option>
+                        @foreach (getActiveRecordsByType('job-family') as $record)
+                            <option value="{{ $record->id }}">{{ $record->name }}</option>
                         @endforeach
                         </select>
                         <p class="text-red-500 text-sm mt-1" x-text="job_familyError"></p>
@@ -38,8 +38,8 @@
                             x-model="job_family_group"
                         >
                             <option value="" disabled>Select Job Family Group</option>
-                        @foreach ($jobfamilygrp as $group)
-                            <option value="{{ $group->id }}">{{ $group->name }}</option>
+                        @foreach (getActiveRecordsByType('job-family-group') as $record)
+                            <option value="{{ $record->id }}">{{ $record->name }}</option>
                         @endforeach
                         </select>
                         <p class="text-red-500 text-sm mt-1" x-text="job_family_groupError"></p>
@@ -113,6 +113,7 @@
 
             validateFields() {
                 this.error = 0; 
+                console.log(this.job_family);
                 if (this.job_family.trim() === "") {
                     this.job_familyError = `Please select a Job Family`;
                     this.error += 1;
@@ -131,35 +132,14 @@
                 this.validateFields();
                 if (this.error === 0) {
                     const formData = new FormData();
-                    formData.append('job_family', this.job_family);
-                    formData.append('job_family_group', this.job_family_group);
+                    formData.append('job_family_id', this.job_family);
+                    formData.append('job_family_group_id', this.job_family_group);
                     if (this.editIndex !== null) {
                         formData.append('id', this.items[this.editIndex].id);
                     }
-
-                    fetch(this.currentUrl, {
-                        method: 'POST',
-                        headers: {
-                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                        },
-                        body: formData
-                    })
-                    .then(response => response.text()) // Change to response.text() to handle non-JSON responses
-                    .then(text => {
-                        try {
-                            const data = JSON.parse(text); // Attempt to parse JSON
-                            if (data.success) {
-                                window.location.href = data.redirect_url;
-                            } else {
-                                console.error('Validation errors:', data.errors);
-                                this.job_familyError = data.errors.job_family || '';
-                                this.job_family_groupError = data.errors.job_family_group || '';
-                            }
-                        } catch (e) {
-                            console.error('Response is not valid JSON:', text);
-                        }
-                    })
-                    .catch(error => console.error('Error:', error));
+                    let url = this.currentUrl;
+                    ajaxCall(url, 'POST', [[onSuccess, ['response']]], formData);
+                  
                 }
             },
 
@@ -169,15 +149,16 @@
                 this.editIndex = null;
             },
 
-            editItem(item) {
-                this.job_family = item.job_family;
-                this.job_family_group = item.job_family_group;
-                this.editIndex = this.items.findIndex(i => i.id === item.id);
-            },
+                editItem(item) {
+                    // Ensure these values are treated as strings
+                    this.job_family = item.job_family_id ? item.job_family_id.toString() : '';
+                    this.job_family_group = item.job_family_group_id ? item.job_family_group_id.toString() : '';
+                    this.editIndex = this.items.findIndex(i => i.id === item.id);
+                },
 
             get filteredItems() {
                 return this.items.filter(item =>
-                    item.job_family.toString().includes(this.searchTerm)
+                item.job_family.name.toString().includes(this.searchTerm)
                     );
                 }
             };

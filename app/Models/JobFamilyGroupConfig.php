@@ -9,7 +9,7 @@ class JobFamilyGroupConfig extends Model
 {
     protected $table = 'job_family_group_config';
 
-    protected $fillable = ['job_family', 'job_family_group'];
+    protected $fillable = ['job_family_id', 'job_family_group_id'];
     
      /**
      * Define a relationship with the GenericData model for the job family.
@@ -18,7 +18,7 @@ class JobFamilyGroupConfig extends Model
      */
     public function jobFamily()
     {
-        return $this->belongsTo(GenericData::class, 'job_family', 'id');
+        return $this->belongsTo(GenericData::class, 'job_family_id', 'id');
     }
 
     /**
@@ -28,6 +28,6 @@ class JobFamilyGroupConfig extends Model
      */
     public function jobFamilyGroup()
     {
-        return $this->belongsTo(GenericData::class, 'job_family_group', 'id');
+        return $this->belongsTo(GenericData::class, 'job_family_group_id', 'id');
     }
 }

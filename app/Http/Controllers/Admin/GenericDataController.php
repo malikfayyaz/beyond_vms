@@ -26,7 +26,7 @@ class GenericDataController extends BaseController
            
             $data = GenericData::with(['country','setting'])->where('type', $formtype)->get();
 
-            return view('admin.data-points.manage', [
+            return view('admin.data_points.manage', [
                 'formtype' => $formtype,
                 'data' => $data,
                 'fields' => $fields,
@@ -102,27 +102,23 @@ class GenericDataController extends BaseController
         // Retrieve all JobFamilyGroupConfig entries
         $data = JobFamilyGroupConfig::with(['jobFamily', 'jobFamilyGroup'])->get();
         
-        // Retrieve job families and job family groups
-        $jobfamily = GenericData::where('type', 'job-family')->get();
-        $jobfamilygrp = GenericData::where('type', 'job-family-group')->get();
+        
        
         // Pass data to the view
-        return view('admin.data-points.jobgroupcofig', [
+        return view('admin.data_points.job_group_config', [
             'data' => $data,
-            'jobfamily' => $jobfamily,
-            'jobfamilygrp' => $jobfamilygrp,
         ]);
     } elseif ($request->isMethod('post')) {
         // Validate request data
         $validatedData = $request->validate([
-            'job_family' => 'required|exists:generic_data,id',
-            'job_family_group' => 'required|exists:generic_data,id'
+            'job_family_id' => 'required|exists:generic_data,id',
+            'job_family_group_id' => 'required|exists:generic_data,id'
         ]);
 
         if ($request->has('id') && $request->input('id')) {
             // Update existing JobFamilyGroupConfig entry
             $data = JobFamilyGroupConfig::find($request->input('id'));
-            
+            session()->flash('success', 'Job Family Group configuration updated successfully!');
             if ($data) {
                 $data->update($validatedData);
                 return response()->json([
@@ -134,6 +130,7 @@ class GenericDataController extends BaseController
         } else {
             // Create new JobFamilyGroupConfig entry
             JobFamilyGroupConfig::create($validatedData);
+            session()->flash('success', 'Job Family Group configuration saved successfully!');
             return response()->json([
                 'success' => true,
                 'message' => 'Job Family Group configuration saved successfully!',
@@ -150,17 +147,10 @@ class GenericDataController extends BaseController
             // Handle GET request: Show form and data
             $data = DivisionBranchZoneConfig::with(['division', 'branch', 'zone', 'bu'])->get(); // Fetch all config data
 
-            $divisions = GenericData::where('type', 'division')->get();
-            $branches = GenericData::where('type', 'branch')->get();
-            $zones = GenericData::where('type', 'region-zone')->get();
-            $businessUnits = GenericData::where('type', 'busines-unit')->get();
 
-            return view('admin.data-points.bu-config', [
+            return view('admin.data_points.bu_config', [
                 'data' => $data,
-                'divisions' => $divisions,
-                'branches' => $branches,
-                'zones' => $zones,
-                'businessUnits' => $businessUnits,
+              
             ]);
         } elseif ($request->isMethod('post')) {
             // Validation rules
@@ -232,7 +222,7 @@ class GenericDataController extends BaseController
             // Handle GET request: Show form and data
             $data = Location::with(['country', 'state'])->get(); // Fetch all location data
             $countries = Country::all();
-            return view('admin.data-points.location', [
+            return view('admin.data_points.location', [
                 'data' => $data,
                 'countries' => $countries,
             ]);
@@ -313,7 +303,7 @@ class GenericDataController extends BaseController
             $setting_category = SettingCategory::all()->map(function($item) {
                 return ['id' => $item->id, 'name' => $item->name];
             });
-            return view('admin.data-points.setting', [
+            return view('admin.data_points.setting', [
                 'setting_category' => $setting_category,
             ]);
         }elseif ($request->isMethod('post')) {

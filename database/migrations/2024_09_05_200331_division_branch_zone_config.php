@@ -13,9 +13,9 @@ return new class extends Migration
     {
         Schema::create('division_branch_zone_config', function (Blueprint $table) {
             $table->id(); // Auto-increment primary key
-            $table->string('division_id'); // Assuming division is a string
-            $table->string('branch_id'); // Assuming branch is a string
-            $table->string('zone_id'); // Assuming zone is a string
+            $table->foreignId('division_id')->constrained('generic_data')->onDelete('cascade');
+            $table->foreignId('branch_id')->constrained('generic_data')->onDelete('cascade');
+            $table->foreignId('zone_id')->constrained('generic_data')->onDelete('cascade');
             $table->foreignId('bu_id')->constrained('generic_data')->onDelete('cascade'); // Business Unit field, using `generic_data` table
             $table->enum('status', ['Active', 'Inactive']); // Status field
             $table->timestamps(); // Created_at and Updated_at timestamps

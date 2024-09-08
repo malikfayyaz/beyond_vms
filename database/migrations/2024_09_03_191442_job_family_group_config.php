@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id(); // Primary key
             $table->foreignId('job_family_id')->constrained('generic_data')->onDelete('cascade');
             $table->foreignId('job_family_group_id')->constrained('generic_data')->onDelete('cascade');
+            $table->enum('status', ['Active', 'Inactive']); // Status field
             $table->timestamps(); // Adds created_at and updated_at columns
         });
     }

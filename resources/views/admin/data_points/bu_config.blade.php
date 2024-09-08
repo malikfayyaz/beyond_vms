@@ -15,8 +15,8 @@
                     <label for="division-select" class="block mb-2">Division <span class="text-red-500">*</span></label>
                     <select id="division-select" name="division_id" x-model="division_id" class="w-full p-2 border rounded h-10 bg-white">
                         <option value="" disabled>Select Division</option>
-                        @foreach ($divisions as $division)
-                            <option value="{{ $division->id }}">{{ $division->name }}</option>
+                        @foreach (getActiveRecordsByType('division') as $record)
+                            <option value="{{ $record->id }}">{{ $record->name }}</option>
                         @endforeach
                     </select>
                     <p x-show="division_idError" class="text-red-500 text-sm mt-1" x-text="division_idError"></p>
@@ -25,8 +25,8 @@
                     <label for="branch-select" class="block mb-2">Branch <span class="text-red-500">*</span></label>
                     <select id="branch-select" name="branch_id" x-model="branch_id" class="w-full p-2 border rounded h-10 bg-white">
                         <option value="" disabled>Select Branch</option>
-                        @foreach ($branches as $branch)
-                            <option value="{{ $branch->id }}">{{ $branch->name }}</option>
+                        @foreach (getActiveRecordsByType('branch') as $record)
+                            <option value="{{ $record->id }}">{{ $record->name }}</option>
                         @endforeach
                     </select>
                     <p x-show="branch_idError" class="text-red-500 text-sm mt-1" x-text="branch_idError"></p>
@@ -38,8 +38,8 @@
                     <label for="zone-select" class="block mb-2">Zone <span class="text-red-500">*</span></label>
                     <select id="zone-select" name="zone_id" x-model="zone_id" class="w-full p-2 border rounded h-10 bg-white">
                         <option value="" disabled>Select Zone</option>
-                        @foreach ($zones as $zone)
-                            <option value="{{ $zone->id }}">{{ $zone->name }}</option>
+                        @foreach (getActiveRecordsByType('region-zone') as $record)
+                            <option value="{{ $record->id }}">{{ $record->name }}</option>
                         @endforeach
                     </select>
                     <p x-show="zone_idError" class="text-red-500 text-sm mt-1" x-text="zone_idError"></p>
@@ -48,8 +48,8 @@
                     <label for="bu-select" class="block mb-2">Business Unit <span class="text-red-500">*</span></label>
                     <select id="bu-select" name="bu_id" x-model="bu_id" class="w-full p-2 border rounded h-10 bg-white">
                         <option value="" disabled>Select Business Unit</option>
-                        @foreach ($businessUnits as $bu)
-                            <option value="{{ $bu->id }}">{{ $bu->name }}</option>
+                        @foreach (getActiveRecordsByType('busines-unit') as $record)
+                            <option value="{{ $record->id }}">{{ $record->name }}</option>
                         @endforeach
                     </select>
                     <p x-show="bu_idError" class="text-red-500 text-sm mt-1" x-text="bu_idError"></p>

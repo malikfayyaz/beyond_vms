@@ -104,9 +104,9 @@ Route::middleware(['ensure_role_is_selected'])->group(function () {
                 'status' => 'select',
             ]);
 
-            Route::match(['get', 'post'], 'job_group_family_config', [GenericDataController::class, 'jobGroupConfig'])->name('data.job_group_family_config');
+            Route::match(['get', 'post'], 'job-group-family-config', [GenericDataController::class, 'jobGroupConfig'])->name('data.job_group_family_config');
 
-            Route::match(['get', 'post'], 'division_branch_zone_config', [GenericDataController::class, 'divisionBranchZoneConfig'])->name('data.division_branch_zone_config');
+            Route::match(['get', 'post'], 'division-branch-zone-config', [GenericDataController::class, 'divisionBranchZoneConfig'])->name('data.division_branch_zone_config');
 
 
             Route::match(['get', 'post'], 'setting/info', [GenericDataController::class, 'locationDetail'])->name('data.location');

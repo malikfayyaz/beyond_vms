@@ -13,7 +13,7 @@ class AdminController extends BaseController
 
     public function accountCode() {
      
-        return view('admin.data-points.account_code');
+        return view('admin.data_points.account_code');
     
     }
 }
