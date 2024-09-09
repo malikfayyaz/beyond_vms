@@ -148,7 +148,8 @@
                 <!-- Job Catalog Rate Card -->
                 @php
                 $jobLevels = checksetting(1);
-                $currencies = checksetting(2);
+                $currencies = getActiveRecordsByType('currency')->load('setting');
+              
                 @endphp
 
                 <div x-data="jobCatalogRateCard()" x-init="init" @reset-rate-card.window="resetEntries">
@@ -210,8 +211,8 @@
                                                 id="currency"
                                                 >
                                         <option value="">Select Currency</option>
-                                        @foreach (checksetting(2) as $key => $value)
-                                        <option value="{{ $key }}">{{ $value }}</option>
+                                        @foreach ($currencies as $currency) 
+                                        <option value="{{ $currency->id }}">{{ $currency->setting->title }}</option>
                                         @endforeach
                                     </select>
                                     <div
@@ -270,12 +271,12 @@
                                         <td class="py-3 px-4 border-b border-gray-200"
                                             x-text="getJobLevelText(entry.jobLevel)"></td>
                                         <td class="py-3 px-4 border-b border-gray-200"
-                                            x-text="formatCurrencyDisplay(entry.minBillRate, entry.currency)"></td>
+                                            x-text="formatCurrencyDisplay(entry.minBillRate, entry.currency_title)"></td>
                                         <td class="py-3 px-4 border-b border-gray-200"
-                                            x-text="formatCurrencyDisplay(entry.maxBillRate, entry.currency)"></td>
+                                            x-text="formatCurrencyDisplay(entry.maxBillRate, entry.currency_title)"></td>
                                         <td class="py-3 px-4 border-b border-gray-200">
-                                            <i :class="getCurrencyIcon(entry.currency)" class="mr-1"></i>
-                                            <span x-text="getCurrencyText(entry.currency)"></span>
+                                            <i :class="entry.currency_title" class="mr-1"></i>
+                                            <span x-text="entry.currency_title"></span>
                                         </td>
                                         <td class="py-3 px-4 border-b border-gray-200">
                                             <button @click="deleteEntry(index)"
@@ -308,6 +309,7 @@ function jobCatalogRateCard() {
             minBillRate: "",
             maxBillRate: "",
             currency: "",
+            currency_title: "",
         },
         errors: {
             minBillRate: "",
@@ -362,14 +364,21 @@ function jobCatalogRateCard() {
                     return;
                 }
 
+                // Get the currency title (the text of the selected option)
+                const currencySelect = document.getElementById('currency');
+                const selectedCurrencyTitle = currencySelect.options[currencySelect.selectedIndex].text;
+
+                // Add the entry with currency title
                 this.entries.push({
-                    ...this.newEntry
+                    ...this.newEntry,
+                    currency_title: selectedCurrencyTitle // Set currency title
                 });
                 this.newEntry = {
                     jobLevel: "",
                     minBillRate: "",
                     maxBillRate: "",
                     currency: "",
+                    currency_title: "",
                 };
                 console.log("New entry added:", this.entries);
 
@@ -380,6 +389,7 @@ function jobCatalogRateCard() {
                     minBillRate: "",
                     maxBillRate: "",
                     currency: "",
+                    currency_title: "",
                 };
             }
         },
@@ -393,6 +403,7 @@ function jobCatalogRateCard() {
                 minBillRate: "",
                 maxBillRate: "",
                 currency: "",
+                currency_title: "",
             };
             this.errors = {
                 minBillRate: "",

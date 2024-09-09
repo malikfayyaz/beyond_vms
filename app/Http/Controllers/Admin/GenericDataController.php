@@ -26,7 +26,7 @@ class GenericDataController extends BaseController
            
             $data = GenericData::with(['country','setting'])->where('type', $formtype)->get();
 
-            return view('admin.data-points.manage', [
+            return view('admin.data_points.manage', [
                 'formtype' => $formtype,
                 'data' => $data,
                 'fields' => $fields,
@@ -96,91 +96,120 @@ class GenericDataController extends BaseController
         }
     }
 
-    public function checkData(Request $request)
-    {
-        if ($request->isMethod('get')) {
-            $data = JobFamilyGroupConfig::all(); // Ensure you're retrieving data from the correct model
-            $jobfamily = GenericData::where('type', 'job-family')->get();
-            $jobfamilygrp = GenericData::where('type', 'job-family-group')->get();
-           
-            return view('admin.data-points.jobgroupcofig', [
-                'data' => $data,
-                'jobfamily' => $jobfamily,
-                'jobfamilygrp' => $jobfamilygrp,
-            ]);
-        } elseif ($request->isMethod('post')) {
-            $validatedData = $request->only([
-                'job_family',
-                'job_family_group'
-            ]);
-            // dd($validatedData);
-            if ($request->has('id') && $request->input('id')) {
-                $data = JobFamilyGroupConfig::find($request->input('id'));
-                
-                if ($data) {
-                    $data->update($validatedData);
-                    return response()->json([
-                        'success' => true,
-                        'message' => 'Job Family Group configuration updated successfully!',
-                        'redirect_url' => url()->previous()
-                    ]);
-                }
-            } else {
-                // dd($validatedData);
-                JobFamilyGroupConfig::create($validatedData);
+    public function jobGroupConfig(Request $request)
+{
+    if ($request->isMethod('get')) {
+        // Retrieve all JobFamilyGroupConfig entries
+        $data = JobFamilyGroupConfig::with(['jobFamily', 'jobFamilyGroup'])->get();
+        
+        
+       
+        // Pass data to the view
+        return view('admin.data_points.job_group_config', [
+            'data' => $data,
+        ]);
+    } elseif ($request->isMethod('post')) {
+        // Validate request data
+        $validatedData = $request->validate([
+            'job_family_id' => 'required|exists:generic_data,id',
+            'job_family_group_id' => 'required|exists:generic_data,id'
+        ]);
+
+        if ($request->has('id') && $request->input('id')) {
+            // Update existing JobFamilyGroupConfig entry
+            $data = JobFamilyGroupConfig::find($request->input('id'));
+            session()->flash('success', 'Job Family Group configuration updated successfully!');
+            if ($data) {
+                $data->update($validatedData);
                 return response()->json([
                     'success' => true,
-                    'message' => 'Job Family Group configuration saved successfully!',
+                    'message' => 'Job Family Group configuration updated successfully!',
                     'redirect_url' => url()->previous()
                 ]);
             }
+        } else {
+            // Create new JobFamilyGroupConfig entry
+            JobFamilyGroupConfig::create($validatedData);
+            session()->flash('success', 'Job Family Group configuration saved successfully!');
+            return response()->json([
+                'success' => true,
+                'message' => 'Job Family Group configuration saved successfully!',
+                'redirect_url' => url()->previous()
+            ]);
         }
     }
+}
+
 
     public function divisionBranchZoneConfig(Request $request)
     {
         if ($request->isMethod('get')) {
-            $data = DivisionBranchZoneConfig::all();  // Ensure you're retrieving data from the correct model
-            $divisions = GenericData::where('type', 'division')->get();
-            $branches = GenericData::where('type', 'branch')->get();
-            $zones = GenericData::where('type', 'region-zone')->get();
-            $bus = GenericData::where('type', 'busines-unit')->get(); // Assuming you have a type for BU
+            // Handle GET request: Show form and data
+            $data = DivisionBranchZoneConfig::with(['division', 'branch', 'zone', 'bu'])->get(); // Fetch all config data
 
-            return view('admin.data-points.division_branch_zone_config', [
+
+            return view('admin.data_points.bu_config', [
                 'data' => $data,
-                'divisions' => $divisions,
-                'branches' => $branches,
-                'zones' => $zones,
-                'bus' => $bus, // Pass the BU data to the view
+              
             ]);
         } elseif ($request->isMethod('post')) {
-            $validatedData = $request->only([
-                'division',
-                'branch',
-                'zone',
-                'bu',        // Include Business Unit
-                'status',    // Include Status
-            ]);
+            // Validation rules
+            $rules = [
+                'division_id' => 'required|exists:generic_data,id',
+                'branch_id' => 'required|exists:generic_data,id',
+                'zone_id' => 'required|exists:generic_data,id',
+                'bu_id' => 'required|exists:generic_data,id',
+                'status' => 'required|in:Active,Inactive',
+            ];
 
+            // Custom error messages (optional)
+            $messages = [
+                'division_id.exists' => 'The selected division is invalid.',
+                'branch_id.exists' => 'The selected branch is invalid.',
+                'zone_id.exists' => 'The selected zone is invalid.',
+                'bu_id.exists' => 'The selected business unit is invalid.',
+                // Add more custom messages as needed
+            ];
+
+            // Validate the request data
+            $validator = Validator::make($request->all(), $rules, $messages);
+
+            if ($validator->fails()) {
+                return response()->json([
+                    'success' => false,
+                    'errors' => $validator->errors(),
+                ]);
+            }
+
+            $validatedData = $validator->validated(); // Get validated data
+
+            // Check if the request has an 'id' to determine whether to create or update
             if ($request->has('id') && $request->input('id')) {
-                $data = DivisionBranchZoneConfig::find($request->input('id'));
-                
-                if ($data) {
-                    $data->update($validatedData);
+                // Update the existing record
+                $config = DivisionBranchZoneConfig::find($request->input('id'));
+                $successMessage = 'Configuration updated successfully!';
+
+                if ($config) {
+                    $config->update($validatedData);
+                } else {
                     return response()->json([
-                        'success' => true,
-                        'message' => 'Division Branch Zone configuration updated successfully!',
-                        'redirect_url' => url()->previous()
+                        'success' => false,
+                        'message' => 'Configuration not found!',
                     ]);
                 }
             } else {
+                // Create a new record
                 DivisionBranchZoneConfig::create($validatedData);
-                return response()->json([
-                    'success' => true,
-                    'message' => 'Division Branch Zone configuration saved successfully!',
-                    'redirect_url' => url()->previous()
-                ]);
+                $successMessage = 'Configuration saved successfully!';
             }
+
+            // Set a success message in the session and return a JSON response
+            session()->flash('success', $successMessage);
+            return response()->json([
+                'success' => true,
+                'message' => $successMessage,
+                'redirect_url' => url()->previous() // Redirect back URL for AJAX
+            ]);
         }
     }
 
@@ -193,7 +222,7 @@ class GenericDataController extends BaseController
             // Handle GET request: Show form and data
             $data = Location::with(['country', 'state'])->get(); // Fetch all location data
             $countries = Country::all();
-            return view('admin.data-points.location', [
+            return view('admin.data_points.location', [
                 'data' => $data,
                 'countries' => $countries,
             ]);
@@ -274,7 +303,7 @@ class GenericDataController extends BaseController
             $setting_category = SettingCategory::all()->map(function($item) {
                 return ['id' => $item->id, 'name' => $item->name];
             });
-            return view('admin.data-points.setting', [
+            return view('admin.data_points.setting', [
                 'setting_category' => $setting_category,
             ]);
         }elseif ($request->isMethod('post')) {

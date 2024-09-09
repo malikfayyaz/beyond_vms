@@ -11,15 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-         Schema::create('division_branch_zone_config', function (Blueprint $table) {
-            $table->id();
-            $table->integer('division'); // Assuming division_id references another table
-            $table->integer('branch'); // Assuming branch_id references another table
-            $table->integer('zone'); // Assuming zone_id references another table
-            $table->integer('bu'); // Business Unit field
-            $table->integer('status'); // Status field
-            $table->timestamps();
-
+        Schema::create('division_branch_zone_config', function (Blueprint $table) {
+            $table->id(); // Auto-increment primary key
+            $table->foreignId('division_id')->constrained('generic_data')->onDelete('cascade');
+            $table->foreignId('branch_id')->constrained('generic_data')->onDelete('cascade');
+            $table->foreignId('zone_id')->constrained('generic_data')->onDelete('cascade');
+            $table->foreignId('bu_id')->constrained('generic_data')->onDelete('cascade'); // Business Unit field, using `generic_data` table
+            $table->enum('status', ['Active', 'Inactive']); // Status field
+            $table->timestamps(); // Created_at and Updated_at timestamps
         });
     }
 

@@ -24,6 +24,6 @@ class TemplateRatecard extends Model
     }
     public function currency()
     {
-        return $this->belongsTo(Setting::class, 'currency_id', 'id');
+        return $this->belongsTo(GenericData::class, 'currency_id', 'id');
     }
 }

@@ -268,8 +268,8 @@
                   </a>
               </li>
 
-              <li class="{{ request()->routeIs('admin.data.test') ? 'active' : '' }}">
-                  <a href="{{ route('admin.data.test') }}"
+              <li class="{{ request()->routeIs('admin.data.job_group_family_config') ? 'active' : '' }}">
+                  <a href="{{ route('admin.data.job_group_family_config') }}"
                       class="flex items-center w-full p-2 text-white transition duration-75 pl-11 hover:bg-gray-700">
                       Job Family Group Configuration
                   </a>
