@@ -5,12 +5,31 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
+use Yajra\DataTables\Facades\DataTables;
 
 class UserController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $users = User::all();
+        if ($request->ajax()) {
+            $data = User::query();
+            return Datatables::of($data)
+                ->addIndexColumn()
+                ->addColumn('action', function($row){
+                    $btn = '
+                    <a href="' . route('users.assignRoleForm', $row->id) . '"
+                       class="text-blue-500 hover:text-blue-700 mr-2 bg-transparent hover:bg-transparent" title="Assign Roles & Permissions"
+                     >
+                    <i class="fas fa-tasks"></i>
+                     </a>
+';
+
+                    return $btn;
+                })
+                ->rawColumns(['action'])
+                ->make(true);
+        }
         return view('users.index', compact('users'));
     }
 
