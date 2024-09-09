@@ -244,7 +244,8 @@
                  <label class="block mb-2"
                    >Work Location <span class="text-red-500">*</span></label
                  >
-                 @php $location =  \App\Models\Location::byStatus(); @endphp
+                 @php $location =  \App\Models\Location::byStatus();
+                 $currencies = getActiveRecordsByType('currency')->load('setting'); @endphp
                  <select
                    x-ref="workLocation"
                    x-model="formData.workLocation"
@@ -276,9 +277,9 @@
                    id="currency"
                  >
                    <option value="">Select a Currency</option>
-                   @foreach (getActiveRecordsByType('currency') as $record)
-                            <option value="{{ $record->id }}">{{ $record->name }}</option>
-                            @endforeach
+                   @foreach ($currencies as $currency) 
+                                        <option value="{{ $currency->id }}">{{ $currency->setting->title }}</option>
+                                        @endforeach
                  </select>
                  <p
                    x-show="showErrors && !isFieldValid('currency')"
@@ -878,6 +879,7 @@
                    x-model="formData.subLedgerType"
                    class="w-full select2-single custom-style"
                    data-field="subLedgerType"
+                   id="ledger_type"
                  >
                  
                    <option value="">Select Sub Ledger Type</option>
@@ -888,11 +890,12 @@
                  </select>
                </div>
                <div class="flex-1">
-                 <label class="block mb-2">Sub Ledger Code</label>
+                 <label class="block mb-2">Sub Ledger Code  <span class="text-red-500 ledger_code__" style="display:none;">*</span></label>
                  <input
                    type="text"
+                   id="ledger_code"
                    x-model="formData.subLedgerCode"
-                   class="w-full h-12 px-4 text-gray-500 border border-gray-300 rounded-md shadow-sm focus:outline-none"
+                   class="w-full  h-12 px-4 text-gray-500 border border-gray-300 rounded-md shadow-sm focus:outline-none"
                  />
                </div>
                <div class="flex-1">
