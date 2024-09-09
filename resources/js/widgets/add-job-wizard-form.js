@@ -119,7 +119,18 @@ export default function wizardForm() {
         unit: businessUnitText,
         percentage: parseFloat(this.budgetPercentage),
       });
-
+      let url = `/admin/division-load`;
+      let data = new FormData();
+                data.append('bu_id', this.selectedBusinessUnit);
+                
+                const updates = {
+                    '#regionZone': { type: 'select2append', field: 'zone' },
+                    '#branch': { type: 'select2append', field: 'branch' },
+                    '#division': { type: 'select2append', field: 'division' },
+                    // '#currency': { type: 'value', field: 'currency_class' },
+                    // Add more mappings as needed
+                };
+                ajaxCall(url,  'POST', [[updateElements, ['response', updates]]], data);
       this.selectedBusinessUnit = "";
       this.budgetPercentage = "";
       $(this.$refs.businessUnitSelect).val("").trigger("change");

@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', function() {
    if (window.$) {
        $('#jobLaborCategory').on('change', function () {
                var labour_type = $(this).val();
-               var type = 11;
+               var type = 10;
                let url = `/admin/load-market-job-template/${labour_type}/${type}`;
 
                ajaxCall(url, 'GET', [[updateStatesDropdown, ['response', 'jobTitle']]]);
@@ -30,8 +30,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 const updates = {
                     '#maxBillRate': { type: 'value', field: 'max_bill_rate' },
                     '#billRate': { type: 'value', field: 'min_bill_rate' },
-                    '#Job_currency': { type: 'value', field: 'currency' },
-                    '#currency': { type: 'value', field: 'currency_class' },
+                    '#currency': { type: 'select2', field: 'currency' },
+                    // '#currency': { type: 'value', field: 'currency_class' },
                     // Add more mappings as needed
                 };
                 ajaxCall(url,  'POST', [[updateElements, ['response', updates]]], data);
@@ -59,6 +59,19 @@ document.addEventListener('DOMContentLoaded', function() {
             
            
         }
+
+        $(document).ready(function() {
+            $("#ledger_type").find("option[value='31'], option[value='32']").remove();
+            var isLedgerCodeRequired = $("#ledger_type :selected").val() === "3";
+            $("#ledger_code").prop('required', isLedgerCodeRequired);
+            $(".ledger_code_").toggleClass('fa-asterisk', isLedgerCodeRequired);
+            $("#ledger_type").on('change', function() {
+                var isLedgerCodeRequired = $(this).val() === "3";
+                $("#ledger_code").prop('required', isLedgerCodeRequired);
+                $(".ledger_code_").toggleClass('fa-asterisk', isLedgerCodeRequired);
+                $(".ledger_code__").toggle(isLedgerCodeRequired);
+              });
+          });
              
    }
   

@@ -49,7 +49,8 @@ Route::middleware(['ensure_role_is_selected'])->group(function () {
 
     // Routes for Permissions
     Route::resource('permissions', PermissionController::class);
-
+    Route::get('roles/{role}/assign-permission', [RoleController::class, 'assignPermissionForm'])->name('roles.assignPermissionForm');
+    Route::post('roles/{role}/assign-permission', [RoleController::class, 'assignPermission'])->name('roles.assignPermission');
     // User management routes
     Route::get('users', [UserController::class, 'index'])->name('users.index');
     Route::get('users/{user}/assign-role', [UserController::class, 'assignRoleForm'])->name('users.assignRoleForm');
@@ -132,6 +133,7 @@ Route::middleware(['ensure_role_is_selected'])->group(function () {
             Route::resource('job/catalog', CatalogController::class);
             Route::get('load-market-job-template/{category}/{type}', [CatalogController::class, 'loadMarketJobTemplate']);
             Route::post('load-job-template', [CatalogController::class, 'loadJobTemplate'])->name('loadJobTemplate');
+            Route::post('division-load', [CatalogController::class, 'divisionLoad'])->name('divisionLoad');
 
     });
 

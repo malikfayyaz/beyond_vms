@@ -80,12 +80,13 @@ function initializeDataTable(tableId, ajaxUrl, columns) {
   const updateStatesDropdown = (response, stateDropdownId) => {
     var statesDropdown = $('#' + stateDropdownId);
     // Save the "Select State" option
-    var selectStateOption = statesDropdown.find('option[value=""]').prop('outerHTML');
+ 
     // Clear only the dynamically added options
     statesDropdown.find('option:not([value=""])').remove();
 
     // Re-add the "Select State" option
     // statesDropdown.append(selectStateOption); // Clear the dropdown before appending new options
+
 
     $.each(response, function (key, state) {
         statesDropdown.append('<option value="' + state.id + '">' + state.name + '</option>');
@@ -112,8 +113,17 @@ function initializeDataTable(tableId, ajaxUrl, columns) {
                   break;
               case 'select2':
                 element.val(data[updateType.field]).trigger("change.select2");
+               
                   // element.select2('val', data[updateType.field]);
                   break;
+              case 'select2append':
+                if (data[updateType.field]) {
+                    // Clear existing options and append new ones
+                    element.empty();
+                    element.append(data[updateType.field]);
+                    element.trigger("change.select2");
+                }
+                break;
               case 'disabled':
                   element.prop('disabled', updateType.value);
                   break;
