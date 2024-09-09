@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', function() {
    if (window.$) {
        $('#jobLaborCategory').on('change', function () {
                var labour_type = $(this).val();
-               var type = 11;
+               var type = 10;
                let url = `/admin/load-market-job-template/${labour_type}/${type}`;
 
                ajaxCall(url, 'GET', [[updateStatesDropdown, ['response', 'jobTitle']]]);

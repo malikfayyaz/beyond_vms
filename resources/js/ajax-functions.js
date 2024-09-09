@@ -80,12 +80,13 @@ function initializeDataTable(tableId, ajaxUrl, columns) {
   const updateStatesDropdown = (response, stateDropdownId) => {
     var statesDropdown = $('#' + stateDropdownId);
     // Save the "Select State" option
-    var selectStateOption = statesDropdown.find('option[value=""]').prop('outerHTML');
+ 
     // Clear only the dynamically added options
     statesDropdown.find('option:not([value=""])').remove();
 
     // Re-add the "Select State" option
     // statesDropdown.append(selectStateOption); // Clear the dropdown before appending new options
+console.log(response);
 
     $.each(response, function (key, state) {
         statesDropdown.append('<option value="' + state.id + '">' + state.name + '</option>');

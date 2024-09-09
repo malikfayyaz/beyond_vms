@@ -117,7 +117,7 @@ class CatalogController extends BaseController
                 $rateCardModel = new TemplateRatecard();
                 $rateCardModel->template_id = $modelId;
                 $rateCardModel->level_id = $rateCardData['jobLevel'];
-                $rateCardModel->currency = $rateCardData['currency'];
+                $rateCardModel->currency_id = $rateCardData['currency'];
                 $rateCardModel->bill_rate = str_replace(",", "", $rateCardData['maxBillRate']);
                 $rateCardModel->min_bill_rate = str_replace(",", "", $rateCardData['minBillRate']);
                 // $rateCardModel->date_created = now();
@@ -170,16 +170,26 @@ class CatalogController extends BaseController
     {
 
         // Logic to get the catalog item to edit
-        $job = JobTemplates::findOrFail($id);
+        $job = JobTemplates::with('templateratecard.currency.setting')->findOrFail($id);
         $ratecards  =  $job->templateratecard;
+        // Get currencies along with their settings
+       // Add the currency setting title to each ratecard
+        $ratecards->map(function($ratecard) {
+            $ratecard->currency_setting_title = $ratecard->currency && $ratecard->currency->setting
+                ? $ratecard->currency->setting->title
+                : null;
 
+            return $ratecard;
+        });
+       
          // Format the rate cards data if necessary
         $ratecardsArray = $ratecards->map(function ($ratecard) {
             return [
                 'jobLevel' => $ratecard->level_id,
                 'minBillRate' => $ratecard->min_bill_rate,
                 'maxBillRate' => $ratecard->bill_rate,
-                'currency' => $ratecard->currency,
+                'currency' => $ratecard->currency_id,
+                'currency_title' => $ratecard->currency_setting_title,
             ];
         });
         // dd($ratecardsArray);
@@ -198,7 +208,6 @@ class CatalogController extends BaseController
      */
     public function update(Request $request, $id)
     {
-        // dd($request);
         // Validate and update the catalog item
         $validatedData = $request->validate([
             'job_title' => 'required|string|max:255',
@@ -226,7 +235,7 @@ class CatalogController extends BaseController
         $catalog->update($dataToUpdate);
 
         // Remove existing rate cards associated with this template
-        TemplateRatecard::where('template_id', $catalog->id)->delete();
+        // TemplateRatecard::where('template_id', $catalog->id)->delete();
 
         if (!empty($jobCatalogRateCards) && is_array($jobCatalogRateCards)) {
             foreach ($jobCatalogRateCards as $key => $rateCardData) {
@@ -244,7 +253,7 @@ class CatalogController extends BaseController
                 $rateCardModel = new TemplateRatecard();
                 $rateCardModel->template_id = $catalog->id;
                 $rateCardModel->level_id = $rateCardData['jobLevel'];
-                $rateCardModel->currency = $rateCardData['currency'];
+                $rateCardModel->currency_id = $rateCardData['currency'];
                 $rateCardModel->bill_rate = str_replace(",", "", $rateCardData['maxBillRate']);
                 $rateCardModel->min_bill_rate = str_replace(",", "", $rateCardData['minBillRate']);
     
