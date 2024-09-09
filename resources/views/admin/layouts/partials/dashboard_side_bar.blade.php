@@ -103,7 +103,13 @@
                       <li class="{{ request()->routeIs('users') ? 'active' : '' }}">
                           <a href="{{ route('users.index') }}"
                              class="flex items-center w-full p-2 text-white transition duration-75 pl-11 hover:bg-gray-700">
-                              Assign Roles
+                              Assign User Roles&Permissions
+                          </a>
+                      </li>
+                      <li class="{{ request()->routeIs('roles') ? 'active' : '' }}">
+                          <a href="{{ route('roles.index') }}"
+                             class="flex items-center w-full p-2 text-white transition duration-75 pl-11 hover:bg-gray-700">
+                              Assign Roles to Permissions
                           </a>
                       </li>
                       @can('roles-index')
@@ -300,7 +306,7 @@
                   </a>
               </li>
 
-              
+
                <!-- Brand Menu Item -->
                <li class="{{ request()->routeIs('admin.data.two') && request()->route('type') === 'brand' ? 'active' : '' }}">
                   <a href="{{ route('admin.data.two', ['type' => 'brand']) }}"
