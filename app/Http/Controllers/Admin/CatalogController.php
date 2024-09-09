@@ -48,7 +48,7 @@ class CatalogController extends BaseController
                     ->make(true);
         }
         // Logic to get and display catalog items
-        return view('admin.job.catalog.index'); // Assumes you have a corresponding Blade view
+        return view('admin.career_opportunities.catalog.index'); // Assumes you have a corresponding Blade view
     }
 
     /**
@@ -58,7 +58,7 @@ class CatalogController extends BaseController
      */
     public function create()
     {
-        return view('admin.job.catalog.create', [
+        return view('admin.career_opportunities.catalog.create', [
             'job' => [],'ratecards' => []
         ]); // Assumes you have a corresponding Blade view
     }
@@ -159,7 +159,7 @@ class CatalogController extends BaseController
         $job = JobTemplates::findOrFail($id);
         $categoryTitle = $job->category->title;
         $profileWorkerTypeTitle = $job->profileWorkerType->title;
-        return view('admin.job.catalog.view', compact('job', 'categoryTitle', 'profileWorkerTypeTitle', 'templateratecard'));
+        return view('admin.career_opportunities.catalog.view', compact('job', 'categoryTitle', 'profileWorkerTypeTitle', 'templateratecard'));
     }
 
     /**
@@ -196,7 +196,7 @@ class CatalogController extends BaseController
         });
         // dd($ratecardsArray);
 
-        return view('admin.job.catalog.create', [
+        return view('admin.career_opportunities.catalog.create', [
             'job' => $job,'ratecards' => $ratecardsArray
         ] );
     }
@@ -353,9 +353,9 @@ class CatalogController extends BaseController
         $id = $request->input('bu_id');
 
         $response = [
-            'zone' => '',
-            'branch' => '',
-            'division' => '',
+            'zone' => '<option  value="" > Select Option</option>',
+            'branch' => '<option  value=""> Select Option</option>',
+            'division' => '<option  value=""> Select Option</option>',
         ];
 
         // Fetch job branches

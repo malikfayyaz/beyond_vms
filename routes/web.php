@@ -4,8 +4,9 @@ use App\Http\Controllers\{
     Admin\RoleController,
     Admin\PermissionController,
     Admin\GenericDataController,
-    Admin\JobController,
     Admin\CatalogController,
+    Admin\RatesController,
+    Admin\CareerOpportunitiesController,
     TeamController,
     UserController,
     Admin\AdminController,
@@ -116,7 +117,6 @@ Route::middleware(['ensure_role_is_selected'])->group(function () {
             Route::match(['get', 'post'], 'location/info', [GenericDataController::class, 'locationDetail'])->name('data.location');
 
             // job routes
-            Route::get('job/create', [JobController::class, 'create'])->name('jobs.create');
 
             Route::match(['get', 'post'], 'setting/info', [GenericDataController::class, 'settingDetail'])->name('setting.info');
             // Route to fetch settings based on category
@@ -131,9 +131,12 @@ Route::middleware(['ensure_role_is_selected'])->group(function () {
             Route::post('setting/store', [GenericDataController::class, 'storeSetting'])
                 ->name('setting.store');
             Route::resource('job/catalog', CatalogController::class);
+            Route::resource('career-opportunities', CareerOpportunitiesController::class);
+            // ajax method routes
             Route::get('load-market-job-template/{category}/{type}', [CatalogController::class, 'loadMarketJobTemplate']);
-            Route::post('load-job-template', [CatalogController::class, 'loadJobTemplate'])->name('loadJobTemplate');
-            Route::post('division-load', [CatalogController::class, 'divisionLoad'])->name('divisionLoad');
+            Route::post('load-job-template', [CatalogController::class, 'loadJobTemplate'])->name('load_job_template');
+            Route::post('division-load', [CatalogController::class, 'divisionLoad'])->name('division_load');
+            Route::post('job-rates', [RatesController::class, 'jobRates'])->name('job_rates');
 
     });
 

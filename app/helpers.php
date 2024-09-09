@@ -1,8 +1,10 @@
 <?php
+use Carbon\Carbon;
 use App\Models\User;
 use App\Models\GenericData;
 use App\Models\Location;
 use App\Models\SettingCategory;
+
 
  function userType(){
     $array = array(
@@ -108,6 +110,50 @@ if (!function_exists('locationName')) {
         
             
         return $location_query->name . '-' . $location_query->address1 . '-' . $location_query->city . '-' . $location_query->state->name . '-' . $location_query->zip_code;
+    }
+}
+
+if (!function_exists('removeComma')) {
+    function removeComma($number)
+    {
+        return str_replace(',', '', $number);
+    }
+}
+
+if (!function_exists('numberOfWorkingDays')) {
+    // Helper method to calculate the number of working days between two dates
+    function numberOfWorkingDays($startDate, $endDate)
+    {
+        $endDate = strtotime($endDate);
+        $startDate = strtotime($startDate);
+        $days = ($endDate - $startDate) / 86400 + 1; // Convert difference to days
+        $no_full_weeks = floor($days / 7); // Full weeks
+        $no_remaining_days = fmod($days, 7); // Remaining days
+        
+        $the_first_day_of_week = date("N", $startDate); // Day of the week for start date
+        $the_last_day_of_week = date("N", $endDate); // Day of the week for end date
+
+        // If the first and last days are in the same week
+        if ($the_first_day_of_week <= $the_last_day_of_week) {
+            if ($the_first_day_of_week <= 6 && 6 <= $the_last_day_of_week) $no_remaining_days--; // Saturday
+            if ($the_first_day_of_week <= 7 && 7 <= $the_last_day_of_week) $no_remaining_days--; // Sunday
+        } else {
+            if ($the_first_day_of_week == 7) { // If starting on a Sunday
+                $no_remaining_days--;
+                if ($the_last_day_of_week == 6) { // If ending on a Saturday
+                    $no_remaining_days--;
+                }
+            } else {
+                $no_remaining_days -= 2; // Adjust for weekends
+            }
+        }
+
+        $workingDays = $no_full_weeks * 5; // Full weeks * 5 working days
+        if ($no_remaining_days > 0) {
+            $workingDays += $no_remaining_days; // Add remaining working days
+        }
+
+        return round($workingDays); // Return the rounded number of working days
     }
 }
 

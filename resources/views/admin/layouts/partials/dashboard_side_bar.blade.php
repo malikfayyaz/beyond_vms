@@ -55,8 +55,8 @@
               <ul x-show="open" class="py-2 space-y-2" x-cloak>
                 <!-- Job create -->
                   @can('job-create')
-                      <li class="{{ request()->routeIs('admin.jobs.create') ? 'active' : '' }}">
-                          <a href="{{ route('admin.jobs.create') }}"
+                      <li class="{{ request()->routeIs('admin.career-opportunities.create') ? 'active' : '' }}">
+                          <a href="{{ route('admin.career-opportunities.create') }}"
                              class="flex items-center w-full p-2 text-white transition duration-75 pl-11 hover:bg-gray-700">
                               Create Job
                           </a>

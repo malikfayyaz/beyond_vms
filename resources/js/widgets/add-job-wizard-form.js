@@ -74,7 +74,7 @@ export default function wizardForm() {
       estimatedExpense: "0.00",
       clientName: "",
       businessUnits: [],
-      unitOfMeasure: "",
+      payment_type: "",
       timeType: "",
       estimatedHoursPerDay: "",
       workDaysPerWeek: "",
@@ -439,7 +439,7 @@ export default function wizardForm() {
           );
         case 4:
           return (
-            this.formData.unitOfMeasure !== "" &&
+            this.formData.payment_type !== "" &&
             this.formData.timeType !== "" &&
             this.formData.estimatedHoursPerDay !== "" &&
             this.formData.workDaysPerWeek !== "" &&
@@ -481,7 +481,7 @@ export default function wizardForm() {
         (this.formData.clientBillable !== "yes" ||
           this.formData.clientName.trim() !== "") &&
         this.isBusinessUnitValid &&
-        this.formData.unitOfMeasure !== "" &&
+        this.formData.payment_type !== "" &&
         this.formData.timeType !== "" &&
         this.formData.estimatedHoursPerDay !== "" &&
         this.formData.workDaysPerWeek !== "" &&
@@ -491,9 +491,13 @@ export default function wizardForm() {
       );
     },
     submitForm() {
+     
       this.showErrors = true;
       if (this.isFormValid) {
+        
         console.log("Form submitted:", this.formData);
+      
+        ajaxCall('/admin/career-opportunities','POST', [[onSuccess, ['response']]], this.formData);
         this.showSuccessMessage = true;
         this.resetForm();
         this.currentStep = 1;
@@ -547,7 +551,7 @@ export default function wizardForm() {
         estimatedExpense: "0.00",
         clientName: "",
         businessUnits: [],
-        unitOfMeasure: "",
+        payment_type: "",
         timeType: "",
         estimatedHoursPerDay: "",
         workDaysPerWeek: "",
