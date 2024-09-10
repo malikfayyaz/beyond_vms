@@ -155,6 +155,19 @@ if (!function_exists('numberOfWorkingDays')) {
 
         return round($workingDays); // Return the rounded number of working days
     }
+
+    if (!function_exists('handleFileUpload')) {
+        function handleFileUpload($request, $fileKey, $directory)
+        {
+            if ($request->hasFile($fileKey)) {
+                $file = $request->file($fileKey);
+                $filename = md5(rand(1000, 9999) . time()) . '.' . $file->getClientOriginalExtension();
+                $file->storeAs($directory, $filename, 'public');
+                return $filename;
+            }
+            return null;
+        }
+    }
 }
 
 

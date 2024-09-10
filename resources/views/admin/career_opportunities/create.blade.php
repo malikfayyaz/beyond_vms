@@ -105,7 +105,7 @@
                     <div class="flex-1">
                         <label for="disabledInput" class="block mb-2">Job Code</label>
                         <div class="relative">
-                            <input type="text" id="job_code" name="job_code" disabled
+                            <input type="text" id="job_code"  x-ref="job_code" name="job_code" x-model="formData.job_code" disabled
                                 class="w-full h-12 px-4 bg-gray-100 text-gray-500 border border-gray-300 rounded-md shadow-sm focus:outline-none cursor-not-allowed appearance-none" />
                         </div>
                     </div>
@@ -115,7 +115,7 @@
                     <div class="flex-1">
                         <label for="jobTitleEmailSignature" class="block mb-2">Job Title for Email Signature</label>
                         <div class="relative">
-                            <input type="text" name="alternative_job_title" id="jobTitleEmailSignature"
+                            <input type="text"  x-ref="jobTitleEmailSignature" name="alternative_job_title" x-model="formData.jobTitleEmailSignature" id="jobTitleEmailSignature"
                                 name="jobTitleEmailSignature"
                                 class="w-full h-12 px-4 text-gray-500 border border-gray-300 rounded-md shadow-sm focus:outline-none" />
                         </div>
@@ -391,7 +391,7 @@
                 <div class="mt-4">
                     <label for="jobAttachment" class="block text-sm font-medium text-gray-700 mb-2">Job
                         Attachment</label>
-                    <input name="attachment" type="file" id="jobAttachment" name="jobAttachment"
+                    <input name="attachment" type="file" id="jobAttachment" name="jobAttachment" @change="handleFileUpload"
                         class="block w-full px-2 py-3 text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none" />
                 </div>
             </div>
@@ -530,7 +530,7 @@
                 <div class="flex space-x-4 mb-4">
                     <div class="flex-1">
                         <label class="block mb-2">Sub Ledger Type</label>
-                        <select name="ledger_type" x-model="formData.subLedgerType"
+                        <select name="ledger_type_id" x-model="formData.subLedgerType"
                             class="w-full select2-single custom-style" data-field="subLedgerType" id="ledger_type">
 
                             <option value="">Select Sub Ledger Type</option>
