@@ -348,6 +348,36 @@
 
               </ul>
             </li>
+
+            <li x-data="{ open: false }">
+              <button
+                @click="open = !open"
+                class="flex items-center w-full p-2 text-white rounded-lg hover:bg-gray-700 overflow-hidden"
+                :class="{'justify-center': miniSidebar}"
+              >
+                <i class="fas fa-cog w-6 h-6"></i>
+                <span
+                  class="flex-1 ml-3 text-left whitespace-nowrap"
+                  x-show="!miniSidebar"
+                  x-cloak
+                  >System Users</span
+                >
+                <i
+                  class="fas fa-chevron-down ml-auto"
+                  x-show="!miniSidebar"
+                  x-cloak
+                ></i>
+              </button>
+              <ul x-show="open" class="py-2 space-y-2" x-cloak>
+                <!-- Account Code Menu Item -->
+                <li class="{{ request()->routeIs('admin.admin-users.index') ? 'active' : '' }}">
+                  <a href="{{ route('admin.admin-users.index') }}"
+                      class="flex items-center w-full p-2 text-white transition duration-75 pl-11 hover:bg-gray-700">
+                      Admin Users
+                  </a>
+                </li>
+              <ul>
+            </li> 
           </ul>
         </div>
       </aside>

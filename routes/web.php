@@ -10,6 +10,7 @@ use App\Http\Controllers\{
     TeamController,
     UserController,
     Admin\AdminController,
+    Admin\AdminManagementController,
     Client\ClientController,
     Auth\AuthController,
     Auth\ForgotPasswordController,
@@ -110,6 +111,7 @@ Route::middleware(['ensure_role_is_selected'])->group(function () {
 
             Route::match(['get', 'post'], 'division-branch-zone-config', [GenericDataController::class, 'divisionBranchZoneConfig'])->name('data.division_branch_zone_config');
 
+            Route::resource('admin-users', AdminManagementController::class);
 
             Route::match(['get', 'post'], 'setting/info', [GenericDataController::class, 'locationDetail'])->name('data.location');
 
