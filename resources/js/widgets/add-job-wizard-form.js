@@ -34,7 +34,8 @@ export default function wizardForm() {
       "Other Details",
     ],
     highestStepReached: 1,
-
+    // Property to store the selected file
+    attachmentFile: null,
     // Form Data
     formData: {
       jobLaborCategory: "",
@@ -52,7 +53,8 @@ export default function wizardForm() {
       candidatePhone: "",
       candidateEmail: "",
       workerPayRate: "0.00",
-      engageWorkerAs: "",
+      jobTitleEmailSignature:"",
+      // engageWorkerAs: "",
       laborType: "",
       startDate: "",
       endDate: "",
@@ -73,8 +75,9 @@ export default function wizardForm() {
       virtualRemote: "",
       estimatedExpense: "0.00",
       clientName: "",
+      job_code:"",
       businessUnits: [],
-      unitOfMeasure: "",
+      payment_type: "",
       timeType: "",
       estimatedHoursPerDay: "",
       workDaysPerWeek: "",
@@ -116,10 +119,22 @@ export default function wizardForm() {
         : this.selectedBusinessUnit;
 
       this.formData.businessUnits.push({
+        id:this.selectedBusinessUnit,
         unit: businessUnitText,
         percentage: parseFloat(this.budgetPercentage),
       });
-
+      let url = `/admin/division-load`;
+      let data = new FormData();
+                data.append('bu_id', this.selectedBusinessUnit);
+                
+                const updates = {
+                    '#regionZone': { type: 'select2append', field: 'zone' },
+                    '#branch': { type: 'select2append', field: 'branch' },
+                    '#division': { type: 'select2append', field: 'division' },
+                    // '#currency': { type: 'value', field: 'currency_class' },
+                    // Add more mappings as needed
+                };
+                ajaxCall(url,  'POST', [[updateElements, ['response', updates]]], data);
       this.selectedBusinessUnit = "";
       this.budgetPercentage = "";
       $(this.$refs.businessUnitSelect).val("").trigger("change");
@@ -129,6 +144,11 @@ export default function wizardForm() {
 
     removeBusinessUnit(index) {
       this.formData.businessUnits.splice(index, 1);
+    },
+
+    // Handle file selection
+    handleFileUpload(event) {
+      this.attachmentFile = event.target.files[0]; // Store the selected file
     },
 
     getTotalPercentage() {
@@ -399,8 +419,8 @@ export default function wizardForm() {
                 this.formData.candidateLastName.trim() !== "" &&
                 this.isValidPhone(this.formData.candidatePhone) &&
                 this.isValidEmail(this.formData.candidateEmail) &&
-                this.isValidPayRate(this.formData.workerPayRate) &&
-                this.formData.engageWorkerAs !== "")) &&
+                this.isValidPayRate(this.formData.workerPayRate) 
+                )) &&
             this.formData.laborType !== "" &&
             this.formData.startDate.trim() !== "" &&
             this.formData.endDate.trim() !== "" &&
@@ -428,7 +448,7 @@ export default function wizardForm() {
           );
         case 4:
           return (
-            this.formData.unitOfMeasure !== "" &&
+            this.formData.payment_type !== "" &&
             this.formData.timeType !== "" &&
             this.formData.estimatedHoursPerDay !== "" &&
             this.formData.workDaysPerWeek !== "" &&
@@ -470,7 +490,7 @@ export default function wizardForm() {
         (this.formData.clientBillable !== "yes" ||
           this.formData.clientName.trim() !== "") &&
         this.isBusinessUnitValid &&
-        this.formData.unitOfMeasure !== "" &&
+        this.formData.payment_type !== "" &&
         this.formData.timeType !== "" &&
         this.formData.estimatedHoursPerDay !== "" &&
         this.formData.workDaysPerWeek !== "" &&
@@ -480,17 +500,38 @@ export default function wizardForm() {
       );
     },
     submitForm() {
+     
       this.showErrors = true;
       if (this.isFormValid) {
+        
         console.log("Form submitted:", this.formData);
+        let formData = new FormData();
+        Object.keys(this.formData).forEach((key) => {
+          if (Array.isArray(this.formData[key])) {
+            // If the key is an array (like businessUnits), handle each item
+            this.formData[key].forEach((item, index) => {
+              formData.append(`${key}[${index}]`, JSON.stringify(item));
+            });
+          } else {
+            formData.append(key, this.formData[key]);
+          }
+        });
+        formData.append("job_code", this.formData.job_code);
+        formData.append("jobTitleEmailSignature", this.formData.jobTitleEmailSignature);
+        // Append the file (if any)
+      if (this.attachmentFile) {
+        formData.append("attachment", this.attachmentFile);
+      }
+      
+        ajaxCall('/admin/career-opportunities','POST', [[onSuccess, ['response']]], formData);
         this.showSuccessMessage = true;
-        this.resetForm();
-        this.currentStep = 1;
-        this.highestStepReached = 1;
-        this.formSubmitted = true;
-        setTimeout(() => {
-          this.showSuccessMessage = false;
-        }, 5000);
+        // this.resetForm();
+        // this.currentStep = 1;
+        // this.highestStepReached = 1;
+        // this.formSubmitted = true;
+        // setTimeout(() => {
+        //   this.showSuccessMessage = false;
+        // }, 5000);
       } else {
         console.log("Form is invalid. Please check the errors.");
       }
@@ -516,7 +557,8 @@ export default function wizardForm() {
         candidatePhone: "",
         candidateEmail: "",
         workerPayRate: "0.00",
-        engageWorkerAs: "",
+        jobTitleEmailSignature:"",
+        // engageWorkerAs: "",
         laborType: "",
         jobDescriptionEditor: "",
         qualificationSkillsEditor: "",
@@ -529,14 +571,15 @@ export default function wizardForm() {
         glCode: "",
         subLedgerType: "",
         subLedgerCode: "",
-        workerType: "default",
+        workerType: "",
         clientBillable: "",
         requireOT: "",
         virtualRemote: "",
         estimatedExpense: "0.00",
         clientName: "",
+        job_code:"",
         businessUnits: [],
-        unitOfMeasure: "",
+        payment_type: "",
         timeType: "",
         estimatedHoursPerDay: "",
         workDaysPerWeek: "",

@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller as BaseController;
 use Illuminate\Http\Request;
 use App\Models\JobTemplates;
+use App\Models\GenericData;
 use App\Models\TemplateRatecard;
+use App\Models\DivisionBranchZoneConfig;
 use Yajra\DataTables\Facades\DataTables;
 
 class CatalogController extends BaseController
@@ -46,7 +48,7 @@ class CatalogController extends BaseController
                     ->make(true);
         }
         // Logic to get and display catalog items
-        return view('admin.job.catalog.index'); // Assumes you have a corresponding Blade view
+        return view('admin.career_opportunities.catalog.index'); // Assumes you have a corresponding Blade view
     }
 
     /**
@@ -56,7 +58,7 @@ class CatalogController extends BaseController
      */
     public function create()
     {
-        return view('admin.job.catalog.create', [
+        return view('admin.career_opportunities.catalog.create', [
             'job' => [],'ratecards' => []
         ]); // Assumes you have a corresponding Blade view
     }
@@ -157,7 +159,7 @@ class CatalogController extends BaseController
         $job = JobTemplates::findOrFail($id);
         $categoryTitle = $job->category->title;
         $profileWorkerTypeTitle = $job->profileWorkerType->title;
-        return view('admin.job.catalog.view', compact('job', 'categoryTitle', 'profileWorkerTypeTitle', 'templateratecard'));
+        return view('admin.career_opportunities.catalog.view', compact('job', 'categoryTitle', 'profileWorkerTypeTitle', 'templateratecard'));
     }
 
     /**
@@ -194,7 +196,7 @@ class CatalogController extends BaseController
         });
         // dd($ratecardsArray);
 
-        return view('admin.job.catalog.create', [
+        return view('admin.career_opportunities.catalog.create', [
             'job' => $job,'ratecards' => $ratecardsArray
         ] );
     }
@@ -339,15 +341,71 @@ class CatalogController extends BaseController
             ->first();
             $response['min_bill_rate'] = $template_rates->min_bill_rate;
             $response['max_bill_rate'] = $template_rates->bill_rate;
-            $response['currency'] = $template_rates->currency;
+            $response['currency'] = $template_rates->currency_id;
             // $currencySetting = Setting::model()->findByPk($template_rates->currency);
             // $response['currency_class'] = $currencySetting->value;
             }
-
-        
-
-        
-
         echo json_encode($response);
+    }
+
+    public function divisionLoad(Request $request)
+    {
+        $id = $request->input('bu_id');
+
+        $response = [
+            'zone' => '<option  value="" > Select Option</option>',
+            'branch' => '<option  value=""> Select Option</option>',
+            'division' => '<option  value=""> Select Option</option>',
+        ];
+
+        // Fetch job branches
+        $jobBranches = DivisionBranchZoneConfig::whereIn('bu_id', [$id])
+            ->where('status', 'active')
+            ->distinct()
+            ->pluck('branch_id');
+
+        foreach ($jobBranches as $branchId) {
+            $jobBranch = GenericData::where('id', $branchId)
+                ->where('status', 'active')
+                ->first();
+
+            if ($jobBranch) {
+                $response['branch'] .= '<option data-id="' . $jobBranch->id . '" value="' . $jobBranch->id . '">' . $jobBranch->name . '</option>';
+            }
+        }
+
+        // Fetch job zones
+        $jobZones = DivisionBranchZoneConfig::whereIn('bu_id', [$id])
+            ->where('status', 1)
+            ->distinct()
+            ->pluck('zone_id');
+
+        foreach ($jobZones as $zoneId) {
+            $jobZone = GenericData::where('id', $zoneId)
+                ->where('status', 'active')
+                ->first();
+
+            if ($jobZone) {
+                $response['zone'] .= '<option data-id="' . $jobZone->id . '" value="' . $jobZone->id . '">' . $jobZone->name . '</option>';
+            }
+        }
+
+        // Fetch job divisions
+        $jobDivisions = DivisionBranchZoneConfig::whereIn('bu_id', [$id])
+            ->where('status', 1)
+            ->distinct()
+            ->pluck('division_id');
+
+        foreach ($jobDivisions as $devisionId) {
+            $jobDivision = GenericData::where('id', $devisionId)
+                ->where('status', 'active')
+                ->first();
+
+            if ($jobDivision) {
+                $response['division'] .= '<option data-id="' . $jobDivision->id . '" value="' . $jobDivision->id . '">' . $jobDivision->name . '</option>';
+            }
+        }
+
+        return response()->json($response);
     }
 }
