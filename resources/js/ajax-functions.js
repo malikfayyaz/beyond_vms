@@ -109,7 +109,7 @@ function initializeDataTable(tableId, ajaxUrl, columns) {
                   element.html(data[updateType.field]);
                   break;
               case 'value':
-                  element.val(data[updateType.field]);
+                  element.val(data[updateType.field]).trigger('input');
                   break;
               case 'select2':
                 element.val(data[updateType.field]).trigger("change.select2");

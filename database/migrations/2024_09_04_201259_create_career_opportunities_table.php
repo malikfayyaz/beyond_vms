@@ -90,7 +90,8 @@ return new class extends Migration
             $table->enum('expenses_allowed', ['Yes', 'No'])->default('No');
             $table->enum('retiree', ['Yes', 'No'])->default('No');
             $table->enum('travel_required', ['Yes', 'No'])->default('No');
-            $table->foreignId('ledger_type_id')->constrained('settings')->onDelete('cascade');
+            $table->string('ledger_type_id')->nullable();
+            $table->integer('job_code')->nullable();
             $table->string('ledger_code')->nullable();
             $table->string('client_name', 255)->nullable();
             $table->integer('rejected_by')->nullable()->default(0);

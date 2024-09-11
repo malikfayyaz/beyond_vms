@@ -4,7 +4,8 @@ import {
   isFieldValid,
 } from "./validationMessages.js";
 
-export default function wizardForm() {
+
+export default function wizardForm(careerOpportunity = null,businessUnitsData = null) {
   return {
     currentStep: 1,
     showErrors: false,
@@ -35,58 +36,58 @@ export default function wizardForm() {
     ],
     highestStepReached: 1,
     // Property to store the selected file
-    attachmentFile: null,
+    attachmentFile: careerOpportunity?.attachment || null,
     // Form Data
     formData: {
-      jobLaborCategory: "",
-      jobTitle: "",
-      hiringManager: "",
-      jobLevel: "",
-      workLocation: "",
-      currency: "",
-      billRate: "0.00",
-      maxBillRate: "0.00",
-      preIdentifiedCandidate: "",
-      candidateFirstName: "",
-      candidateMiddleName: "",
-      candidateLastName: "",
-      candidatePhone: "",
-      candidateEmail: "",
-      workerPayRate: "0.00",
-      jobTitleEmailSignature:"",
-      // engageWorkerAs: "",
-      laborType: "",
-      startDate: "",
-      endDate: "",
-      jobDescriptionEditor: "",
-      qualificationSkillsEditor: "",
-      additionalRequirementEditor: "",
-      division: "",
-      regionZone: "",
-      branch: "",
-      expensesAllowed: "",
-      travelRequired: "",
-      glCode: "",
-      subLedgerType: "",
-      subLedgerCode: "",
-      workerType: "default", // Set default value
-      clientBillable: "",
-      requireOT: "",
-      virtualRemote: "",
-      estimatedExpense: "0.00",
-      clientName: "",
-      job_code:"",
-      businessUnits: [],
-      payment_type: "",
-      timeType: "",
-      estimatedHoursPerDay: "",
-      workDaysPerWeek: "",
-      numberOfPositions: "",
-      businessReason: "",
-      regularCost: "0.00",
-      singleResourceCost: "0.00",
-      allResourcesRegularCost: "0.00",
-      allResourcesCost: "0.00",
+      jobLaborCategory:careerOpportunity?.cat_id || "",
+      jobTitle:careerOpportunity?.template_id || "",
+      hiringManager:careerOpportunity?.hiring_manager || "",
+      jobLevel:careerOpportunity?.job_level || "",
+      workLocation:careerOpportunity?.location_id || "",
+      currency:careerOpportunity?.currency_id || "",
+      billRate: careerOpportunity?.min_bill_rate || "0.00",
+      maxBillRate: careerOpportunity?.max_bill_rate || "0.00",
+      preIdentifiedCandidate:careerOpportunity?.pre_candidate || "",
+      candidateFirstName:careerOpportunity?.pre_name || "",
+      candidateMiddleName:careerOpportunity?.pre_middle_name || "",
+      candidateLastName:careerOpportunity?.pre_last_name || "",
+      candidatePhone:careerOpportunity?.candidate_phone || "",
+      candidateEmail:careerOpportunity?.candidate_email || "",
+      workerPayRate: careerOpportunity?.pre_current_rate || "0.00",
+      jobTitleEmailSignature:careerOpportunity?.alternative_job_title || "",
+      // engageWorkerAs: careerOpportunity?.job_title || "",
+      laborType: careerOpportunity?.labour_type || "",
+      startDate: careerOpportunity?.start_date || "",
+      endDate: careerOpportunity?.end_date || "",
+      jobDescriptionEditor: careerOpportunity?.description || "",
+      qualificationSkillsEditor: careerOpportunity?.skills || "",
+      additionalRequirementEditor: careerOpportunity?.internal_notes || "",
+      division: careerOpportunity?.division_id || "",
+      regionZone: careerOpportunity?.region_zone_id || "",
+      branch: careerOpportunity?.branch_id || "",
+      expensesAllowed: careerOpportunity?.expenses_allowed || "",
+      travelRequired: careerOpportunity?.travel_required || "",
+      glCode: careerOpportunity?.gl_code_id || "",
+      subLedgerType: careerOpportunity?.ledger_type_id || "",
+      subLedgerCode: careerOpportunity?.ledger_code || "",
+      workerType: careerOpportunity?.worker_type_id || "", // Set default value
+      clientBillable: careerOpportunity?.client_billable || "",
+      requireOT: careerOpportunity?.background_check_required || "",
+      virtualRemote: careerOpportunity?.remote_option || "",
+      estimatedExpense: careerOpportunity?.expense_cost || "0.00",
+      clientName: careerOpportunity?.client_name || "",
+      job_code:careerOpportunity?.job_code || "",
+      businessUnits: businessUnitsData || [],
+      payment_type: careerOpportunity?.payment_type || "",
+      timeType: careerOpportunity?.type_of_job || "",
+      estimatedHoursPerDay: careerOpportunity?.hours_per_day || "",
+      workDaysPerWeek: careerOpportunity?.day_per_week || "",
+      numberOfPositions: careerOpportunity?.num_openings || "",
+      businessReason: careerOpportunity?.hire_reason_id || "",
+      regularCost: careerOpportunity?.regular_hours_cost || "0.00",
+      singleResourceCost: careerOpportunity?.single_resource_total_cost || "0.00",
+      allResourcesRegularCost: careerOpportunity?.all_resources_total_cost || "0.00",
+      allResourcesCost: careerOpportunity?.pre_total_estimate_code || "0.00",
       regularHours: "8",
       numberOfWeeks: "0 Weeks 1 Days",
       termsAccepted: false,
@@ -94,6 +95,17 @@ export default function wizardForm() {
     selectedBusinessUnit: "",
     budgetPercentage: "",
     businessUnitErrorMessage: "",
+
+    
+     // Define the formatDate method
+     formatDate(dateStr) {
+      if (!dateStr) return "";
+      const date = new Date(dateStr);
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const day = String(date.getDate()).padStart(2, '0');
+      return `${year}/${month}/${day}`;
+    },
     // Business unit script start from here
     addBusinessUnit() {
       if (!this.selectedBusinessUnit || !this.budgetPercentage) {
@@ -123,6 +135,8 @@ export default function wizardForm() {
         unit: businessUnitText,
         percentage: parseFloat(this.budgetPercentage),
       });
+      console.log(this.formData.businessUnits);
+      
       let url = `/admin/division-load`;
       let data = new FormData();
                 data.append('bu_id', this.selectedBusinessUnit);
@@ -342,6 +356,8 @@ export default function wizardForm() {
       });
     },
     init() {
+      console.log(this.formData.businessUnits);
+      
       this.initSelect2();
       this.initQuill([
         "jobDescriptionEditor",
@@ -349,11 +365,48 @@ export default function wizardForm() {
         "additionalRequirementEditor",
       ]);
       this.initFlatpickr();
+     
+             // If in edit mode, populate the form with initialData
+      if (careerOpportunity.id) {
+
+        if (this.formData.startDate) {
+          this.formData.startDate = this.formatDate(this.formData.startDate);
+        }
+        if (this.formData.endDate) {
+          this.formData.endDate = this.formatDate(this.formData.endDate);
+        }
+            var isLedgerCodeRequired = careerOpportunity.ledger_type_id == "33";
+            console.log(isLedgerCodeRequired);
+            $("#ledger_code").prop('required', isLedgerCodeRequired);
+            $(".ledger_code_").toggleClass('fa-asterisk', isLedgerCodeRequired);
+            $(".ledger_code__").toggle(isLedgerCodeRequired);
+        // If the quill editors need to load data
+        this.$nextTick(() => {
+          calculateRate();
+          if (this.quill) {
+            if (this.quill.jobDescriptionEditor) {
+              this.quill.jobDescriptionEditor.root.innerHTML =
+                careerOpportunity.description || "";
+               
+            }
+            if (this.quill.qualificationSkillsEditor) {
+              this.quill.qualificationSkillsEditor.root.innerHTML =
+                careerOpportunity.skills || "";
+            }
+            if (this.quill.additionalRequirementEditor) {
+              this.quill.additionalRequirementEditor.root.innerHTML =
+                careerOpportunity.internal_notes || "";
+            }
+          }
+        });
+      }
+    
     },
 
     initFlatpickr() {
       flatpickr("#startDate", {
         dateFormat: "Y/m/d",
+        defaultDate: this.formData.startDate || null,
         onChange: (selectedDates, dateStr) => {
           this.formData.startDate = dateStr;
           this.endDatePicker.set("minDate", dateStr);
@@ -362,6 +415,7 @@ export default function wizardForm() {
 
       this.endDatePicker = flatpickr("#endDate", {
         dateFormat: "Y/m/d",
+        defaultDate: this.formData.endDate || null,
         onChange: (selectedDates, dateStr) => {
           this.formData.endDate = dateStr;
         },
@@ -414,7 +468,7 @@ export default function wizardForm() {
         case 2:
           return (
             this.formData.preIdentifiedCandidate !== "" &&
-            (this.formData.preIdentifiedCandidate !== "yes" ||
+            (this.formData.preIdentifiedCandidate !== "Yes" ||
               (this.formData.candidateFirstName.trim() !== "" &&
                 this.formData.candidateLastName.trim() !== "" &&
                 this.isValidPhone(this.formData.candidatePhone) &&
@@ -440,9 +494,12 @@ export default function wizardForm() {
             this.formData.clientBillable !== "" &&
             this.formData.requireOT !== "" &&
             this.formData.virtualRemote !== "" &&
-            (this.formData.expensesAllowed !== "yes" ||
-              this.isValidEstimatedExpense(this.formData.estimatedExpense)) &&
-            (this.formData.clientBillable !== "yes" ||
+            (this.formData.expensesAllowed !== "Yes" ||
+              this.isValidEstimatedExpense(this.formData.estimatedExpense))
+              &&
+            (this.formData.subLedgerType !== 33 ||
+              this.formData.subLedgerCode.trim() !== "") &&
+            (this.formData.clientBillable !== "Yes" ||
               this.formData.clientName.trim() !== "") &&
             this.isBusinessUnitValid
           );
@@ -485,10 +542,12 @@ export default function wizardForm() {
         this.formData.clientBillable !== "" &&
         this.formData.requireOT !== "" &&
         this.formData.virtualRemote !== "" &&
-        (this.formData.expensesAllowed !== "yes" ||
+        (this.formData.expensesAllowed !== "Yes" ||
           this.isValidEstimatedExpense(this.formData.estimatedExpense)) &&
-        (this.formData.clientBillable !== "yes" ||
+        (this.formData.clientBillable !== "Yes" ||
           this.formData.clientName.trim() !== "") &&
+          (this.formData.subLedgerType !== 33 ||
+            this.formData.subLedgerCode.trim() !== "") &&
         this.isBusinessUnitValid &&
         this.formData.payment_type !== "" &&
         this.formData.timeType !== "" &&
@@ -504,7 +563,8 @@ export default function wizardForm() {
       this.showErrors = true;
       if (this.isFormValid) {
         
-        console.log("Form submitted:", this.formData);
+        console.log("Form submitted:", this.formData.job_code);
+       
         let formData = new FormData();
         Object.keys(this.formData).forEach((key) => {
           if (Array.isArray(this.formData[key])) {
@@ -522,8 +582,14 @@ export default function wizardForm() {
       if (this.attachmentFile) {
         formData.append("attachment", this.attachmentFile);
       }
-      
-        ajaxCall('/admin/career-opportunities','POST', [[onSuccess, ['response']]], formData);
+      if(careerOpportunity.id) {
+      formData.append('_method', 'PUT'); 
+      }
+      let methodtype = careerOpportunity.id ? 'POST' : 'POST';
+      const url = careerOpportunity.id
+        ? `/admin/career-opportunities/${careerOpportunity.id}`
+        : "/admin/career-opportunities";
+        ajaxCall(url,methodtype, [[onSuccess, ['response']]], formData);
         this.showSuccessMessage = true;
         // this.resetForm();
         // this.currentStep = 1;

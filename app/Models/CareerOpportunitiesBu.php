@@ -22,4 +22,9 @@ class CareerOpportunitiesBu extends Model
     {
         return $this->belongsTo(CareerOpportunity::class);
     }
+
+    public function buName()
+    {
+        return $this->belongsTo(GenericData::class, 'bu_unit');
+    }
 }

@@ -13,4 +13,9 @@ class CareerOpportunity extends Model
         // List attributes you want to guard from mass assignment
         // e.g., 'id', 'created_at', 'updated_at'
     ];
+
+    public function careerOpportunitiesBu()
+    {
+        return $this->hasMany(CareerOpportunitiesBu::class, 'career_opportunity_id');
+    }
 }

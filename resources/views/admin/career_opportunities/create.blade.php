@@ -5,8 +5,9 @@
 @include('admin.layouts.partials.dashboard_side_bar')
 <div class="ml-16">
     @include('admin.layouts.partials.header')
-    <div class="bg-white mx-4 my-8 rounded p-8" x-data="wizardForm()" x-init="$nextTick(() => init())">
-        <!-- Success Notification -->
+    <div class="bg-white mx-4 my-8 rounded p-8" x-data='wizardForm({!! json_encode($careerOpportunity) !!},{!! json_encode($businessUnitsData) !!})' x-init="$nextTick(() => init())">
+    
+    <!-- Success Notification -->
         @include('admin.layouts.partials.alerts')
         <!-- Include the partial view -->
         <!-- <div
@@ -70,8 +71,11 @@
             </div>
         </div>
         <!-- Wizard form steps -->
-        <form @submit.prevent="submitForm" id="addjobformwizard" enctype="multipart/form-data">
-            <!-- Step 1: Basic Info -->
+        <form @submit.prevent="submitForm" id="addjobformwizard" method="POST" enctype="multipart/form-data">
+         @if(isset($careerOpportunity->id))
+                @method('PUT')
+                @endif    
+        <!-- Step 1: Basic Info -->
             <div x-show="currentStep === 1">
                 <h2 class="text-2xl font-bold mb-4">Basic Information</h2>
                 <!-- Step 1: First row form fields -->
@@ -92,12 +96,26 @@
                         <p x-show="showErrors && !isFieldValid('jobLaborCategory')" class="text-red-500 text-sm mt-1"
                             x-text="getErrorMessageById('jobLaborCategory')"></p>
                     </div>
+                    @php
+                        $jobTemplates = [];
+                        if ($careerOpportunity !="") {
+                            $jobTemplates = \App\Models\JobTemplates::where([
+                                ['cat_id', $careerOpportunity->cat_id],
+                                ['profile_worker_type_id', 10],
+                                ['status', 'Active']
+                            ])->get(['id', 'job_title']);
+                        }
+                    @endphp
                     <div class="flex-1">
                         <label class="block mb-2">Job Title <span class="text-red-500">*</span></label>
                         <select x-ref="jobTitle" name="title" x-model="formData.jobTitle"
                             class="w-full select2-single custom-style" data-field="jobTitle" id="jobTitle">
                             <option value="">Select a job title</option>
-
+                            @foreach($jobTemplates as $template)
+                                <option value="{{ $template->id }}" >
+                                    {{ $template->job_title }}
+                                </option>
+                            @endforeach
                         </select>
                         <p x-show="showErrors && !isFieldValid('jobTitle')" class="text-red-500 text-sm mt-1"
                             x-text="getErrorMessageById('jobTitle')"></p>
@@ -231,8 +249,8 @@
                             x-model="formData.preIdentifiedCandidate" class="w-full select2-single custom-style"
                             data-field="preIdentifiedCandidate" id="preIdentifiedCandidate">
                             <option value="">Select</option>
-                            <option value="yes">Yes</option>
-                            <option value="no">No</option>
+                            <option value="Yes">Yes</option>
+                            <option value="No">No</option>
                         </select>
                         <p x-show="showErrors && !isFieldValid('preIdentifiedCandidate')"
                             class="text-red-500 text-sm mt-1" x-text="getErrorMessageById('preIdentifiedCandidate')">
@@ -242,7 +260,7 @@
                     <div class="flex-1"></div>
                 </div>
                 <!-- Step 2: Pre-Identified Candidate? on "Yes" form fields -->
-                <div x-show="formData.preIdentifiedCandidate === 'yes'" class="mt-4">
+                <div x-show="formData.preIdentifiedCandidate === 'Yes'" class="mt-4">
                     <div class="flex space-x-4 mb-4">
                         <div class="flex-1">
                             <label class="block mb-2">Candidate First Name
@@ -461,7 +479,9 @@
                         <select name="division_id" x-model="formData.division"
                             class="w-full select2-single custom-style" data-field="division" id="division">
                             <option value="">Select Division</option>
-
+                            @foreach (getActiveRecordsByType('division') as $record)
+                                <option value="{{ $record->id }}">{{ $record->name }}</option>
+                                @endforeach
                         </select>
                         <p x-show="showErrors && !isFieldValid('division')" class="text-red-500 text-sm mt-1"
                             x-text="getErrorMessageById('division')"></p>
@@ -471,7 +491,9 @@
                         <select name="region_zone_id" x-model="formData.regionZone"
                             class="w-full select2-single custom-style" data-field="regionZone" id="regionZone">
                             <option value="">Select Region/Zone</option>
-
+                            @foreach (getActiveRecordsByType('region-zone') as $record)
+                                <option value="{{ $record->id }}">{{ $record->name }}</option>
+                                @endforeach
                         </select>
                         <p x-show="showErrors && !isFieldValid('regionZone')" class="text-red-500 text-sm mt-1"
                             x-text="getErrorMessageById('regionZone')"></p>
@@ -481,7 +503,9 @@
                         <select name="branch_id" x-model="formData.branch" class="w-full select2-single custom-style"
                             data-field="branch" id="branch">
                             <option value="">Select Branch</option>
-
+                            @foreach (getActiveRecordsByType('branch') as $record)
+                                <option value="{{ $record->id }}">{{ $record->name }}</option>
+                                @endforeach
                         </select>
                         <p x-show="showErrors && !isFieldValid('branch')" class="text-red-500 text-sm mt-1"
                             x-text="getErrorMessageById('branch')"></p>
@@ -496,8 +520,8 @@
                             class="w-full select2-single custom-style" data-field="expensesAllowed"
                             id="expensesAllowed">
                             <option value="">Select</option>
-                            <option value="yes">Yes</option>
-                            <option value="no">No</option>
+                            <option value="Yes">Yes</option>
+                            <option value="No">No</option>
                         </select>
                         <p x-show="showErrors && !isFieldValid('expensesAllowed')" class="text-red-500 text-sm mt-1"
                             x-text="getErrorMessageById('expensesAllowed')"></p>
@@ -507,8 +531,8 @@
                         <select name="travel_required" x-model="formData.travelRequired"
                             class="w-full select2-single custom-style" data-field="travelRequired" id="travelRequired">
                             <option value="">Select</option>
-                            <option value="yes">Yes</option>
-                            <option value="no">No</option>
+                            <option value="Yes">Yes</option>
+                            <option value="No">No</option>
                         </select>
                         <p x-show="showErrors && !isFieldValid('travelRequired')" class="text-red-500 text-sm mt-1"
                             x-text="getErrorMessageById('travelRequired')"></p>
@@ -545,6 +569,8 @@
                                 style="display:none;">*</span></label>
                         <input name="ledger_code" type="text" id="ledger_code" x-model="formData.subLedgerCode"
                             class="w-full  h-12 px-4 text-gray-500 border border-gray-300 rounded-md shadow-sm focus:outline-none" />
+                            <p x-show="showErrors && !isFieldValid('subLedgerCode')" class="text-red-500 text-sm mt-1"
+                            x-text="getErrorMessageById('subLedgerCode')"></p>
                     </div>
                     <div class="flex-1">
                         <label class="block mb-2">Worker Type <span class="text-red-500">*</span></label>
@@ -564,8 +590,8 @@
                         <select name="client_billable" x-model="formData.clientBillable"
                             class="w-full select2-single custom-style" data-field="clientBillable" id="clientBillable">
                             <option value="">Select</option>
-                            <option value="yes">Yes</option>
-                            <option value="no">No</option>
+                            <option value="Yes">Yes</option>
+                            <option value="No">No</option>
                         </select>
                         <p x-show="showErrors && !isFieldValid('clientBillable')" class="text-red-500 text-sm mt-1"
                             x-text="getErrorMessageById('clientBillable')"></p>
@@ -576,8 +602,8 @@
                         <select name="background_check_required" x-model="formData.requireOT"
                             class="w-full select2-single custom-style" data-field="requireOT" id="requireOT">
                             <option value="">Select</option>
-                            <option value="yes">Yes</option>
-                            <option value="no">No</option>
+                            <option value="Yes">Yes</option>
+                            <option value="No">No</option>
                         </select>
                         <p x-show="showErrors && !isFieldValid('requireOT')" class="text-red-500 text-sm mt-1"
                             x-text="getErrorMessageById('requireOT')"></p>
@@ -588,8 +614,8 @@
                         <select name="remote_option" x-model="formData.virtualRemote"
                             class="w-full select2-single custom-style" data-field="virtualRemote" id="virtualRemote">
                             <option value="">Select</option>
-                            <option value="yes">Yes</option>
-                            <option value="no">No</option>
+                            <option value="Yes">Yes</option>
+                            <option value="No">No</option>
                         </select>
                         <p x-show="showErrors && !isFieldValid('virtualRemote')" class="text-red-500 text-sm mt-1"
                             x-text="getErrorMessageById('virtualRemote')"></p>
@@ -597,8 +623,8 @@
                 </div>
                 <!-- Form Fields for Client Name and Estimated Expense -->
                 <div class="flex space-x-4 mb-4"
-                    x-show="formData.expensesAllowed === 'yes' || formData.clientBillable === 'yes'">
-                    <div class="flex-1" x-show="formData.clientBillable === 'yes'">
+                    x-show="formData.expensesAllowed === 'Yes' || formData.clientBillable === 'Yes'">
+                    <div class="flex-1" x-show="formData.clientBillable === 'Yes'">
                         <label class="block mb-2">Client Name <span class="text-red-500">*</span></label>
                         <input name="client_name" type="text" x-model="formData.clientName"
                             class="w-full h-12 px-4 text-gray-500 border border-gray-300 rounded-md shadow-sm focus:outline-none"
@@ -606,7 +632,7 @@
                         <p x-show="showErrors && !isFieldValid('clientName')" class="text-red-500 text-sm mt-1"
                             x-text="getErrorMessageById('clientName')"></p>
                     </div>
-                    <div class="flex-1" x-show="formData.expensesAllowed === 'yes'">
+                    <div class="flex-1" x-show="formData.expensesAllowed === 'Yes'">
                         <label class="block mb-2">Estimated Expense
                             <span class="text-red-500">*</span></label>
                         <div class="relative">
