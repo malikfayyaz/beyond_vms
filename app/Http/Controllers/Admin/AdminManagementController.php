@@ -162,7 +162,8 @@ class AdminManagementController extends Controller
             'admin' => $admin,
             'roles' => $roles,
             'countries' => $countries,
-            'editMode' => true  
+            'editMode' => true ,
+            'editIndex' => $id  
         ]);  
     }
 
@@ -174,7 +175,7 @@ class AdminManagementController extends Controller
         $request->validate([
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
-            // 'email' => 'required|email|unique:admins,email,' . $id,
+            'email' => 'required|email|unique:admins,email,' . $id,
             'phone' => 'nullable|string|max:20',
             'role' => 'required|exists:roles,id',
             'country' => 'required|exists:countries,id',
@@ -205,7 +206,14 @@ class AdminManagementController extends Controller
 
         $admin->save();
 
-        return redirect()->route('admin.admin-users.index')->with('success', 'Admin updated successfully');
+        $successMessage = 'Admin updated successfully!';
+        session()->flash('success', $successMessage);
+    
+        return response()->json([
+            'success' => true,
+            'message' => $successMessage,
+            'redirect_url' =>  route("admin.admin-users.index")  // Redirect URL for AJAX
+        ]);
     }
 
 
