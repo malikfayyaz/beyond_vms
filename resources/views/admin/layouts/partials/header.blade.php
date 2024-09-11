@@ -206,10 +206,10 @@
                 <hr class="border-gray-200" />
 
                 <a
-                  href="#"
+                  href="{{ route('users.profile') }}"
                   class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center"
                 >
-                  <i class="fas fa-user w-5 h-5 mr-2"></i> My Profile
+                  <i class="fas fa-user w-5 h-5 mr-2"></i>My Profile
                 </a>
                 <a
                   href="#"
@@ -237,7 +237,7 @@
 
                 <a
                 href="#"
-                onclick="event.preventDefault(); 
+                onclick="event.preventDefault();
                         ajaxCall('{{ route('logout') }}', 'POST', [[onSuccess, ['response']]]);"
                 class="block px-4 py-2 text-sm text-red-600 hover:bg-gray-100 flex items-center"
               >
@@ -247,4 +247,3 @@
             </div>
           </div>
         </header>
-   
