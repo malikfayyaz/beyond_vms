@@ -9,6 +9,7 @@ use Spatie\Permission\Models\Role;
 use App\Models\Country;
 use App\Models\Admin;
 use App\Models\User;
+use Illuminate\Support\Facades\Hash;
 
 class AdminManagementController extends Controller
 {
@@ -120,10 +121,10 @@ class AdminManagementController extends Controller
         }else{
             $user = new User;      
             $user->name = $request->first_name;
-            $admin->email = $request->email;
-            $admin->password = Hash::make('password');
+            $user->email = $request->email;
+            $user->password = Hash::make('password');
 
-            $admin->save();
+            $user->save();
         }
 
         $successMessage = 'Admin created successfully!';
@@ -173,7 +174,7 @@ class AdminManagementController extends Controller
         $request->validate([
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
-            'email' => 'required|email|unique:admins,email,' . $id,
+            // 'email' => 'required|email|unique:admins,email,' . $id,
             'phone' => 'nullable|string|max:20',
             'role' => 'required|exists:roles,id',
             'country' => 'required|exists:countries,id',
@@ -184,7 +185,7 @@ class AdminManagementController extends Controller
         $admin = Admin::findOrFail($id);
         $admin->first_name = $request->first_name;
         $admin->last_name = $request->last_name;
-        $admin->email = $request->email;
+        // $admin->email = $request->email;
         $admin->phone = $request->phone;
         $admin->member_access = $request->role;
         $admin->country = $request->country;
