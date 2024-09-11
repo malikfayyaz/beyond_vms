@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use Spatie\Permission\Models\Role;
 use App\Models\Country;
 use App\Models\Admin;
+use App\Models\User;
 
 class AdminManagementController extends Controller
 {
@@ -28,9 +29,13 @@ class AdminManagementController extends Controller
                 return '<a href="'. route('admin.admin-users.show', $admin->id) .'" class="text-blue-500 hover:text-blue-700 mr-2 bg-transparent hover:bg-transparent">
                     <i class="fas fa-eye"></i>
                 </a>
-                        <a href="'. route('admin.admin-users.edit', $admin->id) .'"  class="text-green-500 hover:text-green-700 mr-2 bg-transparent hover:bg-transparent">
-                    <i class="fas fa-edit"></i>
-                </a>
+
+                <a href="' . route('admin.admin-users.edit', $admin->id) . '"
+                       class="text-green-500 hover:text-green-700 mr-2 bg-transparent hover:bg-transparent"
+                     >
+                       <i class="fas fa-edit"></i>
+                     </a>
+                
                         <form action="'. route('admin.admin-users.destroy', $admin->id) .'" method="POST" style="display:inline;" onsubmit="return confirm(\'Are you sure?\');">
                         ' . csrf_field() . method_field('DELETE') . '
                         <button type="submit" class="text-red-500 hover:text-red-700 bg-transparent hover:bg-transparent">
@@ -78,29 +83,57 @@ class AdminManagementController extends Controller
             'status' => 'required|string|in:active,inactive',
             'profile_image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ]);
-        // dd($user->id);
-        // Store data
-        $admin = new Admin;
-        $admin->user_id = $user->id;
-        $admin->first_name = $request->first_name;
-        $admin->last_name = $request->last_name;
-        $admin->email = $request->email;
-        $admin->phone = $request->phone;
-        $admin->member_access = $request->role; // Assuming you have a foreign key to roles in the Admin table
-        $admin->country = $request->country; // Assuming you have a foreign key to countries
-        $admin->status = $request->status;
 
-        // Handle the profile image upload if provided
-        if ($request->hasFile('profile_image')) {
-            $profileImage = $request->file('profile_image');
-            $imagePath = $profileImage->store('uploads/admin_images', 'public'); // Store in the public disk
-            $admin->profile_image = $imagePath;
+
+       $email_found = User::where('email', $request->email)->first();
+       if ($email_found) {
+            $adminRecord = Admin::where('user_id', $email_found->id)->first();
+            if ($adminRecord) {
+                $errorMessage = 'An admin record already exists for this email.';
+                session()->flash('error', $errorMessage);
+                return response()->json([
+                    'success' => false,
+                    'message' => $errorMessage,
+                    'redirect_url' => route('admin.admin-users.create') // Send back the URL to redirect to
+                ]);
+            } else{
+                 
+                $admin = new Admin;
+                $admin->user_id = $email_found->id;
+                $admin->first_name = $request->first_name;
+                $admin->last_name = $request->last_name;
+                $admin->email = $request->email;
+                $admin->phone = $request->phone;
+                $admin->member_access = $request->role; // Assuming you have a foreign key to roles in the Admin table
+                $admin->country = $request->country; // Assuming you have a foreign key to countries
+                $admin->status = $request->status;
+
+                // Handle the profile image upload if provided
+                if ($request->hasFile('profile_image')) {
+                    $profileImage = $request->file('profile_image');
+                    $imagePath = $profileImage->store('uploads/admin_images', 'public'); // Store in the public disk
+                    $admin->profile_image = $imagePath;
+                }
+
+                $admin->save();
+            }
+        }else{
+            $user = new User;      
+            $user->name = $request->first_name;
+            $admin->email = $request->email;
+            $admin->password = Hash::make('password');
+
+            $admin->save();
         }
 
-        $admin->save();
-
-        return redirect()->route('admin.admin-users.index')->with('success', 'Admin created successfully');
+        $successMessage = 'Admin created successfully!';
+        session()->flash('success', $successMessage);
     
+        return response()->json([
+            'success' => true,
+            'message' => $successMessage,
+            'redirect_url' =>  route("admin.admin-users.index")  // Redirect URL for AJAX
+        ]);
     }
 
     /**
@@ -119,12 +152,17 @@ class AdminManagementController extends Controller
      * Show the form for editing the specified resource.
      */
     public function edit($id)
-    {
+    { 
         $admin = Admin::findOrFail($id);
         $roles = Role::where('user_type_id', 1)->get();
         $countries = Country::all();
 
-        return view('admin.users.admin_users.edit', compact('admin', 'roles', 'countries'));
+        return view('admin.users.admin_users.create', [
+            'admin' => $admin,
+            'roles' => $roles,
+            'countries' => $countries,
+            'editMode' => true  
+        ]);  
     }
 
     /**
