@@ -55,6 +55,8 @@ Route::middleware(['ensure_role_is_selected'])->group(function () {
     Route::post('roles/{role}/assign-permission', [RoleController::class, 'assignPermission'])->name('roles.assignPermission');
     // User management routes
     Route::get('users', [UserController::class, 'index'])->name('users.index');
+    Route::get('users/profile', [UserController::class, 'profile'])->name('users.profile');
+    Route::post('users/profile', [UserController::class, 'profileUpdate'])->name('users.profileUpdate');
     Route::get('users/{user}/assign-role', [UserController::class, 'assignRoleForm'])->name('users.assignRoleForm');
     Route::post('users/{user}/assign-role', [UserController::class, 'assignRole'])->name('users.assignRole');
 
