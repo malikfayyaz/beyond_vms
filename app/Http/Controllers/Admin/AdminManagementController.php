@@ -9,6 +9,7 @@ use Spatie\Permission\Models\Role;
 use App\Models\Country;
 use App\Models\Admin;
 use App\Models\User;
+use Illuminate\Support\Facades\Hash;
 
 class AdminManagementController extends Controller
 {
@@ -120,10 +121,10 @@ class AdminManagementController extends Controller
         }else{
             $user = new User;      
             $user->name = $request->first_name;
-            $admin->email = $request->email;
-            $admin->password = Hash::make('password');
+            $user->email = $request->email;
+            $user->password = Hash::make('password');
 
-            $admin->save();
+            $user->save();
         }
 
         $successMessage = 'Admin created successfully!';
@@ -161,7 +162,8 @@ class AdminManagementController extends Controller
             'admin' => $admin,
             'roles' => $roles,
             'countries' => $countries,
-            'editMode' => true  
+            'editMode' => true ,
+            'editIndex' => $id  
         ]);  
     }
 
@@ -184,7 +186,7 @@ class AdminManagementController extends Controller
         $admin = Admin::findOrFail($id);
         $admin->first_name = $request->first_name;
         $admin->last_name = $request->last_name;
-        $admin->email = $request->email;
+        // $admin->email = $request->email;
         $admin->phone = $request->phone;
         $admin->member_access = $request->role;
         $admin->country = $request->country;
@@ -204,7 +206,14 @@ class AdminManagementController extends Controller
 
         $admin->save();
 
-        return redirect()->route('admin.admin-users.index')->with('success', 'Admin updated successfully');
+        $successMessage = 'Admin updated successfully!';
+        session()->flash('success', $successMessage);
+    
+        return response()->json([
+            'success' => true,
+            'message' => $successMessage,
+            'redirect_url' =>  route("admin.admin-users.index")  // Redirect URL for AJAX
+        ]);
     }
 
 
