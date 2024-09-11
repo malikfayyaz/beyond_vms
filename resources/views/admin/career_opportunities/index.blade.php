@@ -14,7 +14,7 @@
                  <button
                    class="px-4 py-2 bg-blue-500 capitalize text-white rounded disabled:opacity-50 ml-2"
                    :style="{'background-color': 'var(--primary-color)'}"
-                   onclick="window.location.href='{{ route('admin.catalog.create') }}'"
+                   onclick="window.location.href='{{ route('admin.career-opportunities.create') }}'"
                  >
                    add job 
                  </button>
