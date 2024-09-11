@@ -9,13 +9,6 @@ use App\Models\Country;
 
 class Admin extends Model
 {
-    protected $fillable = [
-        'first_name',
-        'last_name',
-        'description',
-        'profile_image',
-        'username', // Add this if you're updating the user_name field
-    ];
     use HasFactory;
 
      protected $fillable = [
