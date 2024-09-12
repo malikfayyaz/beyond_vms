@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller as BaseController;
+use App\Models\CareerOpportunity;
 use Illuminate\Http\Request;
 use App\Models\JobTemplates;
 use App\Models\GenericData;
@@ -15,14 +16,21 @@ class CatalogController extends BaseController
     /**
      * Display a listing of the catalog.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $data = JobTemplates::query();
+            $data = JobTemplates::with('category','profileWorkerType');
+/*            $data = JobTemplates::query();*/
             return Datatables::of($data)
                     ->addIndexColumn()
+                    ->addColumn('category', function($row) {
+                        return $row->cat_id ? $row->category->title : 'N/A';
+                    })
+                    ->addColumn('profile_worker_type', function ($row) {
+                        return $row->profileWorkerType ? $row->profileWorkerType->title : 'N/A';
+                    })
                     ->addColumn('action', function($row){
 
                             $btn = ' <a href="' . route('admin.catalog.show', $row->id) . '"
@@ -183,7 +191,7 @@ class CatalogController extends BaseController
 
             return $ratecard;
         });
-       
+
          // Format the rate cards data if necessary
         $ratecardsArray = $ratecards->map(function ($ratecard) {
             return [
@@ -225,7 +233,7 @@ class CatalogController extends BaseController
         $jobCatalogRateCardsJson = $request->input('jobCatalogRateCards');
         $jobCatalogRateCards = json_decode($jobCatalogRateCardsJson, true);
         $additionalData = [
-           
+
             'job_description' => $request->job_description,
         ];
 
@@ -246,11 +254,11 @@ class CatalogController extends BaseController
                     ['level_id', '=', $rateCardData['jobLevel']],
                     ['template_id', '=', $catalog->id]
                 ])->count();
-    
+
                 if ($existingRecordCount > 0) {
                     continue;
                 }
-    
+
                 // Create a new instance of TemplateRatecard
                 $rateCardModel = new TemplateRatecard();
                 $rateCardModel->template_id = $catalog->id;
@@ -258,11 +266,11 @@ class CatalogController extends BaseController
                 $rateCardModel->currency_id = $rateCardData['currency'];
                 $rateCardModel->bill_rate = str_replace(",", "", $rateCardData['maxBillRate']);
                 $rateCardModel->min_bill_rate = str_replace(",", "", $rateCardData['minBillRate']);
-    
+
                 // Ensure default values if empty
                 $rateCardModel->bill_rate = ($rateCardModel->bill_rate == '') ? 0.00 : $rateCardModel->bill_rate;
                 $rateCardModel->min_bill_rate = ($rateCardModel->min_bill_rate == '') ? 0.00 : $rateCardModel->min_bill_rate;
-    
+
                 // Save the model
                 if (!$rateCardModel->save()) {
                     // Handle save failure, if needed
@@ -270,7 +278,7 @@ class CatalogController extends BaseController
                 }
             }
         }
-       
+
 
                 $successMessage = 'Job catalog is updated successfully!';
                 session()->flash('success', $successMessage);
@@ -279,7 +287,7 @@ class CatalogController extends BaseController
                     'message' => $successMessage,
                     'redirect_url' => route('admin.catalog.index') // Redirect back URL for AJAX
                 ]);
-      
+
 
     }
 
@@ -300,7 +308,7 @@ class CatalogController extends BaseController
     }
 
     public function loadMarketJobTemplate($labourType,$type)
-    {   
+    {
         // Query the JobTemplate model
             $jobTemplates = JobTemplates::where([
                 ['cat_id', $labourType],
@@ -325,10 +333,10 @@ class CatalogController extends BaseController
         $level_id = $request->input('level_id');
         $jobTemplate = JobTemplates::find($id);
         $response = [];
-       
-       
-        
-           
+
+
+
+
             $response['job_description'] =  $jobTemplate->job_description;
             $response['job_family_id'] = $jobTemplate->job_family_id;
             $response['cat_id'] = $jobTemplate->cat_id;
