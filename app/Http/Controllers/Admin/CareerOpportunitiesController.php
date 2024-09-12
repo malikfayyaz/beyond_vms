@@ -83,7 +83,7 @@ class CareerOpportunitiesController extends BaseController
                 $validatedData = $this->validateJobOpportunity($request);
 
                 $businessUnits = $request->input('businessUnits');
-                // dd($validatedData);
+                // dd($businessUnits);
 
                 $jobTemplate = JobTemplates::findOrFail($validatedData['jobTitle']);
                 // Handle file upload
@@ -135,8 +135,8 @@ class CareerOpportunitiesController extends BaseController
 
         $businessUnitsData  = $careerOpportunity->careerOpportunitiesBu->map(function ($item) {
             return [
-                'id' => $item->bu_unit, 
-                'unit' => $item->buName->name, 
+                'id' => $item->id,
+                'unit' => $item->buName->name,
                 'percentage' => $item->percentage
             ];
         })->toArray();
@@ -265,12 +265,6 @@ class CareerOpportunitiesController extends BaseController
             'jobTitleEmailSignature' => 'nullable',
             'candidateMiddleName' => 'nullable',
             'job_code' => 'nullable',
-            'regularCost'=>'nullable',
-            'singleResourceCost'=>'nullable',
-            'allResourcesRegularCost'=>'nullable',
-            'allResourcesCost'=>'nullable',
-            'regularHours'=>'nullable',
-            'numberOfWeeks'=>'nullable',
         ]);
     }
     protected function mapJobData(array $validatedData, $jobTemplate, $request, $filename,$job= null)
@@ -327,15 +321,13 @@ class CareerOpportunitiesController extends BaseController
             'pre_middle_name' => $validatedData['candidateMiddleName'] ?? null,
             'ledger_type_id' => $validatedData['subLedgerType'] ?? null,
             'ledger_code' => $validatedData['subLedgerCode'] ?? null,
-            'regular_hours'=>removeComma($validatedData['regularCost']) ?? null,
-            'single_resource_total_cost'=> removeComma($validatedData['singleResourceCost']) ?? null,
-            'regular_hours_cost'=>removeComma($validatedData['allResourcesRegularCost']) ?? null,
-            'all_resources_total_cost'=>removeComma($validatedData['allResourcesCost']) ?? null,
-            'regular_hours'=>removeComma($validatedData['regularHours']) ?? null,
-            'hours_per_week'=>$validatedData['numberOfWeeks'] ?? null,
         ];
 
       
         return true;
     }
+
+    /**
+     * Display the specified resource.
+     */
 }
