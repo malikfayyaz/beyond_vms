@@ -49,7 +49,7 @@ return new class extends Migration
             $table->string('start_date', 55)->nullable();
             $table->string('end_date', 25)->nullable();
             $table->string('shift', 111)->nullable();
-            $table->string('hours_per_week', 11)->nullable();
+            $table->string('hours_per_week', 255)->nullable();
             $table->integer('hours_per_day')->nullable()->default(0);
             $table->integer('day_per_week')->nullable()->default(0);
             $table->string('background_verification', 11)->nullable();
