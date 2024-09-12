@@ -6,7 +6,7 @@
     <div class="ml-16">
         <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/alpine.min.js" defer></script>
         @include('admin.layouts.partials.header')
-        <div class="bg-white mx-4 my-8 rounded p-8" x-data="profileForm()">
+        <div class="bg-white mx-4 my-8 rounded p-8" x-data="profileForm()" enctype="multipart/form-data">
             @include('admin.layouts.partials.alerts') <!-- Include the partial view -->
             <div class="flex justify-between items-center mb-6">
                 <h2 class="text-2xl font-bold">Profile {{ucfirst($sessionrole)}}</h2>
@@ -72,9 +72,9 @@
                     @endif
                         <div class="flex-1">
                             <label for="profile_image" class="block mb-2">Profile Image</label>
-                            <input type="file" id="profile_image" x-model="profile_image" class="w-full">
-
-                            @if($user->profile_image)
+                            <input name="profile_image" type="file" id="profile_image" name="profile_image" @change="handleFileUpload"
+                                   class="block w-full px-2 py-3 text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none" />
+                           @if($user->profile_image)
                                 <p>Current File: {{ basename($user->profile_image) }}</p> <!-- Display the file name -->
                             @endif
 {{--                            <p x-show="profileImageError" class="text-red-500 text-sm mt-1" x-text="profileImageError"></p>--}}
@@ -147,6 +147,10 @@
                     business_name: "{{ $user->business_name }}",
                     profile_image: "{{ $user->profile_image }}",
                     description: "{{ $user->description }}",
+                    attachmentFile: null,
+                    handleFileUpload(event) {
+                        this.attachmentFile = event.target.files[0]; // Store the selected file
+                    },
                     submitData() {
                         const formData = new FormData();
                         formData.append('first_name', this.first_name);
@@ -156,27 +160,10 @@
                         formData.append('organization', this.organization);
                         formData.append('business_name', this.business_name);
                         formData.append('description', this.description);
-                        const profileImageInput = document.getElementById('profile_image');
-                        if (profileImageInput.files.length > 0) {
-                            formData.append('profile_image', profileImageInput.files[0]);
+                        if (this.attachmentFile) {
+                            formData.append("profile_image", this.attachmentFile);
                         }
-                        fetch("{{ route('users.profileUpdate') }}", {
-                            method: 'POST',
-                            body: formData,
-                            headers: {
-                                'X-Requested-With': 'XMLHttpRequest',
-                                'X-CSRF-TOKEN': "{{ csrf_token() }}"
-                            }
-                        })
-                            .then(response => response.json())
-                            .then(data => {
-                                if (data.success) {
-                                    alert(data.message);
-                                } else {
-                                    alert('Error: ' + data.message);
-                                }
-                            })
-                            .catch(error => console.error('Error:', error));
+                        ajaxCall('{{ route('users.profileUpdate') }}', 'POST', [[onSuccess, ['response']]], formData);
                     }
                 }
             }
