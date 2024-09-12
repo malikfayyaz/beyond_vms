@@ -1,4 +1,11 @@
 <?php
+
+require base_path('routes/client.php');
+require base_path('routes/program.php');
+require base_path('routes/vendor.php');
+require base_path('routes/consultant.php');
+
+
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\{
     Admin\RoleController,
