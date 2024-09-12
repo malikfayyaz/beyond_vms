@@ -345,6 +345,12 @@
                       Setting
                   </a>
               </li>
+              <li class="{{ request()->routeIs('admin.setting.markup') ? 'active' : '' }}">
+                  <a href="{{ route('admin.setting.markup') }}"
+                      class="flex items-center w-full p-2 text-white transition duration-75 pl-11 hover:bg-gray-700">
+                      Markup
+                  </a>
+              </li>
 
               </ul>
             </li>

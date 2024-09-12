@@ -63,6 +63,7 @@ class UserController extends Controller
     }
     public function profileUpdate(Request $request)
     {
+ //       dd($filename);
         $userId = auth()->id();
         $sessionrole = session('selected_role');
         if ($request->isMethod('post')) {
@@ -103,10 +104,9 @@ class UserController extends Controller
                 $successMessage = 'Client updated successfully!';
             }
             if ($user) {
-                if ($request->hasFile('profile_image')) {
-                    $originalName = $request->file('profile_image')->getClientOriginalName(); // Get the original file name
-                    $filePath = $request->file('profile_image')->storeAs('profile_images', $originalName, 'public'); // Save with the original file name
-                    $validatedData['profile_image'] = $filePath;  // Store file path in the validated data
+                $filename = handleFileUpload($request, 'profile_image', 'profile_images');
+                if ($filename) {
+                    $validatedData['profile_image'] = $filename; // Store file path in the validated data
                 }
                 $user->update($validatedData); // Update the user with validated data
                 session()->flash('success', $successMessage);

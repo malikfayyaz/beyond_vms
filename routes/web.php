@@ -1,4 +1,11 @@
 <?php
+
+require base_path('routes/client.php');
+require base_path('routes/program.php');
+require base_path('routes/vendor.php');
+require base_path('routes/consultant.php');
+
+
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\{
     Admin\RoleController,
@@ -123,6 +130,7 @@ Route::middleware(['ensure_role_is_selected'])->group(function () {
             // job routes
 
             Route::match(['get', 'post'], 'setting/info', [GenericDataController::class, 'settingDetail'])->name('setting.info');
+            Route::match(['get', 'post'], 'setting/markup', [GenericDataController::class, 'settingMarkup'])->name('setting.markup');
             // Route to fetch settings based on category
             Route::get('setting/fetch/{categoryId}', [GenericDataController::class, 'fetchSettings'])
             ->name('setting.fetch');

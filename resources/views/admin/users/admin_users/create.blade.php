@@ -102,7 +102,7 @@
                 email: '{{ old('email', $admin->email ?? '') }}',
                 phone: '{{ old('phone', $admin->phone ?? '') }}',
                 profile_image: null,
-                role: '{{ old('role', $admin->role ?? '') }}',
+                role: '{{ old('role', $admin->member_access ?? '') }}',
                 country: '{{ old('country', $admin->country ?? '') }}',
                 status: '{{ old('status', $admin->status ?? '') }}',
             },
@@ -204,7 +204,6 @@
 
             // Success handler
             onSuccess(response) {
-                console.log("Form submitted successfully", response);
                 
                 // Handle success case
                 if (response.success && response.redirect_url) {

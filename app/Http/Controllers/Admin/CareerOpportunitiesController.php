@@ -19,12 +19,22 @@ class CareerOpportunitiesController extends BaseController
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $data = CareerOpportunity::query();
+            $data = CareerOpportunity::with('hiringManager','workerType')
+            ->select('career_opportunities.*');
+            return DataTables::of($data)
+                ->addIndexColumn()
+                ->addColumn('hiring_manager', function($row) {
+                    return $row->hiringManager ? $row->hiringManager->first_name : 'N/A';
+                })
+                ->addColumn('worker_type', function($row) {
+                    return $row->workerType ? $row->workerType->title : 'N/A';
+                })
+/*            $data = CareerOpportunity::query();
             return Datatables::of($data)
-                    ->addIndexColumn()
+                    ->addIndexColumn()*/
                     ->addColumn('action', function($row){
 
-                            $btn = ' <a href="' . route('admin.catalog.show', $row->id) . '"
+                            $btn = ' <a href="' . route('admin.career-opportunities.show', $row->id) . '"
                        class="text-blue-500 hover:text-blue-700 mr-2 bg-transparent hover:bg-transparent"
                      >
                        <i class="fas fa-eye"></i>
@@ -34,7 +44,7 @@ class CareerOpportunitiesController extends BaseController
                      >
                        <i class="fas fa-edit"></i>
                      </a>';
-                     $deleteBtn = '<form action="' . route('admin.catalog.destroy', $row->id) . '" method="POST" style="display: inline-block;" onsubmit="return confirm(\'Are you sure?\');">
+                     $deleteBtn = '<form action="' . route('admin.career-opportunities.destroy', $row->id) . '" method="POST" style="display: inline-block;" onsubmit="return confirm(\'Are you sure?\');">
                      ' . csrf_field() . method_field('DELETE') . '
                      <button type="submit" class="text-red-500 hover:text-red-700 bg-transparent hover:bg-transparent">
                          <i class="fas fa-trash"></i>
@@ -69,7 +79,7 @@ class CareerOpportunitiesController extends BaseController
     public function store(Request $request)
     {
         try {
-       
+
                 $validatedData = $this->validateJobOpportunity($request);
 
                 $businessUnits = $request->input('businessUnits');
@@ -77,7 +87,7 @@ class CareerOpportunitiesController extends BaseController
 
                 $jobTemplate = JobTemplates::findOrFail($validatedData['jobTitle']);
                 // Handle file upload
-            
+
                 $filename = handleFileUpload($request, 'attachment', 'career_opportunities');
                 // Mapping form fields to database column names
                 $mappedData = $this->mapJobData($validatedData, $jobTemplate, $request, $filename);
@@ -85,7 +95,7 @@ class CareerOpportunitiesController extends BaseController
 
                 $this->syncBusinessUnits($request->input('businessUnits'), $job->id);
 
-    
+
                 session()->flash('success', 'Job saved successfully!');
                 return response()->json([
                     'success' => true,
@@ -107,7 +117,13 @@ class CareerOpportunitiesController extends BaseController
      */
     public function show(string $id)
     {
-        //
+        $job = CareerOpportunity::with('hiringManager')->findOrFail($id);
+
+        // Optionally, you can dump the data for debugging purposes
+        // dd($job); // Uncomment to check the data structure
+
+        // Return the view and pass the job data to it
+        return view('admin.career_opportunities.view', compact('job'));
     }
 
     /**
@@ -116,7 +132,7 @@ class CareerOpportunitiesController extends BaseController
     public function edit(string $id)
     {
         $careerOpportunity = CareerOpportunity::with('careerOpportunitiesBu')->findOrFail($id);
-       
+
         $businessUnitsData  = $careerOpportunity->careerOpportunitiesBu->map(function ($item) {
             return [
                 'id' => $item->bu_unit, 
@@ -139,7 +155,7 @@ class CareerOpportunitiesController extends BaseController
     {
         // dd($request);
         try {
-           
+
             $validatedData = $this->validateJobOpportunity($request);
 
             $job = CareerOpportunity::findOrFail($id);
@@ -168,7 +184,7 @@ class CareerOpportunitiesController extends BaseController
             ], 422);
         }
     }
-    
+
 
 
     /**
@@ -257,7 +273,6 @@ class CareerOpportunitiesController extends BaseController
             'numberOfWeeks'=>'nullable',
         ]);
     }
-
     protected function mapJobData(array $validatedData, $jobTemplate, $request, $filename)
     {
         return [
@@ -300,7 +315,6 @@ class CareerOpportunitiesController extends BaseController
             'hire_reason_id' => $validatedData['businessReason'],
             'start_date' => Carbon::createFromFormat('Y/m/d', $validatedData['startDate'])->format('Y-m-d'),
             'end_date' => Carbon::createFromFormat('Y/m/d', $validatedData['endDate'])->format('Y-m-d'),
-
             // Conditional fields
             'expense_cost' => $validatedData['estimatedExpense'] ?? null,
             'client_name' => $validatedData['clientName'] ?? null,
@@ -320,7 +334,30 @@ class CareerOpportunitiesController extends BaseController
             'regular_hours'=>removeComma($validatedData['regularHours']) ?? null,
             'hours_per_week'=>$validatedData['numberOfWeeks'] ?? null,
         ];
+
+        $job = CareerOpportunity::create( $mappedData );
+
+        $businessUnits = $request->input('businessUnits');
+
+        // Loop through the business units
+        foreach ($businessUnits as $unitJson) {
+            $unitData = json_decode($unitJson, true);
+
+            if (!empty($unitData) && isset($unitData['id'], $unitData['percentage'])) {
+                CareerOpportunitiesBu::create([
+                    'career_opportunity_id' => $job->id,
+                    'bu_unit' => $unitData['id'],
+                    'percentage' => $unitData['percentage'],
+                ]);
+            }
+        }
+
+
+        session()->flash('success', 'Job saved successfully!');
+        return response()->json([
+            'success' => true,
+            'message' => 'Job saved successfully!',
+            'redirect_url' => route('admin.career-opportunities.index') // Redirect back URL for AJAX
+        ]);
     }
-
-
 }
