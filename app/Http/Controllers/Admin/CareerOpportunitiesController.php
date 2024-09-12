@@ -83,7 +83,7 @@ class CareerOpportunitiesController extends BaseController
                 $validatedData = $this->validateJobOpportunity($request);
 
                 $businessUnits = $request->input('businessUnits');
-                // dd($validatedData);
+                // dd($businessUnits);
 
                 $jobTemplate = JobTemplates::findOrFail($validatedData['jobTitle']);
                 // Handle file upload
@@ -117,7 +117,13 @@ class CareerOpportunitiesController extends BaseController
      */
     public function show(string $id)
     {
-        //
+        $job = CareerOpportunity::with('hiringManager')->findOrFail($id);
+
+        // Optionally, you can dump the data for debugging purposes
+        // dd($job); // Uncomment to check the data structure
+
+        // Return the view and pass the job data to it
+        return view('admin.career_opportunities.view', compact('job'));
     }
 
     /**
@@ -129,8 +135,8 @@ class CareerOpportunitiesController extends BaseController
 
         $businessUnitsData  = $careerOpportunity->careerOpportunitiesBu->map(function ($item) {
             return [
-                'id' => $item->bu_unit, 
-                'unit' => $item->buName->name, 
+                'id' => $item->id,
+                'unit' => $item->buName->name,
                 'percentage' => $item->percentage
             ];
         })->toArray();
@@ -259,12 +265,6 @@ class CareerOpportunitiesController extends BaseController
             'jobTitleEmailSignature' => 'nullable',
             'candidateMiddleName' => 'nullable',
             'job_code' => 'nullable',
-            'regularCost'=>'nullable',
-            'singleResourceCost'=>'nullable',
-            'allResourcesRegularCost'=>'nullable',
-            'allResourcesCost'=>'nullable',
-            'regularHours'=>'nullable',
-            'numberOfWeeks'=>'nullable',
         ]);
     }
     protected function mapJobData(array $validatedData, $jobTemplate, $request, $filename)
@@ -321,12 +321,6 @@ class CareerOpportunitiesController extends BaseController
             'pre_middle_name' => $validatedData['candidateMiddleName'] ?? null,
             'ledger_type_id' => $validatedData['subLedgerType'] ?? null,
             'ledger_code' => $validatedData['subLedgerCode'] ?? null,
-            'regular_hours'=>removeComma($validatedData['regularCost']) ?? null,
-            'single_resource_total_cost'=> removeComma($validatedData['singleResourceCost']) ?? null,
-            'regular_hours_cost'=>removeComma($validatedData['allResourcesRegularCost']) ?? null,
-            'all_resources_total_cost'=>removeComma($validatedData['allResourcesCost']) ?? null,
-            'regular_hours'=>removeComma($validatedData['regularHours']) ?? null,
-            'hours_per_week'=>$validatedData['numberOfWeeks'] ?? null,
         ];
 
         $job = CareerOpportunity::create( $mappedData );
@@ -354,4 +348,8 @@ class CareerOpportunitiesController extends BaseController
             'redirect_url' => route('admin.career-opportunities.index') // Redirect back URL for AJAX
         ]);
     }
+
+    /**
+     * Display the specified resource.
+     */
 }
