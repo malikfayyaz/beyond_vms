@@ -1,9 +1,9 @@
-@extends('client.layouts.app')
+@extends('vendor.layouts.app')
 
 @section('content')
       <!-- Sidebar -->
-      @include('client.layouts.partials.dashboard_side_bar') <!-- Include the partial view -->
-      @include('client.layouts.partials.header')
+      @include('vendor.layouts.partials.dashboard_side_bar') <!-- Include the partial view -->
+      @include('vendor.layouts.partials.header')
       
 
       @endsection

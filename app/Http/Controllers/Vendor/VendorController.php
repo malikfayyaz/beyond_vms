@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers\Vendor;
 
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\Controller as BaseController;
 
-class VendorController extends Controller
+class VendorController extends BaseController
 {
     public function index()
     {

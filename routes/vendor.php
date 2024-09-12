@@ -2,10 +2,14 @@
 
 
 use Illuminate\Support\Facades\Route;
-
-Route::prefix('vendor')->group(function () {
-    Route::get('/', function(){
-    	dd(' i am in vendor view now');
+use App\Http\Controllers\{
+    Vendor\VendorController,
+    Vendor\SubmissionController,
+};
+Route::middleware(['user_role:vendor'])->group(function () {
+    Route::prefix('vendor')->name('vendor.')->group(function () {
+        Route::get('/dashboard', [VendorController::class, 'index'])->name('vendor.dashboard');
+        Route::resource('submission', SubmissionController::class);
     });
-    // Add more vendor-specific routes here
+
 });

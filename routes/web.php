@@ -78,8 +78,5 @@ Route::middleware(['ensure_role_is_selected'])->group(function () {
             ]);
     });
 
-    Route::middleware(['user_role:vendor'])->group(function () {
-        Route::get('/vendor/dashboard', [ClientController::class, 'index'])->name('vendor.dashboard');
-    });
-
+  
 });
