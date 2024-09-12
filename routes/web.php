@@ -8,6 +8,7 @@ use App\Http\Controllers\{
    
     TeamController,
     UserController,
+    Admin\RoleController,
     Client\ClientController,
     Auth\AuthController,
     Auth\ForgotPasswordController,

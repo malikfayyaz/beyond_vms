@@ -3,7 +3,6 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\{
-    Admin\RoleController,
     Admin\PermissionController,
     Admin\GenericDataController,
     Admin\CatalogController,
