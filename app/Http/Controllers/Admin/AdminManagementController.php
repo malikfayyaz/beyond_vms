@@ -17,39 +17,39 @@ class AdminManagementController extends Controller
      * Display a listing of the resource.
      */
     public function index(Request $request)
-{
-    if ($request->ajax()) {
-        // Eager load the role relationship
-        $admins = Admin::with('role')->select(['id', 'first_name', 'last_name', 'email', 'status', 'member_access'])->get();
-        
-        return datatables()->of($admins)
-            ->addColumn('role', function($admin) {
-                return $admin->role ? $admin->role->name : 'N/A'; // Access the role name
-            })
-            ->addColumn('action', function($admin) {
-                return '<a href="'. route('admin.admin-users.show', $admin->id) .'" class="text-blue-500 hover:text-blue-700 mr-2 bg-transparent hover:bg-transparent">
-                    <i class="fas fa-eye"></i>
-                </a>
+    {
+        if ($request->ajax()) {
+            // Eager load the role relationship
+            $admins = Admin::with('role')->select(['id', 'first_name', 'last_name', 'email', 'status', 'member_access'])->get();
+            
+            return datatables()->of($admins)
+                ->addColumn('role', function($admin) {
+                    return $admin->role ? $admin->role->name : 'N/A'; // Access the role name
+                })
+                ->addColumn('action', function($admin) {
+                    return '<a href="'. route('admin.admin-users.show', $admin->id) .'" class="text-blue-500 hover:text-blue-700 mr-2 bg-transparent hover:bg-transparent">
+                        <i class="fas fa-eye"></i>
+                    </a>
 
-                <a href="' . route('admin.admin-users.edit', $admin->id) . '"
-                       class="text-green-500 hover:text-green-700 mr-2 bg-transparent hover:bg-transparent"
-                     >
-                       <i class="fas fa-edit"></i>
-                     </a>
-                
-                        <form action="'. route('admin.admin-users.destroy', $admin->id) .'" method="POST" style="display:inline;" onsubmit="return confirm(\'Are you sure?\');">
-                        ' . csrf_field() . method_field('DELETE') . '
-                        <button type="submit" class="text-red-500 hover:text-red-700 bg-transparent hover:bg-transparent">
-                            <i class="fas fa-trash"></i>
-                        </button>
-                    </form>';
-            })
-            ->rawColumns(['action'])
-            ->make(true);
+                    <a href="' . route('admin.admin-users.edit', $admin->id) . '"
+                        class="text-green-500 hover:text-green-700 mr-2 bg-transparent hover:bg-transparent"
+                        >
+                        <i class="fas fa-edit"></i>
+                        </a>
+                    
+                            <form action="'. route('admin.admin-users.destroy', $admin->id) .'" method="POST" style="display:inline;" onsubmit="return confirm(\'Are you sure?\');">
+                            ' . csrf_field() . method_field('DELETE') . '
+                            <button type="submit" class="text-red-500 hover:text-red-700 bg-transparent hover:bg-transparent">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </form>';
+                })
+                ->rawColumns(['action'])
+                ->make(true);
+        }
+
+        return view('admin.users.admin_users.index');
     }
-
-    return view('admin.users.admin_users.index');
-}
 
 
 
@@ -97,7 +97,7 @@ class AdminManagementController extends Controller
                     'message' => $errorMessage,
                     'redirect_url' => route('admin.admin-users.create') // Send back the URL to redirect to
                 ]);
-            } else{
+            } else {
                  
                 $admin = new Admin;
                 $admin->user_id = $email_found->id;
@@ -118,7 +118,7 @@ class AdminManagementController extends Controller
 
                 $admin->save();
             }
-        }else{
+        } else {
             $user = new User;      
             $user->name = $request->first_name;
             $user->email = $request->email;
