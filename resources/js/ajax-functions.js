@@ -9,41 +9,59 @@ function initializeDataTable(tableId, ajaxUrl, columns) {
     });
   }
 
-   function ajaxCall(url, method, functionsOnSuccess = [], form = null) {
-    $.ajaxSetup({
-      headers: {
-        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-      }
-    });
+  async function ajaxCall(url, method, functionsOnSuccess = [], form = null) {
+    // CSRF token setup
+    const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
+    // If form is null, create an empty FormData object
     if (form === null) {
-      form = new FormData();
+        form = new FormData();
     }
 
-    console.log('before ajax', form.values);
+    console.log('before fetch', Array.from(form.entries()));
 
-    $.ajax({
-      url: url,
-      type: method,
-      async: true,
-      data: form,
-      processData: false,
-      contentType: false,
-      dataType: 'json',
-      error: function(xhr, textStatus, error) {
-        console.error('Error:', xhr.responseText);
-        console.error('Status:', xhr.statusText);
-        console.error('Text Status:', textStatus);
-        console.error('Error Thrown:', error);
-      },
-      success: function(response) {
-        functionsOnSuccess.forEach(function(funcArray) {
-          funcArray[1] = funcArray[1].map(arg => arg === "response" ? response : arg);
-          funcArray[0].apply(this, funcArray[1]);
+    // Initialize options for fetch
+    let fetchOptions = {
+        method: method,
+        headers: {
+            'X-CSRF-TOKEN': csrfToken,
+        }
+    };
+
+    // Handle GET requests: append form data to the URL as query string
+    if (method.toUpperCase() === 'GET') {
+        const queryParams = new URLSearchParams(form).toString();
+        url = queryParams ? `${url}?${queryParams}` : url;
+    } else {
+        // For non-GET requests (e.g., POST, PUT), add form data as body
+        fetchOptions.body = form;
+    }
+
+    try {
+        // Perform the fetch request
+        const response = await fetch(url, fetchOptions);
+
+        // Check if the response is ok
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        // Parse the JSON response
+        const data = await response.json();
+
+        // Execute success functions with the response data
+        functionsOnSuccess.forEach(funcArray => {
+            funcArray[1] = funcArray[1].map(arg => arg === "response" ? data : arg);
+            funcArray[0].apply(this, funcArray[1]);
         });
-      }
-    });
-  }
+
+    } catch (error) {
+        // Handle errors
+        console.error('Fetch error:', error);
+    }
+}
+
+
   // Define the success callback function
   const onSuccess = (response) => {
     if (response.success) {
@@ -109,7 +127,7 @@ function initializeDataTable(tableId, ajaxUrl, columns) {
                   element.html(data[updateType.field]);
                   break;
               case 'value':
-                  element.val(data[updateType.field]).trigger('input');
+                  element.val(data[updateType.field]).trigger(['input', 'change', 'blur']);
                   break;
               case 'select2':
                 element.val(data[updateType.field]).trigger("change.select2");

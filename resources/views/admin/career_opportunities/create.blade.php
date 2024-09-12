@@ -5,7 +5,7 @@
 @include('admin.layouts.partials.dashboard_side_bar')
 <div class="ml-16">
     @include('admin.layouts.partials.header')
-    <div class="bg-white mx-4 my-8 rounded p-8" x-data='wizardForm({!! json_encode($careerOpportunity) !!},{!! json_encode($businessUnitsData) !!})' x-init="$nextTick(() => init())">
+    <div class="bg-white mx-4 my-8 rounded p-8" x-data='wizardForm({!! json_encode($careerOpportunity) !!},{!! json_encode($businessUnitsData) !!})' x-init="mounted()">
     
     <!-- Success Notification -->
         @include('admin.layouts.partials.alerts')

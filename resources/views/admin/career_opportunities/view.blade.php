@@ -4,2153 +4,568 @@
     <!-- Sidebar -->
     @include('admin.layouts.partials.dashboard_side_bar')
       <div class="ml-16">
-          <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/alpine.min.js" defer></script>
           @include('admin.layouts.partials.header')
-          <div class="ml-16">
-              <div x-data="{ activeTab: 'activeJobs' }" class="py-6 sm:px-6 lg:px-8">
-                  <!-- Tabs -->
-                  <div class="mb-4 border-b border-gray-200">
-                      <ul class="flex flex-wrap -mb-px">
-                          <li class="mr-2">
-                              <a
-                                  href="#"
-                                  @click.prevent="activeTab = 'activeJobs'"
-                                  :class="{'border-blue-500 text-blue-600': activeTab === 'activeJobs'}"
-                                  class="inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300"
-                              >
-                                  Active Jobs
-                              </a>
-                          </li>
-                          <li class="mr-2">
-                              <a
-                                  href="#"
-                                  @click.prevent="activeTab = 'pendingReleaseJobs'"
-                                  :class="{'border-blue-500 text-blue-600': activeTab === 'pendingReleaseJobs'}"
-                                  class="inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300"
-                              >
-                                  Pending Release Jobs
-                              </a>
-                          </li>
-                          <li class="mr-2">
-                              <a
-                                  href="#"
-                                  @click.prevent="activeTab = 'filledJobs'"
-                                  :class="{'border-blue-500 text-blue-600': activeTab === 'filledJobs'}"
-                                  class="inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300"
-                              >
-                                  Filled Jobs
-                              </a>
-                          </li>
-                          <li class="mr-2">
-                              <a
-                                  href="#"
-                                  @click.prevent="activeTab = 'closedJobs'"
-                                  :class="{'border-blue-500 text-blue-600': activeTab === 'closedJobs'}"
-                                  class="inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300"
-                              >
-                                  Closed Jobs
-                              </a>
-                          </li>
-                          <li class="mr-2">
-                              <a
-                                  href="#"
-                                  @click.prevent="activeTab = 'pendingPMO'"
-                                  :class="{'border-blue-500 text-blue-600': activeTab === 'pendingPMO'}"
-                                  class="inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300"
-                              >
-                                  Pending - PMO
-                              </a>
-                          </li>
-                          <li class="mr-2">
-                              <a
-                                  href="#"
-                                  @click.prevent="activeTab = 'draft'"
-                                  :class="{'border-blue-500 text-blue-600': activeTab === 'draft'}"
-                                  class="inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300"
-                              >
-                                  Draft
-                              </a>
-                          </li>
-                          <li class="mr-2">
-                              <a
-                                  href="#"
-                                  @click.prevent="activeTab = 'allJobs'"
-                                  :class="{'border-blue-500 text-blue-600': activeTab === 'allJobs'}"
-                                  class="inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300"
-                              >
-                                  All Jobs
-                              </a>
-                          </li>
-                      </ul>
+          <div class="bg-white mx-4 my-8 rounded p-8">
+          <div class="mb-4">
+            <ul
+              class="grid grid-flow-col text-center text-gray-500 bg-gray-100 rounded-lg p-1"
+            >
+              <li class="flex justify-center">
+                <a
+                  href="#page1"
+                  class="w-full flex justify-center items-center gap-3 hover:bg-white hover:rounded-lg hover:shadow py-4"
+                >
+                  <i class="fa-regular fa-file-lines"></i>
+                  <span class="capitalize">active jobs</span>
+                  <div
+                    class="px-1 py-1 flex items-center justify-center bg-gray-500 text-white rounded-lg"
+                  >
+                    <span class="text-[10px]">156</span>
                   </div>
-
-                  <!-- Tab Contents -->
-                  <div class="bg-white shadow overflow-hidden sm:rounded-lg py-6">
-                      <!-- Active Jobs Tab Start from here -->
-                      <div x-show="activeTab === 'activeJobs'">
-                          <div
-                              x-data="{
-              users: [
-                  { id: 1, title: 'Senior Resolution Manager', emailSignature: 'Senior Resolution Manager', jobDuration: '07/29/2024 - 01/24/2025', hiringManager: 'Donna Stockton', status: 'Active', position: '1', submission: '0', workerType: 'CW', action: { icon: 'fa-regular fa-eye', link: '#' } },
-                  { id: 2, title: 'Senior Resolution Manager', emailSignature: 'Senior Resolution Manager', jobDuration: '07/29/2024 - 01/24/2025', hiringManager: 'Don Soto', status: 'Inactive', position: '1', submission: '0', workerType: 'CW', action: { icon: 'fa-regular fa-eye', link: '#' }   },
-                  { id: 3, title: 'Claims Services Representative', emailSignature: 'Claims Service Representative', jobDuration: '07/29/2024 - 01/24/2025	', hiringManager: 'Julie Hommowun', status: 'Pending', position: '1', submission: '0', workerType: 'CW' , action: { icon: 'fa-regular fa-eye', link: '#' }  },
-
-              ],
-              currentPage: 1,
-              itemsPerPage: 20,
-              search: '',
-              selectedUser: null,
-              toggleSidebar(id) {
-                this.selectedUserId = this.selectedUserId === id ? null : id;
-              },
-              filteredUsers() {
-                  return this.users.filter(user =>
-                      user.title.toLowerCase().includes(this.search.toLowerCase()) ||
-                      user.emailSignature.toLowerCase().includes(this.search.toLowerCase())
-                  );
-              },
-              paginatedUsers() {
-                const start = (this.currentPage - 1) * this.itemsPerPage;
-                const end = start + this.itemsPerPage;
-                return this.filteredUsers().slice(start, end);
-            },
-            totalPages() {
-                return Math.ceil(this.filteredUsers().length / this.itemsPerPage);
-            }
-          }"
-                          >
-                              <!-- Main Content -->
-                              <main class="py-6 sm:px-6 lg:px-8">
-                                  <!-- Search and Add User -->
-                                  <div class="mb-4 flex justify-between">
-                                      <div class="relative">
-                                          <input
-                                              type="text"
-                                              x-model="search"
-                                              placeholder="Search users"
-                                              class="pl-10 pr-4 py-2 border rounded-md"
-                                          />
-                                          <div
-                                              class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
-                                          >
-                                              <i class="fas fa-search text-gray-400"></i>
-                                          </div>
-                                      </div>
-                                      <button
-                                          class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                                      >
-                                          Export Sheet
-                                      </button>
-                                  </div>
-
-                                  <!-- User Table -->
-                                  <div class="bg-white shadow overflow-hidden sm:rounded-lg">
-                                      <table class="min-w-full divide-y divide-gray-200">
-                                          <thead class="bg-gray-50">
-                                          <tr>
-                                              <!-- Status -->
-                                              <th
-                                                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                                              >
-                                                  Status
-                                              </th>
-                                              <!-- User -->
-                                              <th
-                                                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                                              >
-                                                  Job ID
-                                              </th>
-                                              <!-- job -->
-                                              <th
-                                                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                                              >
-                                                  Job title
-                                              </th>
-                                              <th
-                                                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                                              >
-                                                  Job Title for Email Signature
-                                              </th>
-
-                                              <th
-                                                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                                              >
-                                                  Hiring Manager
-                                              </th>
-                                              <th
-                                                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                                              >
-                                                  Job Duration
-                                              </th>
-                                              <th
-                                                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                                              >
-                                                  Position
-                                              </th>
-                                              <th
-                                                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                                              >
-                                                  Submission
-                                              </th>
-                                              <th
-                                                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                                              >
-                                                  Hired
-                                              </th>
-                                              <th
-                                                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                                              >
-                                                  Worker Type
-                                              </th>
-                                              <th
-                                                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                                              >
-                                                  Action
-                                              </th>
-                                          </tr>
-                                          </thead>
-                                          <tbody class="bg-white divide-y divide-gray-200">
-                                          <template
-                                              x-for="user in paginatedUsers()"
-                                              :key="user.id"
-                                          >
-                                              <tr>
-                                                  <!-- Status -->
-                                                  <td class="px-6 py-4 text-center whitespace-nowrap">
-                              <span
-                                  class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full"
-                                  :class="{
-                                                      'bg-green-100 text-green-800': user.status === 'Active',
-                                                      'bg-red-100 text-red-800': user.status === 'Inactive',
-                                                      'bg-yellow-100 text-yellow-800': user.status === 'Pending'
-                                                  }"
-                                  x-text="user.status"
-                              ></span>
-                                                  </td>
-                                                  <td
-                                                      class="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-500 cursor-pointer"
-                                                      @click="selectedUser = user"
-                                                  >
-                                                      <span x-text="user.id"></span>
-                                                  </td>
-                                                  <td
-                                                      class="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-500"
-                                                      x-text="user.title"
-                                                  ></td>
-                                                  <td
-                                                      class="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-500"
-                                                      x-text="user.title"
-                                                  ></td>
-                                                  <td
-                                                      class="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-500"
-                                                      x-text="user.emailSignature"
-                                                  ></td>
-                                                  <td
-                                                      class="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-500"
-                                                      x-text="user.jobDuration"
-                                                  ></td>
-                                                  <td
-                                                      class="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-500"
-                                                      x-text="user.hiringManager"
-                                                  ></td>
-                                                  <td
-                                                      class="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-500"
-                                                      x-text="user.position"
-                                                  ></td>
-                                                  <td
-                                                      class="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-500"
-                                                      x-text="user.submission"
-                                                  ></td>
-                                                  <td
-                                                      class="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-500"
-                                                      x-text="user.workerType"
-                                                  ></td>
-                                                  <td
-                                                      class="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-500"
-                                                  >
-                                                      <a
-                                                          :href="user.action.link"
-                                                          class="hover:text-indigo-900"
-                                                      >
-                                                          <i :class="user.action.icon"></i>
-                                                      </a>
-                                                  </td>
-                                              </tr>
-                                          </template>
-                                          </tbody>
-                                      </table>
-                                  </div>
-                                  <div>
-                                      <div class="mt-4 flex justify-between items-center">
-                                          <div>
-                        <span class="text-sm text-gray-700">
-                          Showing
-                          <span
-                              class="font-medium"
-                              x-text="((currentPage - 1) * itemsPerPage) + 1"
-                          ></span>
-                          to
-                          <span
-                              class="font-medium"
-                              x-text="Math.min(currentPage * itemsPerPage, filteredUsers().length)"
-                          ></span>
-                          of
-                          <span
-                              class="font-medium"
-                              x-text="filteredUsers().length"
-                          ></span>
-                          results
-                        </span>
-                                          </div>
-                                          <div>
-                                              <nav
-                                                  class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px"
-                                                  aria-label="Pagination"
-                                              >
-                                                  <button
-                                                      @click="currentPage = Math.max(1, currentPage - 1)"
-                                                      :disabled="currentPage === 1"
-                                                      class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"
-                                                  >
-                                                      <span class="sr-only">Previous</span>
-                                                      <i class="fas fa-chevron-left"></i>
-                                                  </button>
-                                                  <template x-for="pageNumber in totalPages()">
-                                                      <button
-                                                          @click="currentPage = pageNumber"
-                                                          :class="{'bg-blue-50 border-blue-500 text-blue-600': currentPage === pageNumber, 'bg-white border-gray-300 text-gray-500 hover:bg-gray-50': currentPage !== pageNumber}"
-                                                          class="relative inline-flex items-center px-4 py-2 border text-sm font-medium"
-                                                      >
-                                                          <span x-text="pageNumber"></span>
-                                                      </button>
-                                                  </template>
-                                                  <button
-                                                      @click="currentPage = Math.min(totalPages(), currentPage + 1)"
-                                                      :disabled="currentPage === totalPages()"
-                                                      class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"
-                                                  >
-                                                      <span class="sr-only">Next</span>
-                                                      <i class="fas fa-chevron-right"></i>
-                                                  </button>
-                                              </nav>
-                                          </div>
-                                      </div>
-                                  </div>
-
-                                  <!-- Overlay -->
-                                  <div
-                                      x-show="selectedUser !== null"
-                                      @click="selectedUser = null"
-                                      x-transition:enter="transition ease-out duration-300"
-                                      x-transition:enter-start="opacity-0"
-                                      x-transition:enter-end="opacity-100"
-                                      x-transition:leave="transition ease-in duration-300"
-                                      x-transition:leave-start="opacity-100"
-                                      x-transition:leave-end="opacity-0"
-                                      class="fixed inset-0 bg-black bg-opacity-50"
-                                  ></div>
-                                  <!-- Slide-in Window -->
-                                  <div
-                                      x-show="selectedUser !== null"
-                                      @click.stop
-                                      x-transition:enter="transition ease-out duration-300"
-                                      x-transition:enter-start="transform translate-x-full"
-                                      x-transition:enter-end="transform translate-x-0"
-                                      x-transition:leave="transition ease-in duration-300"
-                                      x-transition:leave-start="transform translate-x-0"
-                                      x-transition:leave-end="transform translate-x-full"
-                                      class="fixed inset-y-0 right-0 w-[700px] bg-gray-100 shadow-lg overflow-y-auto z-50 pb-24"
-                                  >
-                                      <template x-if="selectedUser">
-                                          <div>
-                                              <div
-                                                  class="flex justify-between items-center p-4 bg-gray-800 text-white"
-                                              >
-                                                  <h2 class="text-lg font-semibold">
-                                                      Job:
-                                                      <span x-text="selectedUser.title"></span> (<span
-                                                          x-text="selectedUser.id"
-                                                      ></span
-                                                      >)
-                                                  </h2>
-
-                                                  <button
-                                                      @click="selectedUser = null"
-                                                      class="text-gray-500 hover:text-gray-700"
-                                                  >
-                                                      <i class="fas fa-times"></i>
-                                                  </button>
-                                              </div>
-
-                                              <div class="p-4 bg-gray-200">
-                                                  <p>
-                                                      Job Created by
-                                                      <span x-text="selectedUser.hiringManager"></span> on
-                                                      <span x-text="selectedUser.jobDuration"></span>
-                                                  </p>
-                                              </div>
-                                              <div class="p-4">
-                                                  <ul class="flex w-full items-center gap-2">
-                                                      <li
-                                                          class="py-2 px-4 border border-blue-800 bg-white w-1/5 shadow-md flex flex-col items-center rounded"
-                                                      >
-                                                          <h4 class="text-blue-800 font-bold">
-                                                              Submission
-                                                          </h4>
-                                                          <div
-                                                              class="flex mt-2 w-full items-center justify-between"
-                                                          >
-                                                              <span class="text-blue-800 font-bold">0</span>
-                                                              <i
-                                                                  class="fa-solid fa-graduation-cap text-blue-800"
-                                                              ></i>
-                                                          </div>
-                                                      </li>
-                                                      <li
-                                                          class="py-2 px-4 border border-red-800 bg-white w-1/5 shadow-md flex flex-col items-center rounded"
-                                                      >
-                                                          <h4 class="text-red-800 font-bold">Interviews</h4>
-                                                          <div
-                                                              class="flex mt-2 w-full items-center justify-between"
-                                                          >
-                                                              <span class="text-red-800 font-bold">0</span>
-                                                              <i
-                                                                  class="fa-solid fa-graduation-cap text-red-800"
-                                                              ></i>
-                                                          </div>
-                                                      </li>
-                                                      <li
-                                                          class="py-2 px-4 border border-yellow-800 bg-white w-1/5 shadow-md flex flex-col items-center rounded"
-                                                      >
-                                                          <h4 class="text-yellow-800 font-bold">Offers</h4>
-                                                          <div
-                                                              class="flex mt-2 w-full items-center justify-between"
-                                                          >
-                                                              <span class="text-yellow-800 font-bold">0</span>
-                                                              <i
-                                                                  class="fa-solid fa-graduation-cap text-yellow-800"
-                                                              ></i>
-                                                          </div>
-                                                      </li>
-                                                      <li
-                                                          class="py-2 px-4 border border-purple-800 bg-white w-1/5 shadow-md flex flex-col items-center rounded"
-                                                      >
-                                                          <h4 class="text-purple-800 font-bold">
-                                                              Workorders
-                                                          </h4>
-                                                          <div
-                                                              class="flex mt-2 w-full items-center justify-between"
-                                                          >
-                                                              <span class="text-purple-800 font-bold">0</span>
-                                                              <i
-                                                                  class="fa-solid fa-graduation-cap text-purple-800"
-                                                              ></i>
-                                                          </div>
-                                                      </li>
-                                                      <li
-                                                          class="py-2 px-4 border border-green-800 bg-white w-1/5 shadow-md flex flex-col items-center rounded"
-                                                      >
-                                                          <h4 class="text-green-800 font-bold">Hired</h4>
-                                                          <div
-                                                              class="flex mt-2 w-full items-center justify-between"
-                                                          >
-                                                              <span class="text-green-800 font-bold">0</span>
-                                                              <i
-                                                                  class="fa-solid fa-graduation-cap text-green-800"
-                                                              ></i>
-                                                          </div>
-                                                      </li>
-                                                  </ul>
-                                              </div>
-                                              <!-- Job Info Table-->
-                                              <div class="p-4 mb-2">
-                                                  <div class="container mx-auto px-4">
-                                                      <!-- Table Title -->
-                                                      <div
-                                                          class="flex items-center p-4 bg-gray-800 rounded-t-lg"
-                                                      >
-                                                          <i
-                                                              class="fas fa-info-circle text-white text-xl mr-2"
-                                                          ></i>
-                                                          <h2 class="text-xl font-semibold text-white">
-                                                              Job Info
-                                                          </h2>
-                                                      </div>
-
-                                                      <!-- Table -->
-                                                      <div class="overflow-x-auto">
-                                                          <table
-                                                              class="w-full bg-white shadow-white shadow-md rounded-b-lg overflow-hidden"
-                                                          >
-                                                              <tbody>
-                                                              <tr class="hover:bg-gray-100">
-                                                                  <td class="px-4 py-3 border-b">
-                                                                      Job Status:
-                                                                  </td>
-                                                                  <td class="px-4 py-3 border-b">
-                                      <span
-                                          class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full"
-                                          :class="{
-                                                      'bg-green-100 text-green-800': selectedUser.status === 'Active',
-                                                      'bg-red-100 text-red-800': selectedUser.status === 'Inactive',
-                                                      'bg-yellow-100 text-yellow-800': selectedUser.status === 'Pending'
-                                                  }"
-                                          x-text="selectedUser.status"
-                                      ></span>
-                                                                  </td>
-                                                              </tr>
-                                                              <tr class="hover:bg-gray-100">
-                                                                  <td class="px-4 py-3 border-b">
-                                                                      Location:
-                                                                  </td>
-                                                                  <td class="px-4 py-3 border-b">
-                                                                      US Saint Peters 300 St. Peters Centre
-                                                                      Blvd.
-                                                                  </td>
-                                                              </tr>
-                                                              <tr class="hover:bg-gray-100">
-                                                                  <td class="px-4 py-3 border-b">
-                                                                      Number of Opening(s):
-                                                                  </td>
-                                                                  <td class="px-4 py-3 border-b">1</td>
-                                                              </tr>
-                                                              <tr class="hover:bg-gray-100">
-                                                                  <td class="px-4 py-3 border-b">Category</td>
-                                                                  <td class="px-4 py-3 border-b">Claims</td>
-                                                              </tr>
-                                                              <tr class="hover:bg-gray-100">
-                                                                  <td class="px-4 py-3">Expenses Allowed?</td>
-                                                                  <td class="px-4 py-3">No</td>
-                                                              </tr>
-                                                              </tbody>
-                                                          </table>
-                                                      </div>
-                                                  </div>
-                                              </div>
-                                              <!-- Job Duration Table-->
-                                              <div class="p-4 mb-2">
-                                                  <div class="container mx-auto px-4">
-                                                      <!-- Table Title -->
-                                                      <div
-                                                          class="flex items-center p-4 bg-gray-800 rounded-t-lg"
-                                                      >
-                                                          <i
-                                                              class="fa-solid fa-calendar-days text-white text-xl mr-2"
-                                                          ></i>
-                                                          <h2 class="text-xl font-semibold text-white">
-                                                              Job Duration
-                                                          </h2>
-                                                      </div>
-
-                                                      <!-- Table -->
-                                                      <div class="overflow-x-auto">
-                                                          <table
-                                                              class="w-full bg-white shadow-white shadow-md rounded-b-lg overflow-hidden"
-                                                          >
-                                                              <tbody>
-                                                              <tr class="hover:bg-gray-100">
-                                                                  <td class="px-4 py-3 border-b">Days:</td>
-                                                                  <td class="px-4 py-3 border-b">130</td>
-                                                              </tr>
-                                                              <tr class="hover:bg-gray-100">
-                                                                  <td class="px-4 py-3 border-b">
-                                                                      Total Hours:
-                                                                  </td>
-                                                                  <td class="px-4 py-3 border-b">1040</td>
-                                                              </tr>
-                                                              <tr class="hover:bg-gray-100">
-                                                                  <td class="px-4 py-3 border-b">
-                                                                      Job Duration:
-                                                                  </td>
-                                                                  <td class="px-4 py-3 border-b">
-                                      <span
-                                          x-text="selectedUser.jobDuration"
-                                      ></span>
-                                                                  </td>
-                                                              </tr>
-                                                              </tbody>
-                                                          </table>
-                                                      </div>
-                                                  </div>
-                                              </div>
-                                              <!-- Job Rates Table-->
-                                              <div class="p-4 mb-2">
-                                                  <div class="container mx-auto px-4">
-                                                      <!-- Table Title -->
-                                                      <div
-                                                          class="flex items-center p-4 bg-gray-800 rounded-t-lg"
-                                                      >
-                                                          <i
-                                                              class="fa-solid fa-money-bill-wave text-white text-xl mr-2"
-                                                          ></i>
-                                                          <h2 class="text-xl font-semibold text-white">
-                                                              Rates
-                                                          </h2>
-                                                      </div>
-
-                                                      <!-- Table -->
-                                                      <div class="overflow-x-auto">
-                                                          <table
-                                                              class="w-full bg-white shadow-white shadow-md rounded-b-lg overflow-hidden"
-                                                          >
-                                                              <tbody>
-                                                              <tr class="hover:bg-gray-100">
-                                                                  <td class="px-4 py-3 border-b">
-                                                                      Rate Type:
-                                                                  </td>
-                                                                  <td class="px-4 py-3 border-b">Per Hour</td>
-                                                              </tr>
-                                                              <tr class="hover:bg-gray-100">
-                                                                  <td class="px-4 py-3 border-b">
-                                                                      Minimum Bill Rate:
-                                                                  </td>
-                                                                  <td class="px-4 py-3 border-b">$20.00</td>
-                                                              </tr>
-                                                              <tr class="hover:bg-gray-100">
-                                                                  <td class="px-4 py-3 border-b">
-                                                                      Maximum Bill Rate:
-                                                                  </td>
-                                                                  <td class="px-4 py-3 border-b">$75.00</td>
-                                                              </tr>
-                                                              </tbody>
-                                                          </table>
-                                                      </div>
-                                                  </div>
-                                              </div>
-                                              <!-- Business Unit & Budget Percentage Table -->
-                                              <div class="p-4 mb-2">
-                                                  <div class="container mx-auto px-4">
-                                                      <!-- Table -->
-                                                      <div class="overflow-x-auto">
-                                                          <table
-                                                              class="w-full bg-white shadow-md rounded-lg overflow-hidden"
-                                                          >
-                                                              <thead class="bg-gray-800">
-                                                              <tr>
-                                                                  <th class="px-4 py-2 text-left text-white">
-                                                                      Business Unit
-                                                                  </th>
-                                                                  <th class="px-4 py-2 text-left text-white">
-                                                                      Budget Percentage
-                                                                  </th>
-                                                              </tr>
-                                                              </thead>
-                                                              <tbody>
-                                                              <tr class="hover:bg-gray-100">
-                                                                  <td class="px-4 py-3 border-b">
-                                                                      708212 - 166 - St. Peters, MO - LPG
-                                                                  </td>
-                                                                  <td class="px-4 py-3 border-b">100%</td>
-                                                              </tr>
-                                                              </tbody>
-                                                          </table>
-                                                      </div>
-                                                  </div>
-                                              </div>
-                                          </div>
-                                      </template>
-                                      <!-- Add more user details here -->
-                                      <button
-                                          class="bg-gray-800 hover:bg-gray-900 text-white font-bold py-2 px-4 rounded fixed bottom-12 right-8"
-                                      >
-                                          View Full Job Details
-                                          <i class="fa-solid fa-arrow-right ml-2"></i>
-                                      </button>
-                                  </div>
-                              </main>
-                          </div>
-                      </div>
-                      <!-- Active Jobs Tab End from here -->
-                      <!-- Pending Release Jobs Tab start from here -->
-                      <div x-show="activeTab === 'pendingReleaseJobs'">
-                          <div
-                              x-data="{
-              users: [
-                  { id: 1, title: 'Senior Resolution Manager', emailSignature: 'Senior Resolution Manager', jobDuration: '07/29/2024 - 01/24/2025', hiringManager: 'Donna Stockton', status: 'Active', position: '1', submission: '0', workerType: 'CW', action: { icon: 'fa-regular fa-eye', link: '#' } },
-                  { id: 2, title: 'Senior Resolution Manager', emailSignature: 'Senior Resolution Manager', jobDuration: '07/29/2024 - 01/24/2025', hiringManager: 'Don Soto', status: 'Inactive', position: '1', submission: '0', workerType: 'CW', action: { icon: 'fa-regular fa-eye', link: '#' }   },
-                  { id: 3, title: 'Claims Services Representative', emailSignature: 'Claims Service Representative', jobDuration: '07/29/2024 - 01/24/2025	', hiringManager: 'Julie Hommowun', status: 'Pending', position: '1', submission: '0', workerType: 'CW' , action: { icon: 'fa-regular fa-eye', link: '#' }  },
-
-              ],
-              currentPage: 1,
-              itemsPerPage: 20,
-              search: '',
-              filteredUsers() {
-                  return this.users.filter(user =>
-                      user.title.toLowerCase().includes(this.search.toLowerCase()) ||
-                      user.emailSignature.toLowerCase().includes(this.search.toLowerCase())
-                  );
-              },
-              paginatedUsers() {
-                const start = (this.currentPage - 1) * this.itemsPerPage;
-                const end = start + this.itemsPerPage;
-                return this.filteredUsers().slice(start, end);
-            },
-            totalPages() {
-                return Math.ceil(this.filteredUsers().length / this.itemsPerPage);
-            }
-          }"
-                          >
-                              <!-- Main Content -->
-                              <main class="py-6 sm:px-6 lg:px-8">
-                                  <!-- Search and Add User -->
-                                  <div class="mb-4 flex justify-between">
-                                      <div class="relative">
-                                          <input
-                                              type="text"
-                                              x-model="search"
-                                              placeholder="Search users"
-                                              class="pl-10 pr-4 py-2 border rounded-md"
-                                          />
-                                          <div
-                                              class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
-                                          >
-                                              <i class="fas fa-search text-gray-400"></i>
-                                          </div>
-                                      </div>
-                                      <button
-                                          class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                                      >
-                                          Export Sheet
-                                      </button>
-                                  </div>
-
-                                  <!-- User Table -->
-                                  <div class="bg-white shadow overflow-hidden sm:rounded-lg">
-                                      <table class="min-w-full divide-y divide-gray-200">
-                                          <thead class="bg-gray-50">
-                                          <tr>
-                                              <!-- Status -->
-                                              <th
-                                                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                                              >
-                                                  Status
-                                              </th>
-                                              <!-- User -->
-                                              <th
-                                                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                                              >
-                                                  Job ID
-                                              </th>
-                                              <!-- job -->
-                                              <th
-                                                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                                              >
-                                                  Job title
-                                              </th>
-                                              <th
-                                                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                                              >
-                                                  Job Title for Email Signature
-                                              </th>
-
-                                              <th
-                                                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                                              >
-                                                  Job Duration
-                                              </th>
-                                              <th
-                                                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                                              >
-                                                  Hiring Manager
-                                              </th>
-                                              <th
-                                                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                                              >
-                                                  Position
-                                              </th>
-                                              <th
-                                                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                                              >
-                                                  Submission
-                                              </th>
-                                              <th
-                                                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                                              >
-                                                  Hired
-                                              </th>
-                                              <th
-                                                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                                              >
-                                                  Worker Type
-                                              </th>
-                                              <th
-                                                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                                              >
-                                                  Action
-                                              </th>
-                                          </tr>
-                                          </thead>
-                                          <tbody class="bg-white divide-y divide-gray-200">
-                                          <template
-                                              x-for="user in paginatedUsers()"
-                                              :key="user.id"
-                                          >
-                                              <tr>
-                                                  <!-- Status -->
-                                                  <td class="px-6 py-4 text-center whitespace-nowrap">
-                              <span
-                                  class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full"
-                                  :class="{
-                                                      'bg-green-100 text-green-800': user.status === 'Active',
-                                                      'bg-red-100 text-red-800': user.status === 'Inactive',
-                                                      'bg-yellow-100 text-yellow-800': user.status === 'Pending'
-                                                  }"
-                                  x-text="user.status"
-                              ></span>
-                                                  </td>
-                                                  <td
-                                                      class="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-500"
-                                                      x-text="user.id"
-                                                  ></td>
-                                                  <td
-                                                      class="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-500"
-                                                      x-text="user.title"
-                                                  ></td>
-                                                  <td
-                                                      class="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-500"
-                                                      x-text="user.title"
-                                                  ></td>
-                                                  <td
-                                                      class="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-500"
-                                                      x-text="user.emailSignature"
-                                                  ></td>
-                                                  <td
-                                                      class="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-500"
-                                                      x-text="user.jobDuration"
-                                                  ></td>
-                                                  <td
-                                                      class="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-500"
-                                                      x-text="user.hiringManager"
-                                                  ></td>
-                                                  <td
-                                                      class="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-500"
-                                                      x-text="user.position"
-                                                  ></td>
-                                                  <td
-                                                      class="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-500"
-                                                      x-text="user.submission"
-                                                  ></td>
-                                                  <td
-                                                      class="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-500"
-                                                      x-text="user.workerType"
-                                                  ></td>
-                                                  <td
-                                                      class="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-500"
-                                                  >
-                                                      <a
-                                                          :href="user.action.link"
-                                                          class="hover:text-indigo-900"
-                                                      >
-                                                          <i :class="user.action.icon"></i>
-                                                      </a>
-                                                  </td>
-                                              </tr>
-                                          </template>
-                                          </tbody>
-                                      </table>
-                                  </div>
-                                  <div>
-                                      <div class="mt-4 flex justify-between items-center">
-                                          <div>
-                        <span class="text-sm text-gray-700">
-                          Showing
-                          <span
-                              class="font-medium"
-                              x-text="((currentPage - 1) * itemsPerPage) + 1"
-                          ></span>
-                          to
-                          <span
-                              class="font-medium"
-                              x-text="Math.min(currentPage * itemsPerPage, filteredUsers().length)"
-                          ></span>
-                          of
-                          <span
-                              class="font-medium"
-                              x-text="filteredUsers().length"
-                          ></span>
-                          results
-                        </span>
-                                          </div>
-                                          <div>
-                                              <nav
-                                                  class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px"
-                                                  aria-label="Pagination"
-                                              >
-                                                  <button
-                                                      @click="currentPage = Math.max(1, currentPage - 1)"
-                                                      :disabled="currentPage === 1"
-                                                      class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"
-                                                  >
-                                                      <span class="sr-only">Previous</span>
-                                                      <i class="fas fa-chevron-left"></i>
-                                                  </button>
-                                                  <template x-for="pageNumber in totalPages()">
-                                                      <button
-                                                          @click="currentPage = pageNumber"
-                                                          :class="{'bg-blue-50 border-blue-500 text-blue-600': currentPage === pageNumber, 'bg-white border-gray-300 text-gray-500 hover:bg-gray-50': currentPage !== pageNumber}"
-                                                          class="relative inline-flex items-center px-4 py-2 border text-sm font-medium"
-                                                      >
-                                                          <span x-text="pageNumber"></span>
-                                                      </button>
-                                                  </template>
-                                                  <button
-                                                      @click="currentPage = Math.min(totalPages(), currentPage + 1)"
-                                                      :disabled="currentPage === totalPages()"
-                                                      class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"
-                                                  >
-                                                      <span class="sr-only">Next</span>
-                                                      <i class="fas fa-chevron-right"></i>
-                                                  </button>
-                                              </nav>
-                                          </div>
-                                      </div>
-                                  </div>
-                              </main>
-                          </div>
-                      </div>
-                      <!-- Pending Release Jobs Tab end from here -->
-                      <!-- Filled Jobs Tab start from here -->
-                      <div x-show="activeTab === 'filledJobs'">
-                          <div
-                              x-data="{
-              users: [
-                  { id: 1, title: 'Senior Resolution Manager', emailSignature: 'Senior Resolution Manager', jobDuration: '07/29/2024 - 01/24/2025', hiringManager: 'Donna Stockton', status: 'Active', position: '1', submission: '0', workerType: 'CW', action: { icon: 'fa-regular fa-eye', link: '#' } },
-                  { id: 2, title: 'Senior Resolution Manager', emailSignature: 'Senior Resolution Manager', jobDuration: '07/29/2024 - 01/24/2025', hiringManager: 'Don Soto', status: 'Inactive', position: '1', submission: '0', workerType: 'CW', action: { icon: 'fa-regular fa-eye', link: '#' }   },
-                  { id: 3, title: 'Claims Services Representative', emailSignature: 'Claims Service Representative', jobDuration: '07/29/2024 - 01/24/2025	', hiringManager: 'Julie Hommowun', status: 'Pending', position: '1', submission: '0', workerType: 'CW' , action: { icon: 'fa-regular fa-eye', link: '#' }  },
-
-              ],
-              currentPage: 1,
-              itemsPerPage: 20,
-              search: '',
-              filteredUsers() {
-                  return this.users.filter(user =>
-                      user.title.toLowerCase().includes(this.search.toLowerCase()) ||
-                      user.emailSignature.toLowerCase().includes(this.search.toLowerCase())
-                  );
-              },
-              paginatedUsers() {
-                const start = (this.currentPage - 1) * this.itemsPerPage;
-                const end = start + this.itemsPerPage;
-                return this.filteredUsers().slice(start, end);
-            },
-            totalPages() {
-                return Math.ceil(this.filteredUsers().length / this.itemsPerPage);
-            }
-          }"
-                          >
-                              <!-- Main Content -->
-                              <main class="py-6 sm:px-6 lg:px-8">
-                                  <!-- Search and Add User -->
-                                  <div class="mb-4 flex justify-between">
-                                      <div class="relative">
-                                          <input
-                                              type="text"
-                                              x-model="search"
-                                              placeholder="Search users"
-                                              class="pl-10 pr-4 py-2 border rounded-md"
-                                          />
-                                          <div
-                                              class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
-                                          >
-                                              <i class="fas fa-search text-gray-400"></i>
-                                          </div>
-                                      </div>
-                                      <button
-                                          class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                                      >
-                                          Export Sheet
-                                      </button>
-                                  </div>
-
-                                  <!-- User Table -->
-                                  <div class="bg-white shadow overflow-hidden sm:rounded-lg">
-                                      <table class="min-w-full divide-y divide-gray-200">
-                                          <thead class="bg-gray-50">
-                                          <tr>
-                                              <!-- Status -->
-                                              <th
-                                                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                                              >
-                                                  Status
-                                              </th>
-                                              <!-- User -->
-                                              <th
-                                                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                                              >
-                                                  Job ID
-                                              </th>
-                                              <!-- job -->
-                                              <th
-                                                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                                              >
-                                                  Job title
-                                              </th>
-                                              <th
-                                                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                                              >
-                                                  Job Title for Email Signature
-                                              </th>
-
-                                              <th
-                                                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                                              >
-                                                  Job Duration
-                                              </th>
-                                              <th
-                                                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                                              >
-                                                  Hiring Manager
-                                              </th>
-                                              <th
-                                                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                                              >
-                                                  Position
-                                              </th>
-                                              <th
-                                                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                                              >
-                                                  Submission
-                                              </th>
-                                              <th
-                                                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                                              >
-                                                  Hired
-                                              </th>
-                                              <th
-                                                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                                              >
-                                                  Worker Type
-                                              </th>
-                                              <th
-                                                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                                              >
-                                                  Action
-                                              </th>
-                                          </tr>
-                                          </thead>
-                                          <tbody class="bg-white divide-y divide-gray-200">
-                                          <template
-                                              x-for="user in paginatedUsers()"
-                                              :key="user.id"
-                                          >
-                                              <tr>
-                                                  <!-- Status -->
-                                                  <td class="px-6 py-4 text-center whitespace-nowrap">
-                              <span
-                                  class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full"
-                                  :class="{
-                                                      'bg-green-100 text-green-800': user.status === 'Active',
-                                                      'bg-red-100 text-red-800': user.status === 'Inactive',
-                                                      'bg-yellow-100 text-yellow-800': user.status === 'Pending'
-                                                  }"
-                                  x-text="user.status"
-                              ></span>
-                                                  </td>
-                                                  <td
-                                                      class="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-500"
-                                                      x-text="user.id"
-                                                  ></td>
-                                                  <td
-                                                      class="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-500"
-                                                      x-text="user.title"
-                                                  ></td>
-                                                  <td
-                                                      class="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-500"
-                                                      x-text="user.title"
-                                                  ></td>
-                                                  <td
-                                                      class="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-500"
-                                                      x-text="user.emailSignature"
-                                                  ></td>
-                                                  <td
-                                                      class="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-500"
-                                                      x-text="user.jobDuration"
-                                                  ></td>
-                                                  <td
-                                                      class="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-500"
-                                                      x-text="user.hiringManager"
-                                                  ></td>
-                                                  <td
-                                                      class="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-500"
-                                                      x-text="user.position"
-                                                  ></td>
-                                                  <td
-                                                      class="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-500"
-                                                      x-text="user.submission"
-                                                  ></td>
-                                                  <td
-                                                      class="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-500"
-                                                      x-text="user.workerType"
-                                                  ></td>
-                                                  <td
-                                                      class="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-500"
-                                                  >
-                                                      <a
-                                                          :href="user.action.link"
-                                                          class="hover:text-indigo-900"
-                                                      >
-                                                          <i :class="user.action.icon"></i>
-                                                      </a>
-                                                  </td>
-                                              </tr>
-                                          </template>
-                                          </tbody>
-                                      </table>
-                                  </div>
-                                  <div>
-                                      <div class="mt-4 flex justify-between items-center">
-                                          <div>
-                        <span class="text-sm text-gray-700">
-                          Showing
-                          <span
-                              class="font-medium"
-                              x-text="((currentPage - 1) * itemsPerPage) + 1"
-                          ></span>
-                          to
-                          <span
-                              class="font-medium"
-                              x-text="Math.min(currentPage * itemsPerPage, filteredUsers().length)"
-                          ></span>
-                          of
-                          <span
-                              class="font-medium"
-                              x-text="filteredUsers().length"
-                          ></span>
-                          results
-                        </span>
-                                          </div>
-                                          <div>
-                                              <nav
-                                                  class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px"
-                                                  aria-label="Pagination"
-                                              >
-                                                  <button
-                                                      @click="currentPage = Math.max(1, currentPage - 1)"
-                                                      :disabled="currentPage === 1"
-                                                      class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"
-                                                  >
-                                                      <span class="sr-only">Previous</span>
-                                                      <i class="fas fa-chevron-left"></i>
-                                                  </button>
-                                                  <template x-for="pageNumber in totalPages()">
-                                                      <button
-                                                          @click="currentPage = pageNumber"
-                                                          :class="{'bg-blue-50 border-blue-500 text-blue-600': currentPage === pageNumber, 'bg-white border-gray-300 text-gray-500 hover:bg-gray-50': currentPage !== pageNumber}"
-                                                          class="relative inline-flex items-center px-4 py-2 border text-sm font-medium"
-                                                      >
-                                                          <span x-text="pageNumber"></span>
-                                                      </button>
-                                                  </template>
-                                                  <button
-                                                      @click="currentPage = Math.min(totalPages(), currentPage + 1)"
-                                                      :disabled="currentPage === totalPages()"
-                                                      class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"
-                                                  >
-                                                      <span class="sr-only">Next</span>
-                                                      <i class="fas fa-chevron-right"></i>
-                                                  </button>
-                                              </nav>
-                                          </div>
-                                      </div>
-                                  </div>
-                              </main>
-                          </div>
-                      </div>
-                      <!-- Filled Jobs Tab end from here -->
-                      <!-- Closed Jobs Tab start from here -->
-                      <div x-show="activeTab === 'closedJobs'">
-                          <div
-                              x-data="{
-              users: [
-                  { id: 1, title: 'Senior Resolution Manager', emailSignature: 'Senior Resolution Manager', jobDuration: '07/29/2024 - 01/24/2025', hiringManager: 'Donna Stockton', status: 'Active', position: '1', submission: '0', workerType: 'CW', action: { icon: 'fa-regular fa-eye', link: '#' } },
-                  { id: 2, title: 'Senior Resolution Manager', emailSignature: 'Senior Resolution Manager', jobDuration: '07/29/2024 - 01/24/2025', hiringManager: 'Don Soto', status: 'Inactive', position: '1', submission: '0', workerType: 'CW', action: { icon: 'fa-regular fa-eye', link: '#' }   },
-                  { id: 3, title: 'Claims Services Representative', emailSignature: 'Claims Service Representative', jobDuration: '07/29/2024 - 01/24/2025	', hiringManager: 'Julie Hommowun', status: 'Pending', position: '1', submission: '0', workerType: 'CW' , action: { icon: 'fa-regular fa-eye', link: '#' }  },
-              ],
-              currentPage: 1,
-              itemsPerPage: 20,
-              search: '',
-              filteredUsers() {
-                  return this.users.filter(user =>
-                      user.title.toLowerCase().includes(this.search.toLowerCase()) ||
-                      user.emailSignature.toLowerCase().includes(this.search.toLowerCase())
-                  );
-              },
-              paginatedUsers() {
-                const start = (this.currentPage - 1) * this.itemsPerPage;
-                const end = start + this.itemsPerPage;
-                return this.filteredUsers().slice(start, end);
-            },
-            totalPages() {
-                return Math.ceil(this.filteredUsers().length / this.itemsPerPage);
-            }
-          }"
-                          >
-                              <!-- Main Content -->
-                              <main class="py-6 sm:px-6 lg:px-8">
-                                  <!-- Search and Add User -->
-                                  <div class="mb-4 flex justify-between">
-                                      <div class="relative">
-                                          <input
-                                              type="text"
-                                              x-model="search"
-                                              placeholder="Search users"
-                                              class="pl-10 pr-4 py-2 border rounded-md"
-                                          />
-                                          <div
-                                              class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
-                                          >
-                                              <i class="fas fa-search text-gray-400"></i>
-                                          </div>
-                                      </div>
-                                      <button
-                                          class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                                      >
-                                          Export Sheet
-                                      </button>
-                                  </div>
-
-                                  <!-- User Table -->
-                                  <div class="bg-white shadow overflow-hidden sm:rounded-lg">
-                                      <table class="min-w-full divide-y divide-gray-200">
-                                          <thead class="bg-gray-50">
-                                          <tr>
-                                              <!-- Status -->
-                                              <th
-                                                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                                              >
-                                                  Status
-                                              </th>
-                                              <!-- User -->
-                                              <th
-                                                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                                              >
-                                                  Job ID
-                                              </th>
-                                              <!-- job -->
-                                              <th
-                                                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                                              >
-                                                  Job title
-                                              </th>
-                                              <th
-                                                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                                              >
-                                                  Job Title for Email Signature
-                                              </th>
-
-                                              <th
-                                                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                                              >
-                                                  Job Duration
-                                              </th>
-                                              <th
-                                                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                                              >
-                                                  Hiring Manager
-                                              </th>
-                                              <th
-                                                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                                              >
-                                                  Position
-                                              </th>
-                                              <th
-                                                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                                              >
-                                                  Submission
-                                              </th>
-                                              <th
-                                                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                                              >
-                                                  Hired
-                                              </th>
-                                              <th
-                                                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                                              >
-                                                  Worker Type
-                                              </th>
-                                              <th
-                                                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                                              >
-                                                  Action
-                                              </th>
-                                          </tr>
-                                          </thead>
-                                          <tbody class="bg-white divide-y divide-gray-200">
-                                          <template
-                                              x-for="user in paginatedUsers()"
-                                              :key="user.id"
-                                          >
-                                              <tr>
-                                                  <!-- Status -->
-                                                  <td class="px-6 py-4 text-center whitespace-nowrap">
-                              <span
-                                  class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full"
-                                  :class="{
-                                                      'bg-green-100 text-green-800': user.status === 'Active',
-                                                      'bg-red-100 text-red-800': user.status === 'Inactive',
-                                                      'bg-yellow-100 text-yellow-800': user.status === 'Pending'
-                                                  }"
-                                  x-text="user.status"
-                              ></span>
-                                                  </td>
-                                                  <td
-                                                      class="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-500"
-                                                      x-text="user.id"
-                                                  ></td>
-                                                  <td
-                                                      class="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-500"
-                                                      x-text="user.title"
-                                                  ></td>
-                                                  <td
-                                                      class="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-500"
-                                                      x-text="user.title"
-                                                  ></td>
-                                                  <td
-                                                      class="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-500"
-                                                      x-text="user.emailSignature"
-                                                  ></td>
-                                                  <td
-                                                      class="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-500"
-                                                      x-text="user.jobDuration"
-                                                  ></td>
-                                                  <td
-                                                      class="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-500"
-                                                      x-text="user.hiringManager"
-                                                  ></td>
-                                                  <td
-                                                      class="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-500"
-                                                      x-text="user.position"
-                                                  ></td>
-                                                  <td
-                                                      class="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-500"
-                                                      x-text="user.submission"
-                                                  ></td>
-                                                  <td
-                                                      class="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-500"
-                                                      x-text="user.workerType"
-                                                  ></td>
-                                                  <td
-                                                      class="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-500"
-                                                  >
-                                                      <a
-                                                          :href="user.action.link"
-                                                          class="hover:text-indigo-900"
-                                                      >
-                                                          <i :class="user.action.icon"></i>
-                                                      </a>
-                                                  </td>
-                                              </tr>
-                                          </template>
-                                          </tbody>
-                                      </table>
-                                  </div>
-                                  <div>
-                                      <div class="mt-4 flex justify-between items-center">
-                                          <div>
-                        <span class="text-sm text-gray-700">
-                          Showing
-                          <span
-                              class="font-medium"
-                              x-text="((currentPage - 1) * itemsPerPage) + 1"
-                          ></span>
-                          to
-                          <span
-                              class="font-medium"
-                              x-text="Math.min(currentPage * itemsPerPage, filteredUsers().length)"
-                          ></span>
-                          of
-                          <span
-                              class="font-medium"
-                              x-text="filteredUsers().length"
-                          ></span>
-                          results
-                        </span>
-                                          </div>
-                                          <div>
-                                              <nav
-                                                  class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px"
-                                                  aria-label="Pagination"
-                                              >
-                                                  <button
-                                                      @click="currentPage = Math.max(1, currentPage - 1)"
-                                                      :disabled="currentPage === 1"
-                                                      class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"
-                                                  >
-                                                      <span class="sr-only">Previous</span>
-                                                      <i class="fas fa-chevron-left"></i>
-                                                  </button>
-                                                  <template x-for="pageNumber in totalPages()">
-                                                      <button
-                                                          @click="currentPage = pageNumber"
-                                                          :class="{'bg-blue-50 border-blue-500 text-blue-600': currentPage === pageNumber, 'bg-white border-gray-300 text-gray-500 hover:bg-gray-50': currentPage !== pageNumber}"
-                                                          class="relative inline-flex items-center px-4 py-2 border text-sm font-medium"
-                                                      >
-                                                          <span x-text="pageNumber"></span>
-                                                      </button>
-                                                  </template>
-                                                  <button
-                                                      @click="currentPage = Math.min(totalPages(), currentPage + 1)"
-                                                      :disabled="currentPage === totalPages()"
-                                                      class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"
-                                                  >
-                                                      <span class="sr-only">Next</span>
-                                                      <i class="fas fa-chevron-right"></i>
-                                                  </button>
-                                              </nav>
-                                          </div>
-                                      </div>
-                                  </div>
-                              </main>
-                          </div>
-                      </div>
-                      <!-- Closed Jobs Tab end from here -->
-                      <!-- Pending PMO Tab start from here -->
-                      <div x-show="activeTab === 'pendingPMO'">
-                          <div
-                              x-data="{
-              users: [
-                  { id: 1, title: 'Senior Resolution Manager', emailSignature: 'Senior Resolution Manager', jobDuration: '07/29/2024 - 01/24/2025', hiringManager: 'Donna Stockton', status: 'Active', position: '1', submission: '0', workerType: 'CW', action: { icon: 'fa-regular fa-eye', link: '#' } },
-                  { id: 2, title: 'Senior Resolution Manager', emailSignature: 'Senior Resolution Manager', jobDuration: '07/29/2024 - 01/24/2025', hiringManager: 'Don Soto', status: 'Inactive', position: '1', submission: '0', workerType: 'CW', action: { icon: 'fa-regular fa-eye', link: '#' }   },
-                  { id: 3, title: 'Claims Services Representative', emailSignature: 'Claims Service Representative', jobDuration: '07/29/2024 - 01/24/2025	', hiringManager: 'Julie Hommowun', status: 'Pending', position: '1', submission: '0', workerType: 'CW' , action: { icon: 'fa-regular fa-eye', link: '#' }  },
-
-              ],
-              currentPage: 1,
-              itemsPerPage: 20,
-              search: '',
-              filteredUsers() {
-                  return this.users.filter(user =>
-                      user.title.toLowerCase().includes(this.search.toLowerCase()) ||
-                      user.emailSignature.toLowerCase().includes(this.search.toLowerCase())
-                  );
-              },
-              paginatedUsers() {
-                const start = (this.currentPage - 1) * this.itemsPerPage;
-                const end = start + this.itemsPerPage;
-                return this.filteredUsers().slice(start, end);
-            },
-            totalPages() {
-                return Math.ceil(this.filteredUsers().length / this.itemsPerPage);
-            }
-          }"
-                          >
-                              <!-- Main Content -->
-                              <main class="py-6 sm:px-6 lg:px-8">
-                                  <!-- Search and Add User -->
-                                  <div class="mb-4 flex justify-between">
-                                      <div class="relative">
-                                          <input
-                                              type="text"
-                                              x-model="search"
-                                              placeholder="Search users"
-                                              class="pl-10 pr-4 py-2 border rounded-md"
-                                          />
-                                          <div
-                                              class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
-                                          >
-                                              <i class="fas fa-search text-gray-400"></i>
-                                          </div>
-                                      </div>
-                                      <button
-                                          class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                                      >
-                                          Export Sheet
-                                      </button>
-                                  </div>
-
-                                  <!-- User Table -->
-                                  <div class="bg-white shadow overflow-hidden sm:rounded-lg">
-                                      <table class="min-w-full divide-y divide-gray-200">
-                                          <thead class="bg-gray-50">
-                                          <tr>
-                                              <!-- Status -->
-                                              <th
-                                                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                                              >
-                                                  Status
-                                              </th>
-                                              <!-- User -->
-                                              <th
-                                                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                                              >
-                                                  Job ID
-                                              </th>
-                                              <!-- job -->
-                                              <th
-                                                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                                              >
-                                                  Job title
-                                              </th>
-                                              <th
-                                                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                                              >
-                                                  Job Title for Email Signature
-                                              </th>
-
-                                              <th
-                                                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                                              >
-                                                  Job Duration
-                                              </th>
-                                              <th
-                                                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                                              >
-                                                  Hiring Manager
-                                              </th>
-                                              <th
-                                                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                                              >
-                                                  Position
-                                              </th>
-                                              <th
-                                                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                                              >
-                                                  Submission
-                                              </th>
-                                              <th
-                                                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                                              >
-                                                  Hired
-                                              </th>
-                                              <th
-                                                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                                              >
-                                                  Worker Type
-                                              </th>
-                                              <th
-                                                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                                              >
-                                                  Action
-                                              </th>
-                                          </tr>
-                                          </thead>
-                                          <tbody class="bg-white divide-y divide-gray-200">
-                                          <template
-                                              x-for="user in paginatedUsers()"
-                                              :key="user.id"
-                                          >
-                                              <tr>
-                                                  <!-- Status -->
-                                                  <td class="px-6 py-4 text-center whitespace-nowrap">
-                              <span
-                                  class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full"
-                                  :class="{
-                                                      'bg-green-100 text-green-800': user.status === 'Active',
-                                                      'bg-red-100 text-red-800': user.status === 'Inactive',
-                                                      'bg-yellow-100 text-yellow-800': user.status === 'Pending'
-                                                  }"
-                                  x-text="user.status"
-                              ></span>
-                                                  </td>
-                                                  <td
-                                                      class="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-500"
-                                                      x-text="user.id"
-                                                  ></td>
-                                                  <td
-                                                      class="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-500"
-                                                      x-text="user.title"
-                                                  ></td>
-                                                  <td
-                                                      class="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-500"
-                                                      x-text="user.title"
-                                                  ></td>
-                                                  <td
-                                                      class="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-500"
-                                                      x-text="user.emailSignature"
-                                                  ></td>
-                                                  <td
-                                                      class="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-500"
-                                                      x-text="user.jobDuration"
-                                                  ></td>
-                                                  <td
-                                                      class="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-500"
-                                                      x-text="user.hiringManager"
-                                                  ></td>
-                                                  <td
-                                                      class="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-500"
-                                                      x-text="user.position"
-                                                  ></td>
-                                                  <td
-                                                      class="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-500"
-                                                      x-text="user.submission"
-                                                  ></td>
-                                                  <td
-                                                      class="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-500"
-                                                      x-text="user.workerType"
-                                                  ></td>
-                                                  <td
-                                                      class="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-500"
-                                                  >
-                                                      <a
-                                                          :href="user.action.link"
-                                                          class="hover:text-indigo-900"
-                                                      >
-                                                          <i :class="user.action.icon"></i>
-                                                      </a>
-                                                  </td>
-                                              </tr>
-                                          </template>
-                                          </tbody>
-                                      </table>
-                                  </div>
-                                  <div>
-                                      <div class="mt-4 flex justify-between items-center">
-                                          <div>
-                        <span class="text-sm text-gray-700">
-                          Showing
-                          <span
-                              class="font-medium"
-                              x-text="((currentPage - 1) * itemsPerPage) + 1"
-                          ></span>
-                          to
-                          <span
-                              class="font-medium"
-                              x-text="Math.min(currentPage * itemsPerPage, filteredUsers().length)"
-                          ></span>
-                          of
-                          <span
-                              class="font-medium"
-                              x-text="filteredUsers().length"
-                          ></span>
-                          results
-                        </span>
-                                          </div>
-                                          <div>
-                                              <nav
-                                                  class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px"
-                                                  aria-label="Pagination"
-                                              >
-                                                  <button
-                                                      @click="currentPage = Math.max(1, currentPage - 1)"
-                                                      :disabled="currentPage === 1"
-                                                      class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"
-                                                  >
-                                                      <span class="sr-only">Previous</span>
-                                                      <i class="fas fa-chevron-left"></i>
-                                                  </button>
-                                                  <template x-for="pageNumber in totalPages()">
-                                                      <button
-                                                          @click="currentPage = pageNumber"
-                                                          :class="{'bg-blue-50 border-blue-500 text-blue-600': currentPage === pageNumber, 'bg-white border-gray-300 text-gray-500 hover:bg-gray-50': currentPage !== pageNumber}"
-                                                          class="relative inline-flex items-center px-4 py-2 border text-sm font-medium"
-                                                      >
-                                                          <span x-text="pageNumber"></span>
-                                                      </button>
-                                                  </template>
-                                                  <button
-                                                      @click="currentPage = Math.min(totalPages(), currentPage + 1)"
-                                                      :disabled="currentPage === totalPages()"
-                                                      class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"
-                                                  >
-                                                      <span class="sr-only">Next</span>
-                                                      <i class="fas fa-chevron-right"></i>
-                                                  </button>
-                                              </nav>
-                                          </div>
-                                      </div>
-                                  </div>
-                              </main>
-                          </div>
-                      </div>
-                      <!-- Pending PMO Tab end from here -->
-                      <!-- Draft Tab start from here -->
-                      <div x-show="activeTab === 'draft'">
-                          <div
-                              x-data="{
-              users: [
-                  { id: 1, title: 'Senior Resolution Manager', emailSignature: 'Senior Resolution Manager', jobDuration: '07/29/2024 - 01/24/2025', hiringManager: 'Donna Stockton', status: 'Active', position: '1', submission: '0', workerType: 'CW', action: { icon: 'fa-regular fa-eye', link: '#' } },
-                  { id: 2, title: 'Senior Resolution Manager', emailSignature: 'Senior Resolution Manager', jobDuration: '07/29/2024 - 01/24/2025', hiringManager: 'Don Soto', status: 'Inactive', position: '1', submission: '0', workerType: 'CW', action: { icon: 'fa-regular fa-eye', link: '#' }   },
-                  { id: 3, title: 'Claims Services Representative', emailSignature: 'Claims Service Representative', jobDuration: '07/29/2024 - 01/24/2025	', hiringManager: 'Julie Hommowun', status: 'Pending', position: '1', submission: '0', workerType: 'CW' , action: { icon: 'fa-regular fa-eye', link: '#' }  },
-
-              ],
-              currentPage: 1,
-              itemsPerPage: 20,
-              search: '',
-              filteredUsers() {
-                  return this.users.filter(user =>
-                      user.title.toLowerCase().includes(this.search.toLowerCase()) ||
-                      user.emailSignature.toLowerCase().includes(this.search.toLowerCase())
-                  );
-              },
-              paginatedUsers() {
-                const start = (this.currentPage - 1) * this.itemsPerPage;
-                const end = start + this.itemsPerPage;
-                return this.filteredUsers().slice(start, end);
-            },
-            totalPages() {
-                return Math.ceil(this.filteredUsers().length / this.itemsPerPage);
-            }
-          }"
-                          >
-                              <!-- Main Content -->
-                              <main class="py-6 sm:px-6 lg:px-8">
-                                  <!-- Search and Add User -->
-                                  <div class="mb-4 flex justify-between">
-                                      <div class="relative">
-                                          <input
-                                              type="text"
-                                              x-model="search"
-                                              placeholder="Search users"
-                                              class="pl-10 pr-4 py-2 border rounded-md"
-                                          />
-                                          <div
-                                              class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
-                                          >
-                                              <i class="fas fa-search text-gray-400"></i>
-                                          </div>
-                                      </div>
-                                      <button
-                                          class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                                      >
-                                          Export Sheet
-                                      </button>
-                                  </div>
-
-                                  <!-- User Table -->
-                                  <div class="bg-white shadow overflow-hidden sm:rounded-lg">
-                                      <table class="min-w-full divide-y divide-gray-200">
-                                          <thead class="bg-gray-50">
-                                          <tr>
-                                              <!-- Status -->
-                                              <th
-                                                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                                              >
-                                                  Status
-                                              </th>
-                                              <!-- User -->
-                                              <th
-                                                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                                              >
-                                                  Job ID
-                                              </th>
-                                              <!-- job -->
-                                              <th
-                                                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                                              >
-                                                  Job title
-                                              </th>
-                                              <th
-                                                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                                              >
-                                                  Job Title for Email Signature
-                                              </th>
-
-                                              <th
-                                                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                                              >
-                                                  Job Duration
-                                              </th>
-                                              <th
-                                                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                                              >
-                                                  Hiring Manager
-                                              </th>
-                                              <th
-                                                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                                              >
-                                                  Position
-                                              </th>
-                                              <th
-                                                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                                              >
-                                                  Submission
-                                              </th>
-                                              <th
-                                                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                                              >
-                                                  Hired
-                                              </th>
-                                              <th
-                                                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                                              >
-                                                  Worker Type
-                                              </th>
-                                              <th
-                                                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                                              >
-                                                  Action
-                                              </th>
-                                          </tr>
-                                          </thead>
-                                          <tbody class="bg-white divide-y divide-gray-200">
-                                          <template
-                                              x-for="user in paginatedUsers()"
-                                              :key="user.id"
-                                          >
-                                              <tr>
-                                                  <!-- Status -->
-                                                  <td class="px-6 py-4 text-center whitespace-nowrap">
-                              <span
-                                  class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full"
-                                  :class="{
-                                                      'bg-green-100 text-green-800': user.status === 'Active',
-                                                      'bg-red-100 text-red-800': user.status === 'Inactive',
-                                                      'bg-yellow-100 text-yellow-800': user.status === 'Pending'
-                                                  }"
-                                  x-text="user.status"
-                              ></span>
-                                                  </td>
-                                                  <td
-                                                      class="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-500"
-                                                      x-text="user.id"
-                                                  ></td>
-                                                  <td
-                                                      class="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-500"
-                                                      x-text="user.title"
-                                                  ></td>
-                                                  <td
-                                                      class="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-500"
-                                                      x-text="user.title"
-                                                  ></td>
-                                                  <td
-                                                      class="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-500"
-                                                      x-text="user.emailSignature"
-                                                  ></td>
-                                                  <td
-                                                      class="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-500"
-                                                      x-text="user.jobDuration"
-                                                  ></td>
-                                                  <td
-                                                      class="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-500"
-                                                      x-text="user.hiringManager"
-                                                  ></td>
-                                                  <td
-                                                      class="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-500"
-                                                      x-text="user.position"
-                                                  ></td>
-                                                  <td
-                                                      class="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-500"
-                                                      x-text="user.submission"
-                                                  ></td>
-                                                  <td
-                                                      class="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-500"
-                                                      x-text="user.workerType"
-                                                  ></td>
-                                                  <td
-                                                      class="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-500"
-                                                  >
-                                                      <a
-                                                          :href="user.action.link"
-                                                          class="hover:text-indigo-900"
-                                                      >
-                                                          <i :class="user.action.icon"></i>
-                                                      </a>
-                                                  </td>
-                                              </tr>
-                                          </template>
-                                          </tbody>
-                                      </table>
-                                  </div>
-                                  <div>
-                                      <div class="mt-4 flex justify-between items-center">
-                                          <div>
-                        <span class="text-sm text-gray-700">
-                          Showing
-                          <span
-                              class="font-medium"
-                              x-text="((currentPage - 1) * itemsPerPage) + 1"
-                          ></span>
-                          to
-                          <span
-                              class="font-medium"
-                              x-text="Math.min(currentPage * itemsPerPage, filteredUsers().length)"
-                          ></span>
-                          of
-                          <span
-                              class="font-medium"
-                              x-text="filteredUsers().length"
-                          ></span>
-                          results
-                        </span>
-                                          </div>
-                                          <div>
-                                              <nav
-                                                  class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px"
-                                                  aria-label="Pagination"
-                                              >
-                                                  <button
-                                                      @click="currentPage = Math.max(1, currentPage - 1)"
-                                                      :disabled="currentPage === 1"
-                                                      class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"
-                                                  >
-                                                      <span class="sr-only">Previous</span>
-                                                      <i class="fas fa-chevron-left"></i>
-                                                  </button>
-                                                  <template x-for="pageNumber in totalPages()">
-                                                      <button
-                                                          @click="currentPage = pageNumber"
-                                                          :class="{'bg-blue-50 border-blue-500 text-blue-600': currentPage === pageNumber, 'bg-white border-gray-300 text-gray-500 hover:bg-gray-50': currentPage !== pageNumber}"
-                                                          class="relative inline-flex items-center px-4 py-2 border text-sm font-medium"
-                                                      >
-                                                          <span x-text="pageNumber"></span>
-                                                      </button>
-                                                  </template>
-                                                  <button
-                                                      @click="currentPage = Math.min(totalPages(), currentPage + 1)"
-                                                      :disabled="currentPage === totalPages()"
-                                                      class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"
-                                                  >
-                                                      <span class="sr-only">Next</span>
-                                                      <i class="fas fa-chevron-right"></i>
-                                                  </button>
-                                              </nav>
-                                          </div>
-                                      </div>
-                                  </div>
-                              </main>
-                          </div>
-                      </div>
-                      <!-- Draft Tab end from here -->
-                      <!-- All Jobs Tab start from here -->
-                      <div x-show="activeTab === 'allJobs'">
-                          <div
-                              x-data="{
-              users: [
-                  { id: 1, title: 'Senior Resolution Manager', emailSignature: 'Senior Resolution Manager', jobDuration: '07/29/2024 - 01/24/2025', hiringManager: 'Donna Stockton', status: 'Active', position: '1', submission: '0', workerType: 'CW', action: { icon: 'fa-regular fa-eye', link: '#' } },
-                  { id: 2, title: 'Senior Resolution Manager', emailSignature: 'Senior Resolution Manager', jobDuration: '07/29/2024 - 01/24/2025', hiringManager: 'Don Soto', status: 'Inactive', position: '1', submission: '0', workerType: 'CW', action: { icon: 'fa-regular fa-eye', link: '#' }   },
-                  { id: 3, title: 'Claims Services Representative', emailSignature: 'Claims Service Representative', jobDuration: '07/29/2024 - 01/24/2025	', hiringManager: 'Julie Hommowun', status: 'Pending', position: '1', submission: '0', workerType: 'CW' , action: { icon: 'fa-regular fa-eye', link: '#' }  },
-
-              ],
-              currentPage: 1,
-              itemsPerPage: 20,
-              search: '',
-              filteredUsers() {
-                  return this.users.filter(user =>
-                      user.title.toLowerCase().includes(this.search.toLowerCase()) ||
-                      user.emailSignature.toLowerCase().includes(this.search.toLowerCase())
-                  );
-              },
-              paginatedUsers() {
-                const start = (this.currentPage - 1) * this.itemsPerPage;
-                const end = start + this.itemsPerPage;
-                return this.filteredUsers().slice(start, end);
-            },
-            totalPages() {
-                return Math.ceil(this.filteredUsers().length / this.itemsPerPage);
-            }
-          }"
-                          >
-                              <!-- Main Content -->
-                              <main class="py-6 sm:px-6 lg:px-8">
-                                  <!-- Search and Add User -->
-                                  <div class="mb-4 flex justify-between">
-                                      <div class="relative">
-                                          <input
-                                              type="text"
-                                              x-model="search"
-                                              placeholder="Search users"
-                                              class="pl-10 pr-4 py-2 border rounded-md"
-                                          />
-                                          <div
-                                              class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
-                                          >
-                                              <i class="fas fa-search text-gray-400"></i>
-                                          </div>
-                                      </div>
-                                      <button
-                                          class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                                      >
-                                          Export Sheet
-                                      </button>
-                                  </div>
-
-                                  <!-- User Table -->
-                                  <div class="bg-white shadow overflow-hidden sm:rounded-lg">
-                                      <table class="min-w-full divide-y divide-gray-200">
-                                          <thead class="bg-gray-50">
-                                          <tr>
-                                              <!-- Status -->
-                                              <th
-                                                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                                              >
-                                                  Status
-                                              </th>
-                                              <!-- User -->
-                                              <th
-                                                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                                              >
-                                                  Job ID
-                                              </th>
-                                              <!-- job -->
-                                              <th
-                                                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                                              >
-                                                  Job title
-                                              </th>
-                                              <th
-                                                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                                              >
-                                                  Job Title for Email Signature
-                                              </th>
-
-                                              <th
-                                                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                                              >
-                                                  Job Duration
-                                              </th>
-                                              <th
-                                                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                                              >
-                                                  Hiring Manager
-                                              </th>
-                                              <th
-                                                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                                              >
-                                                  Position
-                                              </th>
-                                              <th
-                                                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                                              >
-                                                  Submission
-                                              </th>
-                                              <th
-                                                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                                              >
-                                                  Hired
-                                              </th>
-                                              <th
-                                                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                                              >
-                                                  Worker Type
-                                              </th>
-                                              <th
-                                                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                                              >
-                                                  Action
-                                              </th>
-                                          </tr>
-                                          </thead>
-                                          <tbody class="bg-white divide-y divide-gray-200">
-                                          <template
-                                              x-for="user in paginatedUsers()"
-                                              :key="user.id"
-                                          >
-                                              <tr>
-                                                  <!-- Status -->
-                                                  <td class="px-6 py-4 text-center whitespace-nowrap">
-                              <span
-                                  class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full"
-                                  :class="{
-                                                      'bg-green-100 text-green-800': user.status === 'Active',
-                                                      'bg-red-100 text-red-800': user.status === 'Inactive',
-                                                      'bg-yellow-100 text-yellow-800': user.status === 'Pending'
-                                                  }"
-                                  x-text="user.status"
-                              ></span>
-                                                  </td>
-                                                  <td
-                                                      class="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-500"
-                                                      x-text="user.id"
-                                                  ></td>
-                                                  <td
-                                                      class="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-500"
-                                                      x-text="user.title"
-                                                  ></td>
-                                                  <td
-                                                      class="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-500"
-                                                      x-text="user.title"
-                                                  ></td>
-                                                  <td
-                                                      class="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-500"
-                                                      x-text="user.emailSignature"
-                                                  ></td>
-                                                  <td
-                                                      class="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-500"
-                                                      x-text="user.jobDuration"
-                                                  ></td>
-                                                  <td
-                                                      class="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-500"
-                                                      x-text="user.hiringManager"
-                                                  ></td>
-                                                  <td
-                                                      class="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-500"
-                                                      x-text="user.position"
-                                                  ></td>
-                                                  <td
-                                                      class="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-500"
-                                                      x-text="user.submission"
-                                                  ></td>
-                                                  <td
-                                                      class="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-500"
-                                                      x-text="user.workerType"
-                                                  ></td>
-                                                  <td
-                                                      class="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-500"
-                                                  >
-                                                      <a
-                                                          :href="user.action.link"
-                                                          class="hover:text-indigo-900"
-                                                      >
-                                                          <i :class="user.action.icon"></i>
-                                                      </a>
-                                                  </td>
-                                              </tr>
-                                          </template>
-                                          </tbody>
-                                      </table>
-                                  </div>
-                                  <div>
-                                      <div class="mt-4 flex justify-between items-center">
-                                          <div>
-                        <span class="text-sm text-gray-700">
-                          Showing
-                          <span
-                              class="font-medium"
-                              x-text="((currentPage - 1) * itemsPerPage) + 1"
-                          ></span>
-                          to
-                          <span
-                              class="font-medium"
-                              x-text="Math.min(currentPage * itemsPerPage, filteredUsers().length)"
-                          ></span>
-                          of
-                          <span
-                              class="font-medium"
-                              x-text="filteredUsers().length"
-                          ></span>
-                          results
-                        </span>
-                                          </div>
-                                          <div>
-                                              <nav
-                                                  class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px"
-                                                  aria-label="Pagination"
-                                              >
-                                                  <button
-                                                      @click="currentPage = Math.max(1, currentPage - 1)"
-                                                      :disabled="currentPage === 1"
-                                                      class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"
-                                                  >
-                                                      <span class="sr-only">Previous</span>
-                                                      <i class="fas fa-chevron-left"></i>
-                                                  </button>
-                                                  <template x-for="pageNumber in totalPages()">
-                                                      <button
-                                                          @click="currentPage = pageNumber"
-                                                          :class="{'bg-blue-50 border-blue-500 text-blue-600': currentPage === pageNumber, 'bg-white border-gray-300 text-gray-500 hover:bg-gray-50': currentPage !== pageNumber}"
-                                                          class="relative inline-flex items-center px-4 py-2 border text-sm font-medium"
-                                                      >
-                                                          <span x-text="pageNumber"></span>
-                                                      </button>
-                                                  </template>
-                                                  <button
-                                                      @click="currentPage = Math.min(totalPages(), currentPage + 1)"
-                                                      :disabled="currentPage === totalPages()"
-                                                      class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"
-                                                  >
-                                                      <span class="sr-only">Next</span>
-                                                      <i class="fas fa-chevron-right"></i>
-                                                  </button>
-                                              </nav>
-                                          </div>
-                                      </div>
-                                  </div>
-                              </main>
-                          </div>
-                      </div>
-                      <!-- All Jobs Tab end from here -->
+                </a>
+              </li>
+              <li class="flex justify-center items-center">
+                <a
+                  href="#page2"
+                  class="w-full flex justify-center items-center gap-3 bg-white rounded-lg shadow py-4"
+                  :style="{'color': 'var(--primary-color)'}"
+                  ><i class="fa-regular fa-registered"></i
+                  ><span class="capitalize">Pending Release Job</span>
+                  <div
+                    class="px-1 py-1 flex items-center justify-center text-white rounded-lg"
+                    :style="{'background-color': 'var(--primary-color)'}"
+                  >
+                    <span class="text-[10px]">56</span>
                   </div>
-              </div>
+                </a>
+              </li>
+              <li class="flex justify-center">
+                <a
+                  href="#page1"
+                  class="flex justify-center items-center gap-3 py-4 w-full hover:bg-white hover:rounded-lg hover:shadow"
+                >
+                  <i class="fa-solid fa-fill"></i>
+                  <span class="capitalize">filled jobs</span>
+                  <div
+                    class="px-1 py-1 flex items-center justify-center bg-gray-500 text-white rounded-lg"
+                  >
+                    <span class="text-[10px]">20</span>
+                  </div>
+                </a>
+              </li>
+              <li class="flex justify-center">
+                <a
+                  href="#page1"
+                  class="flex justify-center items-center gap-3 py-4 w-full hover:bg-white hover:rounded-lg hover:shadow"
+                >
+                  <i class="fa-solid fa-lock"></i>
+                  <span class="capitalize">closed jobs</span>
+                  <div
+                    class="px-1 py-1 flex items-center justify-center bg-gray-500 text-white rounded-lg"
+                  >
+                    <span class="text-[10px]">2957</span>
+                  </div>
+                </a>
+              </li>
+              <li class="flex justify-center">
+                <a
+                  href="#page1"
+                  class="flex justify-center items-center gap-3 py-4 w-full hover:bg-white hover:rounded-lg hover:shadow"
+                >
+                  <i class="fa-solid fa-spinner"></i>
+                  <span class="capitalize">pending - PMO</span>
+                  <div
+                    class="px-1 py-1 flex items-center justify-center bg-gray-500 text-white rounded-lg"
+                  >
+                    <span class="text-[10px]">0</span>
+                  </div>
+                </a>
+              </li>
+              <li class="flex justify-center">
+                <a
+                  href="#page1"
+                  class="flex justify-center items-center gap-3 py-4 w-full hover:bg-white hover:rounded-lg hover:shadow"
+                >
+                  <i class="fas fa-drafting-compass"></i>
+                  <span class="capitalize">draft</span>
+                  <div
+                    class="px-1 py-1 flex items-center justify-center bg-gray-500 text-white rounded-lg"
+                  >
+                    <span class="text-[10px]">30</span>
+                  </div>
+                </a>
+              </li>
+              <li class="flex justify-center">
+                <a
+                  href="#page1"
+                  class="flex justify-center items-center gap-3 py-4 w-full hover:bg-white hover:rounded-lg hover:shadow"
+                >
+                  <i class="fa-solid fa-briefcase"></i>
+                  <span class="capitalize">all jobs</span>
+                  <div
+                    class="px-1 py-1 flex items-center justify-center bg-gray-500 text-white rounded-lg"
+                  >
+                    <span class="text-[10px]">4320</span>
+                  </div>
+                </a>
+              </li>
+            </ul>
           </div>
-      </div>
+          <div class="flex w-full gap-4">
+            <!-- Left Column -->
+            <div
+              class="w-1/3 p-[30px] rounded border"
+              :style="{'border-color': 'var(--primary-color)'}"
+            >
+              <!-- Cards -->
+              <div>
+                <div class="flex gap-4 w-full">
+                  <div
+                    class="shadow-[0_3px_10px_rgb(0,0,0,0.2)] bg-white rounded w-full px-2 py-4"
+                  >
+                    <div class="flex flex-col gap-2 items-center">
+                      <div
+                        class="bg-[#ddf6e8] w-8 h-8 rounded-full flex items-center justify-center"
+                      >
+                        <i class="fa-solid fa-dollar-sign text-[#28c76f]"></i>
+                      </div>
+                      <div class="text-center">
+                        <span
+                          class="font-bold text-sm font-normal text-[#28c76f]"
+                          >Regular Hours Cost</span
+                        >
+                      </div>
+                    </div>
+                    <div class="mt-2 text-center">
+                      <span>$78,000.00</span>
+                    </div>
+                  </div>
+                  <div
+                    class="shadow-[0_3px_10px_rgb(0,0,0,0.2)] bg-white rounded w-full px-2 py-4"
+                  >
+                    <div class="flex flex-col gap-2 items-center">
+                      <div
+                        class="bg-[#D6F4F8] w-8 h-8 rounded-full flex items-center justify-center"
+                      >
+                        <i class="fa-solid fa-dollar-sign text-[#00bad1]"></i>
+                      </div>
+                      <div class="text-center">
+                        <span
+                          class="font-bold text-sm font-normal text-[#00bad1]"
+                          >Single Resource Cost</span
+                        >
+                      </div>
+                    </div>
+                    <div class="mt-2 text-center">
+                      <span>$78,000.00</span>
+                    </div>
+                  </div>
+                  <div
+                    class="shadow-[0_3px_10px_rgb(0,0,0,0.2)] bg-white rounded w-full px-2 py-4"
+                  >
+                    <div class="flex flex-col gap-2 items-center">
+                      <div
+                        class="bg-[#FFF0E1] w-8 h-8 rounded-full flex items-center justify-center"
+                      >
+                        <i class="fa-solid fa-dollar-sign text-[#ff9f43]"></i>
+                      </div>
+                      <div class="text-center">
+                        <span
+                          class="font-bold text-sm font-normal text-[#ff9f43]"
+                          >All Resources Cost</span
+                        >
+                      </div>
+                    </div>
+                    <div class="mt-2 text-center">
+                      <span>$78,000.00</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- Business Unit & Business Percentage -->
+              <div class="mt-4">
+                <div
+                  class="flex py-4 px-2 rounded rounded-b-none"
+                  :style="{'background-color': 'var(--primary-color)'}"
+                >
+                  <div class="w-3/5">
+                    <span class="text-white">Business Unit</span>
+                  </div>
+                  <div class="w-2/5 text-center">
+                    <span class="text-white">Budget Percentage</span>
+                  </div>
+                </div>
+                <div
+                  class="flex justify-between gap-2 py-4 px-2 border-x border-b"
+                >
+                  <div class="w-3/5 flex-wrap">
+                    <span>708212 - 166 - St. Peters, MO - LPG</span>
+                  </div>
+                  <div class="w-2/5 text-center">
+                    <span>100%</span>
+                  </div>
+                </div>
+              </div>
+              <div class="mt-4 rounded p-4 bg-[#F5F7FC]">
+                <p class="color-[#202124] font-light">
+                  Please list the preferred agency(s)/vendor(s) to utilize for
+                  filling this position, and list any other relevant information
+                  for the Program Office
+                </p>
+                <div class="mt-4">
+                  <ul class="color-[#202124] font-light">
+                    <li>PRG</li>
+                    <li>Canon</li>
+                    <li>Insight Global</li>
+                    <li>Professional Staffing</li>
+                  </ul>
+                </div>
+                <p class="mt-4">UPDATE HIRING MANAGER TO Suzanne Touch</p>
+                <p class="mt-4">(Justin Stephenson Vacancy)</p>
+              </div>
+              <div class="mt-4 rounded p-4 bg-[#F5F7FC]">
+                <p class="color-[#202124] font-light">Business Justification</p>
+                <div class="mt-4">
+                  <ul class="color-[#202124] font-light">
+                    <li>Line 14724 approved 7/25/2024</li>
+                    <li>(Justin Stephenson Vacancy)</li>
+                  </ul>
+                </div>
+              </div>
+              <div class="mt-4 rounded p-4 bg-[#F5F7FC]">
+                <p class="color-[#202124] font-light">
+                  Pre-Identified Candidate
+                </p>
+                <div
+                  class="flex items-center mt-4 border rounded"
+                  :style="{'border-color': 'var(--primary-color)'}"
+                >
+                  <div
+                    class="py-4 w-2/4 pl-4 rounded rounded-r-none"
+                    :style="{'background-color': 'var(--primary-color)'}"
+                  >
+                    <span class="text-white font-light"
+                      >Pre-Identified Candidate?</span
+                    >
+                  </div>
+                  <div class="w-2/4 pl-4">
+                    <span class="color-[#202124] font-light">No</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- Middle Column -->
+            <div
+              class="w-1/3 p-[30px] rounded border"
+              :style="{'border-color': 'var(--primary-color)'}"
+            >
+              <h3 class="flex items-center gap-2 mb-4 bg-">
+                <i
+                  class="fa-solid fa-inbox"
+                  :style="{'color': 'var(--primary-color)'}"
+                ></i
+                ><span :style="{'color': 'var(--primary-color)'}"
+                  >Job Info</span
+                >
+              </h3>
+              <div class="flex flex-col">
+                <div class="flex items-center justify-between py-4 border-t">
+                  <div class="w-2/4">
+                    <h4 class="font-medium">Job Title:</h4>
+                  </div>
+                  <div class="w-2/4">
+                    <p class="font-light">Senior Resolution Manager</p>
+                  </div>
+                </div>
+                <div class="flex items-center justify-between py-4 border-t">
+                  <div class="w-2/4">
+                    <h4 class="font-medium">Hiring Manager:</h4>
+                  </div>
+                  <div class="w-2/4">
+                    <p class="font-light">Donna Stockton</p>
+                  </div>
+                </div>
+                <div class="flex items-center justify-between py-4 border-t">
+                  <div class="w-2/4">
+                    <h4 class="font-medium">Job Title for Email Signature:</h4>
+                  </div>
+                  <div class="w-2/4">
+                    <p class="font-light">Senior Resolution Manager</p>
+                  </div>
+                </div>
+                <div class="flex items-center justify-between py-4 border-t">
+                  <div class="w-2/4">
+                    <h4 class="font-medium">Work Location:</h4>
+                  </div>
+                  <div class="w-2/4">
+                    <p class="font-light">
+                      US Saint Peters 300 St. Peters Centre Blvd.-300 St. Peters
+                      Centre Blvd.-Saint Peters-Missouri-63376
+                    </p>
+                  </div>
+                </div>
+                <div class="flex items-center justify-between py-4 border-t">
+                  <div class="w-2/4">
+                    <h4 class="font-medium">Division:</h4>
+                  </div>
+                  <div class="w-2/4">
+                    <p class="font-light">Gallagher Bassett Services</p>
+                  </div>
+                </div>
+                <div class="flex items-center justify-between py-4 border-t">
+                  <div class="w-2/4">
+                    <h4 class="font-medium">Region/Zone:</h4>
+                  </div>
+                  <div class="w-2/4">
+                    <p class="font-light">North America Operations</p>
+                  </div>
+                </div>
+                <div class="flex items-center justify-between py-4 border-t">
+                  <div class="w-2/4">
+                    <h4 class="font-medium">Branch:</h4>
+                  </div>
+                  <div class="w-2/4">
+                    <p class="font-light">Claims Services</p>
+                  </div>
+                </div>
+                <div class="flex items-center justify-between py-4 border-t">
+                  <div class="w-2/4">
+                    <h4 class="font-medium">Job Code:</h4>
+                  </div>
+                  <div class="w-2/4">
+                    <p class="font-light">100259</p>
+                  </div>
+                </div>
+                <div class="flex items-center justify-between py-4 border-t">
+                  <div class="w-2/4">
+                    <h4 class="font-medium">Category:</h4>
+                  </div>
+                  <div class="w-2/4">
+                    <p class="font-light">Claims</p>
+                  </div>
+                </div>
+                <div class="flex items-center justify-between py-4 border-t">
+                  <div class="w-2/4">
+                    <h4 class="font-medium">Travel Required:</h4>
+                  </div>
+                  <div class="w-2/4">
+                    <p class="font-light">No</p>
+                  </div>
+                </div>
+                <div class="flex items-center justify-between py-4 border-t">
+                  <div class="w-2/4">
+                    <h4 class="font-medium">Business Reason:</h4>
+                  </div>
+                  <div class="w-2/4">
+                    <p class="font-light">Replacement - Budgeted</p>
+                  </div>
+                </div>
+                <div class="flex items-center justify-between py-4 border-t">
+                  <div class="w-2/4">
+                    <h4 class="font-medium">Time System:</h4>
+                  </div>
+                  <div class="w-2/4">
+                    <p class="font-light">Contractor Connect</p>
+                  </div>
+                </div>
+                <div class="flex items-center justify-between py-4 border-t">
+                  <div class="w-2/4">
+                    <h4 class="font-medium">Client Billable:</h4>
+                  </div>
+                  <div class="w-2/4">
+                    <p class="font-light">No</p>
+                  </div>
+                </div>
+                <div class="flex items-center justify-between py-4 border-t">
+                  <div class="w-2/4">
+                    <h4 class="font-medium">Expenses Allowed?</h4>
+                  </div>
+                  <div class="w-2/4">
+                    <p class="font-light">No</p>
+                  </div>
+                </div>
+                <div class="flex items-center justify-between py-4 border-t">
+                  <div class="w-2/4">
+                    <h4 class="font-medium">Remote Candidate:</h4>
+                  </div>
+                  <div class="w-2/4">
+                    <p class="font-light">Yes</p>
+                  </div>
+                </div>
+                <div class="flex items-center justify-between py-4 border-t">
+                  <div class="w-2/4">
+                    <h4 class="font-medium">Number of Opening(s):</h4>
+                  </div>
+                  <div class="w-2/4">
+                    <p class="font-light">1</p>
+                  </div>
+                </div>
+                <div class="flex items-center justify-between py-4 border-t">
+                  <div class="w-2/4">
+                    <h4 class="font-medium">Worker Type:</h4>
+                  </div>
+                  <div class="w-2/4">
+                    <p class="font-light">Eligible for Overtime Premium</p>
+                  </div>
+                </div>
+                <div class="flex items-center justify-between py-4 border-t">
+                  <div class="w-2/4">
+                    <h4 class="font-medium">Job Family:</h4>
+                  </div>
+                  <div class="w-2/4">
+                    <p class="font-light">777007 - Contingent Worker-Claims</p>
+                  </div>
+                </div>
+                <div class="flex items-center justify-between py-4 border-t">
+                  <div class="w-2/4">
+                    <h4 class="font-medium">GL Account:</h4>
+                  </div>
+                  <div class="w-2/4">
+                    <p class="font-light">507105 - Temporary Help</p>
+                  </div>
+                </div>
+                <div class="flex items-center justify-between py-4 border-t">
+                  <div class="w-2/4">
+                    <h4 class="font-medium">
+                      Will this Position Require the Worker to Work OT?:
+                    </h4>
+                  </div>
+                  <div class="w-2/4">
+                    <p class="font-light">Yes</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- Right Column -->
+            <div
+              class="w-1/3 p-[30px] rounded border"
+              :style="{'border-color': 'var(--primary-color)'}"
+            >
+              <h3 class="flex items-center gap-2 mb-4">
+                <i
+                  class="fa-regular fa-clock"
+                  :style="{'color': 'var(--primary-color)'}"
+                ></i
+                ><span :style="{'color': 'var(--primary-color)'}"
+                  >Job Duration</span
+                >
+              </h3>
+              <div class="flex items-center justify-between py-4 border-t">
+                <div class="w-2/4">
+                  <h4 class="font-medium">Work Days / Week:</h4>
+                </div>
+                <div class="w-2/4">
+                  <p class="font-light">5</p>
+                </div>
+              </div>
+              <div class="flex items-center justify-between py-4 border-t">
+                <div class="w-2/4">
+                  <h4 class="font-medium">Total Working Days:</h4>
+                </div>
+                <div class="w-2/4">
+                  <p class="font-light">130</p>
+                </div>
+              </div>
+              <div class="flex items-center justify-between py-4 border-t">
+                <div class="w-2/4">
+                  <h4 class="font-medium">Estimated Hours / Day:</h4>
+                </div>
+                <div class="w-2/4">
+                  <p class="font-light">8</p>
+                </div>
+              </div>
+              <div class="flex items-center justify-between py-4 border-t">
+                <div class="w-2/4">
+                  <h4 class="font-medium">Total Time:</h4>
+                </div>
+                <div class="w-2/4">
+                  <p class="font-light">1040</p>
+                </div>
+              </div>
+              <div class="flex items-center justify-between py-4 border-y">
+                <div class="w-2/4">
+                  <h4 class="font-medium">Job Duration:</h4>
+                </div>
+                <div class="w-2/4">
+                  <p class="font-light">07/29/2024 - 01/24/2025</p>
+                </div>
+              </div>
+              <!-- Rates -->
+              <h3 class="flex items-center gap-2 my-4">
+                <i
+                  class="fa-regular fa-money-bill-1"
+                  :style="{'color': 'var(--primary-color)'}"
+                ></i
+                ><span :style="{'color': 'var(--primary-color)'}">Rates</span>
+              </h3>
+              <div class="flex items-center justify-between py-4 border-t">
+                <div class="w-2/4">
+                  <h4 class="font-medium">Unit of Measure:</h4>
+                </div>
+                <div class="w-2/4">
+                  <p class="font-light">Per Hour</p>
+                </div>
+              </div>
+              <div class="flex items-center justify-between py-4 border-t">
+                <div class="w-2/4">
+                  <h4 class="font-medium">Currency:</h4>
+                </div>
+                <div class="w-2/4">
+                  <p class="font-light">USD</p>
+                </div>
+              </div>
+              <div class="flex items-center justify-between py-4 border-t">
+                <div class="w-2/4">
+                  <h4 class="font-medium">Minimum Bill Rate:</h4>
+                </div>
+                <div class="w-2/4">
+                  <p class="font-light">$20.00</p>
+                </div>
+              </div>
+              <div class="flex items-center justify-between py-4 border-t">
+                <div class="w-2/4">
+                  <h4 class="font-medium">Maximum Bill Rate:</h4>
+                </div>
+                <div class="w-2/4">
+                  <p class="font-light">$75.00</p>
+                </div>
+              </div>
+              <div class="flex items-center justify-between py-4 border-y">
+                <div class="w-2/4">
+                  <h4 class="font-medium">Time Type:</h4>
+                </div>
+                <div class="w-2/4">
+                  <p class="font-light">Full Time</p>
+                </div>
+              </div>
+              <!-- Job Publish Info -->
+              <h3 class="flex items-center gap-2 my-4">
+                <i
+                  class="fa-solid fa-upload"
+                  :style="{'color': 'var(--primary-color)'}"
+                ></i
+                ><span :style="{'color': 'var(--primary-color)'}"
+                  >Job Publish Info</span
+                >
+              </h3>
+              <div class="flex items-center justify-between py-4 border-t">
+                <div class="w-2/4">
+                  <h4 class="font-medium">Job Created:</h4>
+                </div>
+                <div class="w-2/4">
+                  <p class="font-light">07/25/2024 02:38 PM</p>
+                </div>
+              </div>
+              <div class="flex items-center justify-between py-4 border-t">
+                <div class="w-2/4">
+                  <h4 class="font-medium">Job Created By:</h4>
+                </div>
+                <div class="w-2/4">
+                  <p class="font-light">Donna Stockton</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
     </div>
-@endsection
+    @endsection

@@ -12,6 +12,10 @@ use App\Models\Country;
 use App\Models\State;
 use App\Models\Setting;
 use App\Models\SettingCategory;
+use App\Models\Vendor;
+use App\Models\JobTemplates;
+use App\Models\Markup;
+
 class GenericDataController extends BaseController
 {
 
@@ -331,6 +335,84 @@ class GenericDataController extends BaseController
 
             SettingCategory::create($validatedData);
             $successMessage = 'Category saved successfully!';
+            return response()->json([
+                'success' => true,
+                'message' => $successMessage,
+                'redirect_url' => url()->previous() // Redirect back URL for AJAX
+            ]);
+
+        }
+    }
+
+    public function settingMarkup(Request $request)
+    {
+       // dd($request);
+        if ($request->isMethod('get')) {
+            $data = Markup::with('vendor', 'location', 'category')->get(); 
+            $vendors = Vendor::all();
+            $categories = JobTemplates::all();
+            $locations = Location::all();
+
+            return view('admin.data_points.markup', [
+                'data' => $data,
+                'vendors' => $vendors,
+                'categories' => $categories,
+                'locations' => $locations,
+            ]);
+        }elseif ($request->isMethod('post')) {
+            $rules = [
+                'vendor_id'   => 'required|string|max:255',
+                'location_id' => 'required|string|max:255',
+                'category_id' => 'required|string|max:255',
+                'markup_value'=> 'required|string|max:255',
+                'status'      => 'required|string|max:255',
+               
+            ];
+    
+            // Custom error messages (optional)
+            $messages = [
+               'vendor_id'    => 'The Vendor field is Required.',
+               'location_id'  => 'The Location field is Required.',
+               'category_id'  => 'The Category field is Required.',
+               'markup_value' => 'The Markup  field is Required.',
+               'status'       => 'The Status field is Required.',
+                // Add more custom messages as needed
+            ];
+    
+            // Validate the request data
+            $validator = Validator::make($request->all(), $rules, $messages);
+    
+            if ($validator->fails()) {
+                return response()->json([
+                    'success' => false,
+                    'errors' => $validator->errors()->all(),
+                ]);
+            }
+            $validatedData = $validator->validated(); // Get validated data
+
+            if ($request->has('id') && $request->input('id')) {
+                // Update the existing record
+                $location = Markup::find($request->input('id'));
+                $successMessage = 'Markup updated successfully!';
+    
+                if ($location) {
+                    $location->update($validatedData);
+                } else {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Markup not found!',
+                    ]);
+                }
+            } else {
+                // Create a new record
+                Markup::create($validatedData);
+                $successMessage = 'Markup saved successfully!';
+            }
+
+
+            // Markup::create($validatedData);
+            // $successMessage = 'Markup saved successfully!';
+            
             return response()->json([
                 'success' => true,
                 'message' => $successMessage,
