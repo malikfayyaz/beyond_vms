@@ -152,7 +152,18 @@ Route::middleware(['ensure_role_is_selected'])->group(function () {
 
     Route::middleware(['user_role:client'])->group(function () {
         Route::get('/client/dashboard', [ClientController::class, 'index'])->name('client.dashboard');
+        Route::resource('/client/career-opportunities', \App\Http\Controllers\Client\CareerOpportunitiesController::class)
+            ->names([
+                'index' => 'client.career-opportunities.index',
+                'create' => 'client.career-opportunities.create',
+                'store' => 'client.career-opportunities.store',
+                'show' => 'client.career-opportunities.show',
+                'edit' => 'client.career-opportunities.edit',
+                'update' => 'client.career-opportunities.update',
+                'destroy' => 'client.career-opportunities.destroy'
+            ]);
     });
+
     Route::middleware(['user_role:vendor'])->group(function () {
         Route::get('/vendor/dashboard', [ClientController::class, 'index'])->name('vendor.dashboard');
     });

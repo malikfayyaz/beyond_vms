@@ -117,13 +117,7 @@ class CareerOpportunitiesController extends BaseController
      */
     public function show(string $id)
     {
-        $job = CareerOpportunity::with('hiringManager')->findOrFail($id);
-
-        // Optionally, you can dump the data for debugging purposes
-        // dd($job); // Uncomment to check the data structure
-
-        // Return the view and pass the job data to it
-        return view('admin.career_opportunities.view', compact('job'));
+        //
     }
 
     /**
