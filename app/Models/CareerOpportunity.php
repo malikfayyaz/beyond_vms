@@ -21,5 +21,8 @@ class CareerOpportunity extends Model
     {
         return $this->belongsTo(Setting::class, 'worker_type_id', 'id');
     }
-
+    public function careerOpportunitiesBu()
+    {
+        return $this->hasMany(CareerOpportunitiesBu::class, 'career_opportunity_id');
+    }
 }

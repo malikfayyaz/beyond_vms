@@ -6,7 +6,7 @@
 
     <div class="ml-16">
         @include('admin.layouts.partials.header')
-        <div class="bg-white mx-4 my-8 rounded p-8" x-data="adminUser()">
+        <div class="bg-white mx-4 my-8 rounded p-8" x-data="adminForm({{ $editIndex ?? 'null' }})">
             @include('admin.layouts.partials.alerts') <!-- Include the partial view -->
 
             <!-- Conditional Heading -->
@@ -20,38 +20,38 @@
             <div class="flex mb-4">
                 <div class="w-1/2 pr-2">
                     <label for="first_name" class="block mb-2">First Name <span class="text-red-500">*</span></label>
-                    <input type="text" id="first_name" x-model="first_name" class="w-full p-2 border rounded h-10">
+                    <input type="text" id="first_name"  x-model="formData.first_name" class="w-full p-2 border rounded h-10">
                     <p x-show="firstNameError" class="text-red-500 text-sm mt-1" x-text="firstNameError"></p>
                 </div>
 
                 <div class="w-1/2 pl-2">
                     <label for="last_name" class="block mb-2">Last Name <span class="text-red-500">*</span></label>
-                    <input type="text" id="last_name" x-model="last_name" class="w-full p-2 border rounded h-10">
+                    <input type="text" id="last_name" x-model="formData.last_name" class="w-full p-2 border rounded h-10">
                     <p x-show="lastNameError" class="text-red-500 text-sm mt-1" x-text="lastNameError"></p>
                 </div>
             </div>
 
             <!-- Other Form Fields -->
-            <div class="mb-4">
+            <div class="mb-4" :disabled="editIndex !== null">
                 <label for="email" class="block mb-2">Email Address <span class="text-red-500">*</span></label>
-                <input type="email" id="email" x-model="email" class="w-full p-2 border rounded h-10">
+                <input type="email" id="email" x-model="formData.email" class="w-full p-2 border rounded h-10" :disabled="editIndex !== null">
                 <p x-show="emailError" class="text-red-500 text-sm mt-1" x-text="emailError"></p>
                 <p id="error-message" class="hidden text-red-500"></p>
             </div>
 
             <div class="mb-4">
                 <label for="phone" class="block mb-2">Phone Number</label>
-                <input type="text" id="phone" x-model="phone" class="w-full p-2 border rounded h-10">
+                <input type="text" id="phone" x-model="formData.phone" class="w-full p-2 border rounded h-10">
             </div>
 
             <div class="mb-4">
                 <label for="profile_image" class="block mb-2">Profile Image</label>
-                <input type="file" id="profile_image" x-model="profile_image" class="w-full">
+                <input type="file" id="profile_image" x-model="formData.profile_image" class="w-full">
             </div>
 
             <div class="mb-4 flex-1">
                 <label for="role" class="block mb-2">Role <span class="text-red-500">*</span></label>
-                <select id="role" x-model="role" class="w-full p-2 border rounded h-10">
+                <select id="role" x-model="formData.role" class="w-full p-2 border rounded h-10">
                     <option value="" disabled selected>Select Role</option>
                     @foreach ($roles as $role)
                         <option value="{{ $role->id }}">{{ $role->name }}</option>
@@ -62,7 +62,7 @@
 
             <div class="mb-4 flex-1">
                 <label for="country" class="block mb-2">Country <span class="text-red-500">*</span></label>
-                <select id="country" x-model="country" class="w-full p-2 border rounded h-10">
+                <select id="country" x-model="formData.country" class="w-full p-2 border rounded h-10">
                     <option value="" disabled selected>Select Country</option>
                     @foreach ($countries as $country)
                         <option value="{{ $country->id }}">{{ $country->name }}</option>
@@ -73,7 +73,7 @@
 
             <div class="mb-4 flex-1">
                 <label for="status" class="block mb-2">Status <span class="text-red-500">*</span></label>
-                <select id="status" x-model="status" class="w-full p-2 border rounded h-10">
+                <select id="status" x-model="formData.status" class="w-full p-2 border rounded h-10">
                     <option value="" disabled selected>Select Status</option>
                     <option value="active">Active</option>
                     <option value="inactive">Inactive</option>
@@ -94,19 +94,23 @@
     </div>
 
     <script>
-    function adminUser() {
+    function adminForm(editIndex) {
         return {
-            first_name: '',
-            last_name: '',
-            email: '',
-            phone: '',
-            profile_image: null,
-            role: '',
-            country: '',
-            status: '',
+            formData: {
+                first_name: '{{ old('first_name', $admin->first_name ?? '') }}',
+                last_name: '{{ old('last_name', $admin->last_name ?? '') }}',
+                email: '{{ old('email', $admin->email ?? '') }}',
+                phone: '{{ old('phone', $admin->phone ?? '') }}',
+                profile_image: null,
+                role: '{{ old('role', $admin->member_access ?? '') }}',
+                country: '{{ old('country', $admin->country ?? '') }}',
+                status: '{{ old('status', $admin->status ?? '') }}',
+            },
+
+            
               // Assuming $data contains user data for listing/editing
             searchTerm: '',
-            editIndex: null,
+            editIndex: editIndex,
             currentUrl: '{{ url()->current() }}',
             
             // Error messages
@@ -121,42 +125,42 @@
             validateFields() {
                 let errorCount = 0;
 
-                if (this.first_name.trim() === "") {
+                if (this.formData.first_name.trim() === "") {
                     this.firstNameError = "First name is required";
                     errorCount++;
                 } else {
                     this.firstNameError = '';
                 }
 
-                if (this.last_name.trim() === "") {
+                if (this.formData.last_name.trim() === "") {
                     this.lastNameError = "Last name is required";
                     errorCount++;
                 } else {
                     this.lastNameError = '';
                 }
 
-                if (this.email.trim() === "") {
+                if (this.formData.email.trim() === "") {
                     this.emailError = "Email address is required";
                     errorCount++;
                 } else {
                     this.emailError = '';
                 }
 
-                if (this.role === "") {
+                if (this.formData.role === "") {
                     this.roleError = "Role is required";
                     errorCount++;
                 } else {
                     this.roleError = '';
                 }
 
-                if (this.country === "") {
+                if (this.formData.country === "") {
                     this.countryError = "Country is required";
                     errorCount++;
                 } else {
                     this.countryError = '';
                 }
 
-                if (this.status === "") {
+                if (this.formData.status === "") {
                     this.statusError = "Status is required";
                     errorCount++;
                 } else {
@@ -165,38 +169,41 @@
 
                 return errorCount === 0;  // Return true if no errors
             },
-
-            // Submit form data
+           
             submitData() {
                 if (this.validateFields()) {
                     const formData = new FormData();
-                    formData.append('first_name', this.first_name);
-                    formData.append('last_name', this.last_name);
-                    formData.append('email', this.email);
-                    formData.append('phone', this.phone);
+                    formData.append('first_name', this.formData.first_name);
+                    formData.append('last_name', this.formData.last_name);
+                    formData.append('email', this.formData.email);
+                    formData.append('phone', this.formData.phone);
                     if (this.profile_image) {
-                        formData.append('profile_image', this.profile_image);
+                        formData.append('profile_image', this.formData.profile_image);
                     }
-                    formData.append('role', this.role);
-                    formData.append('country', this.country);
-                    formData.append('status', this.status);
-                    
-                    // Handle edit case
-                    if (this.editIndex !== null) {
-                        formData.append('id', this.items[this.editIndex].id);
-                    }
+                    formData.append('role', this.formData.role);
+                    formData.append('country', this.formData.country);
+                    formData.append('status', this.formData.status);
 
                     let url = '{{ route("admin.admin-users.store") }}';
-                    // Send data via AJAX
-                    ajaxCall(url, 'POST', [[this.onSuccess, ['response']]], formData);
+                    if (this.editIndex !== null) {
+                        
+                        url = '{{ route("admin.admin-users.update", ":id") }}'; // Update URL
+                        url = url.replace(':id', editIndex); // Replace placeholder with actual ID
+                        formData.append('_method', 'PUT'); // Laravel expects PUT method for updates
+                        console.log(formData); 
+                    }
 
+                    ajaxCall(url, 'POST', [[this.onSuccess, ['response']]], formData);
                     this.cancelEdit();
+                    
                 }
+                
+                // Method implementation
             },
+
 
             // Success handler
             onSuccess(response) {
-                console.log("Form submitted successfully", response);
                 
                 // Handle success case
                 if (response.success && response.redirect_url) {
@@ -219,14 +226,14 @@
 
             // Reset form
             resetForm() {
-                this.first_name = '';
-                this.last_name = '';
-                this.email = '';
-                this.phone = '';
-                this.profile_image = null;
-                this.role = '';
-                this.country = '';
-                this.status = '';
+                this.formData.first_name = '';
+                this.formData.last_name = '';
+                this.formData.email = '';
+                this.formData.phone = '';
+                this.formData.profile_image = null;
+                this.formData.role = '';
+                this.formData.country = '';
+                this.formData.status = '';
                 this.clearErrors();
             },
 
@@ -243,13 +250,13 @@
             // Edit item
             editItem(item) {
                 this.editIndex = this.items.indexOf(item);
-                this.first_name = item.first_name;
-                this.last_name = item.last_name;
-                this.email = item.email;
-                this.phone = item.phone;
-                this.role = item.role;
-                this.country = item.country;
-                this.status = item.status;
+                this.formData.first_name = item.first_name;
+                this.formData.last_name = item.last_name;
+                this.formData.email = item.email;
+                this.formData.phone = item.phone;
+                this.formData.role = item.role;
+                this.formData.country = item.country;
+                this.formData.status = item.status;
                 this.clearErrors();
             },
 

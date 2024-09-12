@@ -65,7 +65,12 @@ class CareerOpportunitiesController extends BaseController
      */
     public function create()
     {
-        return view('admin.career_opportunities.create');
+        $careerOpportunity ="";
+        $businessUnitsData = "";
+        return view('admin.career_opportunities.create', [
+            'careerOpportunity' => $careerOpportunity,
+            'businessUnitsData' => $businessUnitsData,
+        ] );
     }
 
     /**
@@ -73,8 +78,144 @@ class CareerOpportunitiesController extends BaseController
      */
     public function store(Request $request)
     {
+        try {
 
-        $validatedData = $request->validate([
+                $validatedData = $this->validateJobOpportunity($request);
+
+                $businessUnits = $request->input('businessUnits');
+                // dd($businessUnits);
+
+                $jobTemplate = JobTemplates::findOrFail($validatedData['jobTitle']);
+                // Handle file upload
+
+                $filename = handleFileUpload($request, 'attachment', 'career_opportunities');
+                // Mapping form fields to database column names
+                $mappedData = $this->mapJobData($validatedData, $jobTemplate, $request, $filename);
+                $job = CareerOpportunity::create( $mappedData );
+
+                $this->syncBusinessUnits($request->input('businessUnits'), $job->id);
+
+
+                session()->flash('success', 'Job saved successfully!');
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Job saved successfully!',
+                    'redirect_url' => route('admin.career-opportunities.index') // Redirect back URL for AJAX
+                ]);
+            }catch (ValidationException $e) {
+                // Handle the validation error and return a JSON response
+                return response()->json([
+                    'success' => false,
+                    'errors' => $e->errors(),  // Returns all the validation errors
+                    'message' => 'Validation failed!',
+                ], 422);
+            }
+    }
+
+    /**
+     * Display the specified resource.
+     */
+    public function show(string $id)
+    {
+        $job = CareerOpportunity::with('hiringManager')->findOrFail($id);
+
+        // Optionally, you can dump the data for debugging purposes
+        // dd($job); // Uncomment to check the data structure
+
+        // Return the view and pass the job data to it
+        return view('admin.career_opportunities.view', compact('job'));
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(string $id)
+    {
+        $careerOpportunity = CareerOpportunity::with('careerOpportunitiesBu')->findOrFail($id);
+
+        $businessUnitsData  = $careerOpportunity->careerOpportunitiesBu->map(function ($item) {
+            return [
+                'id' => $item->id,
+                'unit' => $item->buName->name,
+                'percentage' => $item->percentage
+            ];
+        })->toArray();
+        // dd( $businessUnitsData);
+        return view('admin.career_opportunities.create', [
+            'careerOpportunity' => $careerOpportunity,
+            'businessUnitsData' => $businessUnitsData,
+        ] );
+        //
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(Request $request, $id)
+    {
+        // dd($request);
+        try {
+
+            $validatedData = $this->validateJobOpportunity($request);
+
+            $job = CareerOpportunity::findOrFail($id);
+            $jobTemplate = JobTemplates::findOrFail($validatedData['jobTitle']);
+            $filename = handleFileUpload($request, 'attachment', 'career_opportunities', $job->attachment); // Keep existing if no new file
+            if($filename == null || $filename == "") {
+                $filename = $job->attachment;
+            }
+            $mappedData = $this->mapJobData($validatedData, $jobTemplate, $request, $filename);
+            $job->update($mappedData);
+
+            $this->syncBusinessUnits($request->input('businessUnits'), $job->id);
+
+            session()->flash('success', 'Job updated successfully!');
+            return response()->json([
+                'success' => true,
+                'message' => 'Job updated successfully!',
+                'redirect_url' => route('admin.career-opportunities.index')
+            ]);
+        }catch (ValidationException $e) {
+            // Handle the validation error and return a JSON response
+            return response()->json([
+                'success' => false,
+                'errors' => $e->errors(),  // Returns all the validation errors
+                'message' => 'Validation failed!',
+            ], 422);
+        }
+    }
+
+
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(string $id)
+    {
+        //
+    }
+
+    /**
+     * create or update businessunits.
+     */
+    protected function syncBusinessUnits(array $businessUnits, $jobId)
+    {
+        CareerOpportunitiesBu::where('career_opportunity_id', $jobId)->delete();
+        foreach ($businessUnits as $unitJson) {
+            $unitData = json_decode($unitJson, true);
+            if (!empty($unitData) && isset($unitData['id'], $unitData['percentage'])) {
+                CareerOpportunitiesBu::create([
+                    'career_opportunity_id' => $jobId,
+                    'bu_unit' => $unitData['id'],
+                    'percentage' => $unitData['percentage'],
+                ]);
+            }
+        }
+    }
+
+    protected function validateJobOpportunity(Request $request)
+    {
+        return $request->validate([
             'jobLaborCategory' => 'required',
             'jobTitle' => 'required',
             'hiringManager' => 'required',
@@ -94,7 +235,7 @@ class CareerOpportunitiesController extends BaseController
             'expensesAllowed' => 'required',
             'travelRequired' => 'required',
             'glCode' => 'required',
-            'startDate' => 'required|date_format:Y/m/d',  // Adjusted to match incoming format
+            'startDate' => 'required|date_format:Y/m/d',
             'endDate' => 'required|date_format:Y/m/d',
             'workerType' => 'required',
             'clientBillable' => 'required',
@@ -111,36 +252,27 @@ class CareerOpportunitiesController extends BaseController
             'termsAccepted' => 'accepted',
 
             // Conditional fields
-            'estimatedExpense' => 'nullable|required_if:expensesAllowed,yes',
-            'clientName' => 'nullable|required_if:clientBillable,yes',
-            'candidateFirstName' => 'nullable|required_if:preIdentifiedCandidate,yes',
-            'candidateLastName' => 'nullable|required_if:preIdentifiedCandidate,yes',
-            'candidatePhone' => 'nullable|required_if:preIdentifiedCandidate,yes',
-            'candidateEmail' => 'nullable|required_if:preIdentifiedCandidate,yes',
-            'workerPayRate' => 'nullable|required_if:preIdentifiedCandidate,yes',
+            'estimatedExpense' => 'nullable|required_if:expensesAllowed,Yes',
+            'clientName' => 'nullable|required_if:clientBillable,Yes',
+            'candidateFirstName' => 'nullable|required_if:preIdentifiedCandidate,Yes',
+            'candidateLastName' => 'nullable|required_if:preIdentifiedCandidate,Yes',
+            'candidatePhone' => 'nullable|required_if:preIdentifiedCandidate,Yes',
+            'candidateEmail' => 'nullable|required_if:preIdentifiedCandidate,Yes',
+            'workerPayRate' => 'nullable|required_if:preIdentifiedCandidate,Yes',
             'subLedgerCode' => 'nullable|required_if:subLedgerType,33',
 
             // nullable fields
-            'jobTitleEmailSignature'=>'nullable',
-            'candidateMiddleName'=>'nullable',
-            // 'job_code' => 'nullable',
+            'jobTitleEmailSignature' => 'nullable',
+            'candidateMiddleName' => 'nullable',
+            'job_code' => 'nullable',
         ]);
-
-        $businessUnits = $request->input('businessUnits');
-        // dd($businessUnits);
-
-        $jobTemplate = JobTemplates::findOrFail($validatedData['jobTitle']);
-        // Handle file upload
-
-        $filename = handleFileUpload($request, 'attachment', 'career_opportunities');
-
-
-
-        // Mapping form fields to database column names
-        $mappedData = [
+    }
+    protected function mapJobData(array $validatedData, $jobTemplate, $request, $filename)
+    {
+        return [
             'cat_id' => $validatedData['jobLaborCategory'],
             'template_id' => $validatedData['jobTitle'],
-            'title' =>$jobTemplate->job_title,
+            'title' => $jobTemplate->job_title,
             'hiring_manager' => $validatedData['hiringManager'],
             'job_level' => $validatedData['jobLevel'],
             'location_id' => $validatedData['workLocation'],
@@ -172,14 +304,11 @@ class CareerOpportunitiesController extends BaseController
             'type_of_job' => $validatedData['timeType'],
             'hours_per_day' => $validatedData['estimatedHoursPerDay'],
             'day_per_week' => $validatedData['workDaysPerWeek'],
-            // 'job_code'=> $validatedData['job_code'],
+            'job_code' => $validatedData['job_code'],
             'num_openings' => $validatedData['numberOfPositions'],
             'hire_reason_id' => $validatedData['businessReason'],
-            // 'terms_accepted' => $validatedData['termsAccepted'],
             'start_date' => Carbon::createFromFormat('Y/m/d', $validatedData['startDate'])->format('Y-m-d'),
-            'end_date' =>  Carbon::createFromFormat('Y/m/d', $validatedData['endDate'])->format('Y-m-d'),
-
-
+            'end_date' => Carbon::createFromFormat('Y/m/d', $validatedData['endDate'])->format('Y-m-d'),
             // Conditional fields
             'expense_cost' => $validatedData['estimatedExpense'] ?? null,
             'client_name' => $validatedData['clientName'] ?? null,
@@ -218,43 +347,5 @@ class CareerOpportunitiesController extends BaseController
             'message' => 'Job saved successfully!',
             'redirect_url' => route('admin.career-opportunities.index') // Redirect back URL for AJAX
         ]);
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        $job = CareerOpportunity::with('hiringManager')->findOrFail($id);
-
-        // Optionally, you can dump the data for debugging purposes
-        // dd($job); // Uncomment to check the data structure
-
-        // Return the view and pass the job data to it
-        return view('admin.career_opportunities.view', compact('job'));
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
     }
 }
