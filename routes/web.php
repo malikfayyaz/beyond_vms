@@ -10,6 +10,7 @@ use App\Http\Controllers\{
     UserController,
     Vendor\VendorController,
     Admin\AdminController,
+    Admin\GenericDataController
     Admin\PermissionController,
     Admin\RoleController,
     Client\ClientController,
@@ -63,7 +64,7 @@ Route::middleware(['ensure_role_is_selected'])->group(function () {
     Route::post('users/profile', [UserController::class, 'profileUpdate'])->name('users.profileUpdate');
     Route::get('users/{user}/assign-role', [UserController::class, 'assignRoleForm'])->name('users.assignRoleForm');
     Route::post('users/{user}/assign-role', [UserController::class, 'assignRole'])->name('users.assignRole');
-
+    Route::match(['get', 'post'], 'workflow', [GenericDataController::class, 'workflow'])->name('admin.workflow');
     // Role-specific dashboards
     Route::middleware(['user_role:vendor'])->group(function () {
         Route::get('/admin/dashboard', [AdminController::class, 'index'])->name('dashboard');

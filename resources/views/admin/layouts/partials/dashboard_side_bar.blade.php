@@ -194,55 +194,55 @@
                       class="flex items-center w-full p-2 text-white transition duration-75 pl-11 hover:bg-gray-700">
                       Account Code
                   </a>
-              </li>
+                </li>
 
                <!-- Spend Category Code Menu Item -->
-               <li class="{{ request()->routeIs('admin.data.two') && request()->route('type') === 'spend-category-code' ? 'active' : '' }}">
-                  <a href="{{ route('admin.data.two', ['type' => 'spend-category-code']) }}"
-                      class="flex items-center w-full p-2 text-white transition duration-75 pl-11 hover:bg-gray-700">
-                      Spend Category Code
-                  </a>
-              </li>
+                <li class="{{ request()->routeIs('admin.data.two') && request()->route('type') === 'spend-category-code' ? 'active' : '' }}">
+                    <a href="{{ route('admin.data.two', ['type' => 'spend-category-code']) }}"
+                        class="flex items-center w-full p-2 text-white transition duration-75 pl-11 hover:bg-gray-700">
+                        Spend Category Code
+                    </a>
+                </li>
 
-              <li class="{{ request()->routeIs('admin.data.four') && request()->route('type') === 'currency' ? 'active' : '' }}">
-                  <a href="{{ route('admin.data.four', ['type' => 'currency']) }}"
-                      class="flex items-center w-full p-2 text-white transition duration-75 pl-11 hover:bg-gray-700">
-                      Currency
-                  </a>
-              </li>
+                <li class="{{ request()->routeIs('admin.data.four') && request()->route('type') === 'currency' ? 'active' : '' }}">
+                    <a href="{{ route('admin.data.four', ['type' => 'currency']) }}"
+                        class="flex items-center w-full p-2 text-white transition duration-75 pl-11 hover:bg-gray-700">
+                        Currency
+                    </a>
+                </li>
 
                <!-- workspace Code Menu Item -->
-               <li class="{{ request()->routeIs('admin.data.two') && request()->route('type') === 'workspace' ? 'active' : '' }}">
-                  <a href="{{ route('admin.data.two', ['type' => 'workspace']) }}"
-                      class="flex items-center w-full p-2 text-white transition duration-75 pl-11 hover:bg-gray-700">
-                      Workspace
-                  </a>
-              </li>
+                <li class="{{ request()->routeIs('admin.data.two') && request()->route('type') === 'workspace' ? 'active' : '' }}">
+                    <a href="{{ route('admin.data.two', ['type' => 'workspace']) }}"
+                        class="flex items-center w-full p-2 text-white transition duration-75 pl-11 hover:bg-gray-700">
+                        Workspace
+                    </a>
+                </li>
 
-               <!-- Program Industry Name Menu Item -->
-               <li class="{{ request()->routeIs('admin.data.two') && request()->route('type') === 'program-industry-name' ? 'active' : '' }}">
-                  <a href="{{ route('admin.data.two', ['type' => 'program-industry-name']) }}"
-                      class="flex items-center w-full p-2 text-white transition duration-75 pl-11 hover:bg-gray-700">
-                      Program Industry Name
-                  </a>
-              </li>
+                <!-- Program Industry Name Menu Item -->
+                <li class="{{ request()->routeIs('admin.data.two') && request()->route('type') === 'program-industry-name' ? 'active' : '' }}">
+                    <a href="{{ route('admin.data.two', ['type' => 'program-industry-name']) }}"
+                        class="flex items-center w-full p-2 text-white transition duration-75 pl-11 hover:bg-gray-700">
+                        Program Industry Name
+                    </a>
+                </li>
 
 
-              <!-- Departments Menu Item -->
-              <li class="{{ request()->is('admin/three/departments') ? 'active' : '' }}">
-                  <a href="{{ url('admin/three/departments') }}"
-                      class="flex items-center w-full p-2 text-white transition duration-75 pl-11 hover:bg-gray-700">
-                      Departments
-                  </a>
-              </li>
+                <!-- Departments Menu Item -->
+                <li class="{{ request()->is('admin/three/departments') ? 'active' : '' }}">
+                    <a href="{{ url('admin/three/departments') }}"
+                        class="flex items-center w-full p-2 text-white transition duration-75 pl-11 hover:bg-gray-700">
+                        Departments
+                    </a>
+                </li>
 
-                <!-- cost center Menu Item -->
-                <li class="{{ request()->is('admin/three/cost-center') ? 'active' : '' }}">
-                  <a href="{{ url('admin/three/cost-center') }}"
-                      class="flex items-center w-full p-2 text-white transition duration-75 pl-11 hover:bg-gray-700">
-                      Cost Center
-                  </a>
-              </li>
+                  <!-- cost center Menu Item -->
+                  <li class="{{ request()->is('admin/three/cost-center') ? 'active' : '' }}">
+                    <a href="{{ url('admin/three/cost-center') }}"
+                        class="flex items-center w-full p-2 text-white transition duration-75 pl-11 hover:bg-gray-700">
+                        Cost Center
+                    </a>
+                  </li>
 
                <!-- Business Unit Menu Item -->
                 <li class="{{ request()->is('admin/three/busines-unit') ? 'active' : '' }}">
@@ -250,61 +250,61 @@
                       class="flex items-center w-full p-2 text-white transition duration-75 pl-11 hover:bg-gray-700">
                       Business Unit
                   </a>
-              </li>
+                </li>
 
-              <!-- Job Family Name Menu Item -->
-              <li class="{{ request()->routeIs('admin.data.two') && request()->route('type') === 'job-family' ? 'active' : '' }}">
-                  <a href="{{ route('admin.data.two', ['type' => 'job-family']) }}"
-                      class="flex items-center w-full p-2 text-white transition duration-75 pl-11 hover:bg-gray-700">
-                      Job Family Name
-                  </a>
-              </li>
+               <!-- Job Family Name Menu Item -->
+                <li class="{{ request()->routeIs('admin.data.two') && request()->route('type') === 'job-family' ? 'active' : '' }}">
+                    <a href="{{ route('admin.data.two', ['type' => 'job-family']) }}"
+                        class="flex items-center w-full p-2 text-white transition duration-75 pl-11 hover:bg-gray-700">
+                        Job Family Name
+                    </a>
+                </li>
 
-              <!-- Job Family group Name Menu Item -->
-              <li class="{{ request()->routeIs('admin.data.two') && request()->route('type') === 'job-family-group' ? 'active' : '' }}">
-                  <a href="{{ route('admin.data.two', ['type' => 'job-family-group']) }}"
-                      class="flex items-center w-full p-2 text-white transition duration-75 pl-11 hover:bg-gray-700">
-                      Job Family Group
-                  </a>
-              </li>
+                <!-- Job Family group Name Menu Item -->
+                <li class="{{ request()->routeIs('admin.data.two') && request()->route('type') === 'job-family-group' ? 'active' : '' }}">
+                    <a href="{{ route('admin.data.two', ['type' => 'job-family-group']) }}"
+                        class="flex items-center w-full p-2 text-white transition duration-75 pl-11 hover:bg-gray-700">
+                        Job Family Group
+                    </a>
+                </li>
 
-              <li class="{{ request()->routeIs('admin.data.job_group_family_config') ? 'active' : '' }}">
-                  <a href="{{ route('admin.data.job_group_family_config') }}"
-                      class="flex items-center w-full p-2 text-white transition duration-75 pl-11 hover:bg-gray-700">
-                      Job Family Group Configuration
-                  </a>
-              </li>
+                <li class="{{ request()->routeIs('admin.data.job_group_family_config') ? 'active' : '' }}">
+                    <a href="{{ route('admin.data.job_group_family_config') }}"
+                        class="flex items-center w-full p-2 text-white transition duration-75 pl-11 hover:bg-gray-700">
+                        Job Family Group Configuration
+                    </a>
+                </li>
 
-              <!-- Division Menu Item -->
-              <li class="{{ request()->routeIs('admin.data.two') && request()->route('type') === 'division' ? 'active' : '' }}">
-                  <a href="{{ route('admin.data.two', ['type' => 'division']) }}"
-                      class="flex items-center w-full p-2 text-white transition duration-75 pl-11 hover:bg-gray-700">
-                      Division
-                  </a>
-              </li>
+                <!-- Division Menu Item -->
+                <li class="{{ request()->routeIs('admin.data.two') && request()->route('type') === 'division' ? 'active' : '' }}">
+                    <a href="{{ route('admin.data.two', ['type' => 'division']) }}"
+                        class="flex items-center w-full p-2 text-white transition duration-75 pl-11 hover:bg-gray-700">
+                        Division
+                    </a>
+                </li>
 
-              <!-- Branch Menu Item -->
-              <li class="{{ request()->routeIs('admin.data.two') && request()->route('type') === 'branch' ? 'active' : '' }}">
-                  <a href="{{ route('admin.data.two', ['type' => 'branch']) }}"
-                      class="flex items-center w-full p-2 text-white transition duration-75 pl-11 hover:bg-gray-700">
-                      Branch
-                  </a>
-              </li>
+                <!-- Branch Menu Item -->
+                <li class="{{ request()->routeIs('admin.data.two') && request()->route('type') === 'branch' ? 'active' : '' }}">
+                    <a href="{{ route('admin.data.two', ['type' => 'branch']) }}"
+                        class="flex items-center w-full p-2 text-white transition duration-75 pl-11 hover:bg-gray-700">
+                        Branch
+                    </a>
+                </li>
 
                <!-- Region Zone Menu Item -->
-               <li class="{{ request()->routeIs('admin.data.two') && request()->route('type') === 'region-zone' ? 'active' : '' }}">
+                <li class="{{ request()->routeIs('admin.data.two') && request()->route('type') === 'region-zone' ? 'active' : '' }}">
                   <a href="{{ route('admin.data.two', ['type' => 'region-zone']) }}"
                       class="flex items-center w-full p-2 text-white transition duration-75 pl-11 hover:bg-gray-700">
                       Region Zone
                   </a>
-              </li>
+               </li>
 
-              <li class="{{ request()->routeIs('admin.data.division_branch_zone_config') ? 'active' : '' }}">
+                <li class="{{ request()->routeIs('admin.data.division_branch_zone_config') ? 'active' : '' }}">
                   <a href="{{ route('admin.data.division_branch_zone_config') }}"
                       class="flex items-center w-full p-2 text-white transition duration-75 pl-11 hover:bg-gray-700">
                       Division Branch Zone Configuration
                   </a>
-              </li>
+                </li>
 
 
                <!-- Brand Menu Item -->
@@ -313,15 +313,15 @@
                       class="flex items-center w-full p-2 text-white transition duration-75 pl-11 hover:bg-gray-700">
                       Brand
                   </a>
-              </li>
+               </li>
 
-              <!-- Group / Platform Menu Item -->
-              <li class="{{ request()->routeIs('admin.data.two') && request()->route('type') === 'group-platform' ? 'active' : '' }}">
-                  <a href="{{ route('admin.data.two', ['type' => 'group-platform']) }}"
-                      class="flex items-center w-full p-2 text-white transition duration-75 pl-11 hover:bg-gray-700">
-                      Group / Platform
-                  </a>
-              </li>
+                <!-- Group / Platform Menu Item -->
+                <li class="{{ request()->routeIs('admin.data.two') && request()->route('type') === 'group-platform' ? 'active' : '' }}">
+                    <a href="{{ route('admin.data.two', ['type' => 'group-platform']) }}"
+                        class="flex items-center w-full p-2 text-white transition duration-75 pl-11 hover:bg-gray-700">
+                        Group / Platform
+                    </a>
+                </li>
 
                <!-- GL Code Menu Item -->
                <li class="{{ request()->is('admin/three/gl-code') ? 'active' : '' }}">
@@ -329,61 +329,96 @@
                       class="flex items-center w-full p-2 text-white transition duration-75 pl-11 hover:bg-gray-700">
                       GL Code
                   </a>
-              </li>
+                </li>
 
-              <!-- Location Menu Item -->
-              <li class="{{ request()->routeIs('admin.data.location') ? 'active' : '' }}">
-                  <a href="{{ route('admin.data.location') }}"
-                      class="flex items-center w-full p-2 text-white transition duration-75 pl-11 hover:bg-gray-700">
-                      Location
-                  </a>
-              </li>
+                <!-- Location Menu Item -->
+                <li class="{{ request()->routeIs('admin.data.location') ? 'active' : '' }}">
+                    <a href="{{ route('admin.data.location') }}"
+                        class="flex items-center w-full p-2 text-white transition duration-75 pl-11 hover:bg-gray-700">
+                        Location
+                    </a>
+                </li>
                <!-- Setting Menu Item -->
                <li class="{{ request()->routeIs('admin.setting.info') ? 'active' : '' }}">
                   <a href="{{ route('admin.setting.info') }}"
                       class="flex items-center w-full p-2 text-white transition duration-75 pl-11 hover:bg-gray-700">
                       Setting
                   </a>
-              </li>
-              <li class="{{ request()->routeIs('admin.setting.markup') ? 'active' : '' }}">
+                </li>
+                <li class="{{ request()->routeIs('admin.setting.markup') ? 'active' : '' }}">
                   <a href="{{ route('admin.setting.markup') }}"
                       class="flex items-center w-full p-2 text-white transition duration-75 pl-11 hover:bg-gray-700">
                       Markup
                   </a>
-              </li>
+                </li>
 
               </ul>
             </li>
 
-            <li x-data="{ open: false }">
-              <button
-                @click="open = !open"
-                class="flex items-center w-full p-2 text-white rounded-lg hover:bg-gray-700 overflow-hidden"
-                :class="{'justify-center': miniSidebar}"
-              >
-                <i class="fas fa-cog w-6 h-6"></i>
-                <span
-                  class="flex-1 ml-3 text-left whitespace-nowrap"
-                  x-show="!miniSidebar"
-                  x-cloak
-                  >System Users</span
+            <ul>
+              <!-- First Tab: System Users -->
+              <li x-data="{ open: false }">
+                <button
+                  @click="open = !open"
+                  class="flex items-center w-full p-2 text-white rounded-lg hover:bg-gray-700 overflow-hidden"
+                  :class="{'justify-center': miniSidebar}"
                 >
-                <i
-                  class="fas fa-chevron-down ml-auto"
-                  x-show="!miniSidebar"
-                  x-cloak
-                ></i>
-              </button>
-              <ul x-show="open" class="py-2 space-y-2" x-cloak>
-                <!-- Account Code Menu Item -->
-                <li class="{{ request()->routeIs('admin.admin-users.index') ? 'active' : '' }}">
-                  <a href="{{ route('admin.admin-users.index') }}"
+                  <i class="fas fa-cog w-6 h-6"></i>
+                  <span
+                    class="flex-1 ml-3 text-left whitespace-nowrap"
+                    x-show="!miniSidebar"
+                    x-cloak
+                    >System Users</span
+                  >
+                  <i
+                    class="fas fa-chevron-down ml-auto"
+                    x-show="!miniSidebar"
+                    x-cloak
+                  ></i>
+                </button>
+                <ul x-show="open" class="py-2 space-y-2" x-cloak>
+                  <!-- Admin Users Link -->
+                  <li class="{{ request()->routeIs('admin.admin-users.index') ? 'active' : '' }}">
+                    <a href="{{ route('admin.admin-users.index') }}"
                       class="flex items-center w-full p-2 text-white transition duration-75 pl-11 hover:bg-gray-700">
                       Admin Users
-                  </a>
-                </li>
-              <ul>
-            </li> 
+                    </a>
+                  </li>
+                </ul>
+              </li>
+
+              <!-- Second Tab: Workflow -->
+              <li x-data="{ open: false }">
+                <button
+                  @click="open = !open"
+                  class="flex items-center w-full p-2 text-white rounded-lg hover:bg-gray-700 overflow-hidden"
+                  :class="{'justify-center': miniSidebar}"
+                >
+                  <i class="fas fa-cog w-6 h-6"></i>
+                  <span
+                    class="flex-1 ml-3 text-left whitespace-nowrap"
+                    x-show="!miniSidebar"
+                    x-cloak
+                    >MSP System</span
+                  >
+                  <i
+                    class="fas fa-chevron-down ml-auto"
+                    x-show="!miniSidebar"
+                    x-cloak
+                  ></i>
+                </button>
+                <ul x-show="open" class="py-2 space-y-2" x-cloak>
+                  <!-- Workflow Link -->
+                  <li class="{{ request()->routeIs('admin.workflow') ? 'active' : '' }}">
+                    <a href="{{ route('admin.workflow') }}"
+                      class="flex items-center w-full p-2 text-white transition duration-75 pl-11 hover:bg-gray-700">
+                      Workflow
+                    </a>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+
           </ul>
         </div>
       </aside>

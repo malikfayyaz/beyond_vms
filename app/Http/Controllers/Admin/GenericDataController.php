@@ -101,48 +101,48 @@ class GenericDataController extends BaseController
     }
 
     public function jobGroupConfig(Request $request)
-{
-    if ($request->isMethod('get')) {
-        // Retrieve all JobFamilyGroupConfig entries
-        $data = JobFamilyGroupConfig::with(['jobFamily', 'jobFamilyGroup'])->get();
+    {
+        if ($request->isMethod('get')) {
+            // Retrieve all JobFamilyGroupConfig entries
+            $data = JobFamilyGroupConfig::with(['jobFamily', 'jobFamilyGroup'])->get();
+            
+            
         
-        
-       
-        // Pass data to the view
-        return view('admin.data_points.job_group_config', [
-            'data' => $data,
-        ]);
-    } elseif ($request->isMethod('post')) {
-        // Validate request data
-        $validatedData = $request->validate([
-            'job_family_id' => 'required|exists:generic_data,id',
-            'job_family_group_id' => 'required|exists:generic_data,id'
-        ]);
+            // Pass data to the view
+            return view('admin.data_points.job_group_config', [
+                'data' => $data,
+            ]);
+        } elseif ($request->isMethod('post')) {
+            // Validate request data
+            $validatedData = $request->validate([
+                'job_family_id' => 'required|exists:generic_data,id',
+                'job_family_group_id' => 'required|exists:generic_data,id'
+            ]);
 
-        if ($request->has('id') && $request->input('id')) {
-            // Update existing JobFamilyGroupConfig entry
-            $data = JobFamilyGroupConfig::find($request->input('id'));
-            session()->flash('success', 'Job Family Group configuration updated successfully!');
-            if ($data) {
-                $data->update($validatedData);
+            if ($request->has('id') && $request->input('id')) {
+                // Update existing JobFamilyGroupConfig entry
+                $data = JobFamilyGroupConfig::find($request->input('id'));
+                session()->flash('success', 'Job Family Group configuration updated successfully!');
+                if ($data) {
+                    $data->update($validatedData);
+                    return response()->json([
+                        'success' => true,
+                        'message' => 'Job Family Group configuration updated successfully!',
+                        'redirect_url' => url()->previous()
+                    ]);
+                }
+            } else {
+                // Create new JobFamilyGroupConfig entry
+                JobFamilyGroupConfig::create($validatedData);
+                session()->flash('success', 'Job Family Group configuration saved successfully!');
                 return response()->json([
                     'success' => true,
-                    'message' => 'Job Family Group configuration updated successfully!',
+                    'message' => 'Job Family Group configuration saved successfully!',
                     'redirect_url' => url()->previous()
                 ]);
             }
-        } else {
-            // Create new JobFamilyGroupConfig entry
-            JobFamilyGroupConfig::create($validatedData);
-            session()->flash('success', 'Job Family Group configuration saved successfully!');
-            return response()->json([
-                'success' => true,
-                'message' => 'Job Family Group configuration saved successfully!',
-                'redirect_url' => url()->previous()
-            ]);
         }
     }
-}
 
 
     public function divisionBranchZoneConfig(Request $request)
@@ -342,6 +342,12 @@ class GenericDataController extends BaseController
             ]);
 
         }
+    }
+
+    public function workflow(Request $request)
+    {
+        $data = GenericData::where('type', 'busines-unit')->get();
+        return view('admin.workflow.workflow', compact('data'));
     }
 
     public function settingMarkup(Request $request)
