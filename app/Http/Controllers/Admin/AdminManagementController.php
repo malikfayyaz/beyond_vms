@@ -10,6 +10,7 @@ use App\Models\Country;
 use App\Models\Admin;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\DB;
 
 class AdminManagementController extends Controller
 {
@@ -116,11 +117,10 @@ class AdminManagementController extends Controller
                 $admin->status = $request->status;
 
                 // Handle the profile image upload if provided
-                // if ($request->hasFile('profile_image')) {
-                //     $profileImage = $request->file('profile_image');
-                //     $imagePath = $profileImage->store('uploads/admin_images', 'public'); // Store in the public disk
-                //     $admin->profile_image = $imagePath;
-                // }
+                $imagePath = handleFileUpload($request, 'profile_image', 'admin_profile');
+                if ($imagePath) {
+                    $admin->profile_image = $imagePath;
+                }
 
                 $admin->save();
             }
@@ -135,24 +135,42 @@ class AdminManagementController extends Controller
             $user->save();
 
             $admin = new Admin;
-                $admin->user_id = $user->id;
-                $admin->first_name = $request->first_name;
-                $admin->last_name = $request->last_name;
-                $admin->email = $request->email;
-                $admin->phone = $request->phone;
-                $admin->member_access = $request->role; // Assuming you have a foreign key to roles in the Admin table
-                $admin->admin_status = 1;
-                $admin->country = $request->country; // Assuming you have a foreign key to countries
-                $admin->status = $request->status;
+            $admin->user_id = $user->id;
+            $admin->first_name = $request->first_name;
+            $admin->last_name = $request->last_name;
+            $admin->email = $request->email;
+            $admin->phone = $request->phone;
+            $admin->member_access = $request->role; // Assuming you have a foreign key to roles in the Admin table
+            $admin->admin_status = 1;
+            $admin->country = $request->country; // Assuming you have a foreign key to countries
+            $admin->status = $request->status;
 
-                //  Handle the profile image upload if provided
+            //  Handle the profile image upload if provided
 
-                $imagePath = $this->handleFileUpload($request, 'profile_image', 'admin_profile');
-                if ($imagePath) {
-                    $admin->profile_image = $imagePath;
-                }
+            $imagePath = handleFileUpload($request, 'profile_image', 'admin_profile');
+            if ($imagePath) {
+                $admin->profile_image = $imagePath;
+            }
 
-                $admin->save();
+            $admin->save();
+
+            $roles_permission = DB::table('role_has_permissions')->where('role_id', $request->role)->get();
+            foreach($roles_permission as $permission){
+                $insert = DB::table('model_has_permissions')->insert([
+                    'model_id' => $user->id, // Associating with the user
+                    'permission_id' => $permission->permission_id, // Adjust field as per your table structure
+                    'model_type' => 'App\Models\User', // Assuming you're using the User model
+                ]);
+            }
+
+            $roles = DB::table('roles')->where('id', $request->role)->get(); // Assuming you're getting role from request
+            foreach ($roles as $role) {
+                $insert = DB::table('model_has_roles')->insert([
+                    'role_id' => $role->id, // Role ID from the roles table
+                    'model_id' => $user->id, // Associating the role with the user
+                    'model_type' => 'App\Models\User', // The model being associated, usually 'User'
+                ]);
+            }            
         }
 
         $successMessage = 'Admin created successfully!';
@@ -227,7 +245,7 @@ class AdminManagementController extends Controller
                 Storage::disk('public')->delete($admin->profile_image);
             }
 
-            $imagePath = $this->handleFileUpload($request, 'profile_image', 'admin_profile');
+            $imagePath = handleFileUpload($request, 'profile_image', 'admin_profile');
             if ($imagePath) {
                 $admin->profile_image = $imagePath;
             }

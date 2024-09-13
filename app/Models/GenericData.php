@@ -37,6 +37,9 @@ class GenericData extends Model
     {
         return $this->belongsTo(Setting::class, 'symbol_id', 'id');
     }
-    
+    public function symbol()
+    {
+        return $this->belongsTo(Setting::class, 'symbol_id', 'id');
+    }
 }
 

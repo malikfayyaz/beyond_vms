@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Models\GenericData;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -10,6 +11,7 @@ use App\Models\CareerOpportunity;
 use App\Models\CareerOpportunitiesBu;
 use Illuminate\Support\Carbon;
 use Yajra\DataTables\Facades\DataTables;
+use App\Models\DivisionBranchZoneConfig;
 
 class CareerOpportunitiesController extends BaseController
 {
@@ -117,8 +119,20 @@ class CareerOpportunitiesController extends BaseController
      */
     public function show(string $id)
     {
-        $job = CareerOpportunity::with('hiringManager')->findOrFail($id);
-
+        $job = CareerOpportunity::with('hiringManager',
+            'division',
+            'regionZone',
+            'branch',
+            'jobType',
+            'businessReason',
+            'workerType',
+            'paymentType',
+            'currency',
+            'currency.symbol',
+            'careerBU.buName',
+            'createdBy',
+            'glCode',
+            'category')->findOrFail($id);
         // Optionally, you can dump the data for debugging purposes
         // dd($job); // Uncomment to check the data structure
 
