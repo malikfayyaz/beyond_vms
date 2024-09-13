@@ -97,7 +97,7 @@ class CareerOpportunitiesController extends BaseController
 
                 $this->syncBusinessUnits($request->input('businessUnits'), $job->id);
 
-
+                calculateJobEstimates($job);
                 session()->flash('success', 'Job saved successfully!');
                 return response()->json([
                     'success' => true,
@@ -178,11 +178,11 @@ class CareerOpportunitiesController extends BaseController
             if($filename == null || $filename == "") {
                 $filename = $job->attachment;
             }
-            $mappedData = $this->mapJobData($validatedData, $jobTemplate, $request, $filename);
+            $mappedData = $this->mapJobData($validatedData, $jobTemplate, $request, $filename,$job );
             $job->update($mappedData);
 
             $this->syncBusinessUnits($request->input('businessUnits'), $job->id);
-
+            calculateJobEstimates($job);
             session()->flash('success', 'Job updated successfully!');
             return response()->json([
                 'success' => true,
@@ -281,7 +281,7 @@ class CareerOpportunitiesController extends BaseController
             'job_code' => 'nullable',
         ]);
     }
-    protected function mapJobData(array $validatedData, $jobTemplate, $request, $filename)
+    protected function mapJobData(array $validatedData, $jobTemplate, $request, $filename,$job= null)
     {
         return [
             'cat_id' => $validatedData['jobLaborCategory'],
@@ -292,12 +292,12 @@ class CareerOpportunitiesController extends BaseController
             'location_id' => $validatedData['workLocation'],
             'currency_id' => $validatedData['currency'],
             'min_bill_rate' => $validatedData['billRate'],
-            'user_subclient_id' => \Auth::id(),
+            'user_subclient_id' => isset($job) ? $job->user_subclient_id  : \Auth::id(),
             'attachment' => $filename,
-            'user_id' => 1,
-            'user_type' => '1',
+            'user_id' => isset($job) ? $job->user_id  : \Auth::id(),
+            'user_type' => isset($job) ? $job->user_type  : 1,
             'interview_process' => 'Yes',
-            'jobStatus' => 3,
+            'jobStatus' => isset($job) ? $job->jobStatus : 1,
             'max_bill_rate' => $validatedData['maxBillRate'],
             'pre_candidate' => $validatedData['preIdentifiedCandidate'],
             'labour_type' => $validatedData['laborType'],
@@ -337,30 +337,8 @@ class CareerOpportunitiesController extends BaseController
             'ledger_code' => $validatedData['subLedgerCode'] ?? null,
         ];
 
-        $job = CareerOpportunity::create( $mappedData );
-
-        $businessUnits = $request->input('businessUnits');
-
-        // Loop through the business units
-        foreach ($businessUnits as $unitJson) {
-            $unitData = json_decode($unitJson, true);
-
-            if (!empty($unitData) && isset($unitData['id'], $unitData['percentage'])) {
-                CareerOpportunitiesBu::create([
-                    'career_opportunity_id' => $job->id,
-                    'bu_unit' => $unitData['id'],
-                    'percentage' => $unitData['percentage'],
-                ]);
-            }
-        }
-
-
-        session()->flash('success', 'Job saved successfully!');
-        return response()->json([
-            'success' => true,
-            'message' => 'Job saved successfully!',
-            'redirect_url' => route('admin.career-opportunities.index') // Redirect back URL for AJAX
-        ]);
+      
+        return true;
     }
 
     /**

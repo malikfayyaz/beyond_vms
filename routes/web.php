@@ -8,6 +8,7 @@ use App\Http\Controllers\{
    
     TeamController,
     UserController,
+    Admin\RoleController,
     Client\ClientController,
     Auth\AuthController,
     Auth\ForgotPasswordController,
@@ -77,8 +78,5 @@ Route::middleware(['ensure_role_is_selected'])->group(function () {
             ]);
     });
 
-    Route::middleware(['user_role:vendor'])->group(function () {
-        Route::get('/vendor/dashboard', [ClientController::class, 'index'])->name('vendor.dashboard');
-    });
-
+  
 });

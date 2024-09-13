@@ -169,7 +169,7 @@ export default function wizardForm(careerOpportunity = null,businessUnitsData = 
           };
           ajaxCall(url, 'POST', [[updateElements, ['response', updates]]], data);
           setTimeout(() => {
-            this.formData.jobDescriptionEditor =  $('#jobDescriptionEditor').val();
+            // this.formData.jobDescriptionEditor =  $('#jobDescriptionEditor').val();
             this.formData.workerType = $('#Job_worker_type').val();
             this.formData.job_code = $('#job_code').val();
            }, 500);
