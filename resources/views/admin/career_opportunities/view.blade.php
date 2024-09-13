@@ -403,7 +403,7 @@
                     <h4 class="font-medium">Number of Opening(s):</h4>
                   </div>
                   <div class="w-2/4">
-                      <p class="font-light">{{ $job->num_of_openings ?? 'N/A' }}</p>
+                      <p class="font-light">{{ $job->num_openings ?? 'N/A' }}</p>
                   </div>
                 </div>
                 <div class="flex items-center justify-between py-4 border-t">

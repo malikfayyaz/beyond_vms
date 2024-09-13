@@ -4,13 +4,14 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="csrf-token" content="{{ csrf_token() }}">
+      @vite([ 'resources/sass/app.scss'])
     @vite([ 'resources/css/app.css'])
     <title>Tailwind + Alpine + Vite</title>
   </head>
   <body class="bg-gray-100">
     <div
-      x-data="{ 
-      miniSidebar: true, 
+      x-data="{
+      miniSidebar: true,
       currentTheme: localStorage.getItem('theme') || 'theme-1',
       darkMode: localStorage.getItem('darkMode') === 'true',
       setTheme(theme) {

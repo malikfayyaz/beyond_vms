@@ -1,10 +1,10 @@
-@extends('client.layouts.app')
+@extends('admin.layouts.app')
 
 @section('content')
     <!-- Sidebar -->
-    @include('client.layouts.partials.dashboard_side_bar')
+    @include('admin.layouts.partials.dashboard_side_bar')
     <div class="ml-16">
-        @include('client.layouts.partials.header')
+        @include('admin.layouts.partials.header')
         <div class="bg-white mx-4 my-8 rounded p-8">
             <div class="mb-4">
                 <ul
