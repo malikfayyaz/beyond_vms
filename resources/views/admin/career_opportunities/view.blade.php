@@ -137,7 +137,7 @@
                       </div>
                     </div>
                     <div class="mt-2 text-center">
-                      <span>$78,000.00</span>
+                      <span>${{ $job->regular_hours_cost }}</span>
                     </div>
                   </div>
                   <div
@@ -157,7 +157,7 @@
                       </div>
                     </div>
                     <div class="mt-2 text-center">
-                      <span>$78,000.00</span>
+                        <span>${{ $job->single_resource_total_cost }}</span>
                     </div>
                   </div>
                   <div
@@ -177,7 +177,7 @@
                       </div>
                     </div>
                     <div class="mt-2 text-center">
-                      <span>$78,000.00</span>
+                        <span>${{ $job->all_resources_total_cost }}</span>
                     </div>
                   </div>
                 </div>
@@ -192,21 +192,21 @@
                     <span class="text-white">Business Unit</span>
                   </div>
                   <div class="w-2/5 text-center">
-                    <span class="text-white">Budget Percentage</span>
+                      <p class="font-light">{{ $job->careerBU->percentage ?? 'N/A' }}%</p>
                   </div>
                 </div>
                 <div
                   class="flex justify-between gap-2 py-4 px-2 border-x border-b"
                 >
                   <div class="w-3/5 flex-wrap">
-                    <span>708212 - 166 - St. Peters, MO - LPG</span>
+                    <span><p class="font-light">{{ $job->careerBU->buName->type ?? 'N/A' }}</p></span>
                   </div>
                   <div class="w-2/5 text-center">
-                    <span>100%</span>
+                    <span>{{ $job->careerBU->percentage ?? 'N/A' }}%</span>
                   </div>
                 </div>
               </div>
-              <div class="mt-4 rounded p-4 bg-[#F5F7FC]">
+{{--              <div class="mt-4 rounded p-4 bg-[#F5F7FC]">
                 <p class="color-[#202124] font-light">
                   Please list the preferred agency(s)/vendor(s) to utilize for
                   filling this position, and list any other relevant information
@@ -222,16 +222,23 @@
                 </div>
                 <p class="mt-4">UPDATE HIRING MANAGER TO Suzanne Touch</p>
                 <p class="mt-4">(Justin Stephenson Vacancy)</p>
-              </div>
+              </div>--}}
               <div class="mt-4 rounded p-4 bg-[#F5F7FC]">
-                <p class="color-[#202124] font-light">Business Justification</p>
+                <p class="color-[#202124] font-light">Internal Notes</p>
                 <div class="mt-4">
                   <ul class="color-[#202124] font-light">
-                    <li>Line 14724 approved 7/25/2024</li>
-                    <li>(Justin Stephenson Vacancy)</li>
+                    {{ $job->internal_notes }}
                   </ul>
                 </div>
               </div>
+                <div class="mt-4 rounded p-4 bg-[#F5F7FC]">
+                    <p class="color-[#202124] font-light">Skills</p>
+                    <div class="mt-4">
+                        <ul class="color-[#202124] font-light">
+                            {{ $job->skills }}
+                        </ul>
+                    </div>
+                </div>
               <div class="mt-4 rounded p-4 bg-[#F5F7FC]">
                 <p class="color-[#202124] font-light">
                   Pre-Identified Candidate
@@ -249,7 +256,7 @@
                     >
                   </div>
                   <div class="w-2/4 pl-4">
-                    <span class="color-[#202124] font-light">No</span>
+                    <span class="color-[#202124] font-light">{{$job->pre_candidate}}</span>
                   </div>
                 </div>
               </div>
@@ -274,7 +281,7 @@
                     <h4 class="font-medium">Job Title:</h4>
                   </div>
                   <div class="w-2/4">
-                    <p class="font-light">Senior Resolution Manager</p>
+                    <p class="font-light">{{ $job->title }}</p>
                   </div>
                 </div>
                 <div class="flex items-center justify-between py-4 border-t">
@@ -282,7 +289,7 @@
                     <h4 class="font-medium">Hiring Manager:</h4>
                   </div>
                   <div class="w-2/4">
-                    <p class="font-light">Donna Stockton</p>
+                    <p class="font-light">{{ $job->hiringManager->first_name }} {{ $job->hiringManager->middle_name }}  {{ $job->hiringManager->last_name }} </p>
                   </div>
                 </div>
                 <div class="flex items-center justify-between py-4 border-t">
@@ -290,7 +297,7 @@
                     <h4 class="font-medium">Job Title for Email Signature:</h4>
                   </div>
                   <div class="w-2/4">
-                    <p class="font-light">Senior Resolution Manager</p>
+                    <p class="font-light">{{$job->alternative_job_title}}</p>
                   </div>
                 </div>
                 <div class="flex items-center justify-between py-4 border-t">
@@ -299,8 +306,7 @@
                   </div>
                   <div class="w-2/4">
                     <p class="font-light">
-                      US Saint Peters 300 St. Peters Centre Blvd.-300 St. Peters
-                      Centre Blvd.-Saint Peters-Missouri-63376
+                        {{ locationName($job->location_id)}}
                     </p>
                   </div>
                 </div>
@@ -309,7 +315,7 @@
                     <h4 class="font-medium">Division:</h4>
                   </div>
                   <div class="w-2/4">
-                    <p class="font-light">Gallagher Bassett Services</p>
+                    <p class="font-light">{{ $job->division->type ?? 'N/A' }}</p>
                   </div>
                 </div>
                 <div class="flex items-center justify-between py-4 border-t">
@@ -317,7 +323,7 @@
                     <h4 class="font-medium">Region/Zone:</h4>
                   </div>
                   <div class="w-2/4">
-                    <p class="font-light">North America Operations</p>
+                    <p class="font-light">{{ $job->regionZone->type ?? 'N/A' }}</p>
                   </div>
                 </div>
                 <div class="flex items-center justify-between py-4 border-t">
@@ -325,7 +331,7 @@
                     <h4 class="font-medium">Branch:</h4>
                   </div>
                   <div class="w-2/4">
-                    <p class="font-light">Claims Services</p>
+                      <p class="font-light">{{ $job->branch->type ?? 'N/A' }}</p>
                   </div>
                 </div>
                 <div class="flex items-center justify-between py-4 border-t">
@@ -333,7 +339,7 @@
                     <h4 class="font-medium">Job Code:</h4>
                   </div>
                   <div class="w-2/4">
-                    <p class="font-light">100259</p>
+                      <p class="font-light">{{ $job->job_code ?? 'N/A' }}</p>
                   </div>
                 </div>
                 <div class="flex items-center justify-between py-4 border-t">
@@ -341,7 +347,7 @@
                     <h4 class="font-medium">Category:</h4>
                   </div>
                   <div class="w-2/4">
-                    <p class="font-light">Claims</p>
+                      <p class="font-light">{{ $job->category->title ?? 'N/A' }}</p>
                   </div>
                 </div>
                 <div class="flex items-center justify-between py-4 border-t">
@@ -349,7 +355,7 @@
                     <h4 class="font-medium">Travel Required:</h4>
                   </div>
                   <div class="w-2/4">
-                    <p class="font-light">No</p>
+                      <p class="font-light">{{ $job->travel_required ?? 'N/A' }}</p>
                   </div>
                 </div>
                 <div class="flex items-center justify-between py-4 border-t">
@@ -357,7 +363,7 @@
                     <h4 class="font-medium">Business Reason:</h4>
                   </div>
                   <div class="w-2/4">
-                    <p class="font-light">Replacement - Budgeted</p>
+                    <p class="font-light">{{ $job->businessReason->title ?? 'N/A' }}</p>
                   </div>
                 </div>
                 <div class="flex items-center justify-between py-4 border-t">
@@ -365,7 +371,7 @@
                     <h4 class="font-medium">Time System:</h4>
                   </div>
                   <div class="w-2/4">
-                    <p class="font-light">Contractor Connect</p>
+                    <p class="font-light">{{ $job->jobType->title ?? 'N/A' }}</p>
                   </div>
                 </div>
                 <div class="flex items-center justify-between py-4 border-t">
@@ -373,7 +379,7 @@
                     <h4 class="font-medium">Client Billable:</h4>
                   </div>
                   <div class="w-2/4">
-                    <p class="font-light">No</p>
+                      <p class="font-light">{{ $job->client_billable ?? 'N/A' }}</p>
                   </div>
                 </div>
                 <div class="flex items-center justify-between py-4 border-t">
@@ -381,7 +387,7 @@
                     <h4 class="font-medium">Expenses Allowed?</h4>
                   </div>
                   <div class="w-2/4">
-                    <p class="font-light">No</p>
+                      <p class="font-light">{{ $job->expenses_allowed ?? 'N/A' }}</p>
                   </div>
                 </div>
                 <div class="flex items-center justify-between py-4 border-t">
@@ -389,7 +395,7 @@
                     <h4 class="font-medium">Remote Candidate:</h4>
                   </div>
                   <div class="w-2/4">
-                    <p class="font-light">Yes</p>
+                      <p class="font-light">{{ $job->remote_option ?? 'N/A' }}</p>
                   </div>
                 </div>
                 <div class="flex items-center justify-between py-4 border-t">
@@ -397,7 +403,7 @@
                     <h4 class="font-medium">Number of Opening(s):</h4>
                   </div>
                   <div class="w-2/4">
-                    <p class="font-light">1</p>
+                      <p class="font-light">{{ $job->num_of_openings ?? 'N/A' }}</p>
                   </div>
                 </div>
                 <div class="flex items-center justify-between py-4 border-t">
@@ -405,33 +411,23 @@
                     <h4 class="font-medium">Worker Type:</h4>
                   </div>
                   <div class="w-2/4">
-                    <p class="font-light">Eligible for Overtime Premium</p>
+                      <p class="font-light">{{ $job->workerType->title ?? 'N/A' }}</p>
                   </div>
                 </div>
-                <div class="flex items-center justify-between py-4 border-t">
+{{--                <div class="flex items-center justify-between py-4 border-t">
                   <div class="w-2/4">
                     <h4 class="font-medium">Job Family:</h4>
                   </div>
                   <div class="w-2/4">
                     <p class="font-light">777007 - Contingent Worker-Claims</p>
                   </div>
-                </div>
+                </div>--}}
                 <div class="flex items-center justify-between py-4 border-t">
                   <div class="w-2/4">
                     <h4 class="font-medium">GL Account:</h4>
                   </div>
                   <div class="w-2/4">
-                    <p class="font-light">507105 - Temporary Help</p>
-                  </div>
-                </div>
-                <div class="flex items-center justify-between py-4 border-t">
-                  <div class="w-2/4">
-                    <h4 class="font-medium">
-                      Will this Position Require the Worker to Work OT?:
-                    </h4>
-                  </div>
-                  <div class="w-2/4">
-                    <p class="font-light">Yes</p>
+                      <p class="font-light">{{ $job->glCode->title ?? 'N/A' }}</p>
                   </div>
                 </div>
               </div>
@@ -455,15 +451,15 @@
                   <h4 class="font-medium">Work Days / Week:</h4>
                 </div>
                 <div class="w-2/4">
-                  <p class="font-light">5</p>
+                    <p class="font-light">{{ $job->day_per_week ?? 'N/A' }}</p>
                 </div>
               </div>
               <div class="flex items-center justify-between py-4 border-t">
                 <div class="w-2/4">
-                  <h4 class="font-medium">Total Working Days:</h4>
+                  <h4 class="font-medium">Total Hours/Week:</h4>
                 </div>
                 <div class="w-2/4">
-                  <p class="font-light">130</p>
+                    <p class="font-light">{{ $job->hours_per_week ?? 'N/A' }}</p>
                 </div>
               </div>
               <div class="flex items-center justify-between py-4 border-t">
@@ -471,23 +467,23 @@
                   <h4 class="font-medium">Estimated Hours / Day:</h4>
                 </div>
                 <div class="w-2/4">
-                  <p class="font-light">8</p>
+                    <p class="font-light">{{ $job->hours_per_day ?? 'N/A' }}</p>
                 </div>
               </div>
-              <div class="flex items-center justify-between py-4 border-t">
+{{--              <div class="flex items-center justify-between py-4 border-t">
                 <div class="w-2/4">
                   <h4 class="font-medium">Total Time:</h4>
                 </div>
                 <div class="w-2/4">
                   <p class="font-light">1040</p>
                 </div>
-              </div>
+              </div>--}}
               <div class="flex items-center justify-between py-4 border-y">
                 <div class="w-2/4">
                   <h4 class="font-medium">Job Duration:</h4>
                 </div>
                 <div class="w-2/4">
-                  <p class="font-light">07/29/2024 - 01/24/2025</p>
+                    <p class="font-light">{{ $job->start_date}} - {{$job->end_date}} </p>
                 </div>
               </div>
               <!-- Rates -->
@@ -503,7 +499,7 @@
                   <h4 class="font-medium">Unit of Measure:</h4>
                 </div>
                 <div class="w-2/4">
-                  <p class="font-light">Per Hour</p>
+                    <p class="font-light">{{ $job->paymentType->title }}</p>
                 </div>
               </div>
               <div class="flex items-center justify-between py-4 border-t">
@@ -511,7 +507,7 @@
                   <h4 class="font-medium">Currency:</h4>
                 </div>
                 <div class="w-2/4">
-                  <p class="font-light">USD</p>
+                    <p class="font-light">{{ $job->currency->symbol->title ?? 'N/A' }}</p>
                 </div>
               </div>
               <div class="flex items-center justify-between py-4 border-t">
@@ -519,7 +515,7 @@
                   <h4 class="font-medium">Minimum Bill Rate:</h4>
                 </div>
                 <div class="w-2/4">
-                  <p class="font-light">$20.00</p>
+                    <p class="font-light">{{ $job->min_bill_rate }}</p>
                 </div>
               </div>
               <div class="flex items-center justify-between py-4 border-t">
@@ -527,7 +523,7 @@
                   <h4 class="font-medium">Maximum Bill Rate:</h4>
                 </div>
                 <div class="w-2/4">
-                  <p class="font-light">$75.00</p>
+                    <p class="font-light">{{ $job->max_bill_rate }}</p>
                 </div>
               </div>
               <div class="flex items-center justify-between py-4 border-y">
@@ -535,7 +531,7 @@
                   <h4 class="font-medium">Time Type:</h4>
                 </div>
                 <div class="w-2/4">
-                  <p class="font-light">Full Time</p>
+                    <p class="font-light">{{ $job->jobType->title ?? 'N/A' }}</p>
                 </div>
               </div>
               <!-- Job Publish Info -->
@@ -550,10 +546,10 @@
               </h3>
               <div class="flex items-center justify-between py-4 border-t">
                 <div class="w-2/4">
-                  <h4 class="font-medium">Job Created:</h4>
+                  <h4 class="font-medium">Job Created at:</h4>
                 </div>
                 <div class="w-2/4">
-                  <p class="font-light">07/25/2024 02:38 PM</p>
+                    <p class="font-light">{{ $job->created_at ?? 'N/A' }}</p>
                 </div>
               </div>
               <div class="flex items-center justify-between py-4 border-t">
@@ -561,7 +557,7 @@
                   <h4 class="font-medium">Job Created By:</h4>
                 </div>
                 <div class="w-2/4">
-                  <p class="font-light">Donna Stockton</p>
+                    <p class="font-light">{{ $job->createdBy->name ?? 'N/A' }}</p>
                 </div>
               </div>
             </div>
