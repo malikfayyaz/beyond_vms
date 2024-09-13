@@ -192,19 +192,21 @@
                                 <span class="text-white">Business Unit</span>
                             </div>
                             <div class="w-2/5 text-center">
-                                <p class="font-light">{{ $job->careerBU->percentage ?? 'N/A' }}%</p>
+                                <p class="font-light">%</p>
                             </div>
                         </div>
+                        @foreach($job->careerOpportunitiesBu as $bu)
                         <div
                             class="flex justify-between gap-2 py-4 px-2 border-x border-b"
                         >
                             <div class="w-3/5 flex-wrap">
-                                <span><p class="font-light">{{ $job->careerBU->buName->type ?? 'N/A' }}</p></span>
+                                <span><p class="font-light">{{ $bu->buName->name ?? 'N/A' }}</p></span>
                             </div>
                             <div class="w-2/5 text-center">
-                                <span>{{ $job->careerBU->percentage ?? 'N/A' }}%</span>
+                                <span>{{ $bu->percentage ?? 'N/A' }}%</span>
                             </div>
                         </div>
+                        @endforeach
                     </div>
                     {{--              <div class="mt-4 rounded p-4 bg-[#F5F7FC]">
                                     <p class="color-[#202124] font-light">
