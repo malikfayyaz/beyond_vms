@@ -10,7 +10,7 @@ use App\Http\Controllers\{
     UserController,
     Vendor\VendorController,
     Admin\AdminController,
-    Admin\GenericDataController
+    Admin\GenericDataController,
     Admin\PermissionController,
     Admin\RoleController,
     Client\ClientController,
