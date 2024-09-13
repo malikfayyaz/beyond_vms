@@ -254,6 +254,30 @@ class AdminManagementController extends Controller
 
         $admin->save();
 
+        DB::table('model_has_permissions')->where('model_id', $admin->user_id)->where('model_type', 'App\Models\User')->delete();
+        DB::table('model_has_roles')->where('model_id', $admin->user_id)->where('model_type', 'App\Models\User')->delete();
+
+        // Assign new permissions
+        $roles_permission = DB::table('role_has_permissions')->where('role_id', $request->role)->get();
+        foreach ($roles_permission as $permission) {
+            DB::table('model_has_permissions')->insert([
+                'model_id' => $admin->user_id, // Associating with the user
+                'permission_id' => $permission->permission_id, // Adjust field as per your table structure
+                'model_type' => 'App\Models\User', // Assuming you're using the User model
+            ]);
+        }
+
+        // Assign new roles
+        $roles = DB::table('roles')->where('id', $request->role)->get(); // Assuming you're getting role from request
+        foreach ($roles as $role) {
+            DB::table('model_has_roles')->insert([
+                'role_id' => $role->id, // Role ID from the roles table
+                'model_id' => $admin->user_id, // Associating the role with the user
+                'model_type' => 'App\Models\User', // The model being associated, usually 'User'
+            ]);
+        }
+
+
         $successMessage = 'Admin updated successfully!';
         session()->flash('success', $successMessage);
     
