@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Vendor;
 
 use App\Http\Controllers\Controller;
+use App\Models\CareerOpportunity;
 use Illuminate\Http\Request;
 
 class SubmissionController extends Controller
@@ -18,9 +19,11 @@ class SubmissionController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create($id)
     {
-        return view('vendor.submission.create');
+        $career_opportunity = CareerOpportunity::findOrFail($id);
+        
+        return view('vendor.submission.create',compact($career_opportunity));
     }
 
     /**

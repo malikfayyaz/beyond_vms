@@ -8,6 +8,9 @@ use App\Http\Controllers\{
    
     TeamController,
     UserController,
+    Vendor\VendorController,
+    Admin\AdminController,
+    Admin\PermissionController,
     Admin\RoleController,
     Client\ClientController,
     Auth\AuthController,
@@ -62,8 +65,12 @@ Route::middleware(['ensure_role_is_selected'])->group(function () {
     Route::post('users/{user}/assign-role', [UserController::class, 'assignRole'])->name('users.assignRole');
 
     // Role-specific dashboards
-  
-
+    Route::middleware(['user_role:vendor'])->group(function () {
+        Route::get('/admin/dashboard', [AdminController::class, 'index'])->name('dashboard');
+    });
+    Route::middleware(['user_role:vendor'])->group(function () {
+    Route::get('/vendor/dashboard', [VendorController::class, 'index'])->name('vendor.dashboard');
+    });
     Route::middleware(['user_role:client'])->group(function () {
         Route::get('/client/dashboard', [ClientController::class, 'index'])->name('client.dashboard');
         Route::resource('/client/career-opportunities', \App\Http\Controllers\Client\CareerOpportunitiesController::class)

@@ -9,7 +9,8 @@ use App\Http\Controllers\{
 Route::middleware(['user_role:vendor'])->group(function () {
     Route::prefix('vendor')->name('vendor.')->group(function () {
         Route::get('/dashboard', [VendorController::class, 'index'])->name('vendor.dashboard');
-        Route::resource('submission', SubmissionController::class);
+        Route::get('submission/{id}/create', [SubmissionController::class, 'create'])->name('submission.create');
+        // Route::resource('submission', SubmissionController::class);
     });
 
 });

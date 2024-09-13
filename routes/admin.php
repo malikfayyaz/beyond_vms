@@ -3,7 +3,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\{
-    Admin\PermissionController,
+    
     Admin\GenericDataController,
     Admin\CatalogController,
     Admin\RatesController,

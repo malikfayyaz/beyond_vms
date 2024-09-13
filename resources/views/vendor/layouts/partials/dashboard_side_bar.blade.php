@@ -53,13 +53,13 @@
               </button>
               <ul x-show="open" class="py-2 space-y-2" x-cloak>
                 <li>
-                <li class="{{ request()->routeIs('vendor.submission.create') ? 'active' : '' }}">
-                          <a href="{{ route('vendor.submission.create') }}"
-                             class="flex items-center w-full p-2 text-white transition duration-75 pl-11 hover:bg-gray-700">
-                               submission
-                          </a>
-                      </li>
-                </li>
+                <li class="{{ request()->routeIs('vendor.submission.create') && request()->route('id') == 1 ? 'active' : '' }}">
+                  <a href="{{ route('vendor.submission.create',  ['id' => 1]) }}"
+                    class="flex items-center w-full p-2 text-white transition duration-75 pl-11 hover:bg-gray-700">
+                    Submission
+                  </a>
+              </li>
+
                 <li>
                   <a
                     href="#"
