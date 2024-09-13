@@ -1,10 +1,10 @@
-@extends('client.layouts.app')
+@extends('vendor.layouts.app')
 
 @section('content')
     <!-- Sidebar -->
-    @include('client.layouts.partials.dashboard_side_bar')
+    @include('vendor.layouts.partials.dashboard_side_bar')
     <div class="ml-16">
-        @include('client.layouts.partials.header')
+        @include('vendor.layouts.partials.header')
         <div class="bg-white mx-4 my-8 rounded p-8">
             <div >
                 <div class="flex justify-between items-center mb-6">
@@ -13,7 +13,7 @@
                         <button
                             type="button"
                             class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 capitalize"
-                            onclick="window.location.href='{{ route('client.career-opportunities.create') }}'"
+                            onclick="window.location.href='{{ route('vendor.career-opportunities.create') }}'"
                         >
                             Create New Job
                         </button>
@@ -88,7 +88,7 @@
         document.addEventListener('DOMContentLoaded', function() {
             console.log(window.$); // Verify jQuery is available
             if (window.$) {
-                initializeDataTable('#example', '/client/career-opportunities', [
+                initializeDataTable('#example', '/vendor/career-opportunities', [
                     { data: 'jobStatus', name: 'jobStatus' },
                     { data: 'id', name: 'id' },
                     { data: 'title', name: 'title' },

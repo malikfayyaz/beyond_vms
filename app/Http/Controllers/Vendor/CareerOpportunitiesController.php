@@ -1,10 +1,9 @@
 <?php
 
-namespace App\Http\Controllers\Client;
+namespace App\Http\Controllers\Vendor;
 
 use App\Http\Controllers\Controller;
 use App\Models\CareerOpportunity;
-use App\Models\JobTemplates;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Yajra\DataTables\Facades\DataTables;
@@ -17,9 +16,9 @@ class CareerOpportunitiesController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $clientid = Auth::id();
+            $vendorid = Auth::id();
             $data = CareerOpportunity::with('hiringManager','workerType')
-                ->where('user_id', $clientid)
+                ->where('user_id', $vendorid)
                 ->select('career_opportunities.*');
             return DataTables::of($data)
                 ->addIndexColumn()
@@ -34,17 +33,12 @@ class CareerOpportunitiesController extends Controller
                                     ->addIndexColumn()*/
                 ->addColumn('action', function($row){
 
-                    $btn = ' <a href="' . route('client.career-opportunities.show', $row->id) . '"
+                    $btn = ' <a href="' . route('vendor.career-opportunities.show', $row->id) . '"
                        class="text-blue-500 hover:text-blue-700 mr-2 bg-transparent hover:bg-transparent"
                      >
                        <i class="fas fa-eye"></i>
-                     </a>
-                     <a href="' . route('client.career-opportunities.edit', $row->id) . '"
-                       class="text-green-500 hover:text-green-700 mr-2 bg-transparent hover:bg-transparent"
-                     >
-                       <i class="fas fa-edit"></i>
                      </a>';
-                    $deleteBtn = '<form action="' . route('client.career-opportunities.destroy', $row->id) . '" method="POST" style="display: inline-block;" onsubmit="return confirm(\'Are you sure?\');">
+                    $deleteBtn = '<form action="' . route('vendor.career-opportunities.destroy', $row->id) . '" method="POST" style="display: inline-block;" onsubmit="return confirm(\'Are you sure?\');">
                      ' . csrf_field() . method_field('DELETE') . '
                      <button type="submit" class="text-red-500 hover:text-red-700 bg-transparent hover:bg-transparent">
                          <i class="fas fa-trash"></i>
@@ -56,22 +50,15 @@ class CareerOpportunitiesController extends Controller
                 ->rawColumns(['action'])
                 ->make(true);
         }
-
-        return view('client.career-opportunities.index');
-        //
+        // Logic to get and display catalog items
+        return view('vendor.career_opportunities.index'); // Assumes you have a corresponding Blade view
     }
-
     /**
      * Show the form for creating a new resource.
      */
     public function create()
     {
-        $careerOpportunity ="";
-        $businessUnitsData = "";
-        return view('client.career-opportunities.create', [
-            'careerOpportunity' => $careerOpportunity,
-            'businessUnitsData' => $businessUnitsData,
-        ] );
+        //
     }
 
     /**
@@ -79,52 +66,21 @@ class CareerOpportunitiesController extends Controller
      */
     public function store(Request $request)
     {
-        try {
-
-            $validatedData = $this->validateJobOpportunity($request);
-
-            $businessUnits = $request->input('businessUnits');
-            // dd($businessUnits);
-
-            $jobTemplate = JobTemplates::findOrFail($validatedData['jobTitle']);
-            // Handle file upload
-
-            $filename = handleFileUpload($request, 'attachment', 'career_opportunities');
-            // Mapping form fields to database column names
-            $mappedData = $this->mapJobData($validatedData, $jobTemplate, $request, $filename);
-            $job = CareerOpportunity::create( $mappedData );
-
-            $this->syncBusinessUnits($request->input('businessUnits'), $job->id);
-
-            calculateJobEstimates($job);
-            session()->flash('success', 'Job saved successfully!');
-            return response()->json([
-                'success' => true,
-                'message' => 'Job saved successfully!',
-                'redirect_url' => route('admin.career-opportunities.index') // Redirect back URL for AJAX
-            ]);
-        }catch (ValidationException $e) {
-            // Handle the validation error and return a JSON response
-            return response()->json([
-                'success' => false,
-                'errors' => $e->errors(),  // Returns all the validation errors
-                'message' => 'Validation failed!',
-            ], 422);
-        }
+        //
     }
+
     /**
      * Display the specified resource.
      */
     public function show(string $id)
     {
         $job = CareerOpportunity::with('hiringManager')->findOrFail($id);
-
+       // dd($job);
         // Optionally, you can dump the data for debugging purposes
         // dd($job); // Uncomment to check the data structure
 
         // Return the view and pass the job data to it
-        return view('client.career-opportunities.view', compact('job'));
-        //
+        return view('vendor.career_opportunities.view', compact('job'));
     }
 
     /**

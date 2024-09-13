@@ -337,7 +337,7 @@ class CareerOpportunitiesController extends BaseController
             'ledger_code' => $validatedData['subLedgerCode'] ?? null,
         ];
 
-      
+
         return true;
     }
 
