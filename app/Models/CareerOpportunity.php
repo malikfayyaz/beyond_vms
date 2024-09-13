@@ -5,6 +5,7 @@ namespace App\Models;
 // use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Carbon\Carbon;
 
 class CareerOpportunity extends Model
 {
@@ -69,4 +70,15 @@ class CareerOpportunity extends Model
     {
         return $this->belongsTo(User::class, 'user_id', 'id');
     }
+
+    
+ 
+     public function getDateRangeAttribute()
+     {
+         $start = $this->start_date ? Carbon::parse($this->start_date)->format('m/d/Y') : '';
+         $end = $this->end_date ? Carbon::parse($this->end_date)->format('m/d/Y') : '';
+     
+         return $start && $end ? "$start - $end" : '';
+     }
+     
 }

@@ -7,5 +7,13 @@ use Illuminate\Database\Eloquent\Model;
 
 class Consultant extends Model
 {
-    use HasFactory;
+    protected $guarded = [
+        // List attributes you want to guard from mass assignment
+        // e.g., 'id', 'created_at', 'updated_at'
+    ];
+
+    public function getFullNameAttribute()
+    {
+        return trim($this->first_name . ' ' . ($this->middle_name ?? '') . ' ' . $this->last_name);
+    }
 }

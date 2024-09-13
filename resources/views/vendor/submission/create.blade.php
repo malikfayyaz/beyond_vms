@@ -125,7 +125,7 @@
                  </div>
                  <div class="flex flex-col gap-2">
                    <span class="font-bold text-[#28c76f]">Client</span>
-                   <span>Contractor Connect</span>
+                   <span>{{ $career_opportunity->hiringManager->full_name }}</span>
                  </div>
                </div>
              </div>
@@ -140,7 +140,7 @@
                  </div>
                  <div class="flex flex-col gap-2">
                    <span class="font-bold text-[#00bad1]">Job</span>
-                   <span>Senior Resolution Manager (4897)</span>
+                   <span>{{ $career_opportunity->title }} ({{$career_opportunity->id}})</span>
                  </div>
                </div>
              </div>
@@ -155,7 +155,7 @@
                  </div>
                  <div class="flex flex-col gap-2">
                    <span class="font-bold text-[#ff9f43]">Job Duration</span>
-                   <span>07/29/2024 - 12/06/2024</span>
+                   <span>{{ $career_opportunity->date_range }}</span>
                  </div>
                </div>
              </div>
@@ -211,8 +211,8 @@
                      id="candidateType"
                    >
                      <option value="">Select</option>
-                     <option value="new">New</option>
-                     <option value="yes">Existing</option>
+                     <option value="1">New</option>
+                     <option value="2">Existing</option>
                    </select>
                    <p
                      x-show="showErrors && !isFieldValid('candidateType')"
@@ -221,8 +221,13 @@
                    ></p>
                  </div>
                  <!-- Form Fields for Client New or Existing -->
+                  @php 
+                  $allcandidates = \App\Models\Consultant::where('vendor_id', \Auth::id())
+                        ->get();
+                        
+                        @endphp
                  <div class="flex-1">
-                   <div x-show="formData.candidateType === 'yes'">
+                   <div x-show="formData.candidateType === '2'">
                      <label class="block mb-2"
                        >Candidates <span class="text-red-500">*</span></label
                      >
@@ -233,8 +238,10 @@
                        id="candidateSelection"
                      >
                        <option value="">Select</option>
-                       <option value="one">Candidate One</option>
-                       <option value="two">Candidate Two</option>
+                       @foreach($allcandidates as $candidate)
+                       <option value="{{$candidate->user_id}}">{{ $candidate->full_name }}</option>
+                        @endforeach
+                      
                      </select>
                      <p
                        x-show="showErrors && !isFieldValid('candidateSelection')"
@@ -285,6 +292,7 @@
                    <label class="block mb-2">Middle Name</label>
                    <input
                      type="text"
+                     id="candidateMiddleName"
                      x-model="formData.candidateMiddleName"
                      class="w-full h-12 px-4 text-gray-500 border border-gray-300 rounded-md shadow-sm focus:outline-none"
                      placeholder="Enter middle name"

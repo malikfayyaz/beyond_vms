@@ -23,7 +23,7 @@ class SubmissionController extends Controller
     {
         $career_opportunity = CareerOpportunity::findOrFail($id);
         
-        return view('vendor.submission.create',compact($career_opportunity));
+        return view('vendor.submission.create',['career_opportunity'=>$career_opportunity]);
     }
 
     /**

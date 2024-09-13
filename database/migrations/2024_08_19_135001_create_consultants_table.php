@@ -14,12 +14,12 @@ return new class extends Migration
         Schema::create('consultants', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->string('first_name');
-            $table->string('middle_name');
-            $table->string('last_name');
-            $table->integer('vendor_id');
-            $table->string('organization');
-            $table->string('business_name');
+            $table->string('first_name')->nullable();
+            $table->string('middle_name')->nullable();
+            $table->string('last_name')->nullable();
+            $table->integer('vendor_id')->nullable();
+            $table->string('organization')->nullable();
+            $table->string('business_name')->nullable();
             $table->enum('is_enable', ['0', '1','2']);
             $table->enum('profile_approve', ['Yes', 'No']);
             $table->dateTime('profile_approved_date');

@@ -351,6 +351,46 @@ export default function addSubWizarForm() {
     },
 
     showErrors: false,
+    mounted() {
+      console.log(window.$); // Verify jQuery is available
+      if (window.$) {
+        $('#candidateSelection').on('change', () => {
+          this.loadExistingCandidate();
+        });
+        this.loadExistingCandidate = () => {
+          var candidate_id = $('#candidateSelection').find(':selected').val();
+
+         
+          let url = `/consultant-id`;
+
+          if (candidate_id != '') {
+            let data = new FormData();
+            data.append('candidate_id', candidate_id);
+            const updates = {
+              '#candidateFirstName': { type: 'value', field: 'candidateFirstName' },
+              '#candidateMiddleName': { type: 'value', field: 'candidateMiddleName' },
+              '#candidateLastName': { type: 'select2', field: 'candidateLastName' },
+              '#dobDate': { type: 'value', field: 'dobDate' },
+              '#lastFourNationalId': { type: 'value', field: 'lastFourNationalId' },
+              // Add more mappings as needed
+            };
+            ajaxCall(url, 'POST', [[updateElements, ['response', updates]]], data);
+            setTimeout(() => {
+             this.formData.candidateFirstName =  $('#candidateFirstName').val();
+             this.formData.candidateMiddleName = $('#candidateMiddleName').val();
+             this.formData.candidateLastName = $('#candidateLastName').val();
+             this.formData.dobDate = $('#dobDate').val();
+             this.formData.lastFourNationalId = $('#lastFourNationalId').val();
+            }, 500);
+          }
+        };
+        
+      }
+    },
+
+    
+
+    
 
     initSelect2() {
       this.$nextTick(() => {
