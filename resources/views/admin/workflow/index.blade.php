@@ -42,7 +42,9 @@
 
                 // Method to handle edit item action
                 editItem(item) {
-                    console.log('Editing item:', item);
+                    console.log('Editing item:', item.id);
+                    let redirect_url = '{{ route('admin.workflow.edit', ':id') }}'.replace(':id', item.id);
+                    window.location.href = redirect_url;
                     // Add logic to handle editing
                 }
             }

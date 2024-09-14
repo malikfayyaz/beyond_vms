@@ -15,6 +15,8 @@ use App\Models\SettingCategory;
 use App\Models\Vendor;
 use App\Models\JobTemplates;
 use App\Models\Markup;
+use App\Models\Client;
+use Spatie\Permission\Models\Role;
 
 class GenericDataController extends BaseController
 {
@@ -347,7 +349,23 @@ class GenericDataController extends BaseController
     public function workflow(Request $request)
     {
         $data = GenericData::where('type', 'busines-unit')->get();
-        return view('admin.workflow.workflow', compact('data'));
+
+        return view('admin.workflow.index', compact('data'));
+    }
+
+    public function workflowEdit($id)
+    {
+        $bu_data = GenericData::findOrFail($id);
+
+        $clients = Client::where('profile_status',1)->get();
+        $roles = Role::where('id',2)->get();
+
+
+        // Fetch the item to edit
+        $item = GenericData::findOrFail($id);
+        
+        // Return the edit view with the item data
+        return view('admin.workflow.edit', compact('item','bu_data','clients','roles'));
     }
 
     public function settingMarkup(Request $request)
