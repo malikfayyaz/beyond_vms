@@ -101,9 +101,9 @@
                         <template x-for="(item, index) in filteredItems" :key="index">
                             <tr>
                                 <td class="border p-2 text-center" x-text="index + 1"></td>
-                                <td class="border p-2 text-center" x-text="item.client?.name ?? 'N/A'"></td>
-                                <td class="border p-2 text-center" x-text="item.approvalRole?.name ?? 'N/A'"></td>
-                                <td class="border p-2 text-center" x-text="item.hiringManager?.first_name ?? 'N/A'"></td>
+                                <td class="border p-2 text-center" x-text="item.client.first_name ?? 'N/A'"></td>
+                                <td class="border p-2 text-center" x-text="item.approval_role.name ?? 'N/A'"></td>
+                                <td class="border p-2 text-center" x-text="item.hiring_manager.first_name ?? 'N/A'"></td>
                                 <td class="border p-2 text-center" x-text="item.approval_required ?? 'N/A'"></td>
                                 <td class="border p-2 text-center">
                                     <!-- <span @click="editItem(item)" class="text-gray-600 cursor-pointer">
@@ -204,9 +204,9 @@
 
             get filteredItems() {
             return this.items.filter(item =>
-                (item.client?.name ?? '').toLowerCase().includes(this.searchTerm.toLowerCase()) ||
-                (item.approvalRole?.name ?? '').toLowerCase().includes(this.searchTerm.toLowerCase()) ||
-                (item.hiringManager?.first_name ?? '').toLowerCase().includes(this.searchTerm.toLowerCase())
+                (item.client.first_name ?? '').toLowerCase().includes(this.searchTerm.toLowerCase()) ||
+                (item.approval_role.name ?? '').toLowerCase().includes(this.searchTerm.toLowerCase()) ||
+                (item.hiring_manager.first_name ?? '').toLowerCase().includes(this.searchTerm.toLowerCase())
             );
         },
         };
