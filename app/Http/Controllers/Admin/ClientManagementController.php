@@ -12,6 +12,8 @@ use Carbon\Carbon;
 use App\Models\Country;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Spatie\Permission\Models\Role;
 use Yajra\DataTables\Facades\DataTables;
@@ -73,7 +75,131 @@ class ClientManagementController extends Controller
     /**
      * Store a newly created resource in storage.
      */
+
+
     public function store(Request $request)
+    {
+        $user = Auth::user();
+        $countries = Country::all();
+        // Validation
+        $request->validate([
+            'first_name' => 'required|string|max:255',
+            'middle_name' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
+            'email' => 'required|email|unique:admins,email',
+            'phone' => 'nullable|string|max:20',
+            'role' => 'required|exists:roles,id',
+            'country' => 'required|exists:countries,id',
+            'status' => 'required|string|in:active,inactive',
+            'profile_image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+        ]);
+
+
+        $email_found = User::where('email', $request->email)->first();
+
+        if ($email_found) {
+
+            $adminRecord = Client::where('user_id', $email_found->id)->first();
+
+            if ($adminRecord) {
+
+                $errorMessage = 'An admin record already exists for this email.';
+                session()->flash('error', $errorMessage);
+                return response()->json([
+                    'success' => false,
+                    'message' => $errorMessage,
+                    'redirect_url' => route('admin.client-users.create') // Send back the URL to redirect to
+                ]);
+
+            } else {
+
+                $client = new Client();
+                $client->user_id = $email_found->id;
+                $client->first_name = $request->first_name;
+                $client->last_name = $request->last_name;
+                $client->email = $request->email;
+                $client->phone = $request->phone;
+                $client->member_access = $request->role; // Assuming you have a foreign key to roles in the Admin table
+                $client->admin_status = 1;
+                $client->country = $request->country; // Assuming you have a foreign key to countries
+                $client->status = $request->status;
+
+                // Handle the profile image upload if provided
+                $imagePath = handleFileUpload($request, 'profile_image', 'admin_profile');
+                if ($imagePath) {
+                    $client->profile_image = $imagePath;
+                }
+
+                $client->save();
+            }
+        } else {
+
+            $user = new User;
+            $user->name = $request->first_name;
+            $user->email = $request->email;
+            $user->password = Hash::make('password');
+            $user->is_admin = 1;
+
+            $user->save();
+
+            $client = new $client;
+            $client->user_id = $user->id;
+            $client->first_name = $request->first_name;
+            $client->last_name = $request->last_name;
+            $client->email = $request->email;
+            $client->phone = $request->phone;
+            $client->member_access = $request->role; // Assuming you have a foreign key to roles in the Admin table
+            $client->admin_status = 1;
+            $client->country = $request->country; // Assuming you have a foreign key to countries
+            $client->status = $request->status;
+
+            //  Handle the profile image upload if provided
+
+            $imagePath = handleFileUpload($request, 'profile_image', 'admin_profile');
+            if ($imagePath) {
+                $client->profile_image = $imagePath;
+            }
+
+            $client->save();
+
+            $roles_permission = DB::table('role_has_permissions')->where('role_id', $request->role)->get();
+            foreach($roles_permission as $permission){
+                $insert = DB::table('model_has_permissions')->insert([
+                    'model_id' => $user->id, // Associating with the user
+                    'permission_id' => $permission->permission_id, // Adjust field as per your table structure
+                    'model_type' => 'App\Models\User', // Assuming you're using the User model
+                ]);
+            }
+
+            $roles = DB::table('roles')->where('id', $request->role)->get(); // Assuming you're getting role from request
+            foreach ($roles as $role) {
+                $insert = DB::table('model_has_roles')->insert([
+                    'role_id' => $role->id, // Role ID from the roles table
+                    'model_id' => $user->id, // Associating the role with the user
+                    'model_type' => 'App\Models\User', // The model being associated, usually 'User'
+                ]);
+            }
+        }
+
+        $successMessage = 'Client created successfully!';
+        session()->flash('success', $successMessage);
+
+        return response()->json([
+            'success' => true,
+            'message' => $successMessage,
+            'redirect_url' =>  route("admin.client-users.index")  // Redirect URL for AJAX
+        ]);
+    }
+
+
+
+
+
+
+
+
+
+/*    public function store(Request $request)
     {
         $userId = auth()->id();
 
@@ -82,12 +208,11 @@ class ClientManagementController extends Controller
             'first_name' => 'required',
             'middle_name' => 'nullable',  // Optional middle name
             'last_name' => 'required',
-            'email' => 'required|email|unique:admins,email',
+            'email' => 'required|email|unique:clients,email',
             'profile_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'role' => 'required',
             'country' => 'required',
             'description' => 'required',
-            'status' => 'required',
+            'profile_status' => 'required',
         ];
 
         // Role-specific validation rules
@@ -136,7 +261,6 @@ class ClientManagementController extends Controller
         $validatedData['profile_approved_date'] = Carbon::now();
         $validatedData['user_id'] = $userId; // Associate the client with the authenticated user
         $validatedData['manager_id'] = '1'; // Set default manager
-        $validatedData['profile_status'] = '1'; // Set default profile status
 
         // Create a new Client record
         $client = new Client();
@@ -145,7 +269,7 @@ class ClientManagementController extends Controller
 
         // Return success response
         return response()->json(['success' => true, 'redirect_url' => route('admin.client-users.index')]);
-    }
+    }*/
 
     /**
      * Display the specified resource.

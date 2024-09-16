@@ -101,13 +101,13 @@
                 </div>
 
                 <div class="flex-1">
-                    <label for="status" class="block mb-2">Status <span class="text-red-500">*</span></label>
-                    <select id="status" x-model="formData.status" class="w-full p-2 border rounded h-10">
+                    <label for="profile_status" class="block mb-2">Profile Status <span class="text-red-500">*</span></label>
+                    <select id="profile_status" x-model="formData.profile_status" class="w-full p-2 border rounded h-10">
                         <option value="" disabled selected>Select Status</option>
                         <option value="active">Active</option>
                         <option value="inactive">Inactive</option>
                     </select>
-                    <p x-show="statusError" class="text-red-500 text-sm mt-1" x-text="statusError"></p>
+                    <p x-show="profile_statusError" class="text-red-500 text-sm mt-1" x-text="profile_statusError"></p>
                 </div>
             </div>
             <div class="flex space-x-4 mt-4">
@@ -152,7 +152,7 @@
                     profile_image: null,
                     role: '{{ old('role', $client->member_access ?? '') }}',
                     country: '{{ old('country', $client->country ?? '') }}',
-                    status: '{{ old('status', $client->status ?? '') }}',
+                    profile_status: '{{ old('profile_status', $client->profile_status ?? '') }}',
                 },
 
 
@@ -167,7 +167,7 @@
                 emailError: '',
                 roleError: '',
                 countryError: '',
-                statusError: '',
+                profile_statusError: '',
 
                 // Validation
                 validateFields() {
@@ -208,11 +208,11 @@
                         this.countryError = '';
                     }
 
-                    if (this.formData.status === "") {
-                        this.statusError = "Status is required";
+                    if (this.formData.profile_status === "") {
+                        this.profile_statusError = "profile_status is required";
                         errorCount++;
                     } else {
-                        this.statusError = '';
+                        this.profile_statusError = '';
                     }
 
                     return errorCount === 0;  // Return true if no errors
@@ -238,7 +238,7 @@
 
                         formData.append('role', this.formData.role);
                         formData.append('country', this.formData.country);
-                        formData.append('status', this.formData.status);
+                        formData.append('profile_status', this.formData.profile_status);
 
                         let url = '{{ route("admin.client-users.store") }}';
                         if (this.editIndex !== null) {
@@ -285,7 +285,7 @@
                     this.formData.profile_image = null;
                     this.formData.role = '';
                     this.formData.country = '';
-                    this.formData.status = '';
+                    this.formData.profile_statusError = '';
                     this.clearErrors();
                 },
 
@@ -296,7 +296,7 @@
                     this.emailError = '';
                     this.roleError = '';
                     this.countryError = '';
-                    this.statusError = '';
+                    this.profile_statusError = '';
                 },
 
                 // Edit item
@@ -308,7 +308,7 @@
                     this.formData.phone = item.phone;
                     this.formData.role = item.role;
                     this.formData.country = item.country;
-                    this.formData.status = item.status;
+                    this.formData.profile_status = item.profile_statusError;
                     this.clearErrors();
                 },
 
