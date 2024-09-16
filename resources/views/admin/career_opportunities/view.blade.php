@@ -192,19 +192,21 @@
                     <span class="text-white">Business Unit</span>
                   </div>
                   <div class="w-2/5 text-center">
-                      <p class="font-light">{{ $job->careerBU->percentage ?? 'N/A' }}%</p>
+                      <p class="font-light">%</p>
                   </div>
                 </div>
-                <div
-                  class="flex justify-between gap-2 py-4 px-2 border-x border-b"
-                >
-                  <div class="w-3/5 flex-wrap">
-                    <span><p class="font-light">{{ $job->careerBU->buName->type ?? 'N/A' }}</p></span>
-                  </div>
-                  <div class="w-2/5 text-center">
-                    <span>{{ $job->careerBU->percentage ?? 'N/A' }}%</span>
-                  </div>
-                </div>
+                  @foreach($job->careerOpportunitiesBu as $bu)
+                      <div
+                          class="flex justify-between gap-2 py-4 px-2 border-x border-b"
+                      >
+                          <div class="w-3/5 flex-wrap">
+                              <span><p class="font-light">{{ $bu->buName->name ?? 'N/A' }}</p></span>
+                          </div>
+                          <div class="w-2/5 text-center">
+                              <span>{{ $bu->percentage ?? 'N/A' }}%</span>
+                          </div>
+                      </div>
+                  @endforeach
               </div>
 {{--              <div class="mt-4 rounded p-4 bg-[#F5F7FC]">
                 <p class="color-[#202124] font-light">
@@ -289,7 +291,7 @@
                     <h4 class="font-medium">Hiring Manager:</h4>
                   </div>
                   <div class="w-2/4">
-                    <p class="font-light">{{ $job->hiringManager->first_name }} {{ $job->hiringManager->middle_name }}  {{ $job->hiringManager->last_name }} </p>
+                    <p class="font-light">{{ $job->hiringManager->full_name }} </p>
                   </div>
                 </div>
                 <div class="flex items-center justify-between py-4 border-t">
@@ -483,7 +485,7 @@
                   <h4 class="font-medium">Job Duration:</h4>
                 </div>
                 <div class="w-2/4">
-                    <p class="font-light">{{ $job->start_date}} - {{$job->end_date}} </p>
+                    <p class="font-light">{{ $job->date_range }} </p>
                 </div>
               </div>
               <!-- Rates -->

@@ -23,7 +23,10 @@ class CareerOpportunitiesController extends Controller
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('hiring_manager', function($row) {
-                    return $row->hiringManager ? $row->hiringManager->first_name : 'N/A';
+                    return $row->hiringManager->full_name ? $row->hiringManager->full_name : 'N/A';
+                })
+                ->addColumn('duration', function($row) {
+                    return $row->date_range ? $row->date_range : 'N/A';
                 })
                 ->addColumn('worker_type', function($row) {
                     return $row->workerType ? $row->workerType->title : 'N/A';
@@ -38,14 +41,8 @@ class CareerOpportunitiesController extends Controller
                      >
                        <i class="fas fa-eye"></i>
                      </a>';
-                    $deleteBtn = '<form action="' . route('vendor.career-opportunities.destroy', $row->id) . '" method="POST" style="display: inline-block;" onsubmit="return confirm(\'Are you sure?\');">
-                     ' . csrf_field() . method_field('DELETE') . '
-                     <button type="submit" class="text-red-500 hover:text-red-700 bg-transparent hover:bg-transparent">
-                         <i class="fas fa-trash"></i>
-                     </button>
-                   </form>';
 
-                    return $btn .$deleteBtn;
+                    return $btn;
                 })
                 ->rawColumns(['action'])
                 ->make(true);

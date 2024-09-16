@@ -26,7 +26,10 @@ class CareerOpportunitiesController extends BaseController
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('hiring_manager', function($row) {
-                    return $row->hiringManager ? $row->hiringManager->first_name : 'N/A';
+                    return $row->hiringManager->full_name ? $row->hiringManager->full_name : 'N/A';
+                })
+                ->addColumn('duration', function($row) {
+                    return $row->date_range ? $row->date_range : 'N/A';
                 })
                 ->addColumn('worker_type', function($row) {
                     return $row->workerType ? $row->workerType->title : 'N/A';
@@ -129,7 +132,6 @@ class CareerOpportunitiesController extends BaseController
             'paymentType',
             'currency',
             'currency.symbol',
-            'careerBU.buName',
             'createdBy',
             'glCode',
             'category')->findOrFail($id);
