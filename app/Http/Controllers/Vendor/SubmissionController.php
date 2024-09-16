@@ -4,6 +4,9 @@ namespace App\Http\Controllers\Vendor;
 
 use App\Http\Controllers\Controller;
 use App\Models\CareerOpportunity;
+use App\Models\Markup;
+use App\Models\Country;
+use App\Models\Vendor;
 use Illuminate\Http\Request;
 
 class SubmissionController extends Controller
@@ -22,8 +25,17 @@ class SubmissionController extends Controller
     public function create($id)
     {
         $career_opportunity = CareerOpportunity::findOrFail($id);
-        
-        return view('vendor.submission.create',['career_opportunity'=>$career_opportunity]);
+        $markup = Markup::whereIn('category_id', [$career_opportunity->cat_id])
+                ->orWhereIn('location_id', [$career_opportunity->location_id])
+                ->orWhereIn('vendor_id', [\Auth::id()])
+                ->first();
+                $markupValue = $markup ? $markup->markup_value : 0;
+        $countries = Country::all();       
+        $vendor = Vendor::where('user_id', \Auth::id())->first();
+        return view('vendor.submission.create',[
+            'career_opportunity'=>$career_opportunity,
+            'markup'=>$markupValue,
+            'countries'=> $countries,'vendor'=> $vendor ]);
     }
 
     /**

@@ -156,6 +156,17 @@ function initializeDataTable(tableId, ajaxUrl, columns) {
                   }
 
                   break;
+                  case 'date':
+                    if (element.hasClass('flatpickr-input') && data[updateType.field]) {
+                        // Update Flatpickr instance with new date
+                        const flatpickrInstance = element[0]._flatpickr;
+                        if (flatpickrInstance) {
+                            flatpickrInstance.setDate(data[updateType.field], true); // Set the date and trigger change
+                        }
+                    } else {
+                        element.val(data[updateType.field]).trigger(['input', 'change', 'blur']);
+                    }
+                    break;
 
               // Add more cases as needed
           }

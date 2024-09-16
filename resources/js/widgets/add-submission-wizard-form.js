@@ -31,7 +31,7 @@ export default function addSubWizarForm() {
           "race",
           "workLocation",
           "preferredName",
-          "preferredLanguage",
+          
           "supplierAccountManager",
           "availableDate",
           "needSponsorship",
@@ -92,10 +92,12 @@ export default function addSubWizarForm() {
       preferredName: "",
       gender: "",
       race: "",
+      adjustedMarkup:"0.00",
+      jobId : "",
+      vendorMarkup:"0.00",
       workLocation: "",
       preferredLanguage: "",
       candidateEmail: "",
-      skills: [],
       phoneNumber: "",
       supplierAccountManager: "",
       resumeUpload: null,
@@ -115,21 +117,21 @@ export default function addSubWizarForm() {
       comment: "",
     },
 
-    selectedSkills: [],
+    // selectedSkills: [],
 
-    addSkill() {
-      this.formData.skills = [
-        ...new Set([...this.formData.skills, ...this.selectedSkills]),
-      ];
-      this.selectedSkills = [];
-      this.$nextTick(() => {
-        $("#skills").val(null).trigger("change");
-      });
-    },
+    // addSkill() {
+    //   this.formData.skills = [
+    //     ...new Set([...this.formData.skills, ...this.selectedSkills]),
+    //   ];
+    //   this.selectedSkills = [];
+    //   this.$nextTick(() => {
+    //     $("#skills").val(null).trigger("change");
+    //   });
+    // },
 
-    removeSkill(skill) {
-      this.formData.skills = this.formData.skills.filter((s) => s !== skill);
-    },
+    // removeSkill(skill) {
+    //   this.formData.skills = this.formData.skills.filter((s) => s !== skill);
+    // },
     handleResumeUpload(event) {
       const file = event.target.files[0];
       this.formData.resumeUpload = file || null;
@@ -174,6 +176,8 @@ export default function addSubWizarForm() {
 
     formatBillRate(value) {
       this.formData.billRate = this.formatRateValue(value);
+      console.log(this.formData.billRate );
+      
       this.validateAllRates();
     },
 
@@ -187,8 +191,9 @@ export default function addSubWizarForm() {
     },
 
     validateAllRates() {
-      this.validatePayRate();
       this.validateBillRate();
+      this.validatePayRate();
+      
     },
 
     validatePayRate() {
@@ -205,11 +210,13 @@ export default function addSubWizarForm() {
     },
 
     validateBillRate() {
+      this.errors.billRate =  "";
       const exceedBillRate = parseFloat(this.formData.exceedBillRate);
       const payRate = parseFloat(this.formData.payRate);
       const billRate = parseFloat(this.formData.billRate);
-
-      if (billRate < payRate) {
+      console.log(billRate+"dsfsdfsdf");
+      console.log(payRate+"payRate");
+      if (billRate > payRate) {
         this.errors.billRate = `Bill Rate must be at least ${this.formData.payRate}`;
       } else if (billRate > exceedBillRate) {
         this.errors.billRate = `Bill Rate cannot exceed ${this.formData.exceedBillRate}`;
@@ -251,19 +258,19 @@ export default function addSubWizarForm() {
     isValidRate(value) {
       return /^\d+(\.\d{2})?$/.test(value) && parseFloat(value) > 0;
     },
-    validateBillRate() {
-      const exceedBillRate = parseFloat(this.formData.exceedBillRate);
-      const payRate = parseFloat(this.formData.payRate);
-      const billRate = parseFloat(this.formData.billRate);
+    // validateBillRate() {
+    //   const exceedBillRate = parseFloat(this.formData.exceedBillRate);
+    //   const payRate = parseFloat(this.formData.payRate);
+    //   const billRate = parseFloat(this.formData.billRate);
 
-      if (billRate < payRate) {
-        this.errors.billRate = `Bill Rate must be at least ${this.formData.payRate}`;
-      } else if (billRate > exceedBillRate) {
-        this.errors.billRate = `Bill Rate cannot exceed ${this.formData.exceedBillRate}`;
-      } else {
-        this.errors.billRate = "";
-      }
-    },
+    //   if (billRate < payRate) {
+    //     this.errors.billRate = `Bill Rate must be at least ${this.formData.payRate}`;
+    //   } else if (billRate > exceedBillRate) {
+    //     this.errors.billRate = `Bill Rate cannot exceed ${this.formData.exceedBillRate}`;
+    //   } else {
+    //     this.errors.billRate = "";
+    //   }
+    // },
 
     isValidPayRate(value) {
       return this.isValidRate(value);
@@ -305,13 +312,13 @@ export default function addSubWizarForm() {
       return this.isValidBillRate(rate);
     },
 
-    formatBillRate(value) {
-      this.formData.billRate = this.formatBillingValue(value);
-    },
+    // formatBillRate(value) {
+    //   this.formData.billRate = this.formatBillingValue(value);
+    // },
 
-    formatMaxBillRate(value) {
-      this.formData.maxBillRate = this.formatBillingValue(value);
-    },
+    // formatMaxBillRate(value) {
+    //   this.formData.maxBillRate = this.formatBillingValue(value);
+    // },
 
     formatEstimatedExpense(value) {
       this.formData.estimatedExpense = this.formatBillingValue(value);
@@ -352,14 +359,50 @@ export default function addSubWizarForm() {
 
     showErrors: false,
     mounted() {
-      console.log(window.$); // Verify jQuery is available
+      // console.log(window.$); // Verify jQuery is available
       if (window.$) {
         $('#candidateSelection').on('change', () => {
           this.loadExistingCandidate();
         });
+        const myObject = {
+          disabledFields: (disable = true) => {
+          // Empty the input values and clear formData
+          if (!disable) {
+            $('#candidateSelection').val('').trigger("change.select2");
+            this.formData.candidateSelection = '';
+              $('#candidateFirstName').val('');
+              $('#candidateMiddleName').val('');
+              $('#candidateLastName').val('');
+              $('#dobDate').val('');
+              $('#lastFourNationalId').val('');
+              // console.log("dsfsdf");
+              
+              this.formData.candidateFirstName = '';
+              this.formData.candidateMiddleName = '';
+              this.formData.candidateLastName = '';
+              this.formData.dobDate = '';
+              this.formData.lastFourNationalId = '';
+          }
+          
+          // Disable or enable the fields based on the parameter
+          $('#candidateFirstName').prop('disabled', disable);
+          $('#candidateMiddleName').prop('disabled', disable);
+          $('#candidateLastName').prop('disabled', disable);
+          $('#dobDate').prop('disabled', disable);
+          $('#lastFourNationalId').prop('disabled', disable);
+      }
+      };
+
+      $('#candidateType').on('change', function() {
+        
+        if($(this).val() == 1) {
+          myObject.disabledFields(false);
+        }
+    });
+      
         this.loadExistingCandidate = () => {
           var candidate_id = $('#candidateSelection').find(':selected').val();
-
+          myObject.disabledFields(true);
          
           let url = `/consultant-id`;
 
@@ -369,22 +412,65 @@ export default function addSubWizarForm() {
             const updates = {
               '#candidateFirstName': { type: 'value', field: 'candidateFirstName' },
               '#candidateMiddleName': { type: 'value', field: 'candidateMiddleName' },
-              '#candidateLastName': { type: 'select2', field: 'candidateLastName' },
-              '#dobDate': { type: 'value', field: 'dobDate' },
+              '#candidateLastName': { type: 'value', field: 'candidateLastName' },
+              '#dobDate': { type: 'date', field: 'dobDate' },
               '#lastFourNationalId': { type: 'value', field: 'lastFourNationalId' },
               // Add more mappings as needed
             };
             ajaxCall(url, 'POST', [[updateElements, ['response', updates]]], data);
             setTimeout(() => {
+              
              this.formData.candidateFirstName =  $('#candidateFirstName').val();
              this.formData.candidateMiddleName = $('#candidateMiddleName').val();
              this.formData.candidateLastName = $('#candidateLastName').val();
              this.formData.dobDate = $('#dobDate').val();
              this.formData.lastFourNationalId = $('#lastFourNationalId').val();
+            //  console.log(this.formData);
+             
             }, 500);
           }
         };
-        
+
+        $('#billRate,#payRate').on('change', (event) => {
+          // Ensure formData is accessible
+          let formData = this.formData || {};
+          
+          let payRate = formData.payRate || $('#payRate').val();
+          let billRate = formData.billRate || $('#billRate').val();
+          let adjustedMarkup = formData.adjustedMarkup || $('#adjustedMarkup').val();
+          let markup = formData.vendorMarkup || $('#vendorMarkup').val();
+          let jobid = formData.jobid || $('#jobid').val();
+          let url = `/show-vendor-markup`;
+          let data = new FormData();
+      
+          data.append('payRate', payRate);
+          data.append('billRate', billRate);
+          data.append('adjustedMarkup', adjustedMarkup);
+          data.append('markup', markup);
+          data.append('jobid', jobid);
+      
+          var rateField = '';
+          if ($(event.target).attr('id') == 'billRate') {
+              rateField = 'bill_rate_changed';
+          }
+          if ($(event.target).attr('id') == 'VendorJobSubmission_adjusted_makrup') {
+              rateField = 'adjusted_markup_changed';
+          }
+          data.append('rateField', rateField);
+      
+          const updates = {
+              '#adjustedMarkup': { type: 'value', field: 'adjustedMarkup' },
+              // Add more mappings as needed
+          };
+      
+          ajaxCall(url, 'POST', [[updateElements, ['response', updates]]], data);
+      
+          setTimeout(() => {
+              formData.adjustedMarkup = $('#adjustedMarkup').val();
+              // console.log(formData.adjustedMarkup);
+          }, 500);
+      });
+      
       }
     },
 
@@ -459,7 +545,7 @@ export default function addSubWizarForm() {
 
         // Detect the system date format
         const systemDateFormat = detectDateFormat();
-        console.log("Detected system date format:", systemDateFormat);
+        // console.log("Detected system date format:", systemDateFormat);
 
         this.flatpickrInstance = flatpickr("#dobDate", {
           dateFormat: systemDateFormat,
@@ -467,7 +553,7 @@ export default function addSubWizarForm() {
           altFormat: systemDateFormat,
           maxDate: "today",
           onChange: (selectedDates, dateStr) => {
-            this.formData.dob = dateStr;
+            this.formData.dobDate = dateStr;
           },
           onReady: (selectedDates, dateStr, instance) => {
             // Force an update of the alt input to ensure it uses the correct format
@@ -521,7 +607,7 @@ export default function addSubWizarForm() {
         case 1:
           return (
             this.formData.candidateType !== "" &&
-            (this.formData.candidateType !== "yes" ||
+            (this.formData.candidateType !== "2" ||
               this.formData.candidateSelection !== "") &&
             this.formData.dobDate.trim() !== "" &&
             this.isValidNationalId(this.formData.lastFourNationalId)
@@ -539,7 +625,7 @@ export default function addSubWizarForm() {
             this.isFieldValid("gender") &&
             this.isFieldValid("race") &&
             this.isFieldValid("workLocation") &&
-            this.isFieldValid("preferredLanguage") &&
+            
             this.isFieldValid("candidateEmail") &&
             this.isFieldValid("supplierAccountManager") &&
             this.isFieldValid("resumeUpload") &&
@@ -560,8 +646,7 @@ export default function addSubWizarForm() {
               this.isFieldValid("gallagherCapacity") &&
               this.isFieldValid("gallagherStartDate") &&
               this.isFieldValid("gallagherLastDate") &&
-              this.isFieldValid("virtualCity") &&
-              this.isFieldValid("virtualState");
+              this.isFieldValid("virtualCity");
           }
           return isValid;
         default:
@@ -596,11 +681,26 @@ export default function addSubWizarForm() {
       this.showErrors = true;
       if (this.isFormValid) {
         console.log("Form submitted:", this.formData);
+        let formData = new FormData();
+        Object.keys(this.formData).forEach((key) => {
+          if (Array.isArray(this.formData[key])) {
+            // If the key is an array (like businessUnits), handle each item
+            this.formData[key].forEach((item, index) => {
+              formData.append(`${key}[${index}]`, JSON.stringify(item));
+            });
+          } else {
+            formData.append(key, this.formData[key]);
+          }
+        });
+        formData.append("additionaldoc", this.formData.additionalDocUpload);
+        formData.append("resume", this.formData.resumeUpload);
+        console.log(formData);
+        return false;
         this.showSuccessMessage = true;
-        this.resetForm();
-        this.currentStep = 1;
-        this.highestStepReached = 1;
-        this.formSubmitted = true;
+        // this.resetForm();
+        // this.currentStep = 1;
+        // this.highestStepReached = 1;
+        // this.formSubmitted = true;
         setTimeout(() => {
           this.showSuccessMessage = false;
         }, 5000);
@@ -619,8 +719,8 @@ export default function addSubWizarForm() {
         payRate: "0.00",
         billRate: "0.00",
         preferredName: "",
-        skills: [],
-        preferredLanguage: "",
+        // skills: [],
+       
         candidateEmail: "",
         phoneNumber: "",
         supplierAccountManager: "",
@@ -644,7 +744,7 @@ export default function addSubWizarForm() {
       if (document.getElementById("additionalDocUpload")) {
         document.getElementById("additionalDocUpload").value = "";
       }
-      this.selectedSkills = [];
+      // this.selectedSkills = [];
       // Reset Select2 dropdowns
       this.$nextTick(() => {
         $(".select2-single").val(null).trigger("change");
