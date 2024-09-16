@@ -75,7 +75,7 @@ class AdminManagementController extends Controller
         $user = Auth::user();   
         $countries = Country::all();
         // Validation
-        $request->validate([
+        $validatedData = $request->validate([
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
             'email' => 'required|email|unique:admins,email',
@@ -83,13 +83,18 @@ class AdminManagementController extends Controller
             'role' => 'required|exists:roles,id',
             'country' => 'required|exists:countries,id',
             'status' => 'required|string|in:active,inactive',
-            'profile_image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ]);
+        $first_name = $validatedData['first_name'];
+        $last_name = $validatedData['last_name'];
+        $email = $validatedData['email'];
+        $phone = $validatedData['phone'];
+        $role = $validatedData['role'];
+        $country = $validatedData['country'];
+        $status = $validatedData['status'];
 
-
-       $email_found = User::where('email', $request->email)->first();
+        $email_found = User::where('email', $email)->first();
        
-       if ($email_found) {
+        if ($email_found) {
         
             $adminRecord = Admin::where('user_id', $email_found->id)->first();
             
@@ -107,14 +112,14 @@ class AdminManagementController extends Controller
                  
                 $admin = new Admin;
                 $admin->user_id = $email_found->id;
-                $admin->first_name = $request->first_name;
-                $admin->last_name = $request->last_name;
-                $admin->email = $request->email;
-                $admin->phone = $request->phone;
-                $admin->member_access = $request->role; // Assuming you have a foreign key to roles in the Admin table
+                $admin->first_name = $first_name;
+                $admin->last_name = $last_name;
+                $admin->email = $email;
+                $admin->phone = $phone;
+                $admin->member_access = $role;
                 $admin->admin_status = 1;
-                $admin->country = $request->country; // Assuming you have a foreign key to countries
-                $admin->status = $request->status;
+                $admin->country = $country; // Assuming you have a foreign key to countries
+                $admin->status = $status;
 
                 // Handle the profile image upload if provided
                 $imagePath = handleFileUpload($request, 'profile_image', 'admin_profile');
@@ -127,8 +132,8 @@ class AdminManagementController extends Controller
         } else {
             
             $user = new User;      
-            $user->name = $request->first_name;
-            $user->email = $request->email;
+            $user->name = $first_name;
+            $user->email = $email;
             $user->password = Hash::make('password');
             $user->is_admin = 1;
 
@@ -136,14 +141,14 @@ class AdminManagementController extends Controller
 
             $admin = new Admin;
             $admin->user_id = $user->id;
-            $admin->first_name = $request->first_name;
-            $admin->last_name = $request->last_name;
-            $admin->email = $request->email;
-            $admin->phone = $request->phone;
-            $admin->member_access = $request->role; // Assuming you have a foreign key to roles in the Admin table
+            $admin->first_name = $first_name;
+            $admin->last_name = $last_name;
+            $admin->email = $email;
+            $admin->phone = $phone;
+            $admin->member_access = $role; 
             $admin->admin_status = 1;
-            $admin->country = $request->country; // Assuming you have a foreign key to countries
-            $admin->status = $request->status;
+            $admin->country = $country; 
+            $admin->status = $status;
 
             //  Handle the profile image upload if provided
 
@@ -154,7 +159,7 @@ class AdminManagementController extends Controller
 
             $admin->save();
 
-            $roles_permission = DB::table('role_has_permissions')->where('role_id', $request->role)->get();
+            $roles_permission = DB::table('role_has_permissions')->where('role_id', $role)->get();
             foreach($roles_permission as $permission){
                 $insert = DB::table('model_has_permissions')->insert([
                     'model_id' => $user->id, // Associating with the user
@@ -163,10 +168,10 @@ class AdminManagementController extends Controller
                 ]);
             }
 
-            $roles = DB::table('roles')->where('id', $request->role)->get(); // Assuming you're getting role from request
-            foreach ($roles as $role) {
+            $roles = DB::table('roles')->where('id', $role)->get(); // Assuming you're getting role from request
+            foreach ($roles as $roleData) {
                 $insert = DB::table('model_has_roles')->insert([
-                    'role_id' => $role->id, // Role ID from the roles table
+                    'role_id' => $roleData->id, // Role ID from the roles table
                     'model_id' => $user->id, // Associating the role with the user
                     'model_type' => 'App\Models\User', // The model being associated, usually 'User'
                 ]);
@@ -218,7 +223,7 @@ class AdminManagementController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $request->validate([
+        $validatedData = $request->validate([
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
             'email' => 'required|email|unique:admins,email,' . $id,
@@ -228,15 +233,22 @@ class AdminManagementController extends Controller
             'status' => 'required|string|in:active,inactive',
             'profile_image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ]);
+        $first_name = $validatedData['first_name'];
+        $last_name = $validatedData['last_name'];
+        $email = $validatedData['email'];
+        $phone = $validatedData['phone'];
+        $role = $validatedData['role'];
+        $country = $validatedData['country'];
+        $status = $validatedData['status'];
 
         $admin = Admin::findOrFail($id);
-        $admin->first_name = $request->first_name;
-        $admin->last_name = $request->last_name;
+        $admin->first_name = $first_name;
+        $admin->last_name = $last_name;
         // $admin->email = $request->email;
-        $admin->phone = $request->phone;
-        $admin->member_access = $request->role;
-        $admin->country = $request->country;
-        $admin->status = $request->status;
+        $admin->phone = $phone;
+        $admin->member_access = $role;
+        $admin->country = $country;
+        $admin->status = $status;
 
         // Handle the profile image upload if provided
         if ($request->hasFile('profile_image')) {
@@ -258,7 +270,7 @@ class AdminManagementController extends Controller
         DB::table('model_has_roles')->where('model_id', $admin->user_id)->where('model_type', 'App\Models\User')->delete();
 
         // Assign new permissions
-        $roles_permission = DB::table('role_has_permissions')->where('role_id', $request->role)->get();
+        $roles_permission = DB::table('role_has_permissions')->where('role_id', $role)->get();
         foreach ($roles_permission as $permission) {
             DB::table('model_has_permissions')->insert([
                 'model_id' => $admin->user_id, // Associating with the user
@@ -268,10 +280,10 @@ class AdminManagementController extends Controller
         }
 
         // Assign new roles
-        $roles = DB::table('roles')->where('id', $request->role)->get(); // Assuming you're getting role from request
-        foreach ($roles as $role) {
+        $roles = DB::table('roles')->where('id', $role)->get(); 
+        foreach ($roles as $roleData) {
             DB::table('model_has_roles')->insert([
-                'role_id' => $role->id, // Role ID from the roles table
+                'role_id' => $roleData->id, // Role ID from the roles table
                 'model_id' => $admin->user_id, // Associating the role with the user
                 'model_type' => 'App\Models\User', // The model being associated, usually 'User'
             ]);

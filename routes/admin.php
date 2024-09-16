@@ -1,16 +1,16 @@
-<?php 
-
+<?php
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\{
-    
+
     Admin\GenericDataController,
     Admin\CatalogController,
     Admin\RatesController,
     Admin\CareerOpportunitiesController,
     Admin\AdminController,
     Admin\AdminManagementController,
- 
+    Admin\ClientManagementController,
+
 };
 Route::middleware(['user_role:admin'])->group(function () {
     Route::prefix('admin')->name('admin.')->group(function () {
@@ -65,6 +65,7 @@ Route::middleware(['user_role:admin'])->group(function () {
         Route::match(['get', 'post'], 'division-branch-zone-config', [GenericDataController::class, 'divisionBranchZoneConfig'])->name('data.division_branch_zone_config');
 
         Route::resource('admin-users', AdminManagementController::class);
+        Route::resource('client-users', ClientManagementController::class);
 
         Route::match(['get', 'post'], 'setting/info', [GenericDataController::class, 'locationDetail'])->name('data.location');
 

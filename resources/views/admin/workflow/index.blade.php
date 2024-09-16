@@ -12,7 +12,7 @@
                     <thead>
                         <tr>
                             <th class="border p-2">Sr #</th>
-                            <th class="border p-2">Business Unit</th>
+                            <th class="border p-2">Clients</th>
                             <th class="border p-2">Action</th>
                         </tr>
                     </thead>
@@ -20,7 +20,7 @@
                         <template x-for="(item, index) in filteredItems" :key="index">
                             <tr>
                                 <td class="border p-2 text-center" x-text="index + 1"></td>
-                                <td class="border p-2 text-center" x-text="item.name ?? 'N/A'"></td>
+                                <td class="border p-2 text-center" x-text="item.first_name ?? 'N/A'"></td>
                                 <td class="border p-2 text-center">
                                     <span @click="editItem(item)" class="text-gray-600 cursor-pointer">
                                         <i class="fa-regular fa-pen-to-square"></i>
@@ -42,7 +42,9 @@
 
                 // Method to handle edit item action
                 editItem(item) {
-                    console.log('Editing item:', item);
+                    console.log('Editing item:', item.id);
+                    let redirect_url = '{{ route('admin.workflow.edit', ':id') }}'.replace(':id', item.id);
+                    window.location.href = redirect_url;
                     // Add logic to handle editing
                 }
             }
