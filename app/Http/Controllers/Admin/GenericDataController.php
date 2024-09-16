@@ -363,7 +363,7 @@ class GenericDataController extends BaseController
 
         $roles = Role::where('id',2)->get();
 
-       $table_data = Workflow::with(['client', 'approvalRole', 'hiringManager'])->get();
+        $table_data = Workflow::with(['client', 'approvalRole', 'hiringManager'])->get();
 
         // Fetch the item to edit
         $item = GenericData::findOrFail($id);

@@ -106,9 +106,9 @@
                                 <td class="border p-2 text-center" x-text="item.hiringManager?.first_name ?? 'N/A'"></td>
                                 <td class="border p-2 text-center" x-text="item.approval_required ?? 'N/A'"></td>
                                 <td class="border p-2 text-center">
-                                    <span @click="editItem(item)" class="text-gray-600 cursor-pointer">
+                                    <!-- <span @click="editItem(item)" class="text-gray-600 cursor-pointer">
                                         <i class="fa-regular fa-pen-to-square"></i>
-                                    </span>
+                                    </span> -->
                                 </td>
                             </tr>
                         </template>
