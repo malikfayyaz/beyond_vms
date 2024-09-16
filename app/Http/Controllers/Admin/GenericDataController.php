@@ -15,6 +15,9 @@ use App\Models\SettingCategory;
 use App\Models\Vendor;
 use App\Models\JobTemplates;
 use App\Models\Markup;
+use App\Models\Client;
+use App\Models\Workflow;
+use Spatie\Permission\Models\Role;
 
 class GenericDataController extends BaseController
 {
@@ -346,8 +349,53 @@ class GenericDataController extends BaseController
 
     public function workflow(Request $request)
     {
-        $data = GenericData::where('type', 'busines-unit')->get();
-        return view('admin.workflow.workflow', compact('data'));
+        // $data = GenericData::where('type', 'busines-unit')->get();
+        $data = Client::where('profile_status',1)->get();
+
+        return view('admin.workflow.index', compact('data'));
+    }
+
+    public function workflowEdit($id)
+    {
+        $client_data = Client::find($id);
+
+        $clients = Client::where('profile_status', 1)->where('id', '!=', $id)->get();
+
+        $roles = Role::where('id',2)->get();
+
+        $table_data = Workflow::with(['client', 'approvalRole', 'hiringManager'])->get();
+
+        // Fetch the item to edit
+        $item = GenericData::findOrFail($id);
+        
+        // Return the edit view with the item data
+        return view('admin.workflow.edit', compact('item','client_data','clients','roles','table_data'));
+    }
+
+    public function workflowStore(Request $request)
+    {
+        // Validate the incoming request data
+        $validatedData = $request->validate([
+            'client_id' => 'required|exists:clients,id',
+            'approval_role_id' => 'required|exists:roles,id',
+            'hiring_manager_id' => 'required|exists:clients,id',
+            'approval_required' => 'required|in:yes,no',
+        ]);
+        // dd($validatedData);
+
+        $workflow = new Workflow($validatedData);
+        $workflow->save();
+        
+
+        $successMessage = 'Workflow updated successfully!';
+        $redirectUrl = route('admin.workflow');
+
+        // Redirect to a specific route or return a response
+        return response()->json([
+            'success' => true,
+            'message' => $successMessage,
+            'redirect_url' => $redirectUrl // Redirect back URL for AJAX
+        ]);
     }
 
     public function settingMarkup(Request $request)
