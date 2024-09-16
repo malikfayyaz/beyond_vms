@@ -67,6 +67,8 @@ Route::middleware(['ensure_role_is_selected'])->group(function () {
     Route::post('consultant-id', [VendorController::class, 'consultantDetail'])->name('consultant_detail');
     Route::match(['get', 'post'], 'workflow', [GenericDataController::class, 'workflow'])->name('admin.workflow');
     Route::match(['get', 'post'], 'workflow/edit/{id}', [GenericDataController::class, 'workflowEdit'])->name('admin.workflow.edit');
+    Route::match(['get', 'post'], 'workflow/store', [GenericDataController::class, 'workflowStore'])->name('admin.workflow.store');
+
     // Role-specific dashboards
     Route::middleware(['user_role:admin'])->group(function () {
         Route::get('/dashboard', [AdminController::class, 'index'])->name('dashboard');
