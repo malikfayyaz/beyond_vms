@@ -186,6 +186,7 @@
                         url = '{{ route("admin.vendor-users.update", ":id") }}';
                         url = url.replace(':id', editIndex);
                         formData.append('_method', 'PUT');
+                        // alert(url);
                     }
 
                     ajaxCall(url, 'POST', [[this.onSuccess, ['response']]], formData);

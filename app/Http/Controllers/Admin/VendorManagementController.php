@@ -194,30 +194,145 @@ class VendorManagementController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $vendor = Vendor::findOrFail($id);
+
+        return view('admin.users.vendor_users.show', compact('vendor'));
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit($id)
     {
-        //
+        // Find the vendor by ID
+        $vendor = Vendor::findOrFail($id);
+        
+        // Fetch roles for vendors (assuming user_type_id 2 is for vendors)
+        $roles = Role::where('user_type_id', 2)->get();
+        
+        // Fetch all countries
+        $countries = Country::all();
+
+        // Return the vendor edit view, passing relevant data
+        return view('admin.users.vendor_users.create', [
+            'vendor' => $vendor,
+            'roles' => $roles,
+            'countries' => $countries,
+            'editMode' => true,
+            'editIndex' => $id
+        ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, $id)
     {
-        //
+        // Validation
+        $validatedData = $request->validate([
+            'first_name' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
+            'email' => 'required|email|unique:vendors,email,' . $id,
+            'phone' => 'nullable|string|max:20',
+            'role' => 'required|exists:roles,id',
+            'country' => 'required|exists:countries,id',
+            'status' => 'required|string|in:active,inactive',
+            'profile_image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+        ]);
+
+        $first_name = $validatedData['first_name'];
+        $last_name = $validatedData['last_name'];
+        $email = $validatedData['email'];
+        $phone = $validatedData['phone'];
+        $role = $validatedData['role'];
+        $country = $validatedData['country'];
+        $status = $validatedData['status'];
+
+        // Find the vendor
+        $vendor = Vendor::findOrFail($id);
+        $vendor->first_name = $first_name;
+        $vendor->last_name = $last_name;
+        $vendor->phone = $phone;
+        $vendor->member_access = $role;
+        $vendor->country = $country;
+        $vendor->status = $status;
+
+        // Handle the profile image upload if provided
+        if ($request->hasFile('profile_image')) {
+            // Delete old image if exists
+            if ($vendor->profile_image) {
+                Storage::disk('public')->delete($vendor->profile_image);
+            }
+
+            $imagePath = handleFileUpload($request, 'profile_image', 'vendor_profile');
+            if ($imagePath) {
+                $vendor->profile_image = $imagePath;
+            }
+        }
+
+        $vendor->save();
+
+        // Remove old permissions and roles
+        DB::table('model_has_permissions')->where('model_id', $vendor->user_id)->where('model_type', 'App\Models\User')->delete();
+        DB::table('model_has_roles')->where('model_id', $vendor->user_id)->where('model_type', 'App\Models\User')->delete();
+
+        // Assign new permissions
+        $roles_permission = DB::table('role_has_permissions')->where('role_id', $role)->get();
+        foreach ($roles_permission as $permission) {
+            DB::table('model_has_permissions')->insert([
+                'model_id' => $vendor->user_id, // Associating with the user
+                'permission_id' => $permission->permission_id, // Adjust field as per your table structure
+                'model_type' => 'App\Models\User', // Assuming you're using the User model
+            ]);
+        }
+
+        // Assign new roles
+        $roles = DB::table('roles')->where('id', $role)->get();
+        foreach ($roles as $roleData) {
+            DB::table('model_has_roles')->insert([
+                'role_id' => $roleData->id, // Role ID from the roles table
+                'model_id' => $vendor->user_id, // Associating the role with the user
+                'model_type' => 'App\Models\User', // The model being associated, usually 'User'
+            ]);
+        }
+
+        // Return success response
+        $successMessage = 'Vendor updated successfully!';
+        session()->flash('success', $successMessage);
+
+        return response()->json([
+            'success' => true,
+            'message' => $successMessage,
+            'redirect_url' => route("admin.vendor-users.index")  // Redirect URL for AJAX
+        ]);
     }
+
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy($id)
     {
-        //
+        // Find the vendor by ID
+        $vendor = Vendor::findOrFail($id);
+
+        // Check if the vendor has a profile image and delete the file if it exists
+        if ($vendor->profile_image && \Storage::disk('public')->exists($vendor->profile_image)) {
+            \Storage::disk('public')->delete($vendor->profile_image);
+        }
+
+        // Delete the vendor record
+        $vendor->delete();
+
+        // Check if the request is an AJAX request
+        if (request()->ajax()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Vendor deleted successfully',
+            ]);
+        }
+
+        // Redirect back with success message (for non-AJAX requests)
+        return redirect()->route('admin.vendor-users.index')->with('success', 'Vendor deleted successfully');
     }
 }
