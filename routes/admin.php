@@ -10,6 +10,7 @@ use App\Http\Controllers\{
     Admin\AdminController,
     Admin\AdminManagementController,
     Admin\ClientManagementController,
+    Admin\VendorManagementController
 
 };
 Route::middleware(['user_role:admin'])->group(function () {
@@ -66,6 +67,7 @@ Route::middleware(['user_role:admin'])->group(function () {
 
         Route::resource('admin-users', AdminManagementController::class);
         Route::resource('client-users', ClientManagementController::class);
+        Route::resource('vendor-users', VendorManagementController::class);
 
         Route::match(['get', 'post'], 'setting/info', [GenericDataController::class, 'locationDetail'])->name('data.location');
 

@@ -384,12 +384,18 @@
                       Admin Users
                     </a>
                   </li>
-                    <li class="{{ request()->routeIs('admin.client-users.index') ? 'active' : '' }}">
-                        <a href="{{ route('admin.client-users.index') }}"
-                           class="flex items-center w-full p-2 text-white transition duration-75 pl-11 hover:bg-gray-700">
-                            Client Users
-                        </a>
-                    </li>
+                  <li class="{{ request()->routeIs('admin.client-users.index') ? 'active' : '' }}">
+                    <a href="{{ route('admin.client-users.index') }}"
+                    class="flex items-center w-full p-2 text-white transition duration-75 pl-11 hover:bg-gray-700">
+                    Client Users
+                   </a>
+                  </li>
+                  <li class="{{ request()->routeIs('admin.vendor-users.index') ? 'active' : '' }}">
+                    <a href="{{ route('admin.vendor-users.index') }}"
+                      class="flex items-center w-full p-2 text-white transition duration-75 pl-11 hover:bg-gray-700">
+                      Vendor Users
+                    </a>
+                  </li>
                 </ul>
               </li>
 
