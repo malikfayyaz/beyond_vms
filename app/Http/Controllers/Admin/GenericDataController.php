@@ -28,7 +28,7 @@ class GenericDataController extends BaseController
         $countries = Country::all();
        
             $fields = $request->route()->defaults['fields'] ?? [];
-            // dd($request);
+            // dd($fields);
         if ($request->isMethod('get')) {
            
             $data = GenericData::with(['country','setting'])->where('type', $formtype)->get();

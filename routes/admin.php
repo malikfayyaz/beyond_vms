@@ -17,19 +17,26 @@ Route::middleware(['user_role:admin'])->group(function () {
         Route::get('dashboard', [AdminController::class, 'index'])->name('dashboard');
         Route::get('/admin/catalog/{id}', [CatalogController::class, 'view'])->name('admin.catalog.view');
 
+        Route::match(['get', 'post'], 'rates/{type}', [GenericDataController::class, 'manageData'])
+        ->name('data.rates')
+        ->defaults('fields', [
+        'name' => ['type' => 'number', 'label' => 'Over time Rate'],
+        'value' => ['type' => 'number', 'label' => 'Double time Rate'],
+        'status' => ['type' => 'select', 'label' => 'Status'],
+        ]);
         Route::match(['get', 'post'], 'three/{type}', [GenericDataController::class, 'manageData'])
         ->name('data.three')
         ->defaults('fields', [
-        'name' => 'text',
-        'value' => 'text',
-        'status' => 'select',
+        'name' =>  ['type' => 'text', 'label' => 'Name'],
+        'value' =>  ['type' => 'text', 'label' => 'Value'],
+        'status' => ['type' => 'select', 'label' => 'Status'],
         ]);
 
         Route::match(['get', 'post'], 'two/{type}', [GenericDataController::class, 'manageData'])
         ->name('data.two')
         ->defaults('fields', [
-        'name' => 'text',
-        'status' => 'select',
+        'name' => ['type' => 'text', 'label' => 'Name'],
+        'status' => ['type' => 'select', 'label' => 'Status']
         ]);
         Route::get('/get-states/{country}', [GenericDataController::class, 'getStates']);
         Route::match(['get', 'post'], 'location/info', [GenericDataController::class, 'locationDetail'])->name('data.location');
@@ -38,27 +45,16 @@ Route::middleware(['user_role:admin'])->group(function () {
         Route::match(['get', 'post'], 'four/{type}', [GenericDataController::class, 'manageData'])
         ->name('data.four')
         ->defaults('fields', [
-        'name' => 'text',
-        'value' => 'text',
-        'country' => 'select',
-        'symbol' => 'select',
-        'status' => 'select',
+        'name' => ['type' => 'text', 'label' => 'Name'],
+        'value' => ['type' => 'text', 'label' => 'Value'],
+        'country' =>  ['type' => 'select', 'label' => 'Country'],
+        'symbol' =>  ['type' => 'select', 'label' => 'Symbol'],
+        'status' =>  ['type' => 'select', 'label' => 'Status'],
         ]);
 
-        Route::match(['get', 'post'], 'three/{type}', [GenericDataController::class, 'manageData'])
-        ->name('data.three')
-        ->defaults('fields', [
-            'name' => 'text',
-            'value' => 'text',
-            'status' => 'select',
-        ]);
+     
 
-        Route::match(['get', 'post'], 'two/{type}', [GenericDataController::class, 'manageData'])
-        ->name('data.two')
-        ->defaults('fields', [
-            'name' => 'text',
-            'status' => 'select',
-        ]);
+     
 
         Route::match(['get', 'post'], 'job-group-family-config', [GenericDataController::class, 'jobGroupConfig'])->name('data.job_group_family_config');
 
