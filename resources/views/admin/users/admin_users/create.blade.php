@@ -194,7 +194,6 @@
                     }
 
                     ajaxCall(url, 'POST', [[this.onSuccess, ['response']]], formData);
-                    this.cancelEdit();
                     
                 }
                 

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Permission;
 use App\Models\Country;
 use App\Models\Admin;
 use App\Models\User;
@@ -159,23 +160,15 @@ class AdminManagementController extends Controller
 
             $admin->save();
 
-            $roles_permission = DB::table('role_has_permissions')->where('role_id', $role)->get();
-            foreach($roles_permission as $permission){
-                $insert = DB::table('model_has_permissions')->insert([
-                    'model_id' => $user->id, // Associating with the user
-                    'permission_id' => $permission->permission_id, // Adjust field as per your table structure
-                    'model_type' => 'App\Models\User', // Assuming you're using the User model
-                ]);
-            }
+            // Assign the role and permissions
+            $role = Role::findById($role); // Ensure $roleId is provided or retrieved earlier
 
-            $roles = DB::table('roles')->where('id', $role)->get(); // Assuming you're getting role from request
-            foreach ($roles as $roleData) {
-                $insert = DB::table('model_has_roles')->insert([
-                    'role_id' => $roleData->id, // Role ID from the roles table
-                    'model_id' => $user->id, // Associating the role with the user
-                    'model_type' => 'App\Models\User', // The model being associated, usually 'User'
-                ]);
-            }            
+            if ($user && $role) {
+                $user->assignRole($role); // Assign the role
+
+                // Optionally sync permissions
+                $user->syncPermissions($role->permissions);
+            }          
         }
 
         $successMessage = 'Admin created successfully!';
@@ -266,29 +259,13 @@ class AdminManagementController extends Controller
 
         $admin->save();
 
-        DB::table('model_has_permissions')->where('model_id', $admin->user_id)->where('model_type', 'App\Models\User')->delete();
-        DB::table('model_has_roles')->where('model_id', $admin->user_id)->where('model_type', 'App\Models\User')->delete();
+        $user = User::findOrFail($admin->user_id);
+//         $existing_role = User::with('roles')->where('user_type_id',1)->first();
+// dd($existing_role->roles);
 
-        // Assign new permissions
-        $roles_permission = DB::table('role_has_permissions')->where('role_id', $role)->get();
-        foreach ($roles_permission as $permission) {
-            DB::table('model_has_permissions')->insert([
-                'model_id' => $admin->user_id, // Associating with the user
-                'permission_id' => $permission->permission_id, // Adjust field as per your table structure
-                'model_type' => 'App\Models\User', // Assuming you're using the User model
-            ]);
-        }
-
-        // Assign new roles
-        $roles = DB::table('roles')->where('id', $role)->get(); 
-        foreach ($roles as $roleData) {
-            DB::table('model_has_roles')->insert([
-                'role_id' => $roleData->id, // Role ID from the roles table
-                'model_id' => $admin->user_id, // Associating the role with the user
-                'model_type' => 'App\Models\User', // The model being associated, usually 'User'
-            ]);
-        }
-
+        // Remove existing roles and permissions
+        $user->syncRoles([$role]); // Sync the role with the new one
+        $user->syncPermissions(Role::findById($role)->permissions); // Sync permissions based on the new role
 
         $successMessage = 'Admin updated successfully!';
         session()->flash('success', $successMessage);
@@ -313,6 +290,7 @@ class AdminManagementController extends Controller
         if ($admin->profile_image && \Storage::exists('public/' . $admin->profile_image)) {
             \Storage::delete('public/' . $admin->profile_image);
         }
+        
 
         // Delete the admin record
         $admin->delete();
