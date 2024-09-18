@@ -24,9 +24,6 @@ class VendorManagementController extends Controller
             $vendors = Vendor::with('role')->select(['id', 'first_name', 'last_name', 'email', 'status', 'member_access'])->get();
             
             return datatables()->of($vendors)
-                ->addColumn('role', function($vendor) {
-                    return $vendor->role ? $vendor->role->name : 'N/A'; // Access the role name
-                })
                 ->addColumn('action', function($vendor) {
                     return '<a href="'. route('admin.vendor-users.show', $vendor->id) .'" class="text-blue-500 hover:text-blue-700 mr-2 bg-transparent hover:bg-transparent">
                         <i class="fas fa-eye"></i>
@@ -80,7 +77,7 @@ class VendorManagementController extends Controller
             'last_name' => 'required|string|max:255',
             'email' => 'required|email|unique:vendors,email', // Assuming the vendors table is 'vendors'
             'phone' => 'nullable|string|max:20',
-            'role' => 'required|exists:roles,id',
+            'role' => 'required|exists:roles,name',
             'country' => 'required|exists:countries,id',
             'status' => 'required|string|in:active,inactive',
         ]);
@@ -156,27 +153,9 @@ class VendorManagementController extends Controller
             }
 
             $vendor->save();
-
-            // Assign role permissions to the new vendor user
-            $roles_permission = DB::table('role_has_permissions')->where('role_id', $role)->get();
-            foreach ($roles_permission as $permission) {
-                DB::table('model_has_permissions')->insert([
-                    'model_id' => $user->id,
-                    'permission_id' => $permission->permission_id,
-                    'model_type' => 'App\Models\User', // Ensure correct model type
-                ]);
-            }
-
-            // Assign role to the vendor user
-            $roles = DB::table('roles')->where('id', $role)->get();
-            foreach ($roles as $roleData) {
-                DB::table('model_has_roles')->insert([
-                    'role_id' => $roleData->id,
-                    'model_id' => $user->id,
-                    'model_type' => 'App\Models\User',
-                ]);
-            }
         }
+
+        $this->updateRoles($vendor,$role);
 
         $successMessage = 'Vendor created successfully!';
         session()->flash('success', $successMessage);
@@ -234,7 +213,7 @@ class VendorManagementController extends Controller
             'last_name' => 'required|string|max:255',
             'email' => 'required|email|unique:vendors,email,' . $id,
             'phone' => 'nullable|string|max:20',
-            'role' => 'required|exists:roles,id',
+            'role' => 'required|exists:roles,name',
             'country' => 'required|exists:countries,id',
             'status' => 'required|string|in:active,inactive',
             'profile_image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
@@ -272,29 +251,7 @@ class VendorManagementController extends Controller
 
         $vendor->save();
 
-        // Remove old permissions and roles
-        DB::table('model_has_permissions')->where('model_id', $vendor->user_id)->where('model_type', 'App\Models\User')->delete();
-        DB::table('model_has_roles')->where('model_id', $vendor->user_id)->where('model_type', 'App\Models\User')->delete();
-
-        // Assign new permissions
-        $roles_permission = DB::table('role_has_permissions')->where('role_id', $role)->get();
-        foreach ($roles_permission as $permission) {
-            DB::table('model_has_permissions')->insert([
-                'model_id' => $vendor->user_id, // Associating with the user
-                'permission_id' => $permission->permission_id, // Adjust field as per your table structure
-                'model_type' => 'App\Models\User', // Assuming you're using the User model
-            ]);
-        }
-
-        // Assign new roles
-        $roles = DB::table('roles')->where('id', $role)->get();
-        foreach ($roles as $roleData) {
-            DB::table('model_has_roles')->insert([
-                'role_id' => $roleData->id, // Role ID from the roles table
-                'model_id' => $vendor->user_id, // Associating the role with the user
-                'model_type' => 'App\Models\User', // The model being associated, usually 'User'
-            ]);
-        }
+        $this->updateRoles($vendor,$role);
 
         // Return success response
         $successMessage = 'Vendor updated successfully!';
@@ -326,5 +283,59 @@ class VendorManagementController extends Controller
 
         // Redirect back with success message (for non-AJAX requests)
         return redirect()->route('admin.vendor-users.index')->with('success', 'Vendor deleted successfully');
+    }
+
+    public function updateRoles($vendor,$role) {
+       
+        $userTypeId = 3;
+
+        $user = User::findOrFail($vendor->user_id);
+
+        // code for already exist role 
+        $existing_role = $user->with(['roles' => function ($query) use ($userTypeId) {
+            $query->where('user_type_id', 2)
+                  ->select('id', 'name', 'user_type_id'); // Select specific columns
+        }])
+        ->findOrFail($vendor->user_id);
+
+        $alreadyroles = [];
+        foreach($existing_role->roles as $rolesvalue) {
+            $alreadyroles[] =$rolesvalue->name; 
+        }
+
+        $newUpdatedRole =  $role;
+
+        // Iterate through the already assigned roles
+        foreach ($alreadyroles as $roles) {
+            // Remove roles that are not in the new role set
+            if (!in_array($roles, [$newUpdatedRole])) {
+                // Fetch permissions associated with the role being removed
+                $roleModel = \Spatie\Permission\Models\Role::findByName($roles);
+                $permissionsToRemove = $roleModel->permissions->pluck('name')->toArray();
+                // dd($permissionsToRemove);
+
+                // Remove the permissions from the user
+                $user->revokePermissionTo($permissionsToRemove);
+        
+                // Remove the role
+                $user->removeRole($roles);
+            }
+        }
+
+        // Add the new role if it's not already assigned
+        if (!in_array($newUpdatedRole, $alreadyroles)) {
+            $user->assignRole($newUpdatedRole); // Assign the new role
+        }
+
+         // Fetch permissions associated with the new role
+        $roleModel = \Spatie\Permission\Models\Role::findByName($newUpdatedRole);
+
+        $permissions = $roleModel->permissions->pluck('name')->toArray(); // Get permission names
+        // dd($permissions);
+
+        // Sync user's permissions with the ones associated with the new role
+        $user->syncPermissions($permissions);
+        // dd($newUpdatedRole ,$alreadyroles);
+
     }
 }
