@@ -199,9 +199,8 @@
               <input type="hidden" value ="0.00" id="double_time_rate">
               <input type="hidden" value ="0.00" id="client_over_time_rate">
               <input type="hidden" value ="0.00" id="client_double_time_rate">
-              <input type="hidden" value ="0.00" id="vendor_bill_rate_new">
-              <input type="hidden" value ="0.00" id="vendor_over_time_rate_new">
-              <input type="hidden" value ="0.00" id="vendor_double_time_rate_new">
+              <input type="hidden" value ="0.00" id="vendor_bill_rate">
+             
                <div class="flex space-x-4 mb-4">
                  <div class="flex-1">
                    <label class="block mb-2"

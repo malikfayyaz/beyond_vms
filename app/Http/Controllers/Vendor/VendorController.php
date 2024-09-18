@@ -71,18 +71,13 @@ class VendorController extends BaseController
         // Main calculation based on rate field change
         switch ($rateField) {
             case 'bill_rate_changed':
-                $data['candidate_bill_rate'] = number_format($vendorBillRate, 2, '.', '');
+                // $data['candidate_bill_rate'] = number_format($vendorBillRate, 2, '.', '');
                 $data['candidate_pay_rate'] = $candidatePayRate;
                 break;
 
             case 'adjusted_markup_changed':
                 $data['candidate_bill_rate'] = number_format($candidatePayRate + ($candidatePayRate * $adjustedMarkup / 100), 2, '.', '');
                 $data['candidate_pay_rate'] = vendorPayrate($data['candidate_bill_rate'], $adjustedMarkup);
-                break;
-
-            default:
-                $data['candidate_pay_rate'] = $candidatePayRate;
-                $data['candidate_bill_rate'] = number_format($vendorBillRate, 2, '.', '');
                 break;
         }
         
@@ -94,39 +89,28 @@ class VendorController extends BaseController
 
         $payrate = getActiveRecordsByType('pay-rate')->first();
         $billrate = getActiveRecordsByType('bill-rate')->first();
-        if(!empty($payrate) && !empty($billrate)) {
-            $overTime = $payrate->name/100;
-            $doubleTime = $payrate->value/100;
-            $clientOverTime = $billrate->name/100;
-            $clientDoubleTime = $billrate->value/100;
-        }
+      
 
-        $data['over_time']  = number_format($data['candidate_pay_rate']+($overTime*$data['candidate_pay_rate']),2,'.', '');
+        $data['over_time']  = number_format($data['candidate_pay_rate']+($payrate->name*$data['candidate_pay_rate']),2,'.', '');
 
-        $data['client_over_time'] = number_format($data['candidate_bill_rate']+($data['candidate_bill_rate']*$clientOverTime),2,'.', '');
+        $data['client_over_time'] = number_format($data['candidate_bill_rate']+($data['candidate_bill_rate']*$billrate->name),2,'.', '');
 
-        $data['double_over_time']  = number_format($data['candidate_pay_rate']+($doubleTime*$data['candidate_pay_rate']),2,'.', '');
+        $data['double_over_time']  = number_format($data['candidate_pay_rate']+($payrate->value*$data['candidate_pay_rate']),2,'.', '');
 
-        $data['client_double_over_time']  =  number_format($data['candidate_bill_rate']+($data['candidate_bill_rate']*$clientDoubleTime),2,'.', '');
+        $data['client_double_over_time']  =  number_format($data['candidate_bill_rate']+($data['candidate_bill_rate']*$billrate->value),2,'.', '');
         $clientBillRate   = $data['candidate_bill_rate'];
-        $clientOtBillRate = $data['client_over_time'];
-        $clientDtBillRate = $data['client_double_over_time'];
+      
         $vendorBillRateNew = $clientBillRate- ($clientBillRate*(0/100));
-        $vendorOTBillRateNew = $clientOtBillRate- ($clientOtBillRate*(0/100));
-        $vendorDTBillRateNew = $clientDtBillRate - ($clientDtBillRate*(0/100));
-        $data['vendor_bill_rate_new']  = number_format($vendorBillRateNew,2,'.', '');
-        $data['vendor_over_time_rate_new']  = number_format($vendorOTBillRateNew,2,'.', '');
-        $data['vendor_double_time_rate_new']  = number_format($vendorDTBillRateNew,2,'.', '');
+       
+        $data['vendor_bill_rate']  = number_format($vendorBillRateNew,2,'.', '');
+      
         // Return JSON response
         return response()->json([
             'over_time' => $data['over_time'],
             'double_time_rate' => $data['double_over_time'],
             'client_over_time_rate' => $data['client_over_time'],
             'client_double_time_rate'=> $data['client_double_over_time'],
-            'vendor_bill_rate_new' => $data['vendor_bill_rate_new'],
-            'vendor_over_time_rate_new' => $data['vendor_over_time_rate_new'],
-            'vendor_double_time_rate_new' => $data['vendor_double_time_rate_new'],
-            'vendorBillRate' => $data['candidate_bill_rate'],
+            'vendor_bill_rate' => $data['vendor_bill_rate'],
             'adjustedMarkup' => abs($data['adjusted_markup']),
             'recommendedPayRate' => $data['recommended_pay_rate'],
             // Add more fields as needed

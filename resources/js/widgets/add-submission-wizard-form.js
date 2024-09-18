@@ -120,9 +120,8 @@ export default function addSubWizarForm() {
       double_time_rate:"0.00",
       client_over_time_rate:"0.00",
       client_double_time_rate:"0.00",
-      vendor_bill_rate_new:"0.00",
-      vendor_over_time_rate_new:"0.00",
-      vendor_double_time_rate_new:"0.00",        
+      vendor_bill_rate:"0.00",
+           
              
             
     },
@@ -226,9 +225,10 @@ export default function addSubWizarForm() {
       const billRate = parseFloat(this.formData.billRate);
       console.log(billRate+"dsfsdfsdf");
       console.log(payRate+"payRate");
-      if (billRate > payRate) {
-        this.errors.billRate = `Bill Rate must be at least ${this.formData.payRate}`;
-      } else if (billRate > exceedBillRate) {
+      // if (billRate > payRate) {
+      //   this.errors.billRate = `Bill Rate must be at least ${this.formData.payRate}`;
+      // } else
+       if (billRate > exceedBillRate) {
         this.errors.billRate = `Bill Rate cannot exceed ${this.formData.exceedBillRate}`;
       } else if (billRate <= 0) {
         this.errors.billRate = "Bill Rate must be greater than 0.00";
@@ -505,9 +505,8 @@ export default function addSubWizarForm() {
               '#double_time_rate': { type: 'value', field: 'double_time_rate' },
               '#client_over_time_rate': { type: 'value', field: 'client_over_time_rate' },
               '#client_double_time_rate': { type: 'value', field: 'client_double_time_rate' },
-              '#vendor_bill_rate_new': { type: 'value', field: 'vendor_bill_rate_new' },
-              '#vendor_over_time_rate_new': { type: 'value', field: 'vendor_over_time_rate_new' },
-              '#vendor_double_time_rate_new': { type: 'value', field: 'vendor_double_time_rate_new' },
+              '#vendor_bill_rate': { type: 'value', field: 'vendor_bill_rate' },
+             
               // Add more mappings if needed
           };
 
@@ -521,9 +520,8 @@ export default function addSubWizarForm() {
             this.formData.double_time_rate = $('#double_time_rate').val();
             this.formData.client_over_time_rate = $('#client_over_time_rate').val();
             this.formData.client_double_time_rate = $('#client_double_time_rate').val();
-            this.formData.vendor_bill_rate_new = $('#vendor_bill_rate_new').val();
-            this.formData.vendor_over_time_rate_new = $('#vendor_over_time_rate_new').val();
-            this.formData.vendor_double_time_rate_new = $('#vendor_double_time_rate_new').val();
+            this.formData.vendor_bill_rate = $('#vendor_bill_rate').val();
+           
             console.log(this.formData);
             
           }, 500);
@@ -809,9 +807,8 @@ export default function addSubWizarForm() {
         double_time_rate:"0.00",
         client_over_time_rate:"0.00",
         client_double_time_rate:"0.00",
-        vendor_bill_rate_new:"0.00",
-        vendor_over_time_rate_new:"0.00",
-        vendor_double_time_rate_new:"0.00",  
+        vendor_bill_rate:"0.00",
+        
       };
       if (document.getElementById("resumeUpload")) {
         document.getElementById("resumeUpload").value = "";

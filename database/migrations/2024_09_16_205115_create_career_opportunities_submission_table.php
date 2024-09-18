@@ -28,9 +28,6 @@ class CreateCareerOpportunitiesSubmissionTable extends Migration
             $table->decimal('vendor_bill_rate', 10, 2);  
             $table->decimal('candidate_pay_rate', 10, 2);
             $table->decimal('bill_rate', 10, 2);
-            $table->decimal('bill_rate_new', 10, 2);
-            $table->decimal('bill_rate_new_overtime', 10, 2);
-            $table->decimal('bill_rate_new_doubletime', 10, 2);
             $table->decimal('over_time_rate', 10, 2);
             $table->decimal('client_over_time_rate', 10, 2);
             $table->decimal('double_time_rate', 10, 2);
