@@ -324,14 +324,6 @@ class VendorManagementController extends Controller
         // Delete the vendor record
         $vendor->delete();
 
-        // Check if the request is an AJAX request
-        if (request()->ajax()) {
-            return response()->json([
-                'success' => true,
-                'message' => 'Vendor deleted successfully',
-            ]);
-        }
-
         // Redirect back with success message (for non-AJAX requests)
         return redirect()->route('admin.vendor-users.index')->with('success', 'Vendor deleted successfully');
     }
