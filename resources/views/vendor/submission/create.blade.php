@@ -443,7 +443,7 @@
                      />
                    </div>
                  </div>
-                 <div class="flex-1" x-init="formData.category_id = '<?= $career_opportunity->cat_id ?>';">
+                 <div class="flex-1" x-init="formData.category_id = '<?= $career_opportunity->cat_id ?>';formData.category = '<?= $career_opportunity->category->title ?>';">
                    <label for="category" class="block mb-2">Category</label>
                    <input
                      type="text"

@@ -121,7 +121,7 @@ class SubmissionController extends Controller
             ], 422); // 422 Unprocessable Entity status
         }
         $consultant = $request->filled('candidateSelection') 
-        ? Consultant::findOrFail($request->input('candidateSelection')) 
+        ?Consultant::where('user_id', $request->candidateSelection)->first()
         : new Consultant();
         // Handle the file upload for resume, use the existing resume if it's not uploaded
         $resume = $request->hasFile('resumeUpload') 
@@ -293,9 +293,16 @@ class SubmissionController extends Controller
             'capacity' =>$validatedData['gallagherCapacity'],
             'willing_relocate' =>$validatedData['willingToCommute'],
             'emp_msp_account_mngr' =>$validatedData['supplierAccountManager'],
-            'start_date' =>Carbon::createFromFormat('d/m/Y', $validatedData['gallagherStartDate'])->format('Y-m-d'),
-            'end_date' =>Carbon::createFromFormat('d/m/Y', $validatedData['gallagherLastDate'])->format('Y-m-d'),
-            'estimate_start_date'=> Carbon::createFromFormat('d/m/Y',  $validatedData['availableDate'])->format('Y-m-d'),
+            'start_date' =>!empty($validatedData['gallagherStartDate']) 
+            ? Carbon::createFromFormat('d/m/Y', $validatedData['gallagherStartDate'])->format('Y-m-d')
+            : null,
+            'end_date' => !empty($validatedData['gallagherLastDate']) 
+                ? Carbon::createFromFormat('d/m/Y', $validatedData['gallagherLastDate'])->format('Y-m-d') 
+                : null,
+
+            'estimate_start_date' => !empty($validatedData['availableDate']) 
+                ? Carbon::createFromFormat('d/m/Y', $validatedData['availableDate'])->format('Y-m-d') 
+                : null,
             'virtual_city'=>$validatedData['virtualCity'],
             'resume'=>$submission_resume,       
             'optional_document' =>$submission_additional_doc,

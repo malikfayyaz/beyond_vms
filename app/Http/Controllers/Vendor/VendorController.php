@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Vendor;
 
 use App\Http\Controllers\Controller as BaseController;
 use Illuminate\Http\Request;
+use App\Models\User;
 use App\Models\Consultant;
 use App\Models\CareerOpportunity;
 use Carbon\Carbon;
@@ -23,19 +24,20 @@ class VendorController extends BaseController
         ]);
 
         // Fetch the consultant's details using the candidate ID
-        $consultant = Consultant::where('user_id', $request->input('candidate_id'))->first();
-
-        if (!$consultant) {
+        $user = User::findOrFail($request->input('candidate_id'));
+      
+        if (!$user) {
             return response()->json(['message' => 'Consultant not found'], 404);
         }
 
         // Return a JSON response with the consultant's details
         return response()->json([
-            'candidateFirstName' => $consultant->first_name,
-            'candidateMiddleName' => $consultant->middle_name,
-            'candidateLastName' => $consultant->last_name,
-            'dobDate' => Carbon::parse($consultant->dob)->format('d/m/Y'),
-            'lastFourNationalId' => substr($consultant->national_id, -4),
+            'candidateFirstName' => $user->consultant->first_name,
+            'candidateMiddleName' => $user->consultant->middle_name,
+            'candidateLastName' => $user->consultant->last_name,
+            'dobDate' => Carbon::parse($user->consultant->dob)->format('d/m/Y'),
+            'lastFourNationalId' => substr($user->consultant->national_id, -4),
+            'candidateEmial' => $user->email,
             // Add more fields as needed
         ]);
     }

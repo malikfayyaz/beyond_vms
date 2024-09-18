@@ -92,6 +92,7 @@ export default function addSubWizarForm() {
       preferredName: "",
       gender: "",
       race: "",
+      candidateHomeCity:"",
       adjustedMarkup:"0.00",
       jobId : "",
       vendorMarkup:"0.00",
@@ -388,6 +389,7 @@ export default function addSubWizarForm() {
               $('#candidateLastName').val('');
               $('#dobDate').val('');
               $('#lastFourNationalId').val('');
+              $('#candidateEmail').val('');
               // console.log("dsfsdf");
               
               this.formData.candidateFirstName = '';
@@ -395,6 +397,7 @@ export default function addSubWizarForm() {
               this.formData.candidateLastName = '';
               this.formData.dobDate = '';
               this.formData.lastFourNationalId = '';
+              this.formData.candidateEmail = '';
           }
           
           // Disable or enable the fields based on the parameter
@@ -403,6 +406,7 @@ export default function addSubWizarForm() {
           $('#candidateLastName').prop('disabled', disable);
           $('#dobDate').prop('disabled', disable);
           $('#lastFourNationalId').prop('disabled', disable);
+          $('#candidateEmail').prop('disabled', disable);
       }
       };
 
@@ -428,6 +432,7 @@ export default function addSubWizarForm() {
               '#candidateLastName': { type: 'value', field: 'candidateLastName' },
               '#dobDate': { type: 'date', field: 'dobDate' },
               '#lastFourNationalId': { type: 'value', field: 'lastFourNationalId' },
+              '#candidateEmail': { type: 'value', field: 'candidateEmial' },
               // Add more mappings as needed
             };
             ajaxCall(url, 'POST', [[updateElements, ['response', updates]]], data);
@@ -438,6 +443,7 @@ export default function addSubWizarForm() {
               const candidateLastName = $('#candidateLastName').val();
               const dobDate = $('#dobDate').val();
               const lastFourNationalId = $('#lastFourNationalId').val();
+              const candidateEmail = $('#candidateEmail').val();
 
               // Only set formData when all the required fields have been populated
               if (candidateFirstName && candidateLastName && dobDate && lastFourNationalId) {
@@ -446,7 +452,7 @@ export default function addSubWizarForm() {
                   this.formData.candidateLastName = candidateLastName;
                   this.formData.dobDate = dobDate;
                   this.formData.lastFourNationalId = lastFourNationalId;
-
+                  this.formData.candidateEmail = candidateEmail;
                   // Enable the fields or do further processing
                   myObject.disabledFields(true);
 

@@ -40,7 +40,7 @@ class CreateCareerOpportunitiesSubmissionTable extends Migration
             $table->enum('is_legally_authorized', ['no', 'yes'])->default('no');
             $table->enum('remote_contractor', ['no', 'yes'])->default('no');
             $table->enum('retiree', ['no', 'yes'])->default('no');
-            $table->text('capacity');
+            $table->text('capacity')->nullable();
             $table->date('start_date')->nullable();
             $table->date('end_date')->nullable();
             $table->enum('willing_relocate', ['no', 'yes'])->default('no');
