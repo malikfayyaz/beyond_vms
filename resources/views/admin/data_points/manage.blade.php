@@ -31,10 +31,9 @@
                     <select id="{{ $field }}" name="{{ $field }}" x-model="{{ $field }}"
                         class="w-full p-2 border rounded h-10 bg-white">
                         <option value="" disabled>Select {{ ucfirst($attributes['label']) }}</option>
-                        <option value="1">$ (Dollar)</option>
-                        <option value="2">€ (Euro)</option>
-                        <option value="3">£ (Pound)</option>
-                        <option value="4">₹ (Rupee)</option>
+                        @foreach (currency() as $id => $value)
+                            <option value="{{ $id }}">{{ $value }}</option>
+                        @endforeach
                     </select>
                     @elseif ($attributes['type'] === 'select')
                     <select id="{{ $field }}" name="{{ $field }}" x-model="{{ $field }}"
