@@ -115,6 +115,15 @@ export default function addSubWizarForm() {
       virtualState: "",
       availToInterviewNotes: "",
       comment: "",
+      over_time:"0.00",
+      double_time_rate:"0.00",
+      client_over_time_rate:"0.00",
+      client_double_time_rate:"0.00",
+      vendor_bill_rate_new:"0.00",
+      vendor_over_time_rate_new:"0.00",
+      vendor_double_time_rate_new:"0.00",        
+             
+            
     },
 
     // selectedSkills: [],
@@ -366,8 +375,12 @@ export default function addSubWizarForm() {
         });
         const myObject = {
           disabledFields: (disable = true) => {
+            console.log(this.formData);
+
+            
           // Empty the input values and clear formData
           if (!disable) {
+            console.log(disable);
             $('#candidateSelection').val('').trigger("change.select2");
             this.formData.candidateSelection = '';
               $('#candidateFirstName').val('');
@@ -402,7 +415,7 @@ export default function addSubWizarForm() {
       
         this.loadExistingCandidate = () => {
           var candidate_id = $('#candidateSelection').find(':selected').val();
-          myObject.disabledFields(true);
+          
          
           let url = `/consultant-id`;
 
@@ -418,38 +431,59 @@ export default function addSubWizarForm() {
               // Add more mappings as needed
             };
             ajaxCall(url, 'POST', [[updateElements, ['response', updates]]], data);
-            setTimeout(() => {
-              
-             this.formData.candidateFirstName =  $('#candidateFirstName').val();
-             this.formData.candidateMiddleName = $('#candidateMiddleName').val();
-             this.formData.candidateLastName = $('#candidateLastName').val();
-             this.formData.dobDate = $('#dobDate').val();
-             this.formData.lastFourNationalId = $('#lastFourNationalId').val();
-            //  console.log(this.formData);
-             
-            }, 500);
+            // Poll the DOM until the input fields are updated
+            const intervalId = setInterval(() => {
+              const candidateFirstName = $('#candidateFirstName').val();
+              const candidateMiddleName = $('#candidateMiddleName').val();
+              const candidateLastName = $('#candidateLastName').val();
+              const dobDate = $('#dobDate').val();
+              const lastFourNationalId = $('#lastFourNationalId').val();
+
+              // Only set formData when all the required fields have been populated
+              if (candidateFirstName && candidateLastName && dobDate && lastFourNationalId) {
+                  this.formData.candidateFirstName = candidateFirstName;
+                  this.formData.candidateMiddleName = candidateMiddleName;
+                  this.formData.candidateLastName = candidateLastName;
+                  this.formData.dobDate = dobDate;
+                  this.formData.lastFourNationalId = lastFourNationalId;
+
+                  // Enable the fields or do further processing
+                  myObject.disabledFields(true);
+
+                  // Clear the interval
+                  clearInterval(intervalId);
+              }
+          }, 100); // Check every 100ms if the fields have been updated
           }
         };
 
-        $('#billRate,#payRate').on('change', (event) => {
-          // Ensure formData is accessible
-          let formData = this.formData || {};
-          
-          let payRate = formData.payRate || $('#payRate').val();
-          let billRate = formData.billRate || $('#billRate').val();
-          let adjustedMarkup = formData.adjustedMarkup || $('#adjustedMarkup').val();
-          let markup = formData.vendorMarkup || $('#vendorMarkup').val();
-          let jobid = formData.jobid || $('#jobid').val();
+        $('#billRate, #payRate').on('change', (event) => {
+          this.vendorMarkup(event);
+      });
+
+      
+
+      this.vendorMarkup = (event) => {
+        // let formData = this.formData || {};
+    
+          // Get values from form fields or fallback to formData
+          let payRate = this.formData.payRate || $('#payRate').val();
+          let billRate = this.formData.billRate || $('#billRate').val();
+          let adjustedMarkup = this.formData.adjustedMarkup || $('#adjustedMarkup').val();
+          let markup = this.formData.vendorMarkup || $('#vendorMarkup').val();
+          let jobid = this.formData.jobId || $('#jobid').val();
           let url = `/show-vendor-markup`;
           let data = new FormData();
-      
+
+          // Append form data
           data.append('payRate', payRate);
           data.append('billRate', billRate);
           data.append('adjustedMarkup', adjustedMarkup);
           data.append('markup', markup);
           data.append('jobid', jobid);
-      
-          var rateField = '';
+
+          // Determine which field was changed
+          let rateField = '';
           if ($(event.target).attr('id') == 'billRate') {
               rateField = 'bill_rate_changed';
           }
@@ -457,19 +491,37 @@ export default function addSubWizarForm() {
               rateField = 'adjusted_markup_changed';
           }
           data.append('rateField', rateField);
-      
+
+          // Map field updates to specific DOM elements
           const updates = {
+            '#over_time': { type: 'value', field: 'over_time' },
               '#adjustedMarkup': { type: 'value', field: 'adjustedMarkup' },
-              // Add more mappings as needed
+              '#double_time_rate': { type: 'value', field: 'double_time_rate' },
+              '#client_over_time_rate': { type: 'value', field: 'client_over_time_rate' },
+              '#client_double_time_rate': { type: 'value', field: 'client_double_time_rate' },
+              '#vendor_bill_rate_new': { type: 'value', field: 'vendor_bill_rate_new' },
+              '#vendor_over_time_rate_new': { type: 'value', field: 'vendor_over_time_rate_new' },
+              '#vendor_double_time_rate_new': { type: 'value', field: 'vendor_double_time_rate_new' },
+              // Add more mappings if needed
           };
-      
+
+          // AJAX call to update fields based on pay rate or bill rate change
           ajaxCall(url, 'POST', [[updateElements, ['response', updates]]], data);
-      
+
+          // Delay for updated adjusted markup value
           setTimeout(() => {
-              formData.adjustedMarkup = $('#adjustedMarkup').val();
-              // console.log(formData.adjustedMarkup);
+            this.formData.over_time = $('#over_time').val();
+            this.formData.adjustedMarkup = $('#adjustedMarkup').val();
+            this.formData.double_time_rate = $('#double_time_rate').val();
+            this.formData.client_over_time_rate = $('#client_over_time_rate').val();
+            this.formData.client_double_time_rate = $('#client_double_time_rate').val();
+            this.formData.vendor_bill_rate_new = $('#vendor_bill_rate_new').val();
+            this.formData.vendor_over_time_rate_new = $('#vendor_over_time_rate_new').val();
+            this.formData.vendor_double_time_rate_new = $('#vendor_double_time_rate_new').val();
+            console.log(this.formData);
+            
           }, 500);
-      });
+      }
       
       }
     },
@@ -562,7 +614,9 @@ export default function addSubWizarForm() {
         });
 
         flatpickr(this.$refs.availableDatePicker, {
-          dateFormat: "Y-m-d",
+          dateFormat: systemDateFormat,
+          // altInput: true,
+          altFormat: systemDateFormat,
           minDate: "today",
           onChange: (selectedDates, dateStr) => {
             this.formData.availableDate = dateStr;
@@ -571,7 +625,9 @@ export default function addSubWizarForm() {
 
         // Gallagher Start Date Picker
         flatpickr(this.$refs.gallagherStartDatePicker, {
-          dateFormat: "Y-m-d",
+          dateFormat: systemDateFormat,
+          // altInput: true,
+          altFormat: systemDateFormat,
           onChange: (selectedDates, dateStr) => {
             this.formData.gallagherStartDate = dateStr;
           },
@@ -579,7 +635,9 @@ export default function addSubWizarForm() {
 
         // Gallagher Last Date Picker
         flatpickr(this.$refs.gallagherLastDatePicker, {
-          dateFormat: "Y-m-d",
+          dateFormat: systemDateFormat,
+          // altInput: true,
+          altFormat: systemDateFormat,
           onChange: (selectedDates, dateStr) => {
             this.formData.gallagherLastDate = dateStr;
           },
@@ -692,18 +750,22 @@ export default function addSubWizarForm() {
             formData.append(key, this.formData[key]);
           }
         });
-        formData.append("additionaldoc", this.formData.additionalDocUpload);
+        if (this.formData.additionalDocUpload) {
+          formData.append('additionaldoc', this.formData.additionalDocUpload);
+      }
         formData.append("resume", this.formData.resumeUpload);
-        console.log(formData);
-        return false;
-        this.showSuccessMessage = true;
+        const url = "/vendor/submission/store";
+        ajaxCall(url,'POST', [[onSuccess, ['response']]], formData);
+        // this.showSuccessMessage = true;
+      
+        // this.showSuccessMessage = true;
         // this.resetForm();
         // this.currentStep = 1;
         // this.highestStepReached = 1;
         // this.formSubmitted = true;
-        setTimeout(() => {
-          this.showSuccessMessage = false;
-        }, 5000);
+        // setTimeout(() => {
+        //   this.showSuccessMessage = false;
+        // }, 5000);
       } else {
         console.log("Form is invalid. Please check the errors.");
       }
@@ -737,6 +799,13 @@ export default function addSubWizarForm() {
         virtualState: "",
         availToInterviewNotes: "",
         comment: "",
+        over_time:"0.00",
+        double_time_rate:"0.00",
+        client_over_time_rate:"0.00",
+        client_double_time_rate:"0.00",
+        vendor_bill_rate_new:"0.00",
+        vendor_over_time_rate_new:"0.00",
+        vendor_double_time_rate_new:"0.00",  
       };
       if (document.getElementById("resumeUpload")) {
         document.getElementById("resumeUpload").value = "";

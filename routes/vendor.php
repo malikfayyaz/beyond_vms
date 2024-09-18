@@ -11,6 +11,8 @@ Route::middleware(['user_role:vendor'])->group(function () {
         Route::get('/dashboard', [VendorController::class, 'index'])->name('vendor.dashboard');
         Route::resource('career-opportunities', \App\Http\Controllers\Vendor\CareerOpportunitiesController::class);
         Route::get('submission/{id}/create', [SubmissionController::class, 'create'])->name('submission.create');
+        Route::post('submission/store', [SubmissionController::class, 'store'])->name('submission.store');
+
     });
 
 });

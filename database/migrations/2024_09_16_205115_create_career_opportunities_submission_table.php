@@ -16,10 +16,11 @@ class CreateCareerOpportunitiesSubmissionTable extends Migration
             $table->id(); // This will create an auto-incrementing id column
             $table->foreignId('vendor_id')->constrained('vendors')->onDelete('cascade');  
             $table->unsignedBigInteger('created_by_user');
-            $table->foreignId('client_id')->constrained('clients')->onDelete('cascade');
+            // $table->foreignId('client_id')->constrained('clients')->onDelete('cascade');
             $table->foreignId('candidate_id')->constrained('consultants')->onDelete('cascade');
             $table->foreignId('career_opportunity_id')->constrained('career_opportunities')->onDelete('cascade');
             $table->foreignId('location_id')->constrained('locations')->onDelete('cascade');
+            $table->string('current_location', 255)->nullable();
             $table->unsignedBigInteger('category_id')->nullable();
             $table->unsignedBigInteger('hire_type_id')->nullable();
             $table->decimal('markup', 10, 2);
@@ -40,6 +41,8 @@ class CreateCareerOpportunitiesSubmissionTable extends Migration
             $table->enum('remote_contractor', ['no', 'yes'])->default('no');
             $table->enum('retiree', ['no', 'yes'])->default('no');
             $table->text('capacity');
+            $table->date('start_date')->nullable();
+            $table->date('end_date')->nullable();
             $table->enum('willing_relocate', ['no', 'yes'])->default('no');
             $table->unsignedBigInteger('emp_msp_account_mngr')->nullable();
             $table->tinyInteger('resume_status')->nullable();
@@ -53,14 +56,14 @@ class CreateCareerOpportunitiesSubmissionTable extends Migration
             $table->string('reason_for_rejection', 512)->nullable();
             $table->text('note_for_rejection')->nullable();
             $table->text('notes')->nullable();
+            $table->text('comment')->nullable();
             $table->date('estimate_start_date');
             $table->unsignedBigInteger('rehired_status_by')->nullable();
             $table->text('rehire_comments')->nullable();
             $table->dateTime('rehire_comments_date')->nullable();
             $table->enum('rehire_by_type', ['admin', 'Client']);
             $table->dateTime('date_rejected')->nullable();
-            $table->string('virtual_city', 50);
-            $table->text('interview_notes');
+            $table->string('virtual_city', 255)->nullable();
             $table->timestamps(); // Adds created_at and updated_at columns
         });
     }

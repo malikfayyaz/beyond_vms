@@ -83,15 +83,47 @@ class VendorController extends BaseController
                 $data['candidate_bill_rate'] = number_format($vendorBillRate, 2, '.', '');
                 break;
         }
+        
 
         // Adjusted markup calculation if candidate pay rate exists
         if (!empty($data['candidate_pay_rate'])) {
             $data['adjusted_markup'] = round((($data['candidate_bill_rate'] - $data['candidate_pay_rate']) / $data['candidate_pay_rate']) * 100, 2);
         }
 
+        $payrate = getActiveRecordsByType('pay-rate')->first();
+        $billrate = getActiveRecordsByType('bill-rate')->first();
+        if(!empty($payrate) && !empty($billrate)) {
+            $overTime = $payrate->name/100;
+            $doubleTime = $payrate->value/100;
+            $clientOverTime = $billrate->name/100;
+            $clientDoubleTime = $billrate->value/100;
+        }
+
+        $data['over_time']  = number_format($data['candidate_pay_rate']+($overTime*$data['candidate_pay_rate']),2,'.', '');
+
+        $data['client_over_time'] = number_format($data['candidate_bill_rate']+($data['candidate_bill_rate']*$clientOverTime),2,'.', '');
+
+        $data['double_over_time']  = number_format($data['candidate_pay_rate']+($doubleTime*$data['candidate_pay_rate']),2,'.', '');
+
+        $data['client_double_over_time']  =  number_format($data['candidate_bill_rate']+($data['candidate_bill_rate']*$clientDoubleTime),2,'.', '');
+        $clientBillRate   = $data['candidate_bill_rate'];
+        $clientOtBillRate = $data['client_over_time'];
+        $clientDtBillRate = $data['client_double_over_time'];
+        $vendorBillRateNew = $clientBillRate- ($clientBillRate*(0/100));
+        $vendorOTBillRateNew = $clientOtBillRate- ($clientOtBillRate*(0/100));
+        $vendorDTBillRateNew = $clientDtBillRate - ($clientDtBillRate*(0/100));
+        $data['vendor_bill_rate_new']  = number_format($vendorBillRateNew,2,'.', '');
+        $data['vendor_over_time_rate_new']  = number_format($vendorOTBillRateNew,2,'.', '');
+        $data['vendor_double_time_rate_new']  = number_format($vendorDTBillRateNew,2,'.', '');
         // Return JSON response
         return response()->json([
-            'candidatePayRate' => $data['candidate_pay_rate'],
+            'over_time' => $data['over_time'],
+            'double_time_rate' => $data['double_over_time'],
+            'client_over_time_rate' => $data['client_over_time'],
+            'client_double_time_rate'=> $data['client_double_over_time'],
+            'vendor_bill_rate_new' => $data['vendor_bill_rate_new'],
+            'vendor_over_time_rate_new' => $data['vendor_over_time_rate_new'],
+            'vendor_double_time_rate_new' => $data['vendor_double_time_rate_new'],
             'vendorBillRate' => $data['candidate_bill_rate'],
             'adjustedMarkup' => abs($data['adjusted_markup']),
             'recommendedPayRate' => $data['recommended_pay_rate'],

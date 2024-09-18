@@ -9,90 +9,90 @@ function initializeDataTable(tableId, ajaxUrl, columns) {
     });
   }
 
-  async function ajaxCall(url, method, functionsOnSuccess = [], form = null) {
-    // CSRF token setup
-    const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-
-    // If form is null, create an empty FormData object
-    if (form === null) {
-        form = new FormData();
-    }
-
-    console.log('before fetch', Array.from(form.entries()));
-
-    // Initialize options for fetch
-    let fetchOptions = {
-        method: method,
-        headers: {
-            'X-CSRF-TOKEN': csrfToken,
-        }
-    };
-
-    // Handle GET requests: append form data to the URL as query string
-    if (method.toUpperCase() === 'GET') {
-        const queryParams = new URLSearchParams(form).toString();
-        url = queryParams ? `${url}?${queryParams}` : url;
-    } else {
-        // For non-GET requests (e.g., POST, PUT), add form data as body
-        fetchOptions.body = form;
-    }
-
-    try {
-        // Perform the fetch request
-        const response = await fetch(url, fetchOptions);
-
-        // Check if the response is ok
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-
-        // Parse the JSON response
-        const data = await response.json();
-
-        // Execute success functions with the response data
-        functionsOnSuccess.forEach(funcArray => {
-            funcArray[1] = funcArray[1].map(arg => arg === "response" ? data : arg);
-            funcArray[0].apply(this, funcArray[1]);
+  function ajaxCall(url, method, functionsOnSuccess = [], form = null) {
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
         });
 
-    } catch (error) {
-        // Handle errors
-        console.error('Fetch error:', error);
+        if (form === null) {
+            form = new FormData();
+        }
+
+        console.log('before ajax', form.values);
+
+        $.ajax({
+            url: url,
+            type: method,
+            async: true,
+            data: form,
+            processData: false,
+            contentType: false,
+            dataType: 'json',
+            success: function(response) {
+                functionsOnSuccess.forEach(function(funcArray) {
+                    funcArray[1] = funcArray[1].map(arg => arg === "response" ? response : arg);
+                    funcArray[0].apply(this, funcArray[1]);
+                });
+            },
+            error: function(xhr, textStatus, error) {
+                console.error('Error:', xhr.responseText);
+                console.error('Status:', xhr.statusText);
+                console.error('Text Status:', textStatus);
+                console.error('Error Thrown:', error);
+
+                // Handle error messages
+                $('#error-messages').empty().show();
+
+                try {
+                    // Parse JSON response if it's a string
+                    const response = JSON.parse(xhr.responseText);
+
+                    // Check if errors is an object
+                    if (typeof response.errors === 'object') {
+                        // Loop through each field's errors
+                        $.each(response.errors, function (field, messages) {
+                            // Check if messages is an array (which it usually will be)
+                            if (Array.isArray(messages)) {
+                                // Append each message to the error container
+                                messages.forEach(function (message) {
+                                    $('.error-messages').append('<div>' + message + '</div>');
+                                });
+                            } else {
+                                // If it's a single message, just append it
+                                $('.error-messages').append('<div>' + messages + '</div>');
+                            }
+                        });
+                    } else {
+                        // If the response.errors is not an object, show a generic error message
+                        $('.error-messages').append('<div>Unknown error format.</div>');
+                    }
+                } catch (e) {
+                    // If JSON parsing fails, show a generic error message
+                    $('.error-messages').append('<div>Unable to parse error response.</div>');
+                }
+
+                $('.error-messages').css('display', 'block');
+            }
+        });
     }
-}
+
 
 
   // Define the success callback function
   const onSuccess = (response) => {
+    console.log(response);
+    console.log("sfdfdsfsdf");
     if (response.success) {
-      if(response.redirect_url) {
-        window.location.href = response.redirect_url;
-      }else {
-        document.getElementById('success-message').innerText = response.message;
-      }
-    } else {
-      $('#error-messages').empty().show();
-                    // Check if errors is an array
-                    if (Array.isArray(response.errors)) {
-                        response.errors.forEach(function(error) {
-                            $('#error-messages').append('<div>' + error + '</div>');
-                        });
-                    } else if (typeof response.errors === 'object') {
-                        // Handle errors if response.errors is an object
-                        $.each(response.errors, function(field, messages) {
-                            if (Array.isArray(messages)) {
-                                messages.forEach(function(message) {
-                                    $('#error-messages').append('<div>' + message + '</div>');
-                                });
-                            } else {
-                                $('#error-messages').append('<div>' + messages + '</div>');
-                            }
-                        });
-                    } else {
-                        $('#error-messages').append('<div>Unknown error format.</div>');
-                    }
-    }
-  };
+        if (response.redirect_url) {
+            window.location.href = response.redirect_url;
+        } else {
+            document.getElementById('success-message').innerText = response.message;
+        }
+    } 
+};
+
 
   // that response is for dropdown append options
   const updateStatesDropdown = (response, stateDropdownId) => {

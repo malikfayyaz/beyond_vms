@@ -13,12 +13,9 @@
          x-init="mounted()"
        >
          <!-- Success Notification -->
-         <div
-           x-show="showSuccessMessage"
-           class="mb-4 p-4 bg-green-100 border border-green-400 text-green-700 rounded"
-         >
-           Job is Added Successfully.
-         </div>
+        
+         @include('vendor.layouts.partials.alerts')
+        
          <!-- Progress bar -->
          <div class="mb-8">
            <div class="flex mb-2">
@@ -135,7 +132,7 @@
                <div class="flex gap-6 items-center">
                  <div
                    class="bg-[#D6F4F8] w-12 h-12 rounded-full flex items-center justify-center"
-                   x-init="formData.jobid = '<?= $career_opportunity->id ?>';"
+                   x-init="formData.jobId = '<?= $career_opportunity->id ?>';"
                  >
                    <i class="fa-solid fa-briefcase text-[#00bad1]"></i>
                  </div>
@@ -198,6 +195,13 @@
                  </h2>
                </div>
               <input type="hidden" value ="<?= $career_opportunity->id ?>" id="jobid">
+              <input type="hidden" value ="0.00" id="over_time">
+              <input type="hidden" value ="0.00" id="double_time_rate">
+              <input type="hidden" value ="0.00" id="client_over_time_rate">
+              <input type="hidden" value ="0.00" id="client_double_time_rate">
+              <input type="hidden" value ="0.00" id="vendor_bill_rate_new">
+              <input type="hidden" value ="0.00" id="vendor_over_time_rate_new">
+              <input type="hidden" value ="0.00" id="vendor_double_time_rate_new">
                <div class="flex space-x-4 mb-4">
                  <div class="flex-1">
                    <label class="block mb-2"
@@ -439,7 +443,7 @@
                      />
                    </div>
                  </div>
-                 <div class="flex-1" x-init="formData.category = '<?= $career_opportunity->category->title ?>';">
+                 <div class="flex-1" x-init="formData.category_id = '<?= $career_opportunity->cat_id ?>';">
                    <label for="category" class="block mb-2">Category</label>
                    <input
                      type="text"
@@ -650,8 +654,8 @@
                      id="workLocation"
                    >
                      <option value="">Select Work Location</option>
-                     @foreach ($countries as $country)
-                            <option value="{{ $country->id }}">{{ $country->name }}</option>
+                     @foreach ($location as $location)
+                            <option value="{{ $location->id }}">{{ $location->location_details; }}</option>
                         @endforeach
                    </select>
                    <p

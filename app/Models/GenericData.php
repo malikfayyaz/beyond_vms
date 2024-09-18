@@ -25,7 +25,7 @@ class GenericData extends Model
     {
         return $query->where('type', $type)
                      ->where('status', 'active')
-                     ->get(['id', 'name','symbol_id']);
+                     ->get(['id', 'name','symbol_id','value']);
     }
 
     public function country()

@@ -1,9 +1,11 @@
 <?php
+use Illuminate\Support\Str;
 use Carbon\Carbon;
 use App\Models\User;
 use App\Models\GenericData;
 use App\Models\Location;
 use App\Models\SettingCategory;
+use App\Models\Consultant;
 
 
  function userType(){
@@ -166,6 +168,17 @@ if (!function_exists('numberOfWorkingDays')) {
                 return $filename;
             }
             return null;
+        }
+    }
+    if (!function_exists('generateUniqueUserCode')) {
+        function generateUniqueUserCode($length = 10)
+        {
+            do {
+                // Generate a random string
+                $uniqueCode = Str::random($length);
+            } while (Consultant::where('unique_id', $uniqueCode)->exists());
+
+            return $uniqueCode;
         }
     }
 }
