@@ -221,7 +221,7 @@ class AdminManagementController extends Controller
             'last_name' => 'required|string|max:255',
             'email' => 'required|email|unique:admins,email,' . $id,
             'phone' => 'nullable|string|max:20',
-            'role' => 'required|exists:roles,id',
+            'role' => 'required|exists:roles,name',
             'country' => 'required|exists:countries,id',
             'status' => 'required|string|in:active,inactive',
             'profile_image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
@@ -239,7 +239,7 @@ class AdminManagementController extends Controller
         $admin->last_name = $last_name;
         // $admin->email = $request->email;
         $admin->phone = $phone;
-        $admin->member_access = $role;
+        // $admin->member_access = $role;
         $admin->country = $country;
         $admin->status = $status;
 
@@ -257,16 +257,59 @@ class AdminManagementController extends Controller
         }
         
 
-        $admin->save();
-
+        // $admin->save();
+        
         $user = User::findOrFail($admin->user_id);
-//         $existing_role = User::with('roles')->where('user_type_id',1)->first();
-// dd($existing_role->roles);
+        // code for already exist role 
+        $userTypeId = 1;
+        $existing_role = $user->with(['roles' => function ($query) use ($userTypeId) {
+            $query->where('user_type_id', 1)
+                  ->select('id', 'name', 'user_type_id'); // Select specific columns
+        }])
+        ->findOrFail($admin->user_id);
+        // $existingRoles = $user->getRoleNames()->toArray();
 
-        // Remove existing roles and permissions
-        $user->syncRoles([$role]); // Sync the role with the new one
-        $user->syncPermissions(Role::findById($role)->permissions); // Sync permissions based on the new role
+        $alreadyroles = [];
+        foreach($existing_role->roles as $rolesvalue) {
+            $alreadyroles[] =$rolesvalue->name; 
+        }
 
+        $newUpdatedRole =  $role;
+
+       
+
+        // Iterate through the already assigned roles
+        foreach ($alreadyroles as $roles) {
+            // Remove roles that are not in the new role set
+            if (!in_array($roles, [$newUpdatedRole])) {
+                // Fetch permissions associated with the role being removed
+                $roleModel = \Spatie\Permission\Models\Role::findByName($roles);
+                $permissionsToRemove = $roleModel->permissions->pluck('name')->toArray();
+                // dd($permissionsToRemove);
+                // Remove the permissions from the user
+                $user->revokePermissionTo($permissionsToRemove);
+        
+                // Remove the role
+                $user->removeRole($roles);
+            }
+        }
+
+        // Add the new role if it's not already assigned
+        if (!in_array($newUpdatedRole, $alreadyroles)) {
+            $user->assignRole($newUpdatedRole); // Assign the new role
+        }
+
+         // Fetch permissions associated with the new role
+        $roleModel = \Spatie\Permission\Models\Role::findByName($newUpdatedRole);
+        $permissions = $roleModel->permissions->pluck('name')->toArray(); // Get permission names
+        // dd($permissions);
+        // Sync user's permissions with the ones associated with the new role
+        $user->syncPermissions($permissions);
+        // dd($newUpdatedRole ,$alreadyroles);
+        // $existing_role = $user->with('roles')->first();
+       
+
+      
         $successMessage = 'Admin updated successfully!';
         session()->flash('success', $successMessage);
     

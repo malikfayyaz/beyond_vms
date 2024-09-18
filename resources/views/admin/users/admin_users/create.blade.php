@@ -54,7 +54,7 @@
                 <select id="role" x-model="formData.role" class="w-full p-2 border rounded h-10">
                     <option value="" disabled selected>Select Role</option>
                     @foreach ($roles as $role)
-                        <option value="{{ $role->id }}">{{ $role->name }}</option>
+                        <option value="{{  $role->name }}">{{ $role->name }}</option>
                     @endforeach
                 </select>
                 <p x-show="roleError" class="text-red-500 text-sm mt-1" x-text="roleError"></p>
