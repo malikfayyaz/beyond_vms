@@ -314,7 +314,6 @@ class AdminManagementController extends Controller
                 // Fetch permissions associated with the role being removed
                 $roleModel = \Spatie\Permission\Models\Role::findByName($roles);
                 $permissionsToRemove = $roleModel->permissions->pluck('name')->toArray();
-                // dd($permissionsToRemove);
 
                 // Remove the permissions from the user
                 $user->revokePermissionTo($permissionsToRemove);
@@ -333,11 +332,10 @@ class AdminManagementController extends Controller
         $roleModel = \Spatie\Permission\Models\Role::findByName($newUpdatedRole);
 
         $permissions = $roleModel->permissions->pluck('name')->toArray(); // Get permission names
-        // dd($permissions);
 
         // Sync user's permissions with the ones associated with the new role
         $user->syncPermissions($permissions);
-        // dd($newUpdatedRole ,$alreadyroles);
+       
 
     }
 

@@ -53,7 +53,7 @@
                     { data: 'first_name', name: 'first_name' },
                     { data: 'last_name', name: 'last_name' },
                     { data: 'email', name: 'email' },
-                    { data: 'member_access', name: 'member_access' },
+                    { data: 'member_access', name: 'role' },
                     { data: 'status', name: 'status' },
                     { data: 'action', name: 'action', orderable: false, searchable: false }
                 ]);
