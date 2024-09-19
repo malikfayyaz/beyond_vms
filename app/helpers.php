@@ -6,7 +6,7 @@ use App\Models\Location;
 use App\Models\SettingCategory;
 
 
- function userType(){
+function userType(){
     $array = array(
         '1' => 'Admin',
         '2' => 'Client',
@@ -15,6 +15,20 @@ use App\Models\SettingCategory;
     );
     return $array;
 }
+
+
+function userRoles(){
+    $array = array(
+        '1' => 'Branch Manager',
+        '2' => 'Regional HR',
+        '3' => 'Regional CFO',
+        '4' => 'Regional President',
+        '5' => 'Divisional CFO'
+    );
+    return $array;
+}
+
+
 if (!function_exists('getActiveRoles')) {
     function getActiveRoles(User $user): array
     {

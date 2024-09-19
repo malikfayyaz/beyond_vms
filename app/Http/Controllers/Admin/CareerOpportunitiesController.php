@@ -12,6 +12,7 @@ use App\Models\CareerOpportunitiesBu;
 use Illuminate\Support\Carbon;
 use Yajra\DataTables\Facades\DataTables;
 use App\Models\DivisionBranchZoneConfig;
+use App\JobWorkflowUpdate;
 
 class CareerOpportunitiesController extends BaseController
 {
@@ -31,8 +32,8 @@ class CareerOpportunitiesController extends BaseController
                 ->addColumn('worker_type', function($row) {
                     return $row->workerType ? $row->workerType->title : 'N/A';
                 })
-/*            $data = CareerOpportunity::query();
-            return Datatables::of($data)
+                /*$data = CareerOpportunity::query();
+                    return Datatables::of($data)
                     ->addIndexColumn()*/
                     ->addColumn('action', function($row){
 
@@ -98,6 +99,14 @@ class CareerOpportunitiesController extends BaseController
                 $this->syncBusinessUnits($request->input('businessUnits'), $job->id);
 
                 calculateJobEstimates($job);
+                $jobWorkflow = new JobWorkflowUpdate();
+                $jobWorkflow->createJobWorkflow($job);
+                // get hiring manager id
+                // get all the workflow from workflows table
+                // update in new table with the job id
+                // add sort order in new table
+                //  
+                //dd('workflow should be trigger here');
                 session()->flash('success', 'Job saved successfully!');
                 return response()->json([
                     'success' => true,

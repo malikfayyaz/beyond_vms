@@ -30,8 +30,9 @@
                             x-model="arroval_role"
                         >
                             <option value="" disabled>Select Approval Role</option>
-                            @foreach ($roles as $role)
-                                <option value="{{ $role->id }}">{{ $role->name }}</option>
+                            @php $user_roles = userRoles(); @endphp
+                            @foreach($user_roles as $key => $val)
+                                <option value="{{ $key }}">{{ $val }}</option>
                             @endforeach
                         </select>
                         <p class="text-red-500 text-sm mt-1" x-text="arroval_roleError"></p>
@@ -55,6 +56,26 @@
                             @endforeach
                         </select>
                         <p class="text-red-500 text-sm mt-1" x-text="hiring_managerError"></p>
+                    </div>
+
+                    <div class="w-1/2 mt-2 pr-2">
+                        <label for="approval_number" class="block mb-2">Approval Number <span class="text-red-500">*</span></label>
+                        <select id="approval_number" x-model="approval_number" class="w-full p-2 border rounded h-10">
+                            <option value="" disabled selected>Select Approval Number</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                            <option value="6">6</option>
+                            <option value="7">7</option>
+                            <option value="8">8</option>
+                            <option value="9">9</option>
+                            <option value="10">10</option>
+
+                            
+                        </select>
+                        <p class="text-red-500 text-sm mt-1" x-text="approval_numberError"></p>
                     </div>
 
                     <div class="w-1/2 mt-2 pr-2">
@@ -94,6 +115,7 @@
                             <th class="border p-2">Approval Role</th>
                             <th class="border p-2">Hiring Manager</th>
                             <th class="border p-2">Approval Required</th>
+                            <th class="border p-2">Approval Number</th>
                             <th class="border p-2">Action</th>
                         </tr>
                     </thead>
@@ -105,6 +127,7 @@
                                 <td class="border p-2 text-center" x-text="item.approval_role.name ?? 'N/A'"></td>
                                 <td class="border p-2 text-center" x-text="item.hiring_manager.first_name ?? 'N/A'"></td>
                                 <td class="border p-2 text-center" x-text="item.approval_required ?? 'N/A'"></td>
+                                <td class="border p-2 text-center" x-text="item.approval_number ?? 'N/A'"></td>
                                 <td class="border p-2 text-center">
                                     <!-- <span @click="editItem(item)" class="text-gray-600 cursor-pointer">
                                         <i class="fa-regular fa-pen-to-square"></i>
@@ -127,10 +150,12 @@
             arroval_role: "",
             hiring_manager: "",
             approval_req: "",
+            approval_number: "",
 
             arroval_roleError: "",
             hiring_managerError: "",
             approval_reqError: "",
+            approval_numberError:"",
             items: @json($table_data), // Initialize items with tableData
             
             searchTerm: "",
@@ -160,6 +185,13 @@
                 } else {
                     this.approval_reqError = "";
                 }
+                //alert(this.approval_number);
+                if (this.approval_number.trim() === "") {
+                    this.approval_numberError = `Please select an Approval Number`;
+                    this.error += 1;
+                } else {
+                    this.approval_numberError = "";
+                }
             },
 
             submitData() {
@@ -167,12 +199,13 @@
                 if (this.error === 0) {
                     let formData = new FormData();  // Prepare the form data
                     let url = '{{ route('admin.workflow.store') }}';
-                    
+                    //alert(this.approval_number);
                     // Add your form data (you can add more if needed)
                     formData.append('client_id', this.clientId);
                     formData.append('approval_role_id', this.arroval_role);
                     formData.append('hiring_manager_id', this.hiring_manager);
                     formData.append('approval_required', this.approval_req);
+                    formData.append('approval_number', this.approval_number);
                     ajaxCall(url, 'POST', [[this.onSuccess, ['response']]], formData);
                     this.cancelEdit();
                 }
@@ -190,6 +223,7 @@
                 this.arroval_role = '';
                 this.hiring_manager = '';
                 this.approval_req = '';
+                this.approval_number = '';
                 this.editIndex = null;
             },
 
@@ -199,6 +233,7 @@
                 this.arroval_role = item.arroval_role ? item.arroval_role.toString() : '';
                 this.hiring_manager = item.hiring_manager ? item.hiring_manager.toString() : '';
                 this.approval_req = item.approval_req ? item.approval_req.toString() : '';
+                this.approval_number=item.approval_number ? item.approval_number.toString() : '';
                 this.editIndex = this.items.findIndex(i => i.id === item.id);
             },
 

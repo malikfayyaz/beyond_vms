@@ -358,34 +358,36 @@ class GenericDataController extends BaseController
     public function workflowEdit($id)
     {
         $client_data = Client::find($id);
-
-        $clients = Client::where('profile_status', 1)->where('id', '!=', $id)->get();
-
+        
+        $clients = Client::where('profile_status', '1')->where('id', '!=', $id)->get();
+        
         $roles = Role::where('id',2)->get();
 
         $table_data = Workflow::with(['client', 'approvalRole', 'hiringManager'])->get();
 
         // Fetch the item to edit
         $item = GenericData::findOrFail($id);
-        
         // Return the edit view with the item data
         return view('admin.workflow.edit', compact('item','client_data','clients','roles','table_data'));
     }
 
     public function workflowStore(Request $request)
     {
+        // dd($request->all())
         // Validate the incoming request data
         $validatedData = $request->validate([
             'client_id' => 'required|exists:clients,id',
             'approval_role_id' => 'required|exists:roles,id',
             'hiring_manager_id' => 'required|exists:clients,id',
             'approval_required' => 'required|in:yes,no',
+            'approval_number' => 'required'
         ]);
         // dd($validatedData);
 
         $workflow = new Workflow($validatedData);
         $workflow->save();
-        
+        //dd($workflow);
+
 
         $successMessage = 'Workflow updated successfully!';
         $redirectUrl = route('admin.workflow');
