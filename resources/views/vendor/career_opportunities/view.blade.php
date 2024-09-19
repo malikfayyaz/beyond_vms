@@ -1,12 +1,24 @@
-@extends('admin.layouts.app')
+@extends('vendor.layouts.app')
 
 @section('content')
     <!-- Sidebar -->
-    @include('admin.layouts.partials.dashboard_side_bar')
+    @include('vendor.layouts.partials.dashboard_side_bar')
     <div class="ml-16">
-        @include('admin.layouts.partials.header')
+        @include('vendor.layouts.partials.header')
         <div class="bg-white mx-4 my-8 rounded p-8">
             <div class="mb-4">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl font-bold"></h2>
+                    <div class="flex space-x-2">
+                        <button
+                            type="button"
+                            class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 capitalize"
+                            onclick="window.location.href='{{route('vendor.submission.create', ['id' => $job->id]) }}'"
+                        >
+                            Create Submission
+                        </button>
+                    </div>
+                </div>
                 <ul
                     class="grid grid-flow-col text-center text-gray-500 bg-gray-100 rounded-lg p-1"
                 >
@@ -291,7 +303,7 @@
                                 <h4 class="font-medium">Hiring Manager:</h4>
                             </div>
                             <div class="w-2/4">
-                                <p class="font-light">{{ $job->hiringManager->first_name }} {{ $job->hiringManager->middle_name }}  {{ $job->hiringManager->last_name }} </p>
+                                <p class="font-light">{{ $job->hiringManager->full_name }} </p>
                             </div>
                         </div>
                         <div class="flex items-center justify-between py-4 border-t">
@@ -485,7 +497,7 @@
                             <h4 class="font-medium">Job Duration:</h4>
                         </div>
                         <div class="w-2/4">
-                            <p class="font-light">{{ $job->start_date}} - {{$job->end_date}} </p>
+                            <p class="font-light">{{ $job->date_range }} </p>
                         </div>
                     </div>
                     <!-- Rates -->

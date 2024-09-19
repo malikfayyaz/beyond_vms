@@ -43,4 +43,22 @@ if (!function_exists('calculateJobEstimates')) {
 
         return true;
     }
+
+    if (!function_exists('vendorPayrate')) {
+        function vendorPayrate($billRate, $markup)
+        {
+            $markup = abs($markup);
+            // Check for division by zero or invalid markup
+            if (empty($markup) || $markup == 0) {
+                return null;  // Return null for better handling in Laravel
+            }
+    
+            // Calculate pay rate
+            $payRate = $billRate * (100 / (100 + $markup));
+    
+            // Format pay rate to two decimal places
+            return number_format((float) $payRate, 2, '.', '');
+        }
+    }
+    
 }

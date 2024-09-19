@@ -10,15 +10,12 @@
        <div
          class="bg-white mx-4 my-8 rounded p-8"
          x-data="addSubWizarForm()"
-         x-init="$nextTick(() => init())"
+         x-init="mounted()"
        >
          <!-- Success Notification -->
-         <div
-           x-show="showSuccessMessage"
-           class="mb-4 p-4 bg-green-100 border border-green-400 text-green-700 rounded"
-         >
-           Job is Added Successfully.
-         </div>
+        
+         @include('vendor.layouts.partials.alerts')
+        
          <!-- Progress bar -->
          <div class="mb-8">
            <div class="flex mb-2">
@@ -135,6 +132,7 @@
                <div class="flex gap-6 items-center">
                  <div
                    class="bg-[#D6F4F8] w-12 h-12 rounded-full flex items-center justify-center"
+                   x-init="formData.jobId = '<?= $career_opportunity->id ?>';"
                  >
                    <i class="fa-solid fa-briefcase text-[#00bad1]"></i>
                  </div>
@@ -196,7 +194,13 @@
                    New Candidate/Existing
                  </h2>
                </div>
-
+              <input type="hidden" value ="<?= $career_opportunity->id ?>" id="jobid">
+              <input type="hidden" value ="0.00" id="over_time">
+              <input type="hidden" value ="0.00" id="double_time_rate">
+              <input type="hidden" value ="0.00" id="client_over_time_rate">
+              <input type="hidden" value ="0.00" id="client_double_time_rate">
+              <input type="hidden" value ="0.00" id="vendor_bill_rate">
+             
                <div class="flex space-x-4 mb-4">
                  <div class="flex-1">
                    <label class="block mb-2"
@@ -319,20 +323,20 @@
                <div
                  class="flex space-x-4 mt-4"
                  x-data="{
-               dobDate: '',
-               init() {
-                   let dobPicker = flatpickr(this.$refs.dobPicker, {
-                       dateFormat: 'auto',
-                       altInput: true,
-                       altFormat: 'F j, Y',
-                       onChange: (selectedDates, dateStr) => {
-                         this.formData.dobDate = dateStr;
-                       }
-                   });
-                   this.$watch('dobDate', value => dobPicker.setDate(value));
-               }
-           }"
-               >
+                      dobDate: '',
+                      init() {
+                          let dobPicker = flatpickr(this.$refs.dobPicker, {
+                              dateFormat: 'auto',
+                              altInput: true,
+                              altFormat: 'F j, Y',
+                              onChange: (selectedDates, dateStr) => {
+                                this.formData.dobDate = dateStr;
+                              }
+                          });
+                          this.$watch('dobDate', value => dobPicker.setDate(value));
+                      }
+                  }"
+                  >
                  <div class="flex-1">
                    <label for="dobDate" class="block mb-2"
                      >Date of Birth (YYYY/MM/DD):
@@ -400,17 +404,18 @@
                    <label for="vendorMarkup" class="block mb-2"
                      >Vendor Markup</label
                    >
-                   <div class="relative">
+                   <div class="relative" >
                      <div
                        class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
-                     >
+                       x-init="formData.vendorMarkup = '<?= $markup ?>';">
                        <i class="fas fa-percentage text-gray-400"></i>
                      </div>
                      <input
                        type="text"
+                       x-model="formData.vendorMarkup"
                        id="vendorMarkup"
                        name="vendorMarkup"
-                       value="47.00"
+                       value="formData.vendorMarkup"
                        disabled
                        class="w-full h-12 px-4 text-gray-500 border border-gray-300 rounded-md shadow-sm focus:outline-none"
                      />
@@ -423,37 +428,40 @@
                    <div class="relative">
                      <div
                        class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
-                     >
+                       x-init="formData.adjustedMarkup = '<?= $markup ?>';">
                        <i class="fas fa-percentage text-gray-400"></i>
                      </div>
                      <input
                        type="text"
+                       x-model="formData.adjustedMarkup"
                        id="adjustedMarkup"
                        name="adjustedMarkup"
-                       value="47.00"
+                        value="<?= $markup ?>"
                        disabled
                        class="w-full h-12 px-4 text-gray-500 border border-gray-300 rounded-md shadow-sm focus:outline-none"
                      />
                    </div>
                  </div>
-                 <div class="flex-1">
+                 <div class="flex-1" x-init="formData.category_id = '<?= $career_opportunity->cat_id ?>';formData.category = '<?= $career_opportunity->category->title ?>';">
                    <label for="category" class="block mb-2">Category</label>
                    <input
                      type="text"
                      id="category"
+                     x-model="formData.category"
                      name="category"
-                     value="Claims"
+                     value="{{$career_opportunity->category->title}}"
                      disabled
                      class="bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                    />
                  </div>
-                 <div class="flex-1">
+                 <div class="flex-1" x-init="formData.rateType = '<?= $career_opportunity->paymentType->title ?>';">
                    <label for="rateType" class="block mb-2">Rate Type</label>
                    <input
                      type="text"
                      id="rateType"
                      name="rateType"
-                     value="Per Hour"
+                     value="{{$career_opportunity->paymentType->title}}"
+                     x-model="formData.rateType"
                      disabled
                      class="bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                    />
@@ -479,7 +487,7 @@
                      <label for="rateType" class="block mb-2"
                        >Not to Exceed Bill Rate</label
                      >
-                     <div class="relative">
+                     <div class="relative" x-init="formData.exceedBillRate = '<?= $career_opportunity->min_bill_rate ?>';">
                        <span
                          class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500"
                          >$</span
@@ -487,6 +495,7 @@
                        <input
                          type="text"
                          id="exceedBillRate"
+                         value="<?= $career_opportunity->min_bill_rate ?>"
                          x-model="formData.exceedBillRate"
                          @input="formatExceedBillRate($event.target.value)"
                          @focus="$event.target.setSelectionRange(0, $event.target.value.length)"
@@ -587,21 +596,7 @@
                      x-text="getErrorMessageById('preferredName')"
                    ></p>
                  </div>
-                 <div class="flex-1">
-                   <label class="block mb-2">Pronouns</label>
-                   <select
-                     x-model="formData.pronouns"
-                     class="w-full select2-single custom-style"
-                     data-field="pronouns"
-                     id="pronouns"
-                   >
-                     <option value="">Select</option>
-                     <option value="he/him/his">He/Him/His</option>
-                     <option value="she/her/hers">She/Her/Hers</option>
-                     <option value="they/them/theirs">They/Them/Theirs</option>
-                     <option value="other">Other</option>
-                   </select>
-                 </div>
+               
                </div>
                <div class="flex space-x-4 mb-4">
                  <div class="flex-1">
@@ -615,11 +610,9 @@
                      id="gender"
                    >
                      <option value="">Select Gender</option>
-                     <option value="male">Male</option>
-                     <option value="female">Female</option>
-                     <option value="prefer_not_to_respond">
-                       Prefer not to respond
-                     </option>
+                     @foreach (checksetting(12) as $key => $value)
+                            <option value="{{ $key }}">{{ $value }}</option>
+                            @endforeach
                    </select>
                    <p
                      x-show="showErrors && !isFieldValid('gender')"
@@ -638,9 +631,9 @@
                      id="race"
                    >
                      <option value="">Select Race</option>
-                     <option value="asian">Asian</option>
-                     <option value="white">White</option>
-                     <option value="no_response">No response</option>
+                     @foreach (checksetting(11) as $key => $value)
+                            <option value="{{ $key }}">{{ $value }}</option>
+                            @endforeach
                    </select>
                    <p
                      x-show="showErrors && !isFieldValid('race')"
@@ -660,8 +653,9 @@
                      id="workLocation"
                    >
                      <option value="">Select Work Location</option>
-                     <option value="USA">USA</option>
-                     <option value="Australia">Australia</option>
+                     @foreach ($location as $location)
+                            <option value="{{ $location->id }}">{{ $location->location_details; }}</option>
+                        @endforeach
                    </select>
                    <p
                      x-show="showErrors && !isFieldValid('workLocation')"
@@ -671,62 +665,7 @@
                  </div>
                </div>
                <!-- Add this after the existing fields in Step 3 -->
-               <div class="flex space-x-4 mb-4">
-                 <div class="flex-1">
-                   <label class="block mb-2">Skills</label>
-                   <select
-                     x-model="selectedSkills"
-                     @change="addSkill"
-                     class="h-12 px-4 text-gray-500 border border-gray-300 rounded-md shadow-sm focus:outline-none select2-multiple custom-style"
-                     data-field="skills"
-                     id="skills"
-                     multiple
-                   >
-                     <option value="javascript">JavaScript</option>
-                     <option value="python">Python</option>
-                     <option value="java">Java</option>
-                     <option value="csharp">C#</option>
-                     <option value="ruby">Ruby</option>
-                   </select>
-                   <div class="mt-2 flex flex-wrap">
-                     <template x-for="skill in formData.skills" :key="skill">
-                       <span
-                         class="bg-blue-100 text-blue-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-blue-900 dark:text-blue-300"
-                       >
-                         <span x-text="skill"></span>
-                         <button
-                           @click="removeSkill(skill)"
-                           class="ml-1 text-xs"
-                         >
-                           &times;
-                         </button>
-                       </span>
-                     </template>
-                   </div>
-                 </div>
-                 <div class="flex-1">
-                   <label class="block mb-2"
-                     >Worker Preferred Language
-                     <span class="text-red-500">*</span></label
-                   >
-                   <select
-                     x-model="formData.preferredLanguage"
-                     class="w-full select2-single custom-style"
-                     data-field="preferredLanguage"
-                     id="preferredLanguage"
-                   >
-                     <option value="">Select Language</option>
-                     <option value="english">English</option>
-                     <option value="french">French/Canadian</option>
-                     <option value="spanish">Spanish</option>
-                   </select>
-                   <p
-                     x-show="showErrors && !isFieldValid('preferredLanguage')"
-                     class="text-red-500 text-sm mt-1"
-                     x-text="getErrorMessageById('preferredLanguage')"
-                   ></p>
-                 </div>
-                 <div class="flex-1">
+               <div class="flex-1">
                    <label class="block mb-2"
                      >Candidate Email Address
                      <span class="text-red-500">*</span></label
@@ -744,7 +683,6 @@
                      x-text="getErrorMessageById('candidateEmail')"
                    ></p>
                  </div>
-               </div>
                <div class="flex space-x-4 mb-4">
                  <div class="flex-1">
                    <label class="block mb-2">Phone Number</label>
@@ -774,7 +712,9 @@
                      id="supplierAccountManager"
                    >
                      <option value="">Select Supplier Account Manager</option>
-                     <option value="dawg_inc">Dawg inc</option>
+                    
+                            <option value="{{ $vendor->user_id }}">{{ $vendor->full_name }}</option>
+                     
                    </select>
                    <p
                      x-show="showErrors && !isFieldValid('supplierAccountManager')"
@@ -1011,121 +951,10 @@
                  </div>
                </div>
 
-               <!-- Add this new row after the existing fields  -->
-               <div class="flex space-x-4 mb-4">
-                 <div class="flex-1">
-                   <label class="block mb-2"
-                     >Is this Candidate willing to Commute to Office?
-                     <span class="text-red-500">*</span></label
-                   >
-                   <select
-                     x-model="formData.willingToCommute"
-                     class="w-full select2-single custom-style"
-                     data-field="willingToCommute"
-                     id="willingToCommute"
-                   >
-                     <option value="">Select</option>
-                     <option value="yes">Yes</option>
-                     <option value="no">No</option>
-                   </select>
-                   <p
-                     x-show="showErrors && !isFieldValid('willingToCommute')"
-                     class="text-red-500 text-sm mt-1"
-                     x-text="getErrorMessageById('willingToCommute')"
-                   ></p>
-                 </div>
-                 <div class="flex-1">
-                   <label class="block mb-2"
-                     >Virtual/Remote Candidate?
-                     <span class="text-red-500">*</span></label
-                   >
-                   <select
-                     x-model="formData.virtualRemoteCandidate"
-                     class="w-full select2-single custom-style"
-                     data-field="virtualRemoteCandidate"
-                     id="virtualRemoteCandidate"
-                   >
-                     <option value="">Select</option>
-                     <option value="yes">Yes</option>
-                     <option value="no">No</option>
-                   </select>
-                   <p
-                     x-show="showErrors && !isFieldValid('virtualRemoteCandidate')"
-                     class="text-red-500 text-sm mt-1"
-                     x-text="getErrorMessageById('virtualRemoteCandidate')"
-                   ></p>
-                 </div>
-                 <div class="flex-1">
-                   <label class="block mb-2"
-                     >Do you have the right to represent?
-                     <span class="text-red-500">*</span></label
-                   >
-                   <select
-                     x-model="formData.rightToRepresent"
-                     class="w-full select2-single custom-style"
-                     data-field="rightToRepresent"
-                     id="rightToRepresent"
-                   >
-                     <option value="">Select</option>
-                     <option value="yes">Yes</option>
-                     <option value="no">No</option>
-                   </select>
-                   <p
-                     x-show="showErrors && !isFieldValid('rightToRepresent')"
-                     class="text-red-500 text-sm mt-1"
-                     x-text="getErrorMessageById('rightToRepresent')"
-                   ></p>
-                 </div>
-               </div>
+             
 
                <!-- Conditional fields for Virtual/Remote Candidate -->
-               <div
-                 x-show="formData.virtualRemoteCandidate === 'yes'"
-                 class="flex space-x-4 mb-4"
-               >
-                 <div class="flex-1">
-                   <label class="block mb-2"
-                     >Virtual City <span class="text-red-500">*</span></label
-                   >
-                   <input
-                     type="text"
-                     x-model="formData.virtualCity"
-                     class="w-full h-12 px-4 text-gray-500 border border-gray-300 rounded-md shadow-sm focus:outline-none"
-                     placeholder="Enter virtual city"
-                     id="virtualCity"
-                   />
-                   <p
-                     x-show="showErrors && !isFieldValid('virtualCity')"
-                     class="text-red-500 text-sm mt-1"
-                     x-text="getErrorMessageById('virtualCity')"
-                   ></p>
-                 </div>
-                 <div class="flex-1">
-                   <label class="block mb-2"
-                     >Virtual State/Province
-                     <span class="text-red-500">*</span></label
-                   >
-                   <select
-                     x-model="formData.virtualState"
-                     class="w-full select2-single custom-style"
-                     data-field="virtualState"
-                     id="virtualState"
-                   >
-                     <option value="">Select</option>
-                     <option value="AB">AB</option>
-                     <option value="Alaska">Alaska</option>
-                     <option value="BC">BC</option>
-                   </select>
-                   <p
-                     x-show="showErrors && !isFieldValid('virtualState')"
-                     class="text-red-500 text-sm mt-1"
-                     x-text="getErrorMessageById('virtualState')"
-                   ></p>
-                 </div>
-                 <div class="flex-1">
-                   <!-- This empty div is to maintain the layout consistency -->
-                 </div>
-               </div>
+            
 
                <!-- Add this new row after the existing fields in Step 3 -->
                <div class="flex space-x-4 mb-4">
@@ -1216,28 +1045,7 @@
                      x-text="getErrorMessageById('virtualCity')"
                    ></p>
                  </div>
-                 <div class="flex-1">
-                   <label class="block mb-2"
-                     >Virtual State/Province
-                     <span class="text-red-500">*</span></label
-                   >
-                   <select
-                     x-model="formData.virtualState"
-                     class="w-full select2-single custom-style"
-                     data-field="virtualState"
-                     id="virtualState"
-                   >
-                     <option value="">Select</option>
-                     <option value="AB">AB</option>
-                     <option value="Alaska">Alaska</option>
-                     <option value="BC">BC</option>
-                   </select>
-                   <p
-                     x-show="showErrors && !isFieldValid('virtualState')"
-                     class="text-red-500 text-sm mt-1"
-                     x-text="getErrorMessageById('virtualState')"
-                   ></p>
-                 </div>
+                
                  <div class="flex-1">
                    <!-- This empty div is to maintain the layout consistency -->
                  </div>

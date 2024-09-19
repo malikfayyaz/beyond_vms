@@ -1,19 +1,18 @@
 <?php
 
-namespace App\Http\Controllers\admin;
+namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Spatie\Permission\Models\Role;
-use Spatie\Permission\Models\Permission;
 use App\Models\Country;
-use App\Models\Admin;
+use App\Models\Vendor;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
 
-class AdminManagementController extends Controller
+class VendorManagementController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -21,25 +20,22 @@ class AdminManagementController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            // Eager load the role relationship
-            $admins = Admin::with('role')->select(['id', 'first_name', 'last_name', 'email', 'status', 'member_access'])->get();
+            // Eager load the role relationship (if vendors have roles)
+            $vendors = Vendor::with('role')->select(['id', 'first_name', 'last_name', 'email', 'status', 'member_access'])->get();
             
-            return datatables()->of($admins)
-                ->addColumn('role', function($admin) {
-                    return $admin->role ? $admin->role->name : 'N/A'; // Access the role name
-                })
-                ->addColumn('action', function($admin) {
-                    return '<a href="'. route('admin.admin-users.show', $admin->id) .'" class="text-blue-500 hover:text-blue-700 mr-2 bg-transparent hover:bg-transparent">
+            return datatables()->of($vendors)
+                ->addColumn('action', function($vendor) {
+                    return '<a href="'. route('admin.vendor-users.show', $vendor->id) .'" class="text-blue-500 hover:text-blue-700 mr-2 bg-transparent hover:bg-transparent">
                         <i class="fas fa-eye"></i>
                     </a>
 
-                    <a href="' . route('admin.admin-users.edit', $admin->id) . '"
+                    <a href="' . route('admin.vendor-users.edit', $vendor->id) . '"
                         class="text-green-500 hover:text-green-700 mr-2 bg-transparent hover:bg-transparent"
                         >
                         <i class="fas fa-edit"></i>
                         </a>
                     
-                            <form action="'. route('admin.admin-users.destroy', $admin->id) .'" method="POST" style="display:inline;" onsubmit="return confirm(\'Are you sure?\');">
+                            <form action="'. route('admin.vendor-users.destroy', $vendor->id) .'" method="POST" style="display:inline;" onsubmit="return confirm(\'Are you sure?\');">
                             ' . csrf_field() . method_field('DELETE') . '
                             <button type="submit" class="text-red-500 hover:text-red-700 bg-transparent hover:bg-transparent">
                                 <i class="fas fa-trash"></i>
@@ -50,9 +46,8 @@ class AdminManagementController extends Controller
                 ->make(true);
         }
 
-        return view('admin.users.admin_users.index');
+        return view('admin.users.vendor_users.index');
     }
-
 
 
     /**
@@ -60,12 +55,12 @@ class AdminManagementController extends Controller
      */
     public function create()
     {
-        $roles = Role::where('user_type_id', 1)->get();
+        // Assuming user_type_id for vendors is different from admins, e.g., 2 for vendors
+        $roles = Role::where('user_type_id', 2)->get();
         $user = Auth::user();
         $countries = Country::all();
-        // dd($roles);
         
-        return view('admin.users.admin_users.create', compact('roles', 'countries'));
+        return view('admin.users.vendor_users.create', compact('roles', 'countries'));
     }
 
     /**
@@ -75,16 +70,18 @@ class AdminManagementController extends Controller
     {
         $user = Auth::user();   
         $countries = Country::all();
+
         // Validation
         $validatedData = $request->validate([
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
-            'email' => 'required|email|unique:admins,email',
+            'email' => 'required|email|unique:vendors,email', // Assuming the vendors table is 'vendors'
             'phone' => 'nullable|string|max:20',
             'role' => 'required|exists:roles,name',
             'country' => 'required|exists:countries,id',
             'status' => 'required|string|in:active,inactive',
         ]);
+
         $first_name = $validatedData['first_name'];
         $last_name = $validatedData['last_name'];
         $email = $validatedData['email'];
@@ -93,114 +90,116 @@ class AdminManagementController extends Controller
         $country = $validatedData['country'];
         $status = $validatedData['status'];
 
+        // Check if the email is already used by another user
         $email_found = User::where('email', $email)->first();
-       
+    
         if ($email_found) {
-        
-            $adminRecord = Admin::where('user_id', $email_found->id)->first();
+            // Check if a vendor record already exists for this user
+            $vendorRecord = Vendor::where('user_id', $email_found->id)->first();
             
-            if ($adminRecord) {
-
-                $errorMessage = 'An admin record already exists for this email.';
+            if ($vendorRecord) {
+                $errorMessage = 'A vendor record already exists for this email.';
                 session()->flash('error', $errorMessage);
                 return response()->json([
                     'success' => false,
                     'message' => $errorMessage,
-                    'redirect_url' => route('admin.admin-users.create') // Send back the URL to redirect to
+                    'redirect_url' => route('admin.vendor-users.create') // Update redirect URL for vendors
                 ]);
-
             } else {
-                 
-                $admin = new Admin;
-                $admin->user_id = $email_found->id;
-                $admin->first_name = $first_name;
-                $admin->last_name = $last_name;
-                $admin->email = $email;
-                $admin->phone = $phone;
-                $admin->member_access = $role;
-                $admin->admin_status = 1;
-                $admin->country = $country; // Assuming you have a foreign key to countries
-                $admin->status = $status;
+                // Create a new Vendor record
+                $vendor = new Vendor;
+                $vendor->user_id = $email_found->id;
+                $vendor->first_name = $first_name;
+                $vendor->last_name = $last_name;
+                $vendor->email = $email;
+                $vendor->phone = $phone;
+                $vendor->member_access = $role;
+                $vendor->country = $country; // Assuming country_id is a foreign key
+                $vendor->status = $status;
 
-                // Handle the profile image upload if provided
-                $imagePath = handleFileUpload($request, 'profile_image', 'admin_profile');
+                // Handle profile image upload if provided
+                $imagePath = handleFileUpload($request, 'profile_image', 'vendor_profile');
                 if ($imagePath) {
-                    $admin->profile_image = $imagePath;
+                    $vendor->profile_image = $imagePath;
                 }
-
-                $admin->save();
+                // dd($vendor);
+                $vendor->save();
             }
         } else {
-            
+            // Create a new User record
             $user = new User;      
             $user->name = $first_name;
             $user->email = $email;
-            $user->password = Hash::make('password');
-            $user->is_admin = 1;
+            $user->password = Hash::make('password'); // Assign default password
+            $user->is_vendor = 1; // Assuming you have a field to identify vendors
 
             $user->save();
 
-            $admin = new Admin;
-            $admin->user_id = $user->id;
-            $admin->first_name = $first_name;
-            $admin->last_name = $last_name;
-            $admin->email = $email;
-            $admin->phone = $phone;
-            $admin->member_access = $role; 
-            $admin->admin_status = 1;
-            $admin->country = $country; 
-            $admin->status = $status;
+            // Create a new Vendor record
+            $vendor = new Vendor;
+            $vendor->user_id = $user->id;
+            $vendor->first_name = $first_name;
+            $vendor->last_name = $last_name;
+            $vendor->email = $email;
+            $vendor->phone = $phone;
+            $vendor->member_access = $role;
+            $vendor->country = $country;
+            $vendor->status = $status;
 
-            //  Handle the profile image upload if provided
-
-            $imagePath = handleFileUpload($request, 'profile_image', 'admin_profile');
+            // Handle profile image upload if provided
+            $imagePath = handleFileUpload($request, 'profile_image', 'vendor_profile');
             if ($imagePath) {
-                $admin->profile_image = $imagePath;
+                $vendor->profile_image = $imagePath;
             }
 
-            $admin->save();
+            $vendor->save();
         }
-        
-        $this->updateRoles($admin,$role);         
 
-        $successMessage = 'Admin created successfully!';
+        $this->updateRoles($vendor,$role);
+
+        $successMessage = 'Vendor created successfully!';
         session()->flash('success', $successMessage);
-    
+
         return response()->json([
             'success' => true,
             'message' => $successMessage,
-            'redirect_url' =>  route("admin.admin-users.index")  // Redirect URL for AJAX
+            'redirect_url' => route("admin.vendor-users.index")  // Redirect URL for vendors listing
         ]);
     }
+
 
     /**
      * Display the specified resource.
      */
-    public function show($id)
+    public function show(string $id)
     {
-        // Find the admin by ID
-        $admin = Admin::findOrFail($id);
+        $vendor = Vendor::findOrFail($id);
 
-        // Return the view with the admin details
-        return view('admin.users.admin_users.show', compact('admin'));
+        return view('admin.users.vendor_users.show', compact('vendor'));
     }
 
     /**
      * Show the form for editing the specified resource.
      */
     public function edit($id)
-    { 
-        $admin = Admin::findOrFail($id);
-        $roles = Role::where('user_type_id', 1)->get();
+    {
+        // Find the vendor by ID
+        $vendor = Vendor::findOrFail($id);
+        
+        // Fetch roles for vendors (assuming user_type_id 2 is for vendors)
+        $roles = Role::where('user_type_id', 2)->get();
+        
+        // Fetch all countries
         $countries = Country::all();
 
-        return view('admin.users.admin_users.create', [
-            'admin' => $admin,
+        // Return the vendor edit view, passing relevant data
+        return view('admin.users.vendor_users.create', [
+            'vendor' => $vendor,
             'roles' => $roles,
             'countries' => $countries,
-            'editMode' => true ,
-            'editIndex' => $id  
-        ]);  
+            'editMode' => true,
+            'editIndex' => $id
+        ]);
     }
 
     /**
@@ -208,17 +207,18 @@ class AdminManagementController extends Controller
      */
     public function update(Request $request, $id)
     {
+        // Validation
         $validatedData = $request->validate([
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
-            'email' => 'required|email|unique:admins,email,' . $id,
+            'email' => 'required|email|unique:vendors,email,' . $id,
             'phone' => 'nullable|string|max:20',
             'role' => 'required|exists:roles,name',
             'country' => 'required|exists:countries,id',
             'status' => 'required|string|in:active,inactive',
             'profile_image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ]);
-        
+
         $first_name = $validatedData['first_name'];
         $last_name = $validatedData['last_name'];
         $email = $validatedData['email'];
@@ -227,40 +227,40 @@ class AdminManagementController extends Controller
         $country = $validatedData['country'];
         $status = $validatedData['status'];
 
-        $admin = Admin::findOrFail($id);
-        $admin->first_name = $first_name;
-        $admin->last_name = $last_name;
-        // $admin->email = $request->email;
-        $admin->phone = $phone;
-        $admin->member_access = $role;
-        $admin->country = $country;
-        $admin->status = $status;
+        // Find the vendor
+        $vendor = Vendor::findOrFail($id);
+        $vendor->first_name = $first_name;
+        $vendor->last_name = $last_name;
+        $vendor->phone = $phone;
+        $vendor->member_access = $role;
+        $vendor->country = $country;
+        $vendor->status = $status;
 
         // Handle the profile image upload if provided
         if ($request->hasFile('profile_image')) {
             // Delete old image if exists
-            if ($admin->profile_image) {
-                Storage::disk('public')->delete($admin->profile_image);
+            if ($vendor->profile_image) {
+                Storage::disk('public')->delete($vendor->profile_image);
             }
 
-            $imagePath = handleFileUpload($request, 'profile_image', 'admin_profile');
+            $imagePath = handleFileUpload($request, 'profile_image', 'vendor_profile');
             if ($imagePath) {
-                $admin->profile_image = $imagePath;
+                $vendor->profile_image = $imagePath;
             }
         }
-        
 
-        $admin->save();
-        
-        $this->updateRoles($admin,$role);
-      
-        $successMessage = 'Admin updated successfully!';
+        $vendor->save();
+
+        $this->updateRoles($vendor,$role);
+
+        // Return success response
+        $successMessage = 'Vendor updated successfully!';
         session()->flash('success', $successMessage);
-    
+
         return response()->json([
             'success' => true,
             'message' => $successMessage,
-            'redirect_url' =>  route("admin.admin-users.index")  // Redirect URL for AJAX
+            'redirect_url' => route("admin.vendor-users.index")  // Redirect URL for AJAX
         ]);
     }
 
@@ -270,35 +270,33 @@ class AdminManagementController extends Controller
      */
     public function destroy($id)
     {
-        // Find the admin by ID
-        $admin = Admin::findOrFail($id);
+        // Find the vendor by ID
+        $vendor = Vendor::findOrFail($id);
 
-        // Check if the admin has a profile image and delete the file if it exists
-        if ($admin->profile_image && \Storage::exists('public/' . $admin->profile_image)) {
-            \Storage::delete('public/' . $admin->profile_image);
+        // Check if the vendor has a profile image and delete the file if it exists
+        if ($vendor->profile_image && \Storage::disk('public')->exists($vendor->profile_image)) {
+            \Storage::disk('public')->delete($vendor->profile_image);
         }
-        
 
-        // Delete the admin record
-        $admin->delete();
+        // Delete the vendor record
+        $vendor->delete();
 
-
-        // If not an AJAX request, redirect back with success message
-        return redirect()->route('admin.admin-users.index')->with('success', 'Admin deleted successfully');
+        // Redirect back with success message (for non-AJAX requests)
+        return redirect()->route('admin.vendor-users.index')->with('success', 'Vendor deleted successfully');
     }
 
-    public function updateRoles($admin,$role) {
+    public function updateRoles($vendor,$role) {
        
-        $userTypeId = 1;
+        $userTypeId = 3;
 
-        $user = User::findOrFail($admin->user_id);
+        $user = User::findOrFail($vendor->user_id);
 
         // code for already exist role 
         $existing_role = $user->with(['roles' => function ($query) use ($userTypeId) {
-            $query->where('user_type_id', 1)
+            $query->where('user_type_id', 2)
                   ->select('id', 'name', 'user_type_id'); // Select specific columns
         }])
-        ->findOrFail($admin->user_id);
+        ->findOrFail($vendor->user_id);
 
         $alreadyroles = [];
         foreach($existing_role->roles as $rolesvalue) {
@@ -314,7 +312,6 @@ class AdminManagementController extends Controller
                 // Fetch permissions associated with the role being removed
                 $roleModel = \Spatie\Permission\Models\Role::findByName($roles);
                 $permissionsToRemove = $roleModel->permissions->pluck('name')->toArray();
-
                 // Remove the permissions from the user
                 $user->revokePermissionTo($permissionsToRemove);
         
@@ -335,8 +332,5 @@ class AdminManagementController extends Controller
 
         // Sync user's permissions with the ones associated with the new role
         $user->syncPermissions($permissions);
-       
-
     }
-
 }

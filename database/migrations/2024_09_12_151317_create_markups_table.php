@@ -16,7 +16,7 @@ return new class extends Migration
 
             $table->foreignId('vendor_id')->constrained('vendors')->onDelete('cascade');
             $table->foreignId('location_id')->constrained('locations')->onDelete('cascade');
-            $table->foreignId('category_id')->constrained('job_templates')->onDelete('cascade');
+            $table->foreignId('category_id')->constrained('settings')->onDelete('cascade');
             $table->string('markup_value')->nullable();
             $table->enum('status', ['Active', 'Inactive']);
 

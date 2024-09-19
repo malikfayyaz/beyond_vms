@@ -1,9 +1,11 @@
 <?php
+use Illuminate\Support\Str;
 use Carbon\Carbon;
 use App\Models\User;
 use App\Models\GenericData;
 use App\Models\Location;
 use App\Models\SettingCategory;
+use App\Models\Consultant;
 
 
 function userType(){
@@ -17,6 +19,7 @@ function userType(){
 }
 
 
+
 function userRoles(){
     $array = array(
         '1' => 'Branch Manager',
@@ -28,6 +31,16 @@ function userRoles(){
     return $array;
 }
 
+
+
+function currency(){
+    $curr = array(
+        '1' => '$',
+        '2' => '€',
+        '3' => '£',
+    );
+    return $curr;
+}
 
 if (!function_exists('getActiveRoles')) {
     function getActiveRoles(User $user): array
@@ -180,6 +193,17 @@ if (!function_exists('numberOfWorkingDays')) {
                 return $filename;
             }
             return null;
+        }
+    }
+    if (!function_exists('generateUniqueUserCode')) {
+        function generateUniqueUserCode($length = 10)
+        {
+            do {
+                // Generate a random string
+                $uniqueCode = Str::random($length);
+            } while (Consultant::where('unique_id', $uniqueCode)->exists());
+
+            return $uniqueCode;
         }
     }
 }

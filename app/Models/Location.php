@@ -35,4 +35,12 @@ class Location extends Model
         return $query->where('status', 'active')
                      ->get();
     }
+
+     // Define the accessor for location details
+     public function getLocationDetailsAttribute()
+     {
+         $countryName = $this->country ? $this->country->name : 'N/A';
+ 
+         return trim($this->name . ', ' . $this->address1 . ', ' . $countryName);
+     }
 }

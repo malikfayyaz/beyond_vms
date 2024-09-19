@@ -6,14 +6,14 @@
 
     <div class="ml-16">
         @include('admin.layouts.partials.header')
-        <div class="bg-white mx-4 my-8 rounded p-8" x-data="adminForm({{ $editIndex ?? 'null' }})">
+        <div class="bg-white mx-4 my-8 rounded p-8" x-data="vendorForm({{ $editIndex ?? 'null' }})">
             @include('admin.layouts.partials.alerts') <!-- Include the partial view -->
 
             <!-- Conditional Heading -->
             @if(isset($editMode) && $editMode)
-                <h1>Edit Admin</h1>
+                <h1>Edit Vendor</h1>
             @else
-                <h1>Create Admin</h1>
+                <h1>Create Vendor</h1>
             @endif
 
             <!-- Form Fields -->
@@ -54,7 +54,7 @@
                 <select id="role" x-model="formData.role" class="w-full p-2 border rounded h-10">
                     <option value="" disabled selected>Select Role</option>
                     @foreach ($roles as $role)
-                        <option value="{{  $role->name }}">{{ $role->name }}</option>
+                        <option value="{{ $role->name }}">{{ $role->name }}</option>
                     @endforeach
                 </select>
                 <p x-show="roleError" class="text-red-500 text-sm mt-1" x-text="roleError"></p>
@@ -84,9 +84,9 @@
             <div class="flex justify-end">
                 <button type="button" @click="submitData()" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
                     @if(isset($editMode) && $editMode)
-                        Update Admin
+                        Update Vendor
                     @else
-                        Add Admin
+                        Add Vendor
                     @endif
                 </button>
             </div>
@@ -94,26 +94,23 @@
     </div>
 
     <script>
-    function adminForm(editIndex) {
+    function vendorForm(editIndex) {
         return {
             formData: {
-                first_name: '{{ old('first_name', $admin->first_name ?? '') }}',
-                last_name: '{{ old('last_name', $admin->last_name ?? '') }}',
-                email: '{{ old('email', $admin->email ?? '') }}',
-                phone: '{{ old('phone', $admin->phone ?? '') }}',
+                first_name: '{{ old('first_name', $vendor->first_name ?? '') }}',
+                last_name: '{{ old('last_name', $vendor->last_name ?? '') }}',
+                email: '{{ old('email', $vendor->email ?? '') }}',
+                phone: '{{ old('phone', $vendor->phone ?? '') }}',
                 profile_image: null,
-                role: '{{ old('role', $admin->member_access ?? '') }}',
-                country: '{{ old('country', $admin->country ?? '') }}',
-                status: '{{ old('status', $admin->status ?? '') }}',
+                role: '{{ old('role', $vendor->member_access ?? '') }}',
+                country: '{{ old('country', $vendor->country ?? '') }}',
+                status: '{{ old('status', $vendor->status ?? '') }}',
             },
 
-            
-              // Assuming $data contains user data for listing/editing
             searchTerm: '',
             editIndex: editIndex,
             currentUrl: '{{ url()->current() }}',
             
-            // Error messages
             firstNameError: '',
             lastNameError: '',
             emailError: '',
@@ -121,7 +118,6 @@
             countryError: '',
             statusError: '',
 
-            // Validation
             validateFields() {
                 let errorCount = 0;
 
@@ -167,7 +163,7 @@
                     this.statusError = '';
                 }
 
-                return errorCount === 0;  // Return true if no errors
+                return errorCount === 0;
             },
            
             submitData() {
@@ -184,46 +180,33 @@
                     formData.append('country', this.formData.country);
                     formData.append('status', this.formData.status);
 
-                    let url = '{{ route("admin.admin-users.store") }}';
+                    let url = '{{ route("admin.vendor-users.store") }}';
                     if (this.editIndex !== null) {
                         
-                        url = '{{ route("admin.admin-users.update", ":id") }}'; // Update URL
-                        url = url.replace(':id', editIndex); // Replace placeholder with actual ID
-                        formData.append('_method', 'PUT'); // Laravel expects PUT method for updates
-                        console.log(formData); 
+                        url = '{{ route("admin.vendor-users.update", ":id") }}';
+                        url = url.replace(':id', editIndex);
+                        formData.append('_method', 'PUT');
+                        // alert(url);
                     }
 
                     ajaxCall(url, 'POST', [[this.onSuccess, ['response']]], formData);
-                    
                 }
-                
-                // Method implementation
             },
 
-
-            // Success handler
             onSuccess(response) {
-                
-                // Handle success case
                 if (response.success && response.redirect_url) {
-                    window.location.href = response.redirect_url; // Redirect to the URL specified in the response
-                } 
-                // Handle error case
-                else if (!response.success && response.redirect_url) {
-                    // alert(response.message); // You can replace this with a custom error display logic
-                    // window.location.href = response.redirect_url; // Redirect to the create route or reload the page
+                    window.location.href = response.redirect_url;
+                } else if (!response.success && response.redirect_url) {
                     document.getElementById('error-message').innerText = response.message;
                     document.getElementById('error-message').classList.remove('hidden');
                 }
             },
 
-            // Cancel edit
             cancelEdit() {
                 this.resetForm();
                 this.editIndex = null;
             },
 
-            // Reset form
             resetForm() {
                 this.formData.first_name = '';
                 this.formData.last_name = '';
@@ -233,43 +216,8 @@
                 this.formData.role = '';
                 this.formData.country = '';
                 this.formData.status = '';
-                this.clearErrors();
-            },
-
-            // Clear errors
-            clearErrors() {
-                this.firstNameError = '';
-                this.lastNameError = '';
-                this.emailError = '';
-                this.roleError = '';
-                this.countryError = '';
-                this.statusError = '';
-            },
-
-            // Edit item
-            editItem(item) {
-                this.editIndex = this.items.indexOf(item);
-                this.formData.first_name = item.first_name;
-                this.formData.last_name = item.last_name;
-                this.formData.email = item.email;
-                this.formData.phone = item.phone;
-                this.formData.role = item.role;
-                this.formData.country = item.country;
-                this.formData.status = item.status;
-                this.clearErrors();
-            },
-
-            // Filtered items based on search term
-            get filteredItems() {
-                return this.items.filter(item => {
-                    return item.first_name.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
-                           item.last_name.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
-                           item.email.toLowerCase().includes(this.searchTerm.toLowerCase());
-                });
             }
         }
     }
-
-</script>
-
+    </script>
 @endsection

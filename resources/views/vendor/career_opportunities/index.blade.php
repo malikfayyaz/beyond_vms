@@ -10,13 +10,13 @@
                 <div class="flex justify-between items-center mb-6">
                     <h2 class="text-2xl font-bold">Jobs</h2>
                     <div class="flex space-x-2">
-                        <button
+                        {{--<button
                             type="button"
                             class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 capitalize"
                             onclick="window.location.href='{{ route('vendor.career-opportunities.create') }}'"
                         >
                             Create New Job
-                        </button>
+                        </button>--}}
                     </div>
                 </div>
                 <table class="min-w-full divide-y divide-gray-200" id="example">
@@ -94,27 +94,7 @@
                     { data: 'title', name: 'title' },
                     { data: 'alternative_job_title', name: 'alternative_job_title' },
                     { data: 'hiring_manager', name: 'hiring_manager' },
-                    {
-                        data: null,
-                        render: function (data, type, row) {
-                            if (data.start_date && data.end_date) {
-                                let startDate = new Date(data.start_date);
-                                let endDate = new Date(data.end_date);
-
-                                // Format the dates as MM/DD/YYYY
-                                let formatDate = function(date) {
-                                    let day = String(date.getDate()).padStart(2, '0');
-                                    let month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-based
-                                    let year = date.getFullYear();
-                                    return `${month}/${day}/${year}`;
-                                };
-
-                                return `${formatDate(startDate)} - ${formatDate(endDate)}`;
-                            }
-                            return 'N/A';
-                        },
-                        name: 'duration' // Column name for DataTable
-                    },
+                    { data: 'duration', name: 'duration' },
                     { data: 'num_openings', name: 'num_openings' },
                     { data: 'worker_type', name: 'worker_type' },
                     {data: 'action', name: 'action', orderable: false, searchable: false}

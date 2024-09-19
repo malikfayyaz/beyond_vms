@@ -31,7 +31,7 @@ export default function addSubWizarForm() {
           "race",
           "workLocation",
           "preferredName",
-          "preferredLanguage",
+          
           "supplierAccountManager",
           "availableDate",
           "needSponsorship",
@@ -92,10 +92,13 @@ export default function addSubWizarForm() {
       preferredName: "",
       gender: "",
       race: "",
+      candidateHomeCity:"",
+      adjustedMarkup:"0.00",
+      jobId : "",
+      vendorMarkup:"0.00",
       workLocation: "",
       preferredLanguage: "",
       candidateEmail: "",
-      skills: [],
       phoneNumber: "",
       supplierAccountManager: "",
       resumeUpload: null,
@@ -113,23 +116,31 @@ export default function addSubWizarForm() {
       virtualState: "",
       availToInterviewNotes: "",
       comment: "",
+      over_time:"0.00",
+      double_time_rate:"0.00",
+      client_over_time_rate:"0.00",
+      client_double_time_rate:"0.00",
+      vendor_bill_rate:"0.00",
+           
+             
+            
     },
 
-    selectedSkills: [],
+    // selectedSkills: [],
 
-    addSkill() {
-      this.formData.skills = [
-        ...new Set([...this.formData.skills, ...this.selectedSkills]),
-      ];
-      this.selectedSkills = [];
-      this.$nextTick(() => {
-        $("#skills").val(null).trigger("change");
-      });
-    },
+    // addSkill() {
+    //   this.formData.skills = [
+    //     ...new Set([...this.formData.skills, ...this.selectedSkills]),
+    //   ];
+    //   this.selectedSkills = [];
+    //   this.$nextTick(() => {
+    //     $("#skills").val(null).trigger("change");
+    //   });
+    // },
 
-    removeSkill(skill) {
-      this.formData.skills = this.formData.skills.filter((s) => s !== skill);
-    },
+    // removeSkill(skill) {
+    //   this.formData.skills = this.formData.skills.filter((s) => s !== skill);
+    // },
     handleResumeUpload(event) {
       const file = event.target.files[0];
       this.formData.resumeUpload = file || null;
@@ -174,6 +185,8 @@ export default function addSubWizarForm() {
 
     formatBillRate(value) {
       this.formData.billRate = this.formatRateValue(value);
+      console.log(this.formData.billRate );
+      
       this.validateAllRates();
     },
 
@@ -187,8 +200,9 @@ export default function addSubWizarForm() {
     },
 
     validateAllRates() {
-      this.validatePayRate();
       this.validateBillRate();
+      this.validatePayRate();
+      
     },
 
     validatePayRate() {
@@ -205,13 +219,16 @@ export default function addSubWizarForm() {
     },
 
     validateBillRate() {
+      this.errors.billRate =  "";
       const exceedBillRate = parseFloat(this.formData.exceedBillRate);
       const payRate = parseFloat(this.formData.payRate);
       const billRate = parseFloat(this.formData.billRate);
-
-      if (billRate < payRate) {
-        this.errors.billRate = `Bill Rate must be at least ${this.formData.payRate}`;
-      } else if (billRate > exceedBillRate) {
+      console.log(billRate+"dsfsdfsdf");
+      console.log(payRate+"payRate");
+      // if (billRate > payRate) {
+      //   this.errors.billRate = `Bill Rate must be at least ${this.formData.payRate}`;
+      // } else
+       if (billRate > exceedBillRate) {
         this.errors.billRate = `Bill Rate cannot exceed ${this.formData.exceedBillRate}`;
       } else if (billRate <= 0) {
         this.errors.billRate = "Bill Rate must be greater than 0.00";
@@ -251,19 +268,19 @@ export default function addSubWizarForm() {
     isValidRate(value) {
       return /^\d+(\.\d{2})?$/.test(value) && parseFloat(value) > 0;
     },
-    validateBillRate() {
-      const exceedBillRate = parseFloat(this.formData.exceedBillRate);
-      const payRate = parseFloat(this.formData.payRate);
-      const billRate = parseFloat(this.formData.billRate);
+    // validateBillRate() {
+    //   const exceedBillRate = parseFloat(this.formData.exceedBillRate);
+    //   const payRate = parseFloat(this.formData.payRate);
+    //   const billRate = parseFloat(this.formData.billRate);
 
-      if (billRate < payRate) {
-        this.errors.billRate = `Bill Rate must be at least ${this.formData.payRate}`;
-      } else if (billRate > exceedBillRate) {
-        this.errors.billRate = `Bill Rate cannot exceed ${this.formData.exceedBillRate}`;
-      } else {
-        this.errors.billRate = "";
-      }
-    },
+    //   if (billRate < payRate) {
+    //     this.errors.billRate = `Bill Rate must be at least ${this.formData.payRate}`;
+    //   } else if (billRate > exceedBillRate) {
+    //     this.errors.billRate = `Bill Rate cannot exceed ${this.formData.exceedBillRate}`;
+    //   } else {
+    //     this.errors.billRate = "";
+    //   }
+    // },
 
     isValidPayRate(value) {
       return this.isValidRate(value);
@@ -305,13 +322,13 @@ export default function addSubWizarForm() {
       return this.isValidBillRate(rate);
     },
 
-    formatBillRate(value) {
-      this.formData.billRate = this.formatBillingValue(value);
-    },
+    // formatBillRate(value) {
+    //   this.formData.billRate = this.formatBillingValue(value);
+    // },
 
-    formatMaxBillRate(value) {
-      this.formData.maxBillRate = this.formatBillingValue(value);
-    },
+    // formatMaxBillRate(value) {
+    //   this.formData.maxBillRate = this.formatBillingValue(value);
+    // },
 
     formatEstimatedExpense(value) {
       this.formData.estimatedExpense = this.formatBillingValue(value);
@@ -352,14 +369,57 @@ export default function addSubWizarForm() {
 
     showErrors: false,
     mounted() {
-      console.log(window.$); // Verify jQuery is available
+      // console.log(window.$); // Verify jQuery is available
       if (window.$) {
         $('#candidateSelection').on('change', () => {
           this.loadExistingCandidate();
         });
+        const myObject = {
+          disabledFields: (disable = true) => {
+            console.log(this.formData);
+
+            
+          // Empty the input values and clear formData
+          if (!disable) {
+            console.log(disable);
+            $('#candidateSelection').val('').trigger("change.select2");
+            this.formData.candidateSelection = '';
+              $('#candidateFirstName').val('');
+              $('#candidateMiddleName').val('');
+              $('#candidateLastName').val('');
+              $('#dobDate').val('');
+              $('#lastFourNationalId').val('');
+              $('#candidateEmail').val('');
+              // console.log("dsfsdf");
+              
+              this.formData.candidateFirstName = '';
+              this.formData.candidateMiddleName = '';
+              this.formData.candidateLastName = '';
+              this.formData.dobDate = '';
+              this.formData.lastFourNationalId = '';
+              this.formData.candidateEmail = '';
+          }
+          
+          // Disable or enable the fields based on the parameter
+          $('#candidateFirstName').prop('disabled', disable);
+          $('#candidateMiddleName').prop('disabled', disable);
+          $('#candidateLastName').prop('disabled', disable);
+          $('#dobDate').prop('disabled', disable);
+          $('#lastFourNationalId').prop('disabled', disable);
+          $('#candidateEmail').prop('disabled', disable);
+      }
+      };
+
+      $('#candidateType').on('change', function() {
+        
+        if($(this).val() == 1) {
+          myObject.disabledFields(false);
+        }
+    });
+      
         this.loadExistingCandidate = () => {
           var candidate_id = $('#candidateSelection').find(':selected').val();
-
+          
          
           let url = `/consultant-id`;
 
@@ -369,22 +429,104 @@ export default function addSubWizarForm() {
             const updates = {
               '#candidateFirstName': { type: 'value', field: 'candidateFirstName' },
               '#candidateMiddleName': { type: 'value', field: 'candidateMiddleName' },
-              '#candidateLastName': { type: 'select2', field: 'candidateLastName' },
-              '#dobDate': { type: 'value', field: 'dobDate' },
+              '#candidateLastName': { type: 'value', field: 'candidateLastName' },
+              '#dobDate': { type: 'date', field: 'dobDate' },
               '#lastFourNationalId': { type: 'value', field: 'lastFourNationalId' },
+              '#candidateEmail': { type: 'value', field: 'candidateEmial' },
               // Add more mappings as needed
             };
             ajaxCall(url, 'POST', [[updateElements, ['response', updates]]], data);
-            setTimeout(() => {
-             this.formData.candidateFirstName =  $('#candidateFirstName').val();
-             this.formData.candidateMiddleName = $('#candidateMiddleName').val();
-             this.formData.candidateLastName = $('#candidateLastName').val();
-             this.formData.dobDate = $('#dobDate').val();
-             this.formData.lastFourNationalId = $('#lastFourNationalId').val();
-            }, 500);
+            // Poll the DOM until the input fields are updated
+            const intervalId = setInterval(() => {
+              const candidateFirstName = $('#candidateFirstName').val();
+              const candidateMiddleName = $('#candidateMiddleName').val();
+              const candidateLastName = $('#candidateLastName').val();
+              const dobDate = $('#dobDate').val();
+              const lastFourNationalId = $('#lastFourNationalId').val();
+              const candidateEmail = $('#candidateEmail').val();
+
+              // Only set formData when all the required fields have been populated
+              if (candidateFirstName && candidateLastName && dobDate && lastFourNationalId) {
+                  this.formData.candidateFirstName = candidateFirstName;
+                  this.formData.candidateMiddleName = candidateMiddleName;
+                  this.formData.candidateLastName = candidateLastName;
+                  this.formData.dobDate = dobDate;
+                  this.formData.lastFourNationalId = lastFourNationalId;
+                  this.formData.candidateEmail = candidateEmail;
+                  // Enable the fields or do further processing
+                  myObject.disabledFields(true);
+
+                  // Clear the interval
+                  clearInterval(intervalId);
+              }
+          }, 100); // Check every 100ms if the fields have been updated
           }
         };
-        
+
+        $('#billRate, #payRate').on('change', (event) => {
+          this.vendorMarkup(event);
+      });
+
+      
+
+      this.vendorMarkup = (event) => {
+        // let formData = this.formData || {};
+    
+          // Get values from form fields or fallback to formData
+          let payRate = this.formData.payRate || $('#payRate').val();
+          let billRate = this.formData.billRate || $('#billRate').val();
+          let adjustedMarkup = this.formData.adjustedMarkup || $('#adjustedMarkup').val();
+          let markup = this.formData.vendorMarkup || $('#vendorMarkup').val();
+          let jobid = this.formData.jobId || $('#jobid').val();
+          let url = `/show-vendor-markup`;
+          let data = new FormData();
+
+          // Append form data
+          data.append('payRate', payRate);
+          data.append('billRate', billRate);
+          data.append('adjustedMarkup', adjustedMarkup);
+          data.append('markup', markup);
+          data.append('jobid', jobid);
+
+          // Determine which field was changed
+          let rateField = '';
+          if ($(event.target).attr('id') == 'billRate') {
+              rateField = 'bill_rate_changed';
+          }
+          if ($(event.target).attr('id') == 'VendorJobSubmission_adjusted_makrup') {
+              rateField = 'adjusted_markup_changed';
+          }
+          data.append('rateField', rateField);
+
+          // Map field updates to specific DOM elements
+          const updates = {
+            '#over_time': { type: 'value', field: 'over_time' },
+              '#adjustedMarkup': { type: 'value', field: 'adjustedMarkup' },
+              '#double_time_rate': { type: 'value', field: 'double_time_rate' },
+              '#client_over_time_rate': { type: 'value', field: 'client_over_time_rate' },
+              '#client_double_time_rate': { type: 'value', field: 'client_double_time_rate' },
+              '#vendor_bill_rate': { type: 'value', field: 'vendor_bill_rate' },
+             
+              // Add more mappings if needed
+          };
+
+          // AJAX call to update fields based on pay rate or bill rate change
+          ajaxCall(url, 'POST', [[updateElements, ['response', updates]]], data);
+
+          // Delay for updated adjusted markup value
+          setTimeout(() => {
+            this.formData.over_time = $('#over_time').val();
+            this.formData.adjustedMarkup = $('#adjustedMarkup').val();
+            this.formData.double_time_rate = $('#double_time_rate').val();
+            this.formData.client_over_time_rate = $('#client_over_time_rate').val();
+            this.formData.client_double_time_rate = $('#client_double_time_rate').val();
+            this.formData.vendor_bill_rate = $('#vendor_bill_rate').val();
+           
+            console.log(this.formData);
+            
+          }, 500);
+      }
+      
       }
     },
 
@@ -459,7 +601,7 @@ export default function addSubWizarForm() {
 
         // Detect the system date format
         const systemDateFormat = detectDateFormat();
-        console.log("Detected system date format:", systemDateFormat);
+        // console.log("Detected system date format:", systemDateFormat);
 
         this.flatpickrInstance = flatpickr("#dobDate", {
           dateFormat: systemDateFormat,
@@ -467,7 +609,7 @@ export default function addSubWizarForm() {
           altFormat: systemDateFormat,
           maxDate: "today",
           onChange: (selectedDates, dateStr) => {
-            this.formData.dob = dateStr;
+            this.formData.dobDate = dateStr;
           },
           onReady: (selectedDates, dateStr, instance) => {
             // Force an update of the alt input to ensure it uses the correct format
@@ -476,7 +618,9 @@ export default function addSubWizarForm() {
         });
 
         flatpickr(this.$refs.availableDatePicker, {
-          dateFormat: "Y-m-d",
+          dateFormat: systemDateFormat,
+          // altInput: true,
+          altFormat: systemDateFormat,
           minDate: "today",
           onChange: (selectedDates, dateStr) => {
             this.formData.availableDate = dateStr;
@@ -485,7 +629,9 @@ export default function addSubWizarForm() {
 
         // Gallagher Start Date Picker
         flatpickr(this.$refs.gallagherStartDatePicker, {
-          dateFormat: "Y-m-d",
+          dateFormat: systemDateFormat,
+          // altInput: true,
+          altFormat: systemDateFormat,
           onChange: (selectedDates, dateStr) => {
             this.formData.gallagherStartDate = dateStr;
           },
@@ -493,7 +639,9 @@ export default function addSubWizarForm() {
 
         // Gallagher Last Date Picker
         flatpickr(this.$refs.gallagherLastDatePicker, {
-          dateFormat: "Y-m-d",
+          dateFormat: systemDateFormat,
+          // altInput: true,
+          altFormat: systemDateFormat,
           onChange: (selectedDates, dateStr) => {
             this.formData.gallagherLastDate = dateStr;
           },
@@ -521,7 +669,7 @@ export default function addSubWizarForm() {
         case 1:
           return (
             this.formData.candidateType !== "" &&
-            (this.formData.candidateType !== "yes" ||
+            (this.formData.candidateType !== "2" ||
               this.formData.candidateSelection !== "") &&
             this.formData.dobDate.trim() !== "" &&
             this.isValidNationalId(this.formData.lastFourNationalId)
@@ -539,7 +687,7 @@ export default function addSubWizarForm() {
             this.isFieldValid("gender") &&
             this.isFieldValid("race") &&
             this.isFieldValid("workLocation") &&
-            this.isFieldValid("preferredLanguage") &&
+            
             this.isFieldValid("candidateEmail") &&
             this.isFieldValid("supplierAccountManager") &&
             this.isFieldValid("resumeUpload") &&
@@ -560,8 +708,7 @@ export default function addSubWizarForm() {
               this.isFieldValid("gallagherCapacity") &&
               this.isFieldValid("gallagherStartDate") &&
               this.isFieldValid("gallagherLastDate") &&
-              this.isFieldValid("virtualCity") &&
-              this.isFieldValid("virtualState");
+              this.isFieldValid("virtualCity");
           }
           return isValid;
         default:
@@ -596,14 +743,33 @@ export default function addSubWizarForm() {
       this.showErrors = true;
       if (this.isFormValid) {
         console.log("Form submitted:", this.formData);
-        this.showSuccessMessage = true;
-        this.resetForm();
-        this.currentStep = 1;
-        this.highestStepReached = 1;
-        this.formSubmitted = true;
-        setTimeout(() => {
-          this.showSuccessMessage = false;
-        }, 5000);
+        let formData = new FormData();
+        Object.keys(this.formData).forEach((key) => {
+          if (Array.isArray(this.formData[key])) {
+            // If the key is an array (like businessUnits), handle each item
+            this.formData[key].forEach((item, index) => {
+              formData.append(`${key}[${index}]`, JSON.stringify(item));
+            });
+          } else {
+            formData.append(key, this.formData[key]);
+          }
+        });
+        if (this.formData.additionalDocUpload) {
+          formData.append('additionaldoc', this.formData.additionalDocUpload);
+      }
+        formData.append("resume", this.formData.resumeUpload);
+        const url = "/vendor/submission/store";
+        ajaxCall(url,'POST', [[onSuccess, ['response']]], formData);
+        // this.showSuccessMessage = true;
+      
+        // this.showSuccessMessage = true;
+        // this.resetForm();
+        // this.currentStep = 1;
+        // this.highestStepReached = 1;
+        // this.formSubmitted = true;
+        // setTimeout(() => {
+        //   this.showSuccessMessage = false;
+        // }, 5000);
       } else {
         console.log("Form is invalid. Please check the errors.");
       }
@@ -619,8 +785,8 @@ export default function addSubWizarForm() {
         payRate: "0.00",
         billRate: "0.00",
         preferredName: "",
-        skills: [],
-        preferredLanguage: "",
+        // skills: [],
+       
         candidateEmail: "",
         phoneNumber: "",
         supplierAccountManager: "",
@@ -637,6 +803,12 @@ export default function addSubWizarForm() {
         virtualState: "",
         availToInterviewNotes: "",
         comment: "",
+        over_time:"0.00",
+        double_time_rate:"0.00",
+        client_over_time_rate:"0.00",
+        client_double_time_rate:"0.00",
+        vendor_bill_rate:"0.00",
+        
       };
       if (document.getElementById("resumeUpload")) {
         document.getElementById("resumeUpload").value = "";
@@ -644,7 +816,7 @@ export default function addSubWizarForm() {
       if (document.getElementById("additionalDocUpload")) {
         document.getElementById("additionalDocUpload").value = "";
       }
-      this.selectedSkills = [];
+      // this.selectedSkills = [];
       // Reset Select2 dropdowns
       this.$nextTick(() => {
         $(".select2-single").val(null).trigger("change");

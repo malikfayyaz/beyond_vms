@@ -351,6 +351,19 @@
                       Markup
                   </a>
                 </li>
+                <!-- Business Unit Menu Item -->
+                <li class="{{ request()->is('admin/rates/bill-rate') ? 'active' : '' }}">
+                  <a href="{{ url('admin/rates/bill-rate') }}"
+                      class="flex items-center w-full p-2 text-white transition duration-75 pl-11 hover:bg-gray-700">
+                      Bill Rate
+                  </a>
+                </li>
+                <li class="{{ request()->is('admin/rates/pay-rate') ? 'active' : '' }}">
+                  <a href="{{ url('admin/rates/pay-rate') }}"
+                      class="flex items-center w-full p-2 text-white transition duration-75 pl-11 hover:bg-gray-700">
+                      Pay Rate
+                  </a>
+                </li>
 
               </ul>
             </li>
@@ -382,6 +395,18 @@
                     <a href="{{ route('admin.admin-users.index') }}"
                       class="flex items-center w-full p-2 text-white transition duration-75 pl-11 hover:bg-gray-700">
                       Admin Users
+                    </a>
+                  </li>
+                  <li class="{{ request()->routeIs('admin.client-users.index') ? 'active' : '' }}">
+                    <a href="{{ route('admin.client-users.index') }}"
+                    class="flex items-center w-full p-2 text-white transition duration-75 pl-11 hover:bg-gray-700">
+                    Client Users
+                   </a>
+                  </li>
+                  <li class="{{ request()->routeIs('admin.vendor-users.index') ? 'active' : '' }}">
+                    <a href="{{ route('admin.vendor-users.index') }}"
+                      class="flex items-center w-full p-2 text-white transition duration-75 pl-11 hover:bg-gray-700">
+                      Vendor Users
                     </a>
                   </li>
                 </ul>
