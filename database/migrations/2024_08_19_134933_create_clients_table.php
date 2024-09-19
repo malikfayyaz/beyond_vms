@@ -27,7 +27,7 @@ return new class extends Migration
             $table->string('profile_image');
             $table->text('description');
             $table->dateTime('last_login');
-            $table->tinyInteger('country');
+            $table->smallInteger('country');
             $table->string('date_format_php');
             $table->string('date_format_js');
             $table->string('phone');

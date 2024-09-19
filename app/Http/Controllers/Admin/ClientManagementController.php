@@ -32,6 +32,26 @@ class ClientManagementController extends Controller
                 ->addColumn('full_name', function ($row) {
                     return $row->full_name; // Use the accessor method to get full name
                 })
+                ->addColumn('role', function ($row) {
+                    $userTypeId = 2;
+                    $existing_role = User::with(['roles' => function ($query) use ($userTypeId) {
+                        $query->where('user_type_id', 2)
+                            ->select('id', 'name', 'user_type_id'); // Select specific columns
+                    }])
+                        ->findOrFail($row->user_id);
+                    $alreadyroles = '';
+                    foreach($existing_role->roles as $rolesvalue) {
+                        $alreadyroles .=$rolesvalue->name;
+                    }
+                    return $alreadyroles;
+                })
+                ->addColumn('email', function ($row) {
+                    return $row->user->email; // Fetch email from the related User model
+                })
+                ->addColumn('profile_status', function ($row) {
+                    // Assuming 'profile_status' represents the status
+                    return $row->profile_status == 1 ? 'Active' : 'Inactive';  // Convert status to readable format
+                })
                 ->addColumn('action', function($row){
 
                     $btn = ' <a href="' . route('admin.client-users.show', $row->id) . '"
@@ -67,168 +87,42 @@ class ClientManagementController extends Controller
         $roles = Role::where('user_type_id', 2)->get();
         $client = Auth::user();
         $countries = Country::all();
+        $editIndex = null;
          //dd($client);
 
-        return view('admin.users.client-users.create', compact('roles', 'countries'));
+        return view('admin.users.client-users.create', compact('roles', 'countries', 'editIndex'));
     }
 
     /**
      * Store a newly created resource in storage.
      */
-
-
     public function store(Request $request)
     {
-        $user = Auth::user();
-        $countries = Country::all();
-        // Validation
-        $request->validate([
-            'first_name' => 'required|string|max:255',
-            'middle_name' => 'required|string|max:255',
-            'last_name' => 'required|string|max:255',
-            'email' => 'required|email|unique:admins,email',
-            'phone' => 'nullable|string|max:20',
-            'role' => 'required|exists:roles,id',
-            'country' => 'required|exists:countries,id',
-            'status' => 'required|string|in:active,inactive',
-            'profile_image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
-        ]);
+        $userId = auth()->id(); // This is the ID of the currently authenticated user
 
-
-        $email_found = User::where('email', $request->email)->first();
-
-        if ($email_found) {
-
-            $adminRecord = Client::where('user_id', $email_found->id)->first();
-
-            if ($adminRecord) {
-
-                $errorMessage = 'An admin record already exists for this email.';
-                session()->flash('error', $errorMessage);
-                return response()->json([
-                    'success' => false,
-                    'message' => $errorMessage,
-                    'redirect_url' => route('admin.client-users.create') // Send back the URL to redirect to
-                ]);
-
-            } else {
-
-                $client = new Client();
-                $client->user_id = $email_found->id;
-                $client->first_name = $request->first_name;
-                $client->last_name = $request->last_name;
-                $client->email = $request->email;
-                $client->phone = $request->phone;
-                $client->member_access = $request->role; // Assuming you have a foreign key to roles in the Admin table
-                $client->admin_status = 1;
-                $client->country = $request->country; // Assuming you have a foreign key to countries
-                $client->status = $request->status;
-
-                // Handle the profile image upload if provided
-                $imagePath = handleFileUpload($request, 'profile_image', 'admin_profile');
-                if ($imagePath) {
-                    $client->profile_image = $imagePath;
-                }
-
-                $client->save();
-            }
-        } else {
-
-            $user = new User;
-            $user->name = $request->first_name;
-            $user->email = $request->email;
-            $user->password = Hash::make('password');
-            $user->is_admin = 1;
-
-            $user->save();
-
-            $client = new $client;
-            $client->user_id = $user->id;
-            $client->first_name = $request->first_name;
-            $client->last_name = $request->last_name;
-            $client->email = $request->email;
-            $client->phone = $request->phone;
-            $client->member_access = $request->role; // Assuming you have a foreign key to roles in the Admin table
-            $client->admin_status = 1;
-            $client->country = $request->country; // Assuming you have a foreign key to countries
-            $client->status = $request->status;
-
-            //  Handle the profile image upload if provided
-
-            $imagePath = handleFileUpload($request, 'profile_image', 'admin_profile');
-            if ($imagePath) {
-                $client->profile_image = $imagePath;
-            }
-
-            $client->save();
-
-            $roles_permission = DB::table('role_has_permissions')->where('role_id', $request->role)->get();
-            foreach($roles_permission as $permission){
-                $insert = DB::table('model_has_permissions')->insert([
-                    'model_id' => $user->id, // Associating with the user
-                    'permission_id' => $permission->permission_id, // Adjust field as per your table structure
-                    'model_type' => 'App\Models\User', // Assuming you're using the User model
-                ]);
-            }
-
-            $roles = DB::table('roles')->where('id', $request->role)->get(); // Assuming you're getting role from request
-            foreach ($roles as $role) {
-                $insert = DB::table('model_has_roles')->insert([
-                    'role_id' => $role->id, // Role ID from the roles table
-                    'model_id' => $user->id, // Associating the role with the user
-                    'model_type' => 'App\Models\User', // The model being associated, usually 'User'
-                ]);
-            }
-        }
-
-        $successMessage = 'Client created successfully!';
-        session()->flash('success', $successMessage);
-
-        return response()->json([
-            'success' => true,
-            'message' => $successMessage,
-            'redirect_url' =>  route("admin.client-users.index")  // Redirect URL for AJAX
-        ]);
-    }
-
-
-
-
-
-
-
-
-
-/*    public function store(Request $request)
-    {
-        $userId = auth()->id();
-
-        // Common validation rules
         $commonRules = [
             'first_name' => 'required',
-            'middle_name' => 'nullable',  // Optional middle name
+            'middle_name' => 'nullable',
             'last_name' => 'required',
-            'email' => 'required|email|unique:clients,email',
+            'email' => 'required|email',
             'profile_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'country' => 'required',
             'description' => 'required',
+            'phone' => 'required',
+            'country' => 'required|exists:countries,id',
             'profile_status' => 'required',
+            'role' => 'required',
         ];
 
-        // Role-specific validation rules
         $roleSpecificRules = [
             'middle_name' => 'required',
             'business_name' => 'required',
             'organization' => 'required',
         ];
 
-        // Merge common and role-specific rules
         $rules = array_merge($commonRules, $roleSpecificRules);
 
-        // Validate request
         $validator = Validator::make($request->all(), $rules);
 
-        // If validation fails, return errors
         if ($validator->fails()) {
             return response()->json([
                 'success' => false,
@@ -236,70 +130,246 @@ class ClientManagementController extends Controller
             ]);
         }
 
-        // Check if the email already exists in the 'clients' table
-        $existingClient = Client::where('email', $request->email)->first();
-
-        if ($existingClient) {
-            $errorMessage = 'A client with this email already exists.';
-            return response()->json([
-                'success' => false,
-                'message' => $errorMessage,
-                'redirect_url' => route('admin.client-users.index') // Send back the URL to redirect to
-            ]);
-        }
-
-        // Get validated data
         $validatedData = $validator->validated();
+        $first_name = $validatedData['first_name'];
+        $middle_name = $validatedData['middle_name'];
+        $last_name = $validatedData['last_name'];
+        $email = $validatedData['email'];
+        $business_name = $validatedData['business_name'];
+        $phone = $validatedData['phone'];
+        $organization = $validatedData['organization'];
+        $role = $validatedData['role'];
+        $country = $validatedData['country'];
+        $status = $validatedData['profile_status'];
+        $description = $validatedData['description'];
+        $user = User::where('email', $email)->first();
+        if ($user) {
+            $userId = $user->id;
+            $existingClient = Client::where('user_id', $userId)->first();
+            if ($existingClient) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Client already exists.',
+                ]);
+            }
+            else{
+                $client = new Client;
+                $client->user_id = $userId;
+                $client->first_name = $first_name;
+                $client->middle_name = $middle_name;
+                $client->last_name = $last_name;
+                $client->profile_status = ($status === 'active') ? 1 : 0;
+                $client->organization = $organization;
+                $client->business_name = $business_name;
+                $client->phone = $phone;
+                $client->profile_approved_date = Carbon::now();
+                $client->manager_id = 1;
+                $client->description = $description;
+                $client->country = $country;
 
-        // Handle profile image upload if present
-        $filename = handleFileUpload($request, 'profile_image', 'profile_images');
-        if ($filename) {
-            $validatedData['profile_image'] = $filename;
+                // Handle the profile image upload if provided
+                $imagePath = handleFileUpload($request, 'profile_image', 'client_profile');
+                if ($imagePath) {
+                    $client->profile_image = $imagePath;
+                }
+
+                $client->save();
+            }
+        } else {
+            $user = new User;
+            $user->name = $first_name;
+            $user->email = $email;
+            $user->password = Hash::make('password');
+            $user->is_client = 1;
+            $user->save();
+            $userId = $user->id;
+            $client = new Client;
+            $client->user_id = $userId;
+            $client->first_name = $first_name;
+            $client->middle_name = $middle_name;
+            $client->last_name = $last_name;
+            $client->profile_status = ($status === 'active') ? 1 : 0;
+            $client->organization = $organization;
+            $client->business_name = $business_name;
+            $client->phone = $phone;
+            $client->profile_approved_date = Carbon::now();
+            $client->manager_id = 1;
+            $client->description = $description;
+            $client->country = $country;
+
+            // Handle the profile image upload if provided
+            $imagePath = handleFileUpload($request, 'profile_image', 'client_profile');
+            if ($imagePath) {
+                $client->profile_image = $imagePath;
+            }
+
+            $client->save();
         }
-
-        // Add additional data
-        $validatedData['profile_approved_date'] = Carbon::now();
-        $validatedData['user_id'] = $userId; // Associate the client with the authenticated user
-        $validatedData['manager_id'] = '1'; // Set default manager
-
-        // Create a new Client record
-        $client = new Client();
-        $client->fill($validatedData);
-        $client->save(); // Save the client to the database
-
-        // Return success response
+        $this->updateRoles($client, $role);
+        session()->flash('success', 'Client created successfully!');
         return response()->json(['success' => true, 'redirect_url' => route('admin.client-users.index')]);
-    }*/
+    }
+
+
+
 
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show($id)
     {
-        //
+        $client = Client::findOrFail($id);
+        $user = User::find($client->user_id);
+        $userTypeId = 2;
+        $existing_role = User::with(['roles' => function ($query) use ($userTypeId) {
+            $query->where('user_type_id', 2)->select('id', 'name', 'user_type_id');
+        }])->findOrFail($client->user_id);
+        $alreadyroles = '';
+        foreach($existing_role->roles as $rolesvalue) {
+            $alreadyroles .=$rolesvalue->name;
+        }
+        return view('admin.users.client-users.show', compact('client', 'user', 'alreadyroles'));
     }
+
 
     /**
      * Show the form for editing the specified resource.
      */
     public function edit(string $id)
     {
-        //
+        $client = Client::findOrFail($id);
+        $user = User::find($client->user_id);
+        $roles = Role::where('user_type_id', 2)->get();
+        $countries = Country::all();
+        return view('admin.users.client-users.create', [
+            'user' => $user,
+            'client' => $client,
+            'roles' => $roles,
+            'countries' => $countries,
+            'editMode' => true ,
+            'editIndex' => $id
+        ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, $id)
     {
-        //
+        $userId = auth()->id();
+        $commonRules = [
+            'first_name' => 'required',
+            'middle_name' => 'nullable',
+            'last_name' => 'required',
+            'profile_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'country' => 'required|integer|between:0,255|exists:countries,id',
+            'description' => 'required',
+            'profile_status' => 'required',
+        ];
+        $roleSpecificRules = [
+            'middle_name' => 'required',
+            'business_name' => 'required',
+            'organization' => 'required',
+        ];
+        $rules = array_merge($commonRules, $roleSpecificRules);
+        $validator = Validator::make($request->all(), $rules);
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'errors' => $validator->errors(),
+            ]);
+        }
+        $filename = handleFileUpload($request, 'profile_image', 'profile_images');
+        $validatedData = $validator->validated();
+        if ($filename) {
+            $validatedData['profile_image'] = $filename;
+        }
+        $client = Client::find($id);
+        $user = User::find($client->user_id);
+        if (!$client || !$user) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Client or user not found.',
+                'redirect_url' => route('admin.client-users.index'),
+            ]);
+        }
+        $validatedData['profile_approved_date'] = Carbon::now();
+        $validatedData['user_id'] = $user->id;
+        $validatedData['profile_status'] = ($request->profile_status === 'active') ? 1 : 0;
+        $validatedData['manager_id'] = '1';
+        $client->fill($validatedData);
+        $client->save();
+        $this->updateRoles($client,$request->role);
+        session()->flash('success', 'Client updated successfully!');
+        return response()->json(['success' => true, 'redirect_url' => route('admin.client-users.index')]);
     }
+
 
     /**
      * Remove the specified resource from storage.
      */
     public function destroy(string $id)
     {
-        //
+        $client = Client::findOrFail($id);
+        if ($client->profile_image && \Storage::exists('public/' . $client->profile_image)) {
+            \Storage::delete('public/' . $client->profile_image);
+        }
+        $client->delete();
+        return redirect()->route('admin.client-users.index')->with('success', 'Client deleted successfully');
     }
+    public function updateRoles($client, $role) {
+        $userTypeId = 2;
+
+        // Fetch the user by ID
+        $user = User::findOrFail($client->user_id);
+
+        // Retrieve existing roles for the user
+        $existing_role = $user->with(['roles' => function ($query) use ($userTypeId) {
+            $query->where('user_type_id', $userTypeId)
+                ->select('id', 'name', 'user_type_id');
+        }])->findOrFail($client->user_id);
+
+        // Collect currently assigned roles
+        $alreadyroles = $existing_role->roles->pluck('name')->toArray();
+
+        // Determine if $role is an ID or a name
+        if (is_numeric($role)) {
+            $roleModel = \Spatie\Permission\Models\Role::find($role);
+            if ($roleModel) {
+                $newUpdatedRole = $roleModel->name;
+            } else {
+                return response()->json(['error' => 'Role ID does not exist.'], 404);
+            }
+        } else {
+            $newUpdatedRole = $role;
+        }
+
+        // Remove roles that are not in the new role set
+        foreach ($alreadyroles as $roles) {
+            if (!in_array($roles, [$newUpdatedRole])) {
+                // Fetch permissions associated with the role being removed
+                $roleModel = \Spatie\Permission\Models\Role::findByName($roles);
+                $permissionsToRemove = $roleModel->permissions->pluck('name')->toArray();
+
+                // Remove the permissions from the user
+                $user->revokePermissionTo($permissionsToRemove);
+
+                // Remove the role
+                $user->removeRole($roles);
+            }
+        }
+
+        // Add the new role if it's not already assigned
+        if (!in_array($newUpdatedRole, $alreadyroles)) {
+            $user->assignRole($newUpdatedRole); // Assign the new role
+        }
+
+        // Fetch permissions associated with the new role
+        $roleModel = \Spatie\Permission\Models\Role::findByName($newUpdatedRole);
+        $permissions = $roleModel->permissions->pluck('name')->toArray(); // Get permission names
+
+        // Sync user's permissions with the ones associated with the new role
+        $user->syncPermissions($permissions);
+    }
+
 }

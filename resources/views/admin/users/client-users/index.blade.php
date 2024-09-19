@@ -29,6 +29,8 @@
                         <th class="py-3 px-4 text-left">ID</th>
                         <th class="py-3 px-4 text-left cursor-pointer">Client Name</th>
                         <th class="py-3 px-4 text-left cursor-pointer">Email</th>
+                        <th class="py-3 px-4 text-left cursor-pointer">User Role</th>
+                        <th class="py-3 px-4 text-left cursor-pointer">Profile Status</th>
                         <th class="py-3 px-4 text-left">Action</th>
                     </tr>
                     </thead>
@@ -49,6 +51,8 @@
                     { data: 'id', name: 'id' },
                     { data: 'full_name', name: 'full_name' },
                     { data: 'email', name: 'email' },
+                    { data: 'role', name: 'role' },
+                    { data: 'profile_status', name: 'profile_status' },
                     { data: 'action', name: 'action', orderable: false, searchable: false }
                 ]);
             }
