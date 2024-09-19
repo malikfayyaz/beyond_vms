@@ -25,6 +25,9 @@ class AdminManagementController extends Controller
             $admins = Admin::with('role')->select(['id', 'first_name', 'last_name', 'email', 'status', 'member_access'])->get();
             
             return datatables()->of($admins)
+                ->addColumn('role', function($admin) {
+                    return $admin->role ? $admin->role->name : 'N/A'; // Access the role name
+                })
                 ->addColumn('action', function($admin) {
                     return '<a href="'. route('admin.admin-users.show', $admin->id) .'" class="text-blue-500 hover:text-blue-700 mr-2 bg-transparent hover:bg-transparent">
                         <i class="fas fa-eye"></i>
@@ -232,7 +235,7 @@ class AdminManagementController extends Controller
         $admin->member_access = $role;
         $admin->country = $country;
         $admin->status = $status;
-       
+
         // Handle the profile image upload if provided
         if ($request->hasFile('profile_image')) {
             // Delete old image if exists

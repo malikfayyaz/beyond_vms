@@ -50,8 +50,8 @@
             </div>
 
             <div class="mb-4 flex-1">
-                <label for="member_access" class="block mb-2">Role <span class="text-red-500">*</span></label>
-                <select id="member_access" x-model="formData.member_access" class="w-full p-2 border rounded h-10">
+                <label for="role" class="block mb-2">Role <span class="text-red-500">*</span></label>
+                <select id="role" x-model="formData.role" class="w-full p-2 border rounded h-10">
                     <option value="" disabled selected>Select Role</option>
                     @foreach ($roles as $role)
                         <option value="{{  $role->name }}">{{ $role->name }}</option>
@@ -102,7 +102,7 @@
                 email: '{{ old('email', $admin->email ?? '') }}',
                 phone: '{{ old('phone', $admin->phone ?? '') }}',
                 profile_image: null,
-                member_access: '{{ old('member_access', $admin->member_access ?? '') }}',
+                role: '{{ old('role', $admin->member_access ?? '') }}',
                 country: '{{ old('country', $admin->country ?? '') }}',
                 status: '{{ old('status', $admin->status ?? '') }}',
             },
@@ -146,7 +146,7 @@
                     this.emailError = '';
                 }
 
-                if (this.formData.member_access === "") {
+                if (this.formData.role === "") {
                     this.roleError = "Role is required";
                     errorCount++;
                 } else {
@@ -180,7 +180,7 @@
                     if (this.profile_image) {
                         formData.append('profile_image', this.formData.profile_image);
                     }
-                    formData.append('role', this.formData.member_access);
+                    formData.append('role', this.formData.role);
                     formData.append('country', this.formData.country);
                     formData.append('status', this.formData.status);
 
@@ -230,7 +230,7 @@
                 this.formData.email = '';
                 this.formData.phone = '';
                 this.formData.profile_image = null;
-                this.formData.member_access = '';
+                this.formData.role = '';
                 this.formData.country = '';
                 this.formData.status = '';
                 this.clearErrors();
@@ -253,7 +253,7 @@
                 this.formData.last_name = item.last_name;
                 this.formData.email = item.email;
                 this.formData.phone = item.phone;
-                this.formData.member_access = item.member_access;
+                this.formData.role = item.role;
                 this.formData.country = item.country;
                 this.formData.status = item.status;
                 this.clearErrors();
