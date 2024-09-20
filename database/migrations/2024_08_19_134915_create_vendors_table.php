@@ -14,25 +14,26 @@ return new class extends Migration
         Schema::create('vendors', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->string('first_name');
-            $table->string('middle_name');
-            $table->string('last_name');
-            $table->integer('super_vendor_id');
-            $table->string('organization');
-            $table->string('business_name');
-            $table->enum('status', ['Active', 'Under Review','Inactive']);
-            $table->enum('profile_approve', ['Yes', 'No']);
-            $table->dateTime('profile_approved_date');
-            $table->tinyInteger('profile_status');
-            $table->string('profile_image');
-            $table->text('description');
-            $table->dateTime('last_login');
-            $table->tinyInteger('country');
-            $table->string('date_format_php');
-            $table->string('date_format_js');
-            $table->string('phone');
-            $table->string('language');
-            $table->tinyInteger('portal');
+            $table->string('first_name')->nullable();
+            $table->string('middle_name')->nullable();
+            $table->string('last_name')->nullable();
+            $table->integer('super_vendor_id')->nullable();
+            $table->string('organization')->nullable();
+            $table->string('business_name')->nullable();
+            $table->enum('status', ['Active', 'Under Review', 'Inactive'])->default('Active')->nullable();
+            $table->enum('profile_approve', ['Yes', 'No'])->default('No')->nullable();
+            $table->dateTime('profile_approved_date')->nullable();
+            $table->tinyInteger('profile_status')->nullable();
+            $table->string('profile_image')->nullable();
+            $table->text('description')->nullable();
+            $table->dateTime('last_login')->nullable();
+            $table->tinyInteger('country')->nullable();
+            $table->string('date_format_php')->nullable();
+            $table->string('date_format_js')->nullable();
+            $table->string('phone')->nullable();
+            $table->string('language')->nullable();
+            $table->tinyInteger('portal')->nullable();
+
             $table->timestamps();
         });
     }
