@@ -18,14 +18,6 @@ use App\Models\Consultant;
     return $array;
 }
 
-function currency(){
-    $curr = array(
-        '1' => '$',
-        '2' => '€',
-        '3' => '£',
-    );
-    return $curr;
-}
 if (!function_exists('getActiveRoles')) {
     function getActiveRoles(User $user): array
     {

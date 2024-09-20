@@ -27,8 +27,10 @@ class GenericDataController extends BaseController
        
         $countries = Country::all();
        
-            $fields = $request->route()->defaults['fields'] ?? [];
-            // dd($fields);
+        $fields = $request->route()->defaults['fields'] ?? [];
+
+        $currency = Setting::where('category_id', 2)->get();
+          
         if ($request->isMethod('get')) {
            
             $data = GenericData::with(['country','setting'])->where('type', $formtype)->get();
@@ -38,8 +40,7 @@ class GenericDataController extends BaseController
                 'data' => $data,
                 'fields' => $fields,
                 'countries' => $countries,
-               
-                
+                'currency' => $currency, 
             ]);
         } elseif ($request->isMethod('post')) {
             // Get all the input fields from the request
@@ -55,7 +56,7 @@ class GenericDataController extends BaseController
                 $input['symbol_id'] = $input['symbol'];
                 unset($input['symbol']); // Remove the original 'symbol' field
             }
-           
+            
             $validatedData =$input;
 
             
