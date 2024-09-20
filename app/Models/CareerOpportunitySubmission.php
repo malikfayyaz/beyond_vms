@@ -12,4 +12,8 @@ class CareerOpportunitySubmission extends Model
         // List attributes you want to guard from mass assignment
         // e.g., 'id', 'created_at', 'updated_at'
     ];
+    public function careerOpportunity()
+    {
+        return $this->belongsTo(CareerOpportunity::class, 'career_opportunity_id');
+    }
 }
