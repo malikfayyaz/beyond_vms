@@ -67,6 +67,10 @@ class User extends Authenticatable
         return $this->hasOne(Consultant::class);
     }
 
+    public function getFullNameAttribute()
+    {
+        return trim($this->first_name . ' ' . ($this->middle_name ?? '') . ' ' . $this->last_name);
+    }
 
 
 }
