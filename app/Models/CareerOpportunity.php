@@ -66,15 +66,15 @@ class CareerOpportunity extends Model
     {
         return $this->belongsTo(User::class, 'user_id', 'id');
     }
-
-
-
-     public function getDateRangeAttribute()
+    public function getDateRangeAttribute()
      {
          $start = $this->start_date ? Carbon::parse($this->start_date)->format('m/d/Y') : '';
          $end = $this->end_date ? Carbon::parse($this->end_date)->format('m/d/Y') : '';
 
          return $start && $end ? "$start - $end" : '';
      }
+    public function submissions() {
+        return $this->hasMany(CareerOpportunitySubmission::class);
+    }
 
 }

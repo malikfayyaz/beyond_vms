@@ -21,25 +21,26 @@ class CareerOpportunitiesController extends BaseController
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $data = CareerOpportunity::with('hiringManager','workerType')
-            ->select('career_opportunities.*');
+            $data = CareerOpportunity::with('hiringManager', 'workerType')
+                ->withCount('submissions');
+//            dd($data);
+            $data = CareerOpportunity::withCount('submissions')->get();
             return DataTables::of($data)
                 ->addIndexColumn()
-                ->addColumn('hiring_manager', function($row) {
+                ->addColumn('hiring_manager', function ($row) {
                     return $row->hiringManager->full_name ? $row->hiringManager->full_name : 'N/A';
                 })
-                ->addColumn('duration', function($row) {
+                ->addColumn('duration', function ($row) {
                     return $row->date_range ? $row->date_range : 'N/A';
                 })
-                ->addColumn('worker_type', function($row) {
+                ->addColumn('submissions', function ($row) {
+                    return $row->submissions_count;
+                })
+                ->addColumn('worker_type', function ($row) {
                     return $row->workerType ? $row->workerType->title : 'N/A';
                 })
-/*            $data = CareerOpportunity::query();
-            return Datatables::of($data)
-                    ->addIndexColumn()*/
-                    ->addColumn('action', function($row){
-
-                            $btn = ' <a href="' . route('admin.career-opportunities.show', $row->id) . '"
+                ->addColumn('action', function ($row) {
+                    $btn = ' <a href="' . route('admin.career-opportunities.show', $row->id) . '"
                        class="text-blue-500 hover:text-blue-700 mr-2 bg-transparent hover:bg-transparent"
                      >
                        <i class="fas fa-eye"></i>
@@ -49,21 +50,23 @@ class CareerOpportunitiesController extends BaseController
                      >
                        <i class="fas fa-edit"></i>
                      </a>';
-                     $deleteBtn = '<form action="' . route('admin.career-opportunities.destroy', $row->id) . '" method="POST" style="display: inline-block;" onsubmit="return confirm(\'Are you sure?\');">
+                    $deleteBtn = '<form action="' . route('admin.career-opportunities.destroy', $row->id) . '" method="POST" style="display: inline-block;" onsubmit="return confirm(\'Are you sure?\');">
                      ' . csrf_field() . method_field('DELETE') . '
                      <button type="submit" class="text-red-500 hover:text-red-700 bg-transparent hover:bg-transparent">
                          <i class="fas fa-trash"></i>
                      </button>
                    </form>';
 
-                            return $btn .$deleteBtn;
-                    })
-                    ->rawColumns(['action'])
-                    ->make(true);
+                    return $btn . $deleteBtn;
+                })
+                ->rawColumns(['action'])
+                ->make(true);
         }
+
         // Logic to get and display catalog items
         return view('admin.career_opportunities.index'); // Assumes you have a corresponding Blade view
     }
+
 
     /**
      * Show the form for creating a new resource.
