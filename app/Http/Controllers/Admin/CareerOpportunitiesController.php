@@ -22,9 +22,7 @@ class CareerOpportunitiesController extends BaseController
     {
         if ($request->ajax()) {
             $data = CareerOpportunity::with('hiringManager', 'workerType')
-                ->withCount('submissions');
-//            dd($data);
-            $data = CareerOpportunity::withCount('submissions')->get();
+            ->withCount('submissions');
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('hiring_manager', function ($row) {
