@@ -11,7 +11,7 @@ class Admin extends Model
 {
     use HasFactory;
 
-     protected $fillable = [
+    protected $fillable = [
         'first_name', 'last_name', 'phone', 'member_access', 'country', 'admin_status', 'profile_image','member_access','user_id'
     ];
 

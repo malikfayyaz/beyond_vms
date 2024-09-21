@@ -95,6 +95,7 @@ class AdminManagementController extends Controller
             'member_access' => 'required|exists:roles,id',
             'country' => 'required|exists:countries,id',
             'admin_status' => 'required|boolean',
+            'profile_image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048'
         ]);
 
         $request_email = $request->email;
@@ -181,6 +182,7 @@ class AdminManagementController extends Controller
     public function edit($id)
     { 
         $admin = Admin::findOrFail($id);
+        $user = User::find($admin->user_id);
         $roles = Role::where('user_type_id', 1)->get();
         $countries = Country::all();
 
@@ -188,6 +190,7 @@ class AdminManagementController extends Controller
             'admin' => $admin,
             'roles' => $roles,
             'countries' => $countries,
+            'user' => $user,
             'editMode' => true ,
             'editIndex' => $id  
         ]);  
@@ -201,48 +204,39 @@ class AdminManagementController extends Controller
         $validatedData = $request->validate([
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
-            'email' => 'required|email|unique:admins,email,' . $id,
             'phone' => 'nullable|string|max:20',
-            'role' => 'required|exists:roles,name',
+            'member_access' => 'required|exists:roles,id',
             'country' => 'required|exists:countries,id',
-            'status' => 'required|string|in:active,inactive',
+            'admin_status' => 'required|boolean',
             'profile_image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ]);
-        
-        $first_name = $validatedData['first_name'];
-        $last_name = $validatedData['last_name'];
-        $email = $validatedData['email'];
-        $phone = $validatedData['phone'];
-        $role = $validatedData['role'];
-        $country = $validatedData['country'];
-        $status = $validatedData['status'];
 
         $admin = Admin::findOrFail($id);
-        $admin->first_name = $first_name;
-        $admin->last_name = $last_name;
-        // $admin->email = $request->email;
-        $admin->phone = $phone;
-        $admin->member_access = $role;
-        $admin->country = $country;
-        $admin->status = $status;
-
-        // Handle the profile image upload if provided
+        
+        $admin->update([
+            'first_name' => $validatedData['first_name'],
+            'last_name' => $validatedData['last_name'],
+            'phone' => $validatedData['phone'],
+            'member_access' => $validatedData['member_access'],
+            'country' => $validatedData['country'],
+            'admin_status' => $validatedData['admin_status'],
+        ]);
+    
+        // Handle profile image upload if provided
         if ($request->hasFile('profile_image')) {
             // Delete old image if exists
             if ($admin->profile_image) {
                 Storage::disk('public')->delete($admin->profile_image);
             }
-
+    
+            // Upload new profile image
             $imagePath = handleFileUpload($request, 'profile_image', 'admin_profile');
             if ($imagePath) {
-                $admin->profile_image = $imagePath;
+                $admin->update(['profile_image' => $imagePath]); // Mass assign the image path
             }
         }
         
-
-        $admin->save();
-        
-        $this->updateRoles($admin,$role);
+        $this->updateRoles($admin,$validatedData['member_access']);
       
         $successMessage = 'Admin updated successfully!';
         session()->flash('success', $successMessage);

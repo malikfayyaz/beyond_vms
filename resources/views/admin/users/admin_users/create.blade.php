@@ -100,7 +100,7 @@
             formData: {
                 first_name: '{{ old('first_name', $admin->first_name ?? '') }}',
                 last_name: '{{ old('last_name', $admin->last_name ?? '') }}',
-                email: '{{ old('email', $admin->email ?? '') }}',
+                email: '{{ old('email', $admin->user->email ?? $admin->email ?? '') }}',
                 phone: '{{ old('phone', $admin->phone ?? '') }}',
                 profile_image: null,
                 member_access: '{{ old('member_access', $admin->member_access ?? '') }}',
@@ -266,7 +266,7 @@
                 this.formData.member_access = item.member_access;
                 this.formData.country = item.country;
                 this.formData.admin_status = item.admin_status;
-                this.clearErrors();
+                // this.clearErrors();
             },
 
             // Filtered items based on search term
