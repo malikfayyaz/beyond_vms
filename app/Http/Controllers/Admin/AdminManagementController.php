@@ -34,9 +34,6 @@ class AdminManagementController extends Controller
                 ->addColumn('email', function ($admin) {
                     return $admin->user->email; // Fetch email from the related User model
                 })
-                ->addColumn('email', function ($admin) {
-                    return $admin->user->email; // Fetch email from the related User model
-                })
                 ->addColumn('admin_status', function ($admin) {
                     return $admin->admin_status == 1 ? 'Active' : 'Inactive'; // Check status and return text
                 })
@@ -98,7 +95,7 @@ class AdminManagementController extends Controller
             'profile_image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048'
         ]);
 
-        $request_email = $request->email;
+        $request_email = $request->validate(['email' => 'required|email|unique:users,email']);
 
         $user = User::where('email', $request_email)->first();
        
@@ -118,8 +115,8 @@ class AdminManagementController extends Controller
 
             } else {
 
-                $validatedData['user_id'] = $user->id; // Add user_id to validated data
-                // Create a new admin using mass assignment
+                $validatedData['user_id'] = $user->id;
+                
                 $admin = Admin::create($validatedData);
 
                 // Handle the profile image upload if provided
@@ -132,7 +129,7 @@ class AdminManagementController extends Controller
         } else {
             $userData = [
                 'name' => $validatedData['first_name'],
-                'email' => $request_email,
+                'email' => $request_email['email'],
                 'password' => Hash::make('password'),
                 'is_admin' => 1,
             ];
@@ -152,7 +149,9 @@ class AdminManagementController extends Controller
             }
         }
 
-        $this->updateRoles($admin,$validatedData['member_access']);         
+        $role = $validatedData['member_access'];
+
+        $this->updateRoles($admin,$role);         
 
         $successMessage = 'Admin created successfully!';
         session()->flash('success', $successMessage);
@@ -234,7 +233,9 @@ class AdminManagementController extends Controller
             }
         }
         
-        $this->updateRoles($admin,$validatedData['member_access']);
+        $role = $validatedData['member_access'];
+        
+        $this->updateRoles($admin,$role);
       
         $successMessage = 'Admin updated successfully!';
         session()->flash('success', $successMessage);

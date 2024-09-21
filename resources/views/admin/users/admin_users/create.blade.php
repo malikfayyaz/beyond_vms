@@ -100,7 +100,7 @@
             formData: {
                 first_name: '{{ old('first_name', $admin->first_name ?? '') }}',
                 last_name: '{{ old('last_name', $admin->last_name ?? '') }}',
-                email: '{{ old('email', $admin->user->email ?? $admin->email ?? '') }}',
+                email: '{{ old('email', $admin->user->email ?? '') }}',
                 phone: '{{ old('phone', $admin->phone ?? '') }}',
                 profile_image: null,
                 member_access: '{{ old('member_access', $admin->member_access ?? '') }}',
@@ -166,7 +166,7 @@
                     this.phoneError = "Phone is required";
                     errorCount++;
                 } else {
-                    this.countryError = '';
+                    this.phoneError = '';
                 }
 
                 if (this.formData.admin_status === "") {
