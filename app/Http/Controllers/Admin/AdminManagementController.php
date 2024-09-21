@@ -181,8 +181,7 @@ class AdminManagementController extends Controller
      */
     public function edit($id)
     { 
-        $admin = Admin::findOrFail($id);
-        $user = User::find($admin->user_id);
+        $admin = Admin::findOrFail($id);      
         $roles = Role::where('user_type_id', 1)->get();
         $countries = Country::all();
 
@@ -190,7 +189,6 @@ class AdminManagementController extends Controller
             'admin' => $admin,
             'roles' => $roles,
             'countries' => $countries,
-            'user' => $user,
             'editMode' => true ,
             'editIndex' => $id  
         ]);  
