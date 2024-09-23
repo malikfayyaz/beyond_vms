@@ -198,7 +198,7 @@
                           <span class="text-gray-600">OT Eligible?</span>
                           <span
                             class="font-semibold"
-                          >{{$submission->ot_exempt_position}}</span>
+                          >{{$submission->ot_exempt_position == 'yes' ? 'Yes' : 'No'}}</span>
                         </div>
                         <div class="flex justify-between py-3 px-4">
                           <span class="text-gray-600"
@@ -207,7 +207,7 @@
                           >
                           <span
                             class="font-semibold"
-                          >{{$submission->require_employment_visa_sponsorship}}</span>
+                          >{{$submission->require_employment_visa_sponsorship == 'yes' ? 'Yes' : 'No'}}</span>
                         </div>
                         <div class="flex justify-between py-3 px-4">
                           <span class="text-gray-600"
@@ -216,7 +216,7 @@
                           >
                           <span
                             class="font-semibold"
-                          >{{$submission->willing_relocate}}</span>
+                          >{{$submission->willing_relocate == 'yes' ? 'Yes' : 'No'}}</span>
                         </div>
                         <!-- <div class="flex justify-between py-3 px-4">
                           <span class="text-gray-600"
@@ -255,14 +255,13 @@
                           >
                           <span
                             class="font-semibold"
-                            x-text="jobDetails.candidateWorked"
-                          ></span>
+                          >{{$submission->retiree == 'yes' ? 'Yes' : 'No'}}</span>
                         </div>
                         <div class="flex justify-between py-3 px-4">
                           <span class="text-gray-600">Country:</span>
                           <span
                             class="font-semibold"
-                          >{{$submission->location->name}}</span>
+                          >{{$submission->location->country->name}}</span>
                         </div>
                         <div class="flex justify-between py-3 px-4">
                           <span class="text-gray-600"
@@ -270,7 +269,7 @@
                           >
                           <span
                             class="font-semibold"
-                          >{{$submission->remote_contractor}}</span>
+                          >{{$submission->remote_contractor == 'yes' ? 'Yes' : 'No'}}</span>
                         </div>
                         <div class="flex justify-between py-3 px-4">
                           <span class="text-gray-600">Submission Date:</span>
@@ -351,7 +350,7 @@
                             <span class="text-gray-600">Location Name:</span>
                             <span
                               class="font-semibold text-right"
-                            >{{$submission->current_location}}</span>
+                            >{{$submission->location->LocationDetails}}</span>
                           </div>
                         </div>
                       </div>

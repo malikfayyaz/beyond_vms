@@ -20,7 +20,7 @@ class CareerOpportunitySubmission extends Model
 
     public function location()
     {
-        return $this->belongsTo(Country::class, 'location_id', 'id');
+        return $this->belongsTo(Location::class, 'location_id', 'id');
     }
 
     public function vendor()
@@ -37,4 +37,5 @@ class CareerOpportunitySubmission extends Model
     {
         return $this->belongsTo(Setting::class, 'worker_type_id', 'id');
     }
+   
 }
