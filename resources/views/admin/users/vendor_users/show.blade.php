@@ -18,7 +18,7 @@
             </div>
 
             <div class="mb-4">
-                <strong>Email:</strong> {{ $vendor->email }}
+                <strong>Email:</strong> {{ $vendor->user->email }}
             </div>
 
             <div class="mb-4">

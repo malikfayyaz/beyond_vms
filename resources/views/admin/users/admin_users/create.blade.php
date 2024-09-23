@@ -42,6 +42,7 @@
             <div class="mb-4">
                 <label for="phone" class="block mb-2">Phone Number</label>
                 <input type="text" id="phone" x-model="formData.phone" class="w-full p-2 border rounded h-10">
+                <p x-show="phoneError" class="text-red-500 text-sm mt-1" x-text="phoneError"></p>
             </div>
 
             <div class="mb-4">
@@ -50,11 +51,11 @@
             </div>
 
             <div class="mb-4 flex-1">
-                <label for="role" class="block mb-2">Role <span class="text-red-500">*</span></label>
-                <select id="role" x-model="formData.role" class="w-full p-2 border rounded h-10">
+                <label for="member_access" class="block mb-2">Role <span class="text-red-500">*</span></label>
+                <select id="member_access" x-model="formData.member_access" class="w-full p-2 border rounded h-10">
                     <option value="" disabled selected>Select Role</option>
                     @foreach ($roles as $role)
-                        <option value="{{  $role->name }}">{{ $role->name }}</option>
+                        <option value="{{  $role->id }}">{{ $role->name }}</option>
                     @endforeach
                 </select>
                 <p x-show="roleError" class="text-red-500 text-sm mt-1" x-text="roleError"></p>
@@ -72,13 +73,13 @@
             </div>
 
             <div class="mb-4 flex-1">
-                <label for="status" class="block mb-2">Status <span class="text-red-500">*</span></label>
-                <select id="status" x-model="formData.status" class="w-full p-2 border rounded h-10">
+                <label for="admin_status" class="block mb-2">Status <span class="text-red-500">*</span></label>
+                <select id="admin_status" x-model="formData.admin_status" class="w-full p-2 border rounded h-10">
                     <option value="" disabled selected>Select Status</option>
-                    <option value="active">Active</option>
-                    <option value="inactive">Inactive</option>
+                    <option value="1">Active</option>
+                    <option value="0">Inactive</option>
                 </select>
-                <p x-show="statusError" class="text-red-500 text-sm mt-1" x-text="statusError"></p>
+                <p x-show="admin_statusErr" class="text-red-500 text-sm mt-1" x-text="admin_statusErr"></p>
             </div>
 
             <div class="flex justify-end">
@@ -99,12 +100,12 @@
             formData: {
                 first_name: '{{ old('first_name', $admin->first_name ?? '') }}',
                 last_name: '{{ old('last_name', $admin->last_name ?? '') }}',
-                email: '{{ old('email', $admin->email ?? '') }}',
+                email: '{{ old('email', $admin->user->email ?? '') }}',
                 phone: '{{ old('phone', $admin->phone ?? '') }}',
                 profile_image: null,
-                role: '{{ old('role', $admin->member_access ?? '') }}',
+                member_access: '{{ old('member_access', $admin->member_access ?? '') }}',
                 country: '{{ old('country', $admin->country ?? '') }}',
-                status: '{{ old('status', $admin->status ?? '') }}',
+                admin_status: '{{ old('admin_status', $admin->admin_status ?? '') }}',
             },
 
             
@@ -119,7 +120,8 @@
             emailError: '',
             roleError: '',
             countryError: '',
-            statusError: '',
+            admin_statusErr: '',
+            phoneError: '',
 
             // Validation
             validateFields() {
@@ -146,7 +148,7 @@
                     this.emailError = '';
                 }
 
-                if (this.formData.role === "") {
+                if (this.formData.member_access === "") {
                     this.roleError = "Role is required";
                     errorCount++;
                 } else {
@@ -160,11 +162,18 @@
                     this.countryError = '';
                 }
 
-                if (this.formData.status === "") {
-                    this.statusError = "Status is required";
+                if (this.formData.phone === "") {
+                    this.phoneError = "Phone is required";
                     errorCount++;
                 } else {
-                    this.statusError = '';
+                    this.phoneError = '';
+                }
+
+                if (this.formData.admin_status === "") {
+                    this.admin_statusErr = "Status is required";
+                    errorCount++;
+                } else {
+                    this.admin_statusErr = '';
                 }
 
                 return errorCount === 0;  // Return true if no errors
@@ -180,9 +189,9 @@
                     if (this.profile_image) {
                         formData.append('profile_image', this.formData.profile_image);
                     }
-                    formData.append('role', this.formData.role);
+                    formData.append('member_access', this.formData.member_access);
                     formData.append('country', this.formData.country);
-                    formData.append('status', this.formData.status);
+                    formData.append('admin_status', this.formData.admin_status);
 
                     let url = '{{ route("admin.admin-users.store") }}';
                     if (this.editIndex !== null) {
@@ -194,7 +203,7 @@
                     }
 
                     ajaxCall(url, 'POST', [[this.onSuccess, ['response']]], formData);
-                    
+    
                 }
                 
                 // Method implementation
@@ -230,9 +239,9 @@
                 this.formData.email = '';
                 this.formData.phone = '';
                 this.formData.profile_image = null;
-                this.formData.role = '';
+                this.formData.member_access = '';
                 this.formData.country = '';
-                this.formData.status = '';
+                this.formData.admin_status = '';
                 this.clearErrors();
             },
 
@@ -243,7 +252,8 @@
                 this.emailError = '';
                 this.roleError = '';
                 this.countryError = '';
-                this.statusError = '';
+                this.admin_statusErr = '';
+                this.phoneError = '';
             },
 
             // Edit item
@@ -253,10 +263,10 @@
                 this.formData.last_name = item.last_name;
                 this.formData.email = item.email;
                 this.formData.phone = item.phone;
-                this.formData.role = item.role;
+                this.formData.member_access = item.member_access;
                 this.formData.country = item.country;
-                this.formData.status = item.status;
-                this.clearErrors();
+                this.formData.admin_status = item.admin_status;
+                // this.clearErrors();
             },
 
             // Filtered items based on search term

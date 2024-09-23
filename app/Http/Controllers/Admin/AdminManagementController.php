@@ -22,11 +22,20 @@ class AdminManagementController extends Controller
     {
         if ($request->ajax()) {
             // Eager load the role relationship
-            $admins = Admin::with('role')->select(['id', 'first_name', 'last_name', 'email', 'status', 'member_access'])->get();
+            $admins = Admin::with('role','user')->get();
             
             return datatables()->of($admins)
                 ->addColumn('role', function($admin) {
                     return $admin->role ? $admin->role->name : 'N/A'; // Access the role name
+                })
+                ->addColumn('full_name', function ($admin) {
+                    return $admin->full_name; // Use the accessor method to get full name
+                })
+                ->addColumn('email', function ($admin) {
+                    return $admin->user->email; // Fetch email from the related User model
+                })
+                ->addColumn('admin_status', function ($admin) {
+                    return $admin->admin_status == 1 ? 'Active' : 'Inactive'; // Check status and return text
                 })
                 ->addColumn('action', function($admin) {
                     return '<a href="'. route('admin.admin-users.show', $admin->id) .'" class="text-blue-500 hover:text-blue-700 mr-2 bg-transparent hover:bg-transparent">
@@ -73,31 +82,26 @@ class AdminManagementController extends Controller
      */
     public function store(Request $request)
     {
-        $user = Auth::user();   
+        $login_user = Auth::user();   
         $countries = Country::all();
         // Validation
         $validatedData = $request->validate([
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
-            'email' => 'required|email|unique:admins,email',
             'phone' => 'nullable|string|max:20',
-            'role' => 'required|exists:roles,name',
+            'member_access' => 'required|exists:roles,id',
             'country' => 'required|exists:countries,id',
-            'status' => 'required|string|in:active,inactive',
+            'admin_status' => 'required|boolean',
+            'profile_image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048'
         ]);
-        $first_name = $validatedData['first_name'];
-        $last_name = $validatedData['last_name'];
-        $email = $validatedData['email'];
-        $phone = $validatedData['phone'];
-        $role = $validatedData['role'];
-        $country = $validatedData['country'];
-        $status = $validatedData['status'];
 
-        $email_found = User::where('email', $email)->first();
+        $request_email = $request->validate(['email' => 'required|email|unique:users,email']);
+
+        $user = User::where('email', $request_email)->first();
        
-        if ($email_found) {
+        if ($user) {
         
-            $adminRecord = Admin::where('user_id', $email_found->id)->first();
+            $adminRecord = Admin::where('user_id', $user->id)->first();
             
             if ($adminRecord) {
 
@@ -110,57 +114,43 @@ class AdminManagementController extends Controller
                 ]);
 
             } else {
-                 
-                $admin = new Admin;
-                $admin->user_id = $email_found->id;
-                $admin->first_name = $first_name;
-                $admin->last_name = $last_name;
-                $admin->email = $email;
-                $admin->phone = $phone;
-                $admin->member_access = $role;
-                $admin->admin_status = 1;
-                $admin->country = $country; // Assuming you have a foreign key to countries
-                $admin->status = $status;
+
+                $validatedData['user_id'] = $user->id;
+                
+                $admin = Admin::create($validatedData);
 
                 // Handle the profile image upload if provided
-                $imagePath = handleFileUpload($request, 'profile_image', 'admin_profile');
-                if ($imagePath) {
+                if ($request->hasFile('profile_image')) {
+                    $imagePath = handleFileUpload($request, 'profile_image', 'admin_profile');
                     $admin->profile_image = $imagePath;
+                    $admin->save(); // Save after updating the profile image
                 }
-
-                $admin->save();
             }
         } else {
+            $userData = [
+                'name' => $validatedData['first_name'],
+                'email' => $request_email['email'],
+                'password' => Hash::make('password'),
+                'is_admin' => 1,
+            ];
+
+            $user = User::create($userData);
             
-            $user = new User;      
-            $user->name = $first_name;
-            $user->email = $email;
-            $user->password = Hash::make('password');
-            $user->is_admin = 1;
+            $validatedData['user_id'] = $user->id;
 
-            $user->save();
-
-            $admin = new Admin;
-            $admin->user_id = $user->id;
-            $admin->first_name = $first_name;
-            $admin->last_name = $last_name;
-            $admin->email = $email;
-            $admin->phone = $phone;
-            $admin->member_access = $role; 
-            $admin->admin_status = 1;
-            $admin->country = $country; 
-            $admin->status = $status;
+            $admin = Admin::create($validatedData);
 
             //  Handle the profile image upload if provided
 
-            $imagePath = handleFileUpload($request, 'profile_image', 'admin_profile');
-            if ($imagePath) {
+            if ($request->hasFile('profile_image')) {
+                $imagePath = handleFileUpload($request, 'profile_image', 'admin_profile');
                 $admin->profile_image = $imagePath;
+                $admin->save(); // Save after updating the profile image
             }
-
-            $admin->save();
         }
-        
+
+        $role = $validatedData['member_access'];
+
         $this->updateRoles($admin,$role);         
 
         $successMessage = 'Admin created successfully!';
@@ -190,7 +180,7 @@ class AdminManagementController extends Controller
      */
     public function edit($id)
     { 
-        $admin = Admin::findOrFail($id);
+        $admin = Admin::findOrFail($id);      
         $roles = Role::where('user_type_id', 1)->get();
         $countries = Country::all();
 
@@ -211,46 +201,39 @@ class AdminManagementController extends Controller
         $validatedData = $request->validate([
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
-            'email' => 'required|email|unique:admins,email,' . $id,
             'phone' => 'nullable|string|max:20',
-            'role' => 'required|exists:roles,name',
+            'member_access' => 'required|exists:roles,id',
             'country' => 'required|exists:countries,id',
-            'status' => 'required|string|in:active,inactive',
+            'admin_status' => 'required|boolean',
             'profile_image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ]);
-        
-        $first_name = $validatedData['first_name'];
-        $last_name = $validatedData['last_name'];
-        $email = $validatedData['email'];
-        $phone = $validatedData['phone'];
-        $role = $validatedData['role'];
-        $country = $validatedData['country'];
-        $status = $validatedData['status'];
 
         $admin = Admin::findOrFail($id);
-        $admin->first_name = $first_name;
-        $admin->last_name = $last_name;
-        // $admin->email = $request->email;
-        $admin->phone = $phone;
-        $admin->member_access = $role;
-        $admin->country = $country;
-        $admin->status = $status;
-
-        // Handle the profile image upload if provided
+        
+        $admin->update([
+            'first_name' => $validatedData['first_name'],
+            'last_name' => $validatedData['last_name'],
+            'phone' => $validatedData['phone'],
+            'member_access' => $validatedData['member_access'],
+            'country' => $validatedData['country'],
+            'admin_status' => $validatedData['admin_status'],
+        ]);
+    
+        // Handle profile image upload if provided
         if ($request->hasFile('profile_image')) {
             // Delete old image if exists
             if ($admin->profile_image) {
                 Storage::disk('public')->delete($admin->profile_image);
             }
-
+    
+            // Upload new profile image
             $imagePath = handleFileUpload($request, 'profile_image', 'admin_profile');
             if ($imagePath) {
-                $admin->profile_image = $imagePath;
+                $admin->update(['profile_image' => $imagePath]); // Mass assign the image path
             }
         }
         
-
-        $admin->save();
+        $role = $validatedData['member_access'];
         
         $this->updateRoles($admin,$role);
       
@@ -287,56 +270,52 @@ class AdminManagementController extends Controller
         return redirect()->route('admin.admin-users.index')->with('success', 'Admin deleted successfully');
     }
 
-    public function updateRoles($admin,$role) {
-       
+    public function updateRoles($admin, $role)
+    {
         $userTypeId = 1;
 
+        // Find the user based on the admin's user_id
         $user = User::findOrFail($admin->user_id);
 
-        // code for already exist role 
-        $existing_role = $user->with(['roles' => function ($query) use ($userTypeId) {
-            $query->where('user_type_id', 1)
-                  ->select('id', 'name', 'user_type_id'); // Select specific columns
-        }])
-        ->findOrFail($admin->user_id);
+        // Get the existing roles for the user (with user_type_id = 1)
+        $alreadyRoles = $user->roles()->where('user_type_id', $userTypeId)->pluck('name')->toArray();
 
-        $alreadyroles = [];
-        foreach($existing_role->roles as $rolesvalue) {
-            $alreadyroles[] =$rolesvalue->name; 
+        // Check if $role is an ID or a name
+        if (is_numeric($role)) {
+            // If it's a number (ID), find the role by ID
+            $roleModel = \Spatie\Permission\Models\Role::find($role);
+
+            // Check if the role exists
+            if (!$roleModel) {
+                return response()->json(['error' => 'Role ID does not exist.'], 404);
+            }
+
+            $newUpdatedRole = $roleModel->name; // Get the role name from the model
+        } else {
+            $newUpdatedRole = $role; // If it's a name, use it directly
         }
 
-        $newUpdatedRole =  $role;
-
-        // Iterate through the already assigned roles
-        foreach ($alreadyroles as $roles) {
-            // Remove roles that are not in the new role set
-            if (!in_array($roles, [$newUpdatedRole])) {
-                // Fetch permissions associated with the role being removed
-                $roleModel = \Spatie\Permission\Models\Role::findByName($roles);
-                $permissionsToRemove = $roleModel->permissions->pluck('name')->toArray();
-
-                // Remove the permissions from the user
-                $user->revokePermissionTo($permissionsToRemove);
-        
-                // Remove the role
-                $user->removeRole($roles);
+        // Remove roles that are not in the new role set
+        foreach ($alreadyRoles as $existingRole) {
+            if ($existingRole !== $newUpdatedRole) {
+                // Remove the role and its permissions
+                $user->removeRole($existingRole);
             }
         }
 
-        // Add the new role if it's not already assigned
-        if (!in_array($newUpdatedRole, $alreadyroles)) {
-            $user->assignRole($newUpdatedRole); // Assign the new role
+        // Assign the new role if it's not already assigned
+        if (!in_array($newUpdatedRole, $alreadyRoles)) {
+            $user->assignRole($newUpdatedRole);
         }
 
-         // Fetch permissions associated with the new role
+        // Fetch permissions associated with the new role
         $roleModel = \Spatie\Permission\Models\Role::findByName($newUpdatedRole);
-
-        $permissions = $roleModel->permissions->pluck('name')->toArray(); // Get permission names
-
-        // Sync user's permissions with the ones associated with the new role
-        $user->syncPermissions($permissions);
-       
-
+        if ($roleModel) {
+            $permissions = $roleModel->permissions->pluck('name')->toArray();
+            // Sync user's permissions with the ones associated with the new role
+            $user->syncPermissions($permissions);
+        }
     }
+
 
 }

@@ -21,9 +21,18 @@ class VendorManagementController extends Controller
     {
         if ($request->ajax()) {
             // Eager load the role relationship (if vendors have roles)
-            $vendors = Vendor::with('role')->select(['id', 'first_name', 'last_name', 'email', 'status', 'member_access'])->get();
+            $vendors = Vendor::with('role', 'user')->get();
             
             return datatables()->of($vendors)
+            ->addColumn('role', function($vendor) {
+                return $vendor->role ? $vendor->role->name : 'N/A'; // Access the role name
+            })
+            ->addColumn('full_name', function ($vendor) {
+                return $vendor->full_name; // Use the accessor method to get full name
+            })
+            ->addColumn('email', function ($vendor) {
+                return $vendor->user->email; // Fetch email from the related User model
+            })
                 ->addColumn('action', function($vendor) {
                     return '<a href="'. route('admin.vendor-users.show', $vendor->id) .'" class="text-blue-500 hover:text-blue-700 mr-2 bg-transparent hover:bg-transparent">
                         <i class="fas fa-eye"></i>
@@ -75,27 +84,20 @@ class VendorManagementController extends Controller
         $validatedData = $request->validate([
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
-            'email' => 'required|email|unique:vendors,email', // Assuming the vendors table is 'vendors'
             'phone' => 'nullable|string|max:20',
-            'role' => 'required|exists:roles,name',
+            'role' => 'required|exists:roles,id',
             'country' => 'required|exists:countries,id',
-            'status' => 'required|string|in:active,inactive',
+            'status' => 'required|string|in:Active,Under Review,Inactive',
+            'profile_image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048'
         ]);
 
-        $first_name = $validatedData['first_name'];
-        $last_name = $validatedData['last_name'];
-        $email = $validatedData['email'];
-        $phone = $validatedData['phone'];
-        $role = $validatedData['role'];
-        $country = $validatedData['country'];
-        $status = $validatedData['status'];
+        $request_email = $request->validate(['email' => 'required|email|unique:users,email']);
 
-        // Check if the email is already used by another user
-        $email_found = User::where('email', $email)->first();
+        $user = User::where('email', $request_email)->first();
     
-        if ($email_found) {
+        if ($user) {
             // Check if a vendor record already exists for this user
-            $vendorRecord = Vendor::where('user_id', $email_found->id)->first();
+            $vendorRecord = Vendor::where('user_id', $user->id)->first();
             
             if ($vendorRecord) {
                 $errorMessage = 'A vendor record already exists for this email.';
@@ -106,56 +108,42 @@ class VendorManagementController extends Controller
                     'redirect_url' => route('admin.vendor-users.create') // Update redirect URL for vendors
                 ]);
             } else {
-                // Create a new Vendor record
-                $vendor = new Vendor;
-                $vendor->user_id = $email_found->id;
-                $vendor->first_name = $first_name;
-                $vendor->last_name = $last_name;
-                $vendor->email = $email;
-                $vendor->phone = $phone;
-                $vendor->member_access = $role;
-                $vendor->country = $country; // Assuming country_id is a foreign key
-                $vendor->status = $status;
 
-                // Handle profile image upload if provided
-                $imagePath = handleFileUpload($request, 'profile_image', 'vendor_profile');
-                if ($imagePath) {
+                $validatedData['user_id'] = $user->id;
+                $vendor = Vendor::create($validatedData);
+
+                if ($request->hasFile('profile_image')) {
+                    $imagePath = handleFileUpload($request, 'profile_image', 'vendor_profile');
                     $vendor->profile_image = $imagePath;
+                    $vendor->save(); // Save after updating the profile image
                 }
-                // dd($vendor);
-                $vendor->save();
+                
             }
         } else {
-            // Create a new User record
-            $user = new User;      
-            $user->name = $first_name;
-            $user->email = $email;
-            $user->password = Hash::make('password'); // Assign default password
-            $user->is_vendor = 1; // Assuming you have a field to identify vendors
 
-            $user->save();
+            $userData = [
+                'name' => $validatedData['first_name'],
+                'email' => $request_email['email'],
+                'password' => Hash::make('password'),
+                'is_admin' => 1,
+            ];
 
-            // Create a new Vendor record
-            $vendor = new Vendor;
-            $vendor->user_id = $user->id;
-            $vendor->first_name = $first_name;
-            $vendor->last_name = $last_name;
-            $vendor->email = $email;
-            $vendor->phone = $phone;
-            $vendor->member_access = $role;
-            $vendor->country = $country;
-            $vendor->status = $status;
+            $user = User::create($userData);
 
-            // Handle profile image upload if provided
-            $imagePath = handleFileUpload($request, 'profile_image', 'vendor_profile');
-            if ($imagePath) {
+            $validatedData['user_id'] = $user->id;
+
+            $vendor = Vendor::create($validatedData);
+            
+            if ($request->hasFile('profile_image')) {
+                $imagePath = handleFileUpload($request, 'profile_image', 'vendor_profile');
                 $vendor->profile_image = $imagePath;
+                $vendor->save(); // Save after updating the profile image
             }
-
-            $vendor->save();
         }
 
-        $this->updateRoles($vendor,$role);
+        $role = $validatedData['role'];
+
+        // $this->updateRoles($vendor,$role);
 
         $successMessage = 'Vendor created successfully!';
         session()->flash('success', $successMessage);
@@ -211,30 +199,24 @@ class VendorManagementController extends Controller
         $validatedData = $request->validate([
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
-            'email' => 'required|email|unique:vendors,email,' . $id,
             'phone' => 'nullable|string|max:20',
-            'role' => 'required|exists:roles,name',
+            'role' => 'required|exists:roles,id',
             'country' => 'required|exists:countries,id',
-            'status' => 'required|string|in:active,inactive',
-            'profile_image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            'status' => 'required|string|in:Active,Under Review,Inactive',
+            'profile_image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048'
         ]);
 
-        $first_name = $validatedData['first_name'];
-        $last_name = $validatedData['last_name'];
-        $email = $validatedData['email'];
-        $phone = $validatedData['phone'];
-        $role = $validatedData['role'];
-        $country = $validatedData['country'];
-        $status = $validatedData['status'];
-
-        // Find the vendor
         $vendor = Vendor::findOrFail($id);
-        $vendor->first_name = $first_name;
-        $vendor->last_name = $last_name;
-        $vendor->phone = $phone;
-        $vendor->member_access = $role;
-        $vendor->country = $country;
-        $vendor->status = $status;
+
+        $role = $validatedData['role'];
+       
+        $vendor->update([
+            'first_name' => $validatedData['first_name'],
+            'last_name' => $validatedData['last_name'],
+            'phone' => $validatedData['phone'],
+            'country' => $validatedData['country'],
+            'status' => $validatedData['status'],
+        ]);
 
         // Handle the profile image upload if provided
         if ($request->hasFile('profile_image')) {
@@ -246,12 +228,12 @@ class VendorManagementController extends Controller
             $imagePath = handleFileUpload($request, 'profile_image', 'vendor_profile');
             if ($imagePath) {
                 $vendor->profile_image = $imagePath;
+                $vendor->save(); 
             }
         }
 
-        $vendor->save();
 
-        $this->updateRoles($vendor,$role);
+        // $this->updateRoles($vendor,$role);
 
         // Return success response
         $successMessage = 'Vendor updated successfully!';

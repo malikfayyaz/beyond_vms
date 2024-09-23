@@ -27,8 +27,7 @@
                     <thead class="bg-gray-200 text-gray-700">
                         <tr>
                             <th class="py-3 px-4 text-left">ID</th>
-                            <th class="py-3 px-4 text-left cursor-pointer">First Name</th>
-                            <th class="py-3 px-4 text-left cursor-pointer">Last Name</th>
+                            <th class="py-3 px-4 text-left cursor-pointer">Full Name</th>
                             <th class="py-3 px-4 text-left cursor-pointer">Email</th>
                             <th class="py-3 px-4 text-left cursor-pointer">Role</th>
                             <th class="py-3 px-4 text-left cursor-pointer">Status</th>
@@ -50,10 +49,9 @@
                 // Initialize DataTable for vendors
                 initializeDataTable('#vendorsTable', '{{ route('admin.vendor-users.index') }}', [
                     { data: 'id', name: 'id' },
-                    { data: 'first_name', name: 'first_name' },
-                    { data: 'last_name', name: 'last_name' },
+                    { data: 'full_name', name: 'full_name' },
                     { data: 'email', name: 'email' },
-                    { data: 'member_access', name: 'role' },
+                    { data: 'role', name: 'role' },
                     { data: 'status', name: 'status' },
                     { data: 'action', name: 'action', orderable: false, searchable: false }
                 ]);
