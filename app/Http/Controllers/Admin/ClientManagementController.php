@@ -172,11 +172,6 @@ class ClientManagementController extends Controller
             }
         }
         $this->updateRoles($client, $role);
-        if ($client) {
-            Mail::to($email)->send(new ClientCreated($client, 'password'));
-            session()->flash('success', 'Client created successfully and email sent!');
-            return response()->json(['success' => true, 'redirect_url' => route('admin.client-users.index')]);
-        }
         session()->flash('success', 'Client created successfully!');
         return response()->json(['success' => true, 'redirect_url' => route('admin.client-users.index')]);
     }
