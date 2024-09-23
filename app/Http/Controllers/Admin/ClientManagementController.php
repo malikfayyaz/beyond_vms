@@ -85,12 +85,12 @@ class ClientManagementController extends Controller
     public function create()
     {
         $roles = Role::where('user_type_id', 2)->get();
-        $client = Auth::user();
+        $user = Auth::user();
         $countries = Country::all();
         $editIndex = null;
-         //dd($client);
+//         dd($roles);
 
-        return view('admin.users.client-users.create', compact('roles', 'countries', 'editIndex'));
+        return view('admin.users.client-users.create', compact('roles', 'user', 'countries', 'editIndex'));
     }
 
     /**
@@ -241,6 +241,7 @@ class ClientManagementController extends Controller
         $user = User::find($client->user_id);
         $roles = Role::where('user_type_id', 2)->get();
         $countries = Country::all();
+//        dd($client);
         return view('admin.users.client-users.create', [
             'user' => $user,
             'client' => $client,
@@ -295,7 +296,6 @@ class ClientManagementController extends Controller
         }
         $validatedData['profile_approved_date'] = Carbon::now();
         $validatedData['user_id'] = $user->id;
-        $validatedData['profile_status'] = ($request->profile_status === 'active') ? 1 : 0;
         $validatedData['manager_id'] = '1';
         $client->fill($validatedData);
         $client->save();
