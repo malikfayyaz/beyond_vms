@@ -183,7 +183,7 @@
                           <span class="text-gray-600">Resume:</span>
                           <span
                             class="font-semibold"
-                            >{{$submission->resume}}</span>
+                            >{{$submission->consultant->resume}}</span>
                         </div>
                         <div class="flex justify-between py-3 px-4">
                           <span class="text-gray-600">Vendor Name:</span>
@@ -234,7 +234,7 @@
                           <span class="text-gray-600">Gender</span>
                           <span
                             class="font-semibold"
-                          >{{$submission->consultant->gender->title}}</span>
+                          >{{$submission->consultant->genDer->title}}</span>
                         </div>
                         <div class="flex justify-between py-3 px-4">
                           <span class="text-gray-600">Race</span>
@@ -308,7 +308,7 @@
                             <span class="text-gray-600">Over Time Rate:</span>
                             <span
                               class="font-semibold"
-                            >${{$submission->over_time_rate}}</span>
+                            >${{$submission->client_over_time_rate}}</span>
                           </div>
                         </div>
 
@@ -354,17 +354,21 @@
               </div>
             </div>
             <div class="w-2/4 bg-white h-[1024px] mx-4 rounded p-8">
-              <object
-                data="{{ asset('assets/pdfs/resume-sample.pdf') }}"
+            @if ($submission->resume)
+            <object
+                data="{{ asset('storage/submission_resume/' . $submission->resume) }}"
                 type="application/pdf"
                 width="100%"
                 height="100%"
-              >
+            >
                 <p>
-                  Alternative text - include a link
-                  <a href="../assets/pdfs/resume-sample.pdf">to the PDF!</a>
+                    Alternative text - include a link
+                    <a href="{{ asset('storage/submission_resume/' . $submission->resume) }}">to the PDF!</a>
                 </p>
-              </object>
+            </object>
+            @else
+                <p>No resume available.</p>
+            @endif
             </div>
           </div>
         </div>

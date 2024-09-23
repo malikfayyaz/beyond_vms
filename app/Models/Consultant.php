@@ -20,8 +20,8 @@ class Consultant extends Model
     public function race() {
         return $this->belongsTo(Setting::class, 'ethnicity', 'id');
     }
-    public function gender() {
-        return $this->belongsTo(Setting::class, 'gendor', 'id');
+    public function genDer() {
+        return $this->belongsTo(Setting::class, 'gender', 'id');
     }
 
 }
