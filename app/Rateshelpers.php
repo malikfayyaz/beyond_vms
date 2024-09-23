@@ -2,7 +2,7 @@
 
 if (!function_exists('calculateJobEstimates')) {
     function calculateJobEstimates($model) {
-        // dd($model); 
+        
         $noOfOpenings = $model->num_openings;
         $startDate = date('Y-m-d',strtotime($model->start_date));
         $endDate = date('Y-m-d',strtotime($model->end_date));
@@ -12,10 +12,10 @@ if (!function_exists('calculateJobEstimates')) {
         $noOfDays = numberOfWorkingDays($startDate,$endDate);
         $extraDays = $noOfDays%5;
         $numberOfWeeks = ($noOfDays - $extraDays) / 5;
-
+        
         $totalNumberOfHours = $numberOfWeeks*$daysPerWeek*$hoursPerDay + $extraDays*$hoursPerDay;
-
-        $billRate = $model->bill_rate;
+       
+        $billRate = $model->min_bill_rate;
         $overtimeCost = $model->overtime_hours_cost;
         $otherExpensesCost = $model->expense_cost;
 
@@ -40,7 +40,7 @@ if (!function_exists('calculateJobEstimates')) {
         $model->all_resources_total_cost = $allResourceBudget;
         $model->pre_total_estimate_code = $allResourceBudget;
         $model->save();
-
+        // dd($model); 
         return true;
     }
 

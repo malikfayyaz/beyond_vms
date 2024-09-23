@@ -152,7 +152,7 @@ class CareerOpportunitiesController extends BaseController
 
         $businessUnitsData  = $careerOpportunity->careerOpportunitiesBu->map(function ($item) {
             return [
-                'id' => $item->id,
+                'id' => $item->buName->id,
                 'unit' => $item->buName->name,
                 'percentage' => $item->percentage
             ];
@@ -170,7 +170,7 @@ class CareerOpportunitiesController extends BaseController
      */
     public function update(Request $request, $id)
     {
-        // dd($request);
+        // dd($request->input('businessUnits'));
         try {
 
             $validatedData = $this->validateJobOpportunity($request);

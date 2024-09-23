@@ -10,7 +10,8 @@ use App\Http\Controllers\{
     Admin\AdminController,
     Admin\AdminManagementController,
     Admin\ClientManagementController,
-    Admin\VendorManagementController
+    Admin\VendorManagementController,
+    Admin\CareerOpportunitiesOfferController,
 
 };
 Route::middleware(['user_role:admin'])->group(function () {
@@ -93,5 +94,9 @@ Route::middleware(['user_role:admin'])->group(function () {
         Route::post('division-load', [CatalogController::class, 'divisionLoad'])->name('division_load');
         Route::post('job-rates', [RatesController::class, 'jobRates'])->name('job_rates');
         Route::match(['get', 'post'], 'workflow', [GenericDataController::class, 'workflow'])->name('workflow');
+
+        // offer
+        Route::get('offer/{id}/create', [CareerOpportunitiesOfferController::class, 'create'])->name('offer.create');
+
     });
 });
