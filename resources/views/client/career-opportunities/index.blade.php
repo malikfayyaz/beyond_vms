@@ -59,6 +59,11 @@
                         <th
                             class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                         >
+                            Submissions
+                        </th>
+                        <th
+                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                        >
                             Position
                         </th>
 
@@ -95,6 +100,7 @@
                     { data: 'alternative_job_title', name: 'alternative_job_title' },
                     { data: 'hiring_manager', name: 'hiring_manager' },
                     { data: 'duration', name: 'duration' },
+                    { data: 'submissions', name: 'submissions' },
                     { data: 'num_openings', name: 'num_openings' },
                     { data: 'worker_type', name: 'worker_type' },
                     {data: 'action', name: 'action', orderable: false, searchable: false}
