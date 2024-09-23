@@ -143,16 +143,15 @@
                           <span class="text-gray-600">Unique ID:</span>
                           <span
                             class="font-semibold"
-                          >{{$submission->unique_id}}</span>
+                          >{{$submission->consultant->unique_id}}</span>
                         </div>
-                        <!-- <div class="flex justify-between py-3 px-4">
+                        <div class="flex justify-between py-3 px-4">
                           <span class="text-gray-600"
                             >Last 4 Numbers of National ID:</span
                           >
                           <span
                             class="font-semibold"
-                            x-text="jobDetails.nationId"
-                          ></span>
+                          >{{$submission->consultant->national_id}}</span>
                         </div>
                         <div class="flex justify-between py-3 px-4">
                           <span class="text-gray-600"
@@ -160,14 +159,12 @@
                           >
                           <span
                             class="font-semibold"
-                            x-text="jobDetails.prefLanguage"
-                          ></span>
-                        </div> -->
+                          >{{$submission->consultant->language}}</span>
+                        </div>
                         <div class="flex justify-between py-3 px-4">
                           <span class="text-gray-600">Availability Date:</span>
                           <span
                             class="font-semibold"
-                            x-text="jobDetails.availDate"
                           >{{$submission->estimate_start_date}}</span>
                         </div>
                         <div class="flex justify-between py-3 px-4">
@@ -186,7 +183,7 @@
                           <span class="text-gray-600">Resume:</span>
                           <span
                             class="font-semibold"
-                            >{{$submission->resume}}</span>
+                            >{{$submission->consultant->resume}}</span>
                         </div>
                         <div class="flex justify-between py-3 px-4">
                           <span class="text-gray-600">Vendor Name:</span>
@@ -198,7 +195,7 @@
                           <span class="text-gray-600">OT Eligible?</span>
                           <span
                             class="font-semibold"
-                          >{{$submission->ot_exempt_position}}</span>
+                          >{{$submission->ot_exempt_position == 'yes' ? 'Yes' : 'No'}}</span>
                         </div>
                         <div class="flex justify-between py-3 px-4">
                           <span class="text-gray-600"
@@ -207,7 +204,7 @@
                           >
                           <span
                             class="font-semibold"
-                          >{{$submission->require_employment_visa_sponsorship}}</span>
+                          >{{$submission->require_employment_visa_sponsorship == 'yes' ? 'Yes' : 'No'}}</span>
                         </div>
                         <div class="flex justify-between py-3 px-4">
                           <span class="text-gray-600"
@@ -216,7 +213,7 @@
                           >
                           <span
                             class="font-semibold"
-                          >{{$submission->willing_relocate}}</span>
+                          >{{$submission->willing_relocate == 'yes' ? 'Yes' : 'No'}}</span>
                         </div>
                         <!-- <div class="flex justify-between py-3 px-4">
                           <span class="text-gray-600"
@@ -231,23 +228,20 @@
                           <span class="text-gray-600">Preferred Name</span>
                           <span
                             class="font-semibold"
-                            x-text="jobDetails.preferredName"
                           ></span>
                         </div>
-                        <!-- <div class="flex justify-between py-3 px-4">
+                        <div class="flex justify-between py-3 px-4">
                           <span class="text-gray-600">Gender</span>
                           <span
                             class="font-semibold"
-                            x-text="jobDetails.gender"
-                          ></span>
+                          >{{$submission->consultant->genDer->title}}</span>
                         </div>
                         <div class="flex justify-between py-3 px-4">
                           <span class="text-gray-600">Race</span>
                           <span
                             class="font-semibold"
-                            x-text="jobDetails.race"
-                          ></span>
-                        </div> -->
+                          >{{$submission->consultant->race->title}}</span>
+                        </div>
                         <div class="flex justify-between py-3 px-4">
                           <span class="text-gray-600"
                             >Has this candidate ever worked for any Gallagher
@@ -255,14 +249,13 @@
                           >
                           <span
                             class="font-semibold"
-                            x-text="jobDetails.candidateWorked"
-                          ></span>
+                          >{{$submission->retiree == 'yes' ? 'Yes' : 'No'}}</span>
                         </div>
                         <div class="flex justify-between py-3 px-4">
                           <span class="text-gray-600">Country:</span>
                           <span
                             class="font-semibold"
-                          >{{$submission->location->name}}</span>
+                          >{{$submission->location->country->name}}</span>
                         </div>
                         <div class="flex justify-between py-3 px-4">
                           <span class="text-gray-600"
@@ -270,7 +263,7 @@
                           >
                           <span
                             class="font-semibold"
-                          >{{$submission->remote_contractor}}</span>
+                          >{{$submission->remote_contractor == 'yes' ? 'Yes' : 'No'}}</span>
                         </div>
                         <div class="flex justify-between py-3 px-4">
                           <span class="text-gray-600">Submission Date:</span>
@@ -294,7 +287,7 @@
                       <div class="p-6 space-y-4">
                         <div class="flex justify-between items-center">
                           <span class="text-gray-600">Rate Type:</span>
-                          <span class="font-semibold" x-text="rateType"></span>
+                          <span class="font-semibold"></span>
                         </div>
 
                         <div class="bg-blue-50 p-3 rounded-md">
@@ -315,7 +308,7 @@
                             <span class="text-gray-600">Over Time Rate:</span>
                             <span
                               class="font-semibold"
-                            >${{$submission->over_time_rate}}</span>
+                            >${{$submission->client_over_time_rate}}</span>
                           </div>
                         </div>
 
@@ -351,7 +344,7 @@
                             <span class="text-gray-600">Location Name:</span>
                             <span
                               class="font-semibold text-right"
-                            >{{$submission->current_location}}</span>
+                            >{{$submission->location->LocationDetails}}</span>
                           </div>
                         </div>
                       </div>
@@ -361,17 +354,21 @@
               </div>
             </div>
             <div class="w-2/4 bg-white h-[1024px] mx-4 rounded p-8">
-              <object
-                data="../assets/pdfs/resume-sample.pdf"
+            @if ($submission->resume)
+            <object
+                data="{{ asset('storage/submission_resume/' . $submission->resume) }}"
                 type="application/pdf"
                 width="100%"
                 height="100%"
-              >
+            >
                 <p>
-                  Alternative text - include a link
-                  <a href="../assets/pdfs/resume-sample.pdf">to the PDF!</a>
+                    Alternative text - include a link
+                    <a href="{{ asset('storage/submission_resume/' . $submission->resume) }}">to the PDF!</a>
                 </p>
-              </object>
+            </object>
+            @else
+                <p>No resume available.</p>
+            @endif
             </div>
           </div>
         </div>

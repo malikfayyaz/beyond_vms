@@ -93,10 +93,13 @@ Route::middleware(['user_role:admin'])->group(function () {
         Route::post('load-job-template', [CatalogController::class, 'loadJobTemplate'])->name('load_job_template');
         Route::post('division-load', [CatalogController::class, 'divisionLoad'])->name('division_load');
         Route::post('job-rates', [RatesController::class, 'jobRates'])->name('job_rates');
+        
         Route::match(['get', 'post'], 'workflow', [GenericDataController::class, 'workflow'])->name('workflow');
 
         // offer
         Route::get('offer/{id}/create', [CareerOpportunitiesOfferController::class, 'create'])->name('offer.create');
+        Route::match(['get', 'post'], 'workflow/edit/{id}', [GenericDataController::class, 'workflowEdit'])->name('workflow.edit');
+        Route::match(['get', 'post'], 'workflow/store', [GenericDataController::class, 'workflowStore'])->name('workflow.store');
 
     });
 });

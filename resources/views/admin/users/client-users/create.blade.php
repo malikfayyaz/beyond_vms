@@ -115,8 +115,8 @@
                     <label for="profile_status" class="block mb-2">Profile Status <span class="text-red-500">*</span></label>
                     <select id="profile_status" x-model="formData.profile_status" class="w-full p-2 border rounded h-10">
                         <option value="" disabled selected>Select Status</option>
-                        <option value="active">Active</option>
-                        <option value="inactive">Inactive</option>
+                        <option value="1">Active</option>
+                        <option value="0">Inactive</option>
                     </select>
                     <p x-show="profile_statusError" class="text-red-500 text-sm mt-1" x-text="profile_statusError"></p>
                 </div>

@@ -18,8 +18,8 @@ class CareerOpportunitiesController extends Controller
         if ($request->ajax()) {
             $vendorid = Auth::id();
             $data = CareerOpportunity::with('hiringManager','workerType')
-                ->where('user_id', $vendorid)
-                ->select('career_opportunities.*');
+                ->withCount('submissions')
+                ->where('user_id', $vendorid);
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('hiring_manager', function($row) {
@@ -27,6 +27,9 @@ class CareerOpportunitiesController extends Controller
                 })
                 ->addColumn('duration', function($row) {
                     return $row->date_range ? $row->date_range : 'N/A';
+                })
+                ->addColumn('submissions', function ($row) {
+                    return $row->submissions_count;
                 })
                 ->addColumn('worker_type', function($row) {
                     return $row->workerType ? $row->workerType->title : 'N/A';

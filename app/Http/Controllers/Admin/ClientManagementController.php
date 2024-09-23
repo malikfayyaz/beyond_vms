@@ -12,6 +12,7 @@ use Carbon\Carbon;
 use App\Models\Country;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Mail\ClientCreated;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -85,12 +86,12 @@ class ClientManagementController extends Controller
     public function create()
     {
         $roles = Role::where('user_type_id', 2)->get();
-        $client = Auth::user();
+        $user = Auth::user();
         $countries = Country::all();
         $editIndex = null;
-         //dd($client);
+//         dd($roles);
 
-        return view('admin.users.client-users.create', compact('roles', 'countries', 'editIndex'));
+        return view('admin.users.client-users.create', compact('roles', 'user', 'countries', 'editIndex'));
     }
 
     /**
@@ -98,13 +99,12 @@ class ClientManagementController extends Controller
      */
     public function store(Request $request)
     {
-        $userId = auth()->id(); // This is the ID of the currently authenticated user
-
+        $userId = auth()->id();
         $commonRules = [
             'first_name' => 'required',
             'middle_name' => 'nullable',
             'last_name' => 'required',
-            'email' => 'required|email',
+            'email' => 'required|email:users,email',
             'profile_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'description' => 'required',
             'phone' => 'required',
@@ -112,106 +112,69 @@ class ClientManagementController extends Controller
             'profile_status' => 'required',
             'role' => 'required',
         ];
-
         $roleSpecificRules = [
             'middle_name' => 'required',
             'business_name' => 'required',
             'organization' => 'required',
         ];
-
         $rules = array_merge($commonRules, $roleSpecificRules);
-
         $validator = Validator::make($request->all(), $rules);
-
         if ($validator->fails()) {
             return response()->json([
                 'success' => false,
                 'errors' => $validator->errors(),
             ]);
         }
-
         $validatedData = $validator->validated();
-        $first_name = $validatedData['first_name'];
-        $middle_name = $validatedData['middle_name'];
-        $last_name = $validatedData['last_name'];
         $email = $validatedData['email'];
-        $business_name = $validatedData['business_name'];
-        $phone = $validatedData['phone'];
-        $organization = $validatedData['organization'];
         $role = $validatedData['role'];
-        $country = $validatedData['country'];
-        $status = $validatedData['profile_status'];
-        $description = $validatedData['description'];
         $user = User::where('email', $email)->first();
         if ($user) {
             $userId = $user->id;
             $existingClient = Client::where('user_id', $userId)->first();
             if ($existingClient) {
+                $errorMessage = 'A Client record already exists for this email.';
+                session()->flash('error', $errorMessage);
                 return response()->json([
                     'success' => false,
-                    'message' => 'Client already exists.',
+                    'message' => $errorMessage,
+                    'redirect_url' => route('admin.client-users.create')
                 ]);
-            }
-            else{
-                $client = new Client;
-                $client->user_id = $userId;
-                $client->first_name = $first_name;
-                $client->middle_name = $middle_name;
-                $client->last_name = $last_name;
-                $client->profile_status = ($status === 'active') ? 1 : 0;
-                $client->organization = $organization;
-                $client->business_name = $business_name;
-                $client->phone = $phone;
-                $client->profile_approved_date = Carbon::now();
-                $client->manager_id = 1;
-                $client->description = $description;
-                $client->country = $country;
+            } else {
+                // Unset email from validated data before creating the client
+                unset($validatedData['email']);
+                unset($validatedData['role']);
+                $validatedData['user_id'] = $user->id;
+                $client = Client::create($validatedData);
 
-                // Handle the profile image upload if provided
-                $imagePath = handleFileUpload($request, 'profile_image', 'client_profile');
-                if ($imagePath) {
+                if ($request->hasFile('profile_image')) {
+                    $imagePath = handleFileUpload($request, 'profile_image', 'admin_profile');
                     $client->profile_image = $imagePath;
+                    $client->save();
                 }
-
-                $client->save();
             }
         } else {
-            $user = new User;
-            $user->name = $first_name;
-            $user->email = $email;
-            $user->password = Hash::make('password');
-            $user->is_client = 1;
-            $user->save();
-            $userId = $user->id;
-            $client = new Client;
-            $client->user_id = $userId;
-            $client->first_name = $first_name;
-            $client->middle_name = $middle_name;
-            $client->last_name = $last_name;
-            $client->profile_status = ($status === 'active') ? 1 : 0;
-            $client->organization = $organization;
-            $client->business_name = $business_name;
-            $client->phone = $phone;
-            $client->profile_approved_date = Carbon::now();
-            $client->manager_id = 1;
-            $client->description = $description;
-            $client->country = $country;
-
-            // Handle the profile image upload if provided
-            $imagePath = handleFileUpload($request, 'profile_image', 'client_profile');
-            if ($imagePath) {
+            $userData = [
+                'name' => $validatedData['first_name'],
+                'email' => $email, // inserting the email only for the user
+                'password' => Hash::make('password'),
+                'is_client' => 1,
+            ];
+            $user = User::create($userData);            // Create a new user
+            $validatedData['user_id'] = $user->id;
+            unset($validatedData['email']);
+            unset($validatedData['role']);
+            $client = Client::create($validatedData);
+            if ($request->hasFile('profile_image')) {
+                $imagePath = handleFileUpload($request, 'profile_image', 'admin_profile');
                 $client->profile_image = $imagePath;
+                $client->save();
             }
-
-            $client->save();
         }
         $this->updateRoles($client, $role);
         session()->flash('success', 'Client created successfully!');
         return response()->json(['success' => true, 'redirect_url' => route('admin.client-users.index')]);
     }
-
-
-
 
     /**
      * Display the specified resource.
@@ -241,6 +204,7 @@ class ClientManagementController extends Controller
         $user = User::find($client->user_id);
         $roles = Role::where('user_type_id', 2)->get();
         $countries = Country::all();
+//        dd($client);
         return view('admin.users.client-users.create', [
             'user' => $user,
             'client' => $client,
@@ -286,16 +250,8 @@ class ClientManagementController extends Controller
         }
         $client = Client::find($id);
         $user = User::find($client->user_id);
-        if (!$client || !$user) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Client or user not found.',
-                'redirect_url' => route('admin.client-users.index'),
-            ]);
-        }
         $validatedData['profile_approved_date'] = Carbon::now();
         $validatedData['user_id'] = $user->id;
-        $validatedData['profile_status'] = ($request->profile_status === 'active') ? 1 : 0;
         $validatedData['manager_id'] = '1';
         $client->fill($validatedData);
         $client->save();
