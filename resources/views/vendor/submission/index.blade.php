@@ -34,6 +34,11 @@
                         <th
                             class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                         >
+                            Unique ID
+                        </th>
+                        <th
+                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                        >
                             Job Profile 
                         </th>
                         <th
@@ -93,6 +98,7 @@
                 { data: 'resume_status', name: 'resume_status' },
                 { data: 'id', name: 'id' },
                 { data: 'consultant_name', name: 'consultant_name' }, // Consultant name
+                { data: 'unique_id', name: 'unique_id' }, 
                 { data: 'career_opportunity_title', name: 'career_opportunity_title' },
                 { data: 'hiring_manager_name', name: 'hiring_manager_name' },
                 { data: 'vendor_name', name: 'vendor_name' }, // Vendor name
