@@ -89,7 +89,7 @@
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         if (window.$) {
-            initializeDataTable('#listing', '/vendor/submission-list', [
+            initializeDataTable('#listing', '/vendor/submission/index', [
                 { data: 'resume_status', name: 'resume_status' },
                 { data: 'id', name: 'id' },
                 { data: 'consultant_name', name: 'consultant_name' }, // Consultant name
@@ -98,7 +98,7 @@
                 { data: 'vendor_name', name: 'vendor_name' }, // Vendor name
                 { data: 'candidate_pay_rate', name: 'candidate_pay_rate' },
                 { data: 'bill_rate', name: 'bill_rate' },
-                { data: 'current_location', name: 'current_location' }, // Location name
+                { data: 'location_name', name: 'location_name' }, // Location name
                 { data: 'worker_type', name: 'worker_type' },
                 { data: 'action', name: 'action', orderable: false, searchable: false }
             ]);
