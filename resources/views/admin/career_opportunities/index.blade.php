@@ -88,18 +88,25 @@
       document.addEventListener('DOMContentLoaded', function() {
                  console.log(window.$); // Verify jQuery is available
                 if (window.$) {
-                  initializeDataTable('#example', '/admin/career-opportunities', [
-                    { data: 'jobStatus', name: 'jobStatus' },
-                    { data: 'id', name: 'id' },
-                    { data: 'title', name: 'title' },
-                    { data: 'alternative_job_title', name: 'alternative_job_title' },
-                    { data: 'hiring_manager', name: 'hiring_manager' },
-                    { data: 'duration', name: 'duration' },
-                      { data: 'num_openings', name: 'num_openings' },
-                    { data: 'worker_type', name: 'worker_type' },
-                    {data: 'action', name: 'action', orderable: false, searchable: false}
-                  ]);
-                }
+                  const id = '{{ }}';
+                  initializeDataTable('#example', {
+                      url: '/admin/career-opportunities', 
+                      data: function(d){
+                        d.id = id;
+                      }
+                    },
+                    [
+                      { data: 'jobStatus', name: 'jobStatus' },
+                      { data: 'id', name: 'id' },
+                      { data: 'title', name: 'title' },
+                      { data: 'alternative_job_title', name: 'alternative_job_title' },
+                      { data: 'hiring_manager', name: 'hiring_manager' },
+                      { data: 'duration', name: 'duration' },
+                        { data: 'num_openings', name: 'num_openings' },
+                      { data: 'worker_type', name: 'worker_type' },
+                      {data: 'action', name: 'action', orderable: false, searchable: false}
+                    ]);
+                  }
 
       });
    </script>

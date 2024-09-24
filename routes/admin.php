@@ -93,5 +93,9 @@ Route::middleware(['user_role:admin'])->group(function () {
         Route::post('division-load', [CatalogController::class, 'divisionLoad'])->name('division_load');
         Route::post('job-rates', [RatesController::class, 'jobRates'])->name('job_rates');
         Route::match(['get', 'post'], 'workflow', [GenericDataController::class, 'workflow'])->name('workflow');
+
+        Route::match(['get', 'post'], 'job-workflow-data', [CareerOpportunitiesController::class, 'jobWorkFlowData'])->name('jobWorkFlowData');
+
+        
     });
 });

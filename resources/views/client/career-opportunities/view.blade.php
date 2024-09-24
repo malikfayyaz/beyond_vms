@@ -16,7 +16,7 @@
                             class="w-full flex justify-center items-center gap-3 hover:bg-white hover:rounded-lg hover:shadow py-4"
                         >
                             <i class="fa-regular fa-file-lines"></i>
-                            <span class="capitalize">active jobs</span>
+                            <span class="capitalize">actsdfsdfsdfsive jobs</span>
                             <div
                                 class="px-1 py-1 flex items-center justify-center bg-gray-500 text-white rounded-lg"
                             >

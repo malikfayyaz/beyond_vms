@@ -5,15 +5,16 @@
     @include('admin.layouts.partials.dashboard_side_bar')
       <div class="ml-16">
           @include('admin.layouts.partials.header')
-          <div class="bg-white mx-4 my-8 rounded p-8">
+          <div  x-data="{ tab: 'activejobs' }" class="bg-white mx-4 my-8 rounded p-8">
           <div class="mb-4">
             <ul
               class="grid grid-flow-col text-center text-gray-500 bg-gray-100 rounded-lg p-1"
             >
               <li class="flex justify-center">
                 <a
-                  href="#page1"
-                  class="w-full flex justify-center items-center gap-3 hover:bg-white hover:rounded-lg hover:shadow py-4"
+                @click="tab = 'activejobs'" 
+                :class="{ 'border-blue-500 text-blue-500': tab === 'activejobs' }" 
+                class="w-full flex justify-center items-center gap-3 hover:bg-white hover:rounded-lg hover:shadow py-4"
                 >
                   <i class="fa-regular fa-file-lines"></i>
                   <span class="capitalize">active jobs</span>
@@ -41,11 +42,12 @@
               </li>
               <li class="flex justify-center">
                 <a
-                  href="#page1"
-                  class="flex justify-center items-center gap-3 py-4 w-full hover:bg-white hover:rounded-lg hover:shadow"
+                @click="tab = 'jobworkflow'" 
+                :class="{ 'border-blue-500 text-blue-500': tab === 'jobworkflow' }" 
+                class="flex justify-center items-center gap-3 py-4 w-full hover:bg-white hover:rounded-lg hover:shadow"
                 >
                   <i class="fa-solid fa-fill"></i>
-                  <span class="capitalize">filled jobs</span>
+                  <span class="capitalize">Workflow</span>
                   <div
                     class="px-1 py-1 flex items-center justify-center bg-gray-500 text-white rounded-lg"
                   >
@@ -111,7 +113,7 @@
               </li>
             </ul>
           </div>
-          <div class="flex w-full gap-4">
+          <div x-show="tab === 'activejobs'" class="flex w-full gap-4">
             <!-- Left Column -->
             <div
               class="w-1/3 p-[30px] rounded border"
@@ -208,7 +210,7 @@
                       </div>
                   @endforeach
               </div>
-{{--              <div class="mt-4 rounded p-4 bg-[#F5F7FC]">
+              {{--<div class="mt-4 rounded p-4 bg-[#F5F7FC]">
                 <p class="color-[#202124] font-light">
                   Please list the preferred agency(s)/vendor(s) to utilize for
                   filling this position, and list any other relevant information
@@ -416,7 +418,7 @@
                       <p class="font-light">{{ $job->workerType->title ?? 'N/A' }}</p>
                   </div>
                 </div>
-{{--                <div class="flex items-center justify-between py-4 border-t">
+            {{--<div class="flex items-center justify-between py-4 border-t">
                   <div class="w-2/4">
                     <h4 class="font-medium">Job Family:</h4>
                   </div>
@@ -472,7 +474,7 @@
                     <p class="font-light">{{ $job->hours_per_day ?? 'N/A' }}</p>
                 </div>
               </div>
-{{--              <div class="flex items-center justify-between py-4 border-t">
+            {{-- <div class="flex items-center justify-between py-4 border-t">
                 <div class="w-2/4">
                   <h4 class="font-medium">Total Time:</h4>
                 </div>
@@ -564,6 +566,118 @@
               </div>
             </div>
           </div>
+
+          <div x-show="tab === 'jobworkflow'" class="flex w-full gap-4">
+             <div
+              class="w-100 p-[30px] rounded border"
+              :style="{'border-color': 'var(--primary-color)'}"
+            >
+              
+              <table class="min-w-full divide-y divide-gray-200" id="example">
+                <thead class="bg-gray-50">
+                  <tr>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Sr. #
+                    </th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Approver Name
+                    </th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Approval Type
+                    </th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Approval Required
+                    </th>
+
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Approval/Rejected By
+                    </th>
+
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Release Date & Time
+                    </th>
+
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Approved/Rejected Date & Time
+                    </th>
+
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Approval Notes
+                    </th>
+
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Approval Document
+                    </th>
+
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Action
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                </tbody>
+              </table>
+          </div>
         </div>
+      </div>
     </div>
-    @endsection
+
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        console.log(window.$); // Verify jQuery is available
+        if (window.$) {
+          const id = '{{ $job->id }}';
+           initializeDataTable('#example', {
+                url: '/admin/job-workflow-data', 
+                data: function(d){
+                  d.id = id;
+                }
+              },
+              [
+                { data: 'counter', name: 'counter' },
+                { data: 'hiring_manager', name: 'hiring_manager',orderable: false  },
+                { data: 'approval_role_id', name: 'approval_role_id' },
+                { data: 'approval_required', name: 'approval_required' },
+                { data: 'approve_reject_by', name: 'approve_reject_by' },
+                { data: 'created_at', name: 'created_at' },
+                { data: 'approved_datetime', name: 'approved_datetime' },
+                { data: 'approval_notes', name: 'approval_notes' },
+                { data: 'approval_doc', name: 'approval_doc' },
+                { data: 'action', name: 'action', orderable: false, searchable: false }
+              ]);
+            }
+         });
+
+    function submitForm(event) {
+        // Get form data
+        // event.preventDefault();
+
+        let formData = new FormData(event.target);
+
+        const url = "/vendor/submission/store";
+        ajaxCall(url,'POST', [[onSuccess, ['response']]], formData);
+        
+
+        // Make AJAX request
+        fetch("{{ route('admin.workflow.jobWorkFlowUpdate') }}", {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+            }
+        }).then(response => response.json())
+          .then(data => {
+              if (data.success) {
+                  // Handle success (e.g., show a success message, close modal, etc.)
+                  this.open = false;
+                  alert('Form submitted successfully!');
+              } else {
+                  // Handle error (e.g., show error messages)
+                  alert('Form submission failed!');
+              }
+          }).catch(error => {
+              console.error('Error:', error);
+          });
+    }
+</script>
+  @endsection

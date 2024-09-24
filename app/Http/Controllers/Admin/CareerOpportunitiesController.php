@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Validator;
 use App\Models\JobTemplates;
 use App\Models\CareerOpportunity;
 use App\Models\CareerOpportunitiesBu;
+use App\Models\JobWorkFlow;
 use Illuminate\Support\Carbon;
 use Yajra\DataTables\Facades\DataTables;
 use App\Models\DivisionBranchZoneConfig;
@@ -352,7 +353,89 @@ class CareerOpportunitiesController extends BaseController
         return true;
     }
 
-    /**
-     * Display the specified resource.
-     */
+    public function jobWorkFlowData(Request $request){
+        $data = JobWorkFlow::where('job_id', $request->id)->orderby('approval_number', 'ASC');
+        return DataTables::of($data)
+             ->addColumn('counter', function($row) {
+                static $counter = 0;  
+                return ++$counter;    
+            })
+            ->addColumn('hiring_manager', function($row) {
+                return $row->hiringManager->full_name ? $row->hiringManager->full_name : 'N/A';
+            })
+            ->addColumn('approval_role_id', function($row) {
+                return $row->approval_role_id ? userRoles()[$row->approval_role_id] : 'N/A';
+            })
+            ->addColumn('approval_required', function($row) {
+                return $row->approval_required ? $row->approval_required : 'N/A';
+            })
+            ->addColumn('approve_reject_by', function($row) {
+                return $row->approve_reject_by ? $row->approve_reject_by : 'N/A';
+            })
+            ->addColumn('created_at', function($row) {
+                return $row->created_at ? date('Y-m-d H:i:s',strtotime($row->created_at)) : 'N/A';
+            })
+            ->addColumn('approved_datetime', function($row) {
+                return $row->approved_datetime ? $row->approved_datetime : 'N/A';
+            })
+            ->addColumn('approval_notes', function($row) {
+                return $row->approval_notes ? $row->approval_notes : 'N/A';
+            })
+            ->addColumn('approval_doc', function($row) {
+                return $row->approval_doc ? $row->approval_doc : 'N/A';
+            })
+            ->addColumn('action', function($row){
+                 $btn = ' <div x-data="{ open: false }" @keydown.window.escape="open = false">
+                        <button @click="open = true" class="inline-flex items-center px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-red-600">
+                            Approve
+                        </button>
+                         <form @submit.prevent="submitForm" enctype="multipart/form-data" class="space-y-6">
+                         ' . csrf_field() . '
+                         <div x-show="open" class="fixed inset-0 flex items-center justify-center bg-gray-500 bg-opacity-50 z-50" style="display: none;">
+                            <div class="bg-white rounded-lg shadow-lg max-w-lg mx-4 p-6">
+                                <h2 class="text-lg font-bold mb-4">Approve Workflow</h2>
+                                <p class="mb-4">
+                                <input type="hidden" name="id" value="'.$row->id.'">
+                                <input type="hidden" name="action" value="approve">
+                                <textarea placeholder="Enter your message" rows="4" class="border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 w-full"></textarea>
+                                <input type="file" class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500">
+
+                                </p>
+                                <button type="submit"
+                                    class="inline-flex justify-center px-4 py-2 bg-blue-500 text-white font-semibold text-sm rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+                                    Submit
+                                </button>
+                                <button @click="open = false" class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">
+                                    Close
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+                    <div x-data="{ open: false }" @keydown.window.escape="open = false">
+                        <button @click="open = true" class="inline-flex items-center px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600">
+                            Reject
+                        </button>
+
+                         <div x-show="open" class="fixed inset-0 flex items-center justify-center bg-gray-500 bg-opacity-50 z-50" style="display: none;">
+                            <div class="bg-white rounded-lg shadow-lg w-full max-w-lg mx-4 p-6">
+                                <h2 class="text-lg font-bold mb-4">Modal Title</h2>
+                                <p class="mb-4">This is a modal description.</p>
+                                <button @click="open = false" class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">
+                                    Close
+                                </button>
+                            </div>
+                        </div>
+                    </div>';
+                return $btn;
+            })
+            ->rawColumns(['action'])->make(true);
+
+    }
+
+    public function jobWorkFlowUpdate(Request $request){
+        dd($request->all());
+    }
+
+
 }
