@@ -14,22 +14,23 @@ return new class extends Migration
         Schema::create('admins', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->string('first_name');
-            $table->string('last_name');
-            $table->string('username');
-            $table->string('staf_type');
-            $table->string('member_access');
-            $table->tinyInteger('admin_status');
-            $table->string('profile_image');
-            $table->text('description');
-            $table->dateTime('last_login');
-            $table->tinyInteger('country');
-            $table->string('date_format_php');
-            $table->string('date_format_js');
-            $table->string('phone');
-            $table->string('language');
-            $table->tinyInteger('portal');
+            $table->string('first_name')->nullable();
+            $table->string('last_name')->nullable();
+            $table->string('username')->nullable();
+            $table->string('staf_type')->nullable();
+            $table->string('member_access')->nullable();
+            $table->tinyInteger('admin_status')->nullable();
+            $table->string('profile_image')->nullable();
+            $table->text('description')->nullable();
+            $table->dateTime('last_login')->nullable();
+            $table->tinyInteger('country')->nullable();
+            $table->string('date_format_php')->nullable();
+            $table->string('date_format_js')->nullable();
+            $table->string('phone')->nullable();
+            $table->string('language')->nullable();
+            $table->tinyInteger('portal')->nullable();
             $table->timestamps();
+
         });
     }
 

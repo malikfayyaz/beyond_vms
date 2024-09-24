@@ -42,6 +42,7 @@
             <div class="mb-4">
                 <label for="phone" class="block mb-2">Phone Number</label>
                 <input type="text" id="phone" x-model="formData.phone" class="w-full p-2 border rounded h-10">
+                <p x-show="phoneError" class="text-red-500 text-sm mt-1" x-text="phoneError"></p>
             </div>
 
             <div class="mb-4">
@@ -54,7 +55,7 @@
                 <select id="role" x-model="formData.role" class="w-full p-2 border rounded h-10">
                     <option value="" disabled selected>Select Role</option>
                     @foreach ($roles as $role)
-                        <option value="{{ $role->name }}">{{ $role->name }}</option>
+                        <option value="{{ $role->id }}">{{ $role->name }}</option>
                     @endforeach
                 </select>
                 <p x-show="roleError" class="text-red-500 text-sm mt-1" x-text="roleError"></p>
@@ -75,8 +76,9 @@
                 <label for="status" class="block mb-2">Status <span class="text-red-500">*</span></label>
                 <select id="status" x-model="formData.status" class="w-full p-2 border rounded h-10">
                     <option value="" disabled selected>Select Status</option>
-                    <option value="active">Active</option>
-                    <option value="inactive">Inactive</option>
+                    <option value="Active">Active</option>
+                    <option value="Under Review">Under Review</option>
+                    <option value="Inactive">Inactive</option>
                 </select>
                 <p x-show="statusError" class="text-red-500 text-sm mt-1" x-text="statusError"></p>
             </div>
@@ -99,7 +101,7 @@
             formData: {
                 first_name: '{{ old('first_name', $vendor->first_name ?? '') }}',
                 last_name: '{{ old('last_name', $vendor->last_name ?? '') }}',
-                email: '{{ old('email', $vendor->email ?? '') }}',
+                email: '{{ old('email', $vendor->user->email ?? '') }}',
                 phone: '{{ old('phone', $vendor->phone ?? '') }}',
                 profile_image: null,
                 role: '{{ old('role', $vendor->member_access ?? '') }}',
@@ -117,6 +119,7 @@
             roleError: '',
             countryError: '',
             statusError: '',
+            phoneError: '',
 
             validateFields() {
                 let errorCount = 0;
@@ -140,6 +143,13 @@
                     errorCount++;
                 } else {
                     this.emailError = '';
+                }
+
+                if (this.formData.phone.trim() === "") {
+                    this.phoneError = "Phone address is required";
+                    errorCount++;
+                } else {
+                    this.phoneError = '';
                 }
 
                 if (this.formData.role === "") {

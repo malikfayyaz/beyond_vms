@@ -18,7 +18,7 @@
             </div>
 
             <div class="mb-4">
-                <strong>Email:</strong> {{ $admin->email }}
+                <strong>Email:</strong> {{ $admin->user->email }}
             </div>
 
             <div class="mb-4">
@@ -30,7 +30,7 @@
             </div>
 
             <div class="mb-4">
-                <strong>Status:</strong> {{ ucfirst($admin->status) }}
+                <strong>Status:</strong> {{ $admin->admin_status == 1 ? 'Active' : 'Inactive' }}
             </div>
 
             @if($admin->profile_image)

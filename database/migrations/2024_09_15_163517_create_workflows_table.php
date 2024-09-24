@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('workflows', function (Blueprint $table) {
             $table->id();
             $table->foreignId('client_id')->constrained('clients')->onDelete('cascade');
-            $table->foreignId('approval_role_id')->constrained('roles')->onDelete('cascade');
+            $table->integer('approval_role_id');
             $table->foreignId('hiring_manager_id')->constrained('clients')->onDelete('cascade');
             $table->integer('approval_number')->default('no');
             // Approval required field

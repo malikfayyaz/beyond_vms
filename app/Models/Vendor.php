@@ -12,7 +12,7 @@ class Vendor extends Model
     use HasFactory;
 
     protected $fillable = [
-        'first_name', 'last_name', 'email', 'phone', 'role_id', 'country_id', 'status', 'profile_image', 'member_access'
+        'first_name', 'last_name', 'phone', 'role_id', 'country', 'status', 'profile_image', 'member_access','user_id'
     ];
 
     public function getFullNameAttribute()
@@ -20,21 +20,18 @@ class Vendor extends Model
         return trim($this->first_name . ' ' . ($this->middle_name ?? '') . ' ' . $this->last_name);
     }
 
-    /**
-     * Relationship with the Role model.
-     * Assuming `member_access` is the foreign key for roles.
-     */
     public function role()
     {
         return $this->belongsTo(Role::class, 'member_access', 'id'); // Replace with your foreign key if different
     }
 
-    /**
-     * Relationship with the Country model.
-     * Assuming `country_id` is the foreign key for countries.
-     */
     public function country()
     {
-        return $this->belongsTo(Country::class, 'country_id', 'id');
+        return $this->belongsTo(Country::class, 'country', 'id');
     }
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
 }

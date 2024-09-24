@@ -31,8 +31,8 @@
                     <select id="{{ $field }}" name="{{ $field }}" x-model="{{ $field }}"
                         class="w-full p-2 border rounded h-10 bg-white">
                         <option value="" disabled>Select {{ ucfirst($attributes['label']) }}</option>
-                        @foreach (currency() as $id => $value)
-                            <option value="{{ $id }}">{{ $value }}</option>
+                        @foreach (checksetting(2) as $key => $value)
+                            <option value="{{ $key }}">{{ $value }}</option>
                         @endforeach
                     </select>
                     @elseif ($attributes['type'] === 'select')

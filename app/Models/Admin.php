@@ -11,8 +11,8 @@ class Admin extends Model
 {
     use HasFactory;
 
-     protected $fillable = [
-        'first_name', 'last_name', 'email', 'phone', 'role_id', 'country', 'status', 'profile_image','member_access'
+    protected $fillable = [
+        'first_name', 'last_name', 'phone', 'member_access', 'country', 'admin_status', 'profile_image','member_access','user_id'
     ];
 
 
@@ -24,5 +24,15 @@ class Admin extends Model
     public function country()
     {
         return $this->belongsTo(Country::class, 'country', 'id');
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function getFullNameAttribute()
+    {
+        return trim($this->first_name . ' ' . ($this->middle_name ?? '') . ' ' . $this->last_name);
     }
 }

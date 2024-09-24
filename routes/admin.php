@@ -10,7 +10,9 @@ use App\Http\Controllers\{
     Admin\AdminController,
     Admin\AdminManagementController,
     Admin\ClientManagementController,
-    Admin\VendorManagementController
+    Admin\VendorManagementController,
+    Admin\CareerOpportunitiesOfferController,
+    Admin\SubmissionController,
 
 };
 Route::middleware(['user_role:admin'])->group(function () {
@@ -92,10 +94,20 @@ Route::middleware(['user_role:admin'])->group(function () {
         Route::post('load-job-template', [CatalogController::class, 'loadJobTemplate'])->name('load_job_template');
         Route::post('division-load', [CatalogController::class, 'divisionLoad'])->name('division_load');
         Route::post('job-rates', [RatesController::class, 'jobRates'])->name('job_rates');
+        
         Route::match(['get', 'post'], 'workflow', [GenericDataController::class, 'workflow'])->name('workflow');
+
 
         Route::match(['get', 'post'], 'job-workflow-data', [CareerOpportunitiesController::class, 'jobWorkFlowData'])->name('jobWorkFlowData');
 
         
+
+        // offer
+        Route::get('offer/{id}/create', [CareerOpportunitiesOfferController::class, 'create'])->name('offer.create');
+        Route::match(['get', 'post'], 'workflow/edit/{id}', [GenericDataController::class, 'workflowEdit'])->name('workflow.edit');
+        Route::match(['get', 'post'], 'workflow/store', [GenericDataController::class, 'workflowStore'])->name('workflow.store');
+        Route::match(['get', 'post'], 'submission/index', [SubmissionController::class, 'index'])->name('submission.index');
+        Route::get('/submission/{id}', [SubmissionController::class, 'show'])->name('submission.show');
+
     });
 });

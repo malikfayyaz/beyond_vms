@@ -15,15 +15,52 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Yajra\DataTables\Facades\DataTables;
 
 class SubmissionController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        if ($request->ajax()) {
+            $submissions = CareerOpportunitySubmission::with(['consultant','vendor','careerOpportunity.hiringManager','workerType','location'])->get();
+
+            return DataTables::of($submissions)
+                ->addColumn('consultant_name', function($row) {
+                    return $row->consultant ? $row->consultant->full_name : 'N/A';
+                })
+                ->addColumn('unique_id', function($row) {
+                    return $row->consultant ? $row->consultant->unique_id : 'N/A';
+                })
+                ->addColumn('hiring_manager_name', function($row) {
+                    // Access the hiring manager through the careerOpportunity relationship
+                    return $row->careerOpportunity && $row->careerOpportunity->hiringManager 
+                        ? $row->careerOpportunity->hiringManager->full_name 
+                        : 'N/A';
+                })
+                ->addColumn('location_name', function($row) {
+                    return $row->location->name; // Access the attribute
+                })
+                ->addColumn('vendor_name', function($row) {
+                    return $row->vendor ? $row->vendor->full_name : 'N/A';
+                })
+                ->addColumn('career_opportunity_title', function($row) {
+                    return $row->careerOpportunity ? $row->careerOpportunity->title : 'N/A';
+                })
+                ->addColumn('worker_type', function ($row) {
+                    return $row->workerType ? $row->workerType->title : 'N/A';
+                })
+                ->addColumn('action', function($row) {
+                    return '<a href="' . route('vendor.submission.show', $row->id) . '"
+                                class="text-blue-500 hover:text-blue-700 mr-2 bg-transparent hover:bg-transparent">
+                                    <i class="fas fa-eye"></i>
+                            </a>';
+                })
+                ->make(true);
+        }
+        return view('vendor.submission.index');
     }
 
     /**
@@ -56,7 +93,7 @@ class SubmissionController extends Controller
         $rules = [
             'candidateType' => 'required|integer',
             'candidateSelection' => 'nullable|required_if:candidateType,2',
-            'dobDate' => 'required|date_format:d/m/Y',
+            'dobDate' => 'required|date_format:m/d/Y',
             'lastFourNationalId' => 'required|digits:4',
             'payRate' => 'required|numeric|min:0',
             'billRate' => 'required|numeric|min:0',
@@ -72,7 +109,7 @@ class SubmissionController extends Controller
             'candidateEmail' => 'required|email',
             'phoneNumber' => 'nullable',
             'supplierAccountManager' => 'required|integer',
-            'availableDate' => 'required|date_format:d/m/Y',
+            'availableDate' => 'required|date_format:m/d/Y',
             'needSponsorship' => 'required|in:yes,no',
             'workedForGallagher' => 'required|in:yes,no',
             'gallagherCapacity' => 'nullable|required_if:workedForGallagher,Yes',
@@ -181,9 +218,12 @@ class SubmissionController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show($id)
     {
-        //
+        $submission = CareerOpportunitySubmission::findOrFail($id);
+        
+        // Return a view or other response with the submission details
+        return view('vendor.submission.view', compact('submission'));
     }
 
     /**

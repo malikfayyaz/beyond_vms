@@ -5,6 +5,7 @@
     @include('admin.layouts.partials.dashboard_side_bar')
       <div class="ml-16">
           @include('admin.layouts.partials.header')
+
           <div  x-data="{ tab: 'activejobs' }" class="bg-white mx-4 my-8 rounded p-8">
           <div class="mb-4">
             <ul
@@ -114,6 +115,7 @@
             </ul>
           </div>
           <div x-show="tab === 'activejobs'" class="flex w-full gap-4">
+
             <!-- Left Column -->
             <div
               class="w-1/3 p-[30px] rounded border"

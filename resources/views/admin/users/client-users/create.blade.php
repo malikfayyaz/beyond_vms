@@ -60,12 +60,23 @@
                     />
                 </div>
             </div>
-                <div class="w-1/2 pl-2" :disabled="editIndex !== null">
-                    <label for="email" class="block mb-2">Email Address <span class="text-red-500">*</span></label>
-                    <input type="email" id="email" x-model="formData.email" class="w-full p-2 border rounded h-10" :disabled="editIndex !== null">
-                    <p x-show="emailError" class="text-red-500 text-sm mt-1" x-text="emailError"></p>
-                    <p id="error-message" class="hidden text-red-500"></p>
-                </div>
+                @if($editIndex !== null)
+                    <div class="w-1/2 pl-2">
+                        <label for="user_email" class="block mb-2">Email Address <span class="text-red-500">*</span></label>
+                        <input type="email" id="user_email" x-model="formData.user_email" class="w-full p-2 border rounded h-10" disabled>
+                        <input type="hidden" name="email" x-model="formData.user_email"> <!-- Hidden input -->
+                        <p x-show="emailError" class="text-red-500 text-sm mt-1" x-text="emailError"></p>
+                        <p id="error-message" class="hidden text-red-500"></p>
+                    </div>
+                @else
+                    <div class="w-1/2 pl-2" :disabled="editIndex !== null">
+                        <label for="email" class="block mb-2">Email Address <span class="text-red-500">*</span></label>
+                        <input type="email" id="email" x-model="formData.email" class="w-full p-2 border rounded h-10" :disabled="editIndex !== null">
+                        <p x-show="emailError" class="text-red-500 text-sm mt-1" x-text="emailError"></p>
+                        <p id="error-message" class="hidden text-red-500"></p>
+                    </div>
+                @endif
+
             </div>
             <div class="flex space-x-4 mt-4">
             <div class="flex-1">
@@ -104,8 +115,8 @@
                     <label for="profile_status" class="block mb-2">Profile Status <span class="text-red-500">*</span></label>
                     <select id="profile_status" x-model="formData.profile_status" class="w-full p-2 border rounded h-10">
                         <option value="" disabled selected>Select Status</option>
-                        <option value="active">Active</option>
-                        <option value="inactive">Inactive</option>
+                        <option value="1">Active</option>
+                        <option value="0">Inactive</option>
                     </select>
                     <p x-show="profile_statusError" class="text-red-500 text-sm mt-1" x-text="profile_statusError"></p>
                 </div>
@@ -141,12 +152,13 @@
         function clientForm(editIndex) {
             return {
                 formData: {
+                    user_email: '{{ $user->email }}',
                     first_name: '{{ old('first_name', $client->first_name ?? '') }}',
                     middle_name: '{{ old('last_name', $client->middle_name ?? '') }}',
                     last_name: '{{ old('last_name', $client->last_name ?? '') }}',
                     business_name: '{{ old('business_name', $client->business_name ?? '') }}',
                     organization: '{{ old('business_name', $client->organization ?? '') }}',
-                    email: '{{ old('email', $client->email ?? '') }}',
+                    email: editIndex !== null ? '{{ $user->email }}' : '{{ old('email', $client->email ?? '') }}',
                     phone: '{{ old('phone', $client->phone ?? '') }}',
                     description: '{{ old('phone', $client->description ?? '') }}',
                     profile_image: null,
@@ -187,11 +199,13 @@
                         this.lastNameError = '';
                     }
 
-                    if (this.formData.email.trim() === "") {
-                        this.emailError = "Email address is required";
-                        errorCount++;
-                    } else {
-                        this.emailError = '';
+                    if (this.editIndex === null) {  // Only validate if not in edit mode
+                        if (this.formData.email.trim() === "") {
+                            this.emailError = "Email address is required";
+                            errorCount++;
+                        } else {
+                            this.emailError = '';
+                        }
                     }
 
                     if (this.formData.role === "") {

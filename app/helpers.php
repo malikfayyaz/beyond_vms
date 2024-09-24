@@ -20,6 +20,7 @@ function userType(){
 
 
 
+
 function userRoles(){
     $array = array(
         '1' => 'Branch Manager',
@@ -41,6 +42,7 @@ function currency(){
     );
     return $curr;
 }
+
 
 if (!function_exists('getActiveRoles')) {
     function getActiveRoles(User $user): array

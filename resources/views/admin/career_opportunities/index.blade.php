@@ -19,6 +19,111 @@
                      </button>
                  </div>
              </div>
+             <div class="mb-4">
+                 <ul
+                     class="grid grid-flow-col text-center text-gray-500 bg-gray-100 rounded-lg p-1"
+                 >
+                     <li class="flex justify-center">
+                         <a
+                             href="#page1"
+                             class="w-full flex justify-center items-center gap-3 hover:bg-white hover:rounded-lg hover:shadow py-4"
+                         >
+                             <i class="fa-regular fa-file-lines"></i>
+                             <span class="capitalize">active jobs</span>
+                             <div
+                                 class="px-1 py-1 flex items-center justify-center bg-gray-500 text-white rounded-lg"
+                             >
+                                 <span class="text-[10px]">156</span>
+                             </div>
+                         </a>
+                     </li>
+                     <li class="flex justify-center items-center">
+                         <a
+                             href="#page2"
+                             class="w-full flex justify-center items-center gap-3 bg-white rounded-lg shadow py-4"
+                             :style="{'color': 'var(--primary-color)'}"
+                         ><i class="fa-regular fa-registered"></i
+                             ><span class="capitalize">Pending Release Job</span>
+                             <div
+                                 class="px-1 py-1 flex items-center justify-center text-white rounded-lg"
+                                 :style="{'background-color': 'var(--primary-color)'}"
+                             >
+                                 <span class="text-[10px]">56</span>
+                             </div>
+                         </a>
+                     </li>
+                     <li class="flex justify-center">
+                         <a
+                             href="#page1"
+                             class="flex justify-center items-center gap-3 py-4 w-full hover:bg-white hover:rounded-lg hover:shadow"
+                         >
+                             <i class="fa-solid fa-fill"></i>
+                             <span class="capitalize">filled jobs</span>
+                             <div
+                                 class="px-1 py-1 flex items-center justify-center bg-gray-500 text-white rounded-lg"
+                             >
+                                 <span class="text-[10px]">20</span>
+                             </div>
+                         </a>
+                     </li>
+                     <li class="flex justify-center">
+                         <a
+                             href="#page1"
+                             class="flex justify-center items-center gap-3 py-4 w-full hover:bg-white hover:rounded-lg hover:shadow"
+                         >
+                             <i class="fa-solid fa-lock"></i>
+                             <span class="capitalize">closed jobs</span>
+                             <div
+                                 class="px-1 py-1 flex items-center justify-center bg-gray-500 text-white rounded-lg"
+                             >
+                                 <span class="text-[10px]">2957</span>
+                             </div>
+                         </a>
+                     </li>
+                     <li class="flex justify-center">
+                         <a
+                             href="#page1"
+                             class="flex justify-center items-center gap-3 py-4 w-full hover:bg-white hover:rounded-lg hover:shadow"
+                         >
+                             <i class="fa-solid fa-spinner"></i>
+                             <span class="capitalize">pending - PMO</span>
+                             <div
+                                 class="px-1 py-1 flex items-center justify-center bg-gray-500 text-white rounded-lg"
+                             >
+                                 <span class="text-[10px]">0</span>
+                             </div>
+                         </a>
+                     </li>
+                     <li class="flex justify-center">
+                         <a
+                             href="#page1"
+                             class="flex justify-center items-center gap-3 py-4 w-full hover:bg-white hover:rounded-lg hover:shadow"
+                         >
+                             <i class="fas fa-drafting-compass"></i>
+                             <span class="capitalize">draft</span>
+                             <div
+                                 class="px-1 py-1 flex items-center justify-center bg-gray-500 text-white rounded-lg"
+                             >
+                                 <span class="text-[10px]">30</span>
+                             </div>
+                         </a>
+                     </li>
+                     <li class="flex justify-center">
+                         <a
+                             href="#page1"
+                             class="flex justify-center items-center gap-3 py-4 w-full hover:bg-white hover:rounded-lg hover:shadow"
+                         >
+                             <i class="fa-solid fa-briefcase"></i>
+                             <span class="capitalize">all jobs</span>
+                             <div
+                                 class="px-1 py-1 flex items-center justify-center bg-gray-500 text-white rounded-lg"
+                             >
+                                 <span class="text-[10px]">4320</span>
+                             </div>
+                         </a>
+                     </li>
+                 </ul>
+             </div>
            <table class="min-w-full divide-y divide-gray-200" id="example">
                       <thead class="bg-gray-50">
                         <tr>
@@ -56,6 +161,11 @@
                           >
                             Job Duration
                           </th>
+                            <th
+                                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                            >
+                                Submissions
+                            </th>
                           <th
                             class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                           >
@@ -88,25 +198,21 @@
       document.addEventListener('DOMContentLoaded', function() {
                  console.log(window.$); // Verify jQuery is available
                 if (window.$) {
-                  const id = '{{ }}';
-                  initializeDataTable('#example', {
-                      url: '/admin/career-opportunities', 
-                      data: function(d){
-                        d.id = id;
-                      }
-                    },
-                    [
-                      { data: 'jobStatus', name: 'jobStatus' },
-                      { data: 'id', name: 'id' },
-                      { data: 'title', name: 'title' },
-                      { data: 'alternative_job_title', name: 'alternative_job_title' },
-                      { data: 'hiring_manager', name: 'hiring_manager' },
-                      { data: 'duration', name: 'duration' },
+
+                    initializeDataTable('#example', '/admin/career-opportunities', [
+                        { data: 'jobStatus', name: 'jobStatus' },
+                        { data: 'id', name: 'id' },
+                        { data: 'title', name: 'title' },
+                        { data: 'alternative_job_title', name: 'alternative_job_title' },
+                        { data: 'hiring_manager', name: 'hiring_manager' },
+                        { data: 'duration', name: 'duration' },
+                        { data: 'submissions', name: 'submissions' }, // Make sure this matches the column name
                         { data: 'num_openings', name: 'num_openings' },
-                      { data: 'worker_type', name: 'worker_type' },
-                      {data: 'action', name: 'action', orderable: false, searchable: false}
+                        { data: 'worker_type', name: 'worker_type' },
+                        {data: 'action', name: 'action', orderable: false, searchable: false}
                     ]);
-                  }
+                }
+
 
       });
    </script>
