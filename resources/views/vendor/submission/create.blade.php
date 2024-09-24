@@ -3,8 +3,8 @@
 @section('content')
       <!-- Sidebar -->
       @include('vendor.layouts.partials.dashboard_side_bar') <!-- Include the partial view -->
-      
-      
+
+
       <div class="ml-16">
       @include('vendor.layouts.partials.header')
        <div
@@ -13,9 +13,9 @@
          x-init="mounted()"
        >
          <!-- Success Notification -->
-        
+
          @include('vendor.layouts.partials.alerts')
-        
+
          <!-- Progress bar -->
          <div class="mb-8">
            <div class="flex mb-2">
@@ -200,7 +200,7 @@
               <input type="hidden" value ="0.00" id="client_over_time_rate">
               <input type="hidden" value ="0.00" id="client_double_time_rate">
               <input type="hidden" value ="0.00" id="vendor_bill_rate">
-             
+
                <div class="flex space-x-4 mb-4">
                  <div class="flex-1">
                    <label class="block mb-2"
@@ -225,10 +225,10 @@
                    ></p>
                  </div>
                  <!-- Form Fields for Client New or Existing -->
-                  @php 
+                  @php
                   $allcandidates = \App\Models\Consultant::where('vendor_id', \Auth::id())
                         ->get();
-                        
+
                         @endphp
                  <div class="flex-1">
                    <div x-show="formData.candidateType === '2'">
@@ -245,7 +245,7 @@
                        @foreach($allcandidates as $candidate)
                        <option value="{{$candidate->user_id}}">{{ $candidate->full_name }}</option>
                         @endforeach
-                      
+
                      </select>
                      <p
                        x-show="showErrors && !isFieldValid('candidateSelection')"
@@ -275,7 +275,26 @@
                </div>
 
                <div class="flex space-x-4 mb-4">
-                 <div class="flex-1">
+                   <div class="flex-1">
+                       <label class="block mb-2"
+                       >Candidate Email Address
+                           <span class="text-red-500">*</span></label
+                       >
+                       <input
+                           type="email"
+                           x-model="formData.candidateEmail"
+{{--                           :readonly="formData.candidateType === '2'"--}}
+                           class="w-full h-12 px-4 text-gray-500 border border-gray-300 rounded-md shadow-sm focus:outline-none"
+                           placeholder="Enter email address"
+                           id="candidateEmail"
+                       />
+                       <p
+                           x-show="showErrors && !isFieldValid('candidateEmail')"
+                           class="text-red-500 text-sm mt-1"
+                           x-text="getErrorMessageById('candidateEmail')"
+                       ></p>
+                   </div>
+                   <div class="flex-1">
                    <label class="block mb-2"
                      >First Name <span class="text-red-500">*</span></label
                    >
@@ -596,7 +615,7 @@
                      x-text="getErrorMessageById('preferredName')"
                    ></p>
                  </div>
-               
+
                </div>
                <div class="flex space-x-4 mb-4">
                  <div class="flex-1">
@@ -665,24 +684,6 @@
                  </div>
                </div>
                <!-- Add this after the existing fields in Step 3 -->
-               <div class="flex-1">
-                   <label class="block mb-2"
-                     >Candidate Email Address
-                     <span class="text-red-500">*</span></label
-                   >
-                   <input
-                     type="email"
-                     x-model="formData.candidateEmail"
-                     class="w-full h-12 px-4 text-gray-500 border border-gray-300 rounded-md shadow-sm focus:outline-none"
-                     placeholder="Enter email address"
-                     id="candidateEmail"
-                   />
-                   <p
-                     x-show="showErrors && !isFieldValid('candidateEmail')"
-                     class="text-red-500 text-sm mt-1"
-                     x-text="getErrorMessageById('candidateEmail')"
-                   ></p>
-                 </div>
                <div class="flex space-x-4 mb-4">
                  <div class="flex-1">
                    <label class="block mb-2">Phone Number</label>
@@ -712,9 +713,9 @@
                      id="supplierAccountManager"
                    >
                      <option value="">Select Supplier Account Manager</option>
-                    
+
                             <option value="{{ $vendor->user_id }}">{{ $vendor->full_name }}</option>
-                     
+
                    </select>
                    <p
                      x-show="showErrors && !isFieldValid('supplierAccountManager')"
@@ -951,10 +952,10 @@
                  </div>
                </div>
 
-             
+
 
                <!-- Conditional fields for Virtual/Remote Candidate -->
-            
+
 
                <!-- Add this new row after the existing fields in Step 3 -->
                <div class="flex space-x-4 mb-4">
@@ -1045,7 +1046,7 @@
                      x-text="getErrorMessageById('virtualCity')"
                    ></p>
                  </div>
-                
+
                  <div class="flex-1">
                    <!-- This empty div is to maintain the layout consistency -->
                  </div>
@@ -1109,4 +1110,4 @@
        </div>
      </div>
       @endsection
-   
+

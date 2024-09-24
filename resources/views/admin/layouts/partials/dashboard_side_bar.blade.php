@@ -54,14 +54,14 @@
               </button>
               <ul x-show="open" class="py-2 space-y-2" x-cloak>
                 <!-- Job create -->
-                 
+
                       <li class="{{ request()->routeIs('admin.career-opportunities.index') ? 'active' : '' }}">
                           <a href="{{ route('admin.career-opportunities.index') }}"
                              class="flex items-center w-full p-2 text-white transition duration-75 pl-11 hover:bg-gray-700">
                                Job
                           </a>
                       </li>
-                 
+
                   @can('catalog-index')
                   <li class="{{ request()->routeIs('admin.catalog.index') ? 'active' : '' }}">
                   <a href="{{ route('admin.catalog.index') }}"
@@ -275,22 +275,19 @@
                                                 Assign Roles to Permissions
                                             </a>
                                         </li>
-                                        @can('roles-index')
                                             <li class="{{ request()->routeIs('roles.index') ? 'active' : '' }}">
                                                 <a href="{{ route('roles.index') }}"
                                                    class="flex items-center w-full p-2 text-white transition duration-75 pl-11 hover:bg-gray-700">
                                                     Roles
                                                 </a>
                                             </li>
-                                        @endcan
-                                        @can('permissions-index')
                                             <li class="{{ request()->routeIs('permissions.index') ? 'active' : '' }}">
                                                 <a href="{{ route('permissions.index') }}"
                                                    class="flex items-center w-full p-2 text-white transition duration-75 pl-11 hover:bg-gray-700">
                                                     Permission
                                                 </a>
                                             </li>
-                                        @endcan
+
                                     </ul>
 
                                 </li>
