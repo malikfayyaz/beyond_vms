@@ -94,13 +94,6 @@
                   </a>
               </li>
 
-                <li>
-                  <a
-                    href="#"
-                    class="flex items-center w-full p-2 text-white transition duration-75 pl-11 hover:bg-gray-700"
-                    >Details</a
-                  >
-                </li>
               </ul>
             </li>
             <li>

@@ -195,7 +195,7 @@
                           <span class="text-gray-600">OT Eligible?</span>
                           <span
                             class="font-semibold"
-                          >{{$submission->ot_exempt_position == 'yes' ? 'Yes' : 'No'}}</span>
+                          >{{ucfirst($submission->ot_exempt_position == 'yes' ? 'Yes' : 'No')}}</span>
                         </div>
                         <div class="flex justify-between py-3 px-4">
                           <span class="text-gray-600"
@@ -204,7 +204,7 @@
                           >
                           <span
                             class="font-semibold"
-                          >{{$submission->require_employment_visa_sponsorship == 'yes' ? 'Yes' : 'No'}}</span>
+                          >{{ucfirst($submission->require_employment_visa_sponsorship == 'yes' ? 'Yes' : 'No')}}</span>
                         </div>
                         <div class="flex justify-between py-3 px-4">
                           <span class="text-gray-600"
@@ -213,7 +213,7 @@
                           >
                           <span
                             class="font-semibold"
-                          >{{$submission->willing_relocate == 'yes' ? 'Yes' : 'No'}}</span>
+                          >{{ ucfirst($submission->willing_relocate == 'yes' ? 'Yes' : 'No') }}</span>
                         </div>
                         <!-- <div class="flex justify-between py-3 px-4">
                           <span class="text-gray-600"
@@ -249,7 +249,7 @@
                           >
                           <span
                             class="font-semibold"
-                          >{{$submission->retiree == 'yes' ? 'Yes' : 'No'}}</span>
+                          >{{ucfirst($submission->retiree == 'yes' ? 'Yes' : 'No')}}</span>
                         </div>
                         <div class="flex justify-between py-3 px-4">
                           <span class="text-gray-600">Country:</span>
@@ -263,7 +263,7 @@
                           >
                           <span
                             class="font-semibold"
-                          >{{$submission->remote_contractor == 'yes' ? 'Yes' : 'No'}}</span>
+                          >{{ucfirst($submission->remote_contractor == 'yes' ? 'Yes' : 'No')}}</span>
                         </div>
                         <div class="flex justify-between py-3 px-4">
                           <span class="text-gray-600">Submission Date:</span>
