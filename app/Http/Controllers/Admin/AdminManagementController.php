@@ -253,17 +253,22 @@ class AdminManagementController extends Controller
      */
     public function destroy($id)
     {
-        // Find the admin by ID
-        $admin = Admin::findOrFail($id);
+        \DB::transaction(function () use ($id) {
+            
+            $admin = Admin::findOrFail($id);
+            $user = User::findOrFail($admin->user_id);
+    
+            
+            if ($admin->profile_image && \Storage::disk('public')->exists($admin->profile_image)) {
+                \Storage::disk('public')->delete($admin->profile_image);
+            }
 
-        // Check if the admin has a profile image and delete the file if it exists
-        if ($admin->profile_image && \Storage::exists('public/' . $admin->profile_image)) {
-            \Storage::delete('public/' . $admin->profile_image);
-        }
-        
-
-        // Delete the admin record
-        $admin->delete();
+            $user->syncRoles([]); 
+            $user->syncPermissions([]);
+            
+            $user->delete();
+            $admin->delete();
+        });
 
 
         // If not an AJAX request, redirect back with success message
