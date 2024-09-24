@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\Admin;
-
+use App\Mail\ClientCreated;
 use App\Http\Controllers\Client\ClientController;
 use App\Http\Controllers\Controller;
 use App\Models\Admin;
@@ -12,7 +12,7 @@ use Carbon\Carbon;
 use App\Models\Country;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Mail\ClientCreated;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -168,10 +168,14 @@ class ClientManagementController extends Controller
             if ($request->hasFile('profile_image')) {
                 $imagePath = handleFileUpload($request, 'profile_image', 'admin_profile');
                 $client->profile_image = $imagePath;
-                $client->save();
             }
+            $client->save();
         }
         $this->updateRoles($client, $role);
+/*        dump($email);
+        dump($client);
+        dd('here');*/
+        Mail::to($email)->send(new ClientCreated($client, $user, 'password'));
         session()->flash('success', 'Client created successfully!');
         return response()->json(['success' => true, 'redirect_url' => route('admin.client-users.index')]);
     }
