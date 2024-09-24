@@ -183,7 +183,7 @@
                           <span class="text-gray-600">Resume:</span>
                           <span
                             class="font-semibold"
-                            >{{$submission->consultant->resume}}</span>
+                            >{{$submission->resume}}</span>
                         </div>
                         <div class="flex justify-between py-3 px-4">
                           <span class="text-gray-600">Vendor Name:</span>
@@ -356,15 +356,15 @@
             <div class="w-2/4 bg-white h-[1024px] mx-4 rounded p-8">
             @if ($submission->resume)
             <object
-                data="{{ asset('storage/submission_resume/' . $submission->resume) }}"
-                type="application/pdf"
-                width="100%"
-                height="100%"
+              data="{{ asset('storage/submission_resume/' . $submission->resume) }}"
+              type="application/pdf"
+              width="100%"
+              height="100%"
             >
-                <p>
-                    Alternative text - include a link
-                    <a href="{{ asset('storage/submission_resume/' . $submission->resume) }}">to the PDF!</a>
-                </p>
+              <p>
+                Alternative text - include a link
+                <a href="{{ asset('storage/submission_resume/' . $submission->resume) }}">to the PDF!</a>
+              </p>
             </object>
             @else
                 <p>No resume available.</p>
