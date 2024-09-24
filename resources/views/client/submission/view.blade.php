@@ -355,19 +355,19 @@
             </div>
             <div class="w-2/4 bg-white h-[1024px] mx-4 rounded p-8">
             @if ($submission->resume)
-            <object
-              data="{{ asset('storage/submission_resume/' . $submission->resume) }}"
-              type="application/pdf"
-              width="100%"
-              height="100%"
-            >
-              <p>
-                Alternative text - include a link
-                <a href="{{ asset('storage/submission_resume/' . $submission->resume) }}">to the PDF!</a>
-              </p>
-            </object>
+              <object
+                data="{{ asset('storage/submission_resume/' . $submission->resume) }}"
+                type="application/pdf"
+                width="100%"
+                height="100%"
+              >
+                <p>
+                  Alternative text - include a link
+                  <a href="{{ asset('storage/submission_resume/' . $submission->resume) }}">to the PDF!</a>
+                </p>
+              </object>
             @else
-                <p>No resume available.</p>
+              <p>No resume available.</p>
             @endif
             </div>
           </div>
