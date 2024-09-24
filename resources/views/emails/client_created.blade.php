@@ -9,7 +9,7 @@
 <p><strong>Email:</strong> {{ $user->email }}</p>
 <p><strong>Organization:</strong> {{ $client->organization }}</p>
 <p><strong>Business Name:</strong> {{ $client->business_name }}</p>
-<p><strong>Business Name:</strong> {{ $client->created_at }}</p>
+<p><strong>Created At:</strong> {{ $client->created_at }}</p>
 <p>Thank you for joining us!</p>
 </body>
 </html>
