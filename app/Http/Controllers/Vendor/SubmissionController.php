@@ -31,6 +31,9 @@ class SubmissionController extends Controller
                 ->addColumn('consultant_name', function($row) {
                     return $row->consultant ? $row->consultant->full_name : 'N/A';
                 })
+                ->addColumn('unique_id', function($row) {
+                    return $row->consultant ? $row->consultant->unique_id : 'N/A';
+                })
                 ->addColumn('hiring_manager_name', function($row) {
                     // Access the hiring manager through the careerOpportunity relationship
                     return $row->careerOpportunity && $row->careerOpportunity->hiringManager 
@@ -90,7 +93,7 @@ class SubmissionController extends Controller
         $rules = [
             'candidateType' => 'required|integer',
             'candidateSelection' => 'nullable|required_if:candidateType,2',
-            'dobDate' => 'required|date_format:d/m/Y',
+            'dobDate' => 'required|date_format:m/d/Y',
             'lastFourNationalId' => 'required|digits:4',
             'payRate' => 'required|numeric|min:0',
             'billRate' => 'required|numeric|min:0',
@@ -106,7 +109,7 @@ class SubmissionController extends Controller
             'candidateEmail' => 'required|email',
             'phoneNumber' => 'nullable',
             'supplierAccountManager' => 'required|integer',
-            'availableDate' => 'required|date_format:d/m/Y',
+            'availableDate' => 'required|date_format:m/d/Y',
             'needSponsorship' => 'required|in:yes,no',
             'workedForGallagher' => 'required|in:yes,no',
             'gallagherCapacity' => 'nullable|required_if:workedForGallagher,Yes',

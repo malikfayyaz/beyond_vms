@@ -54,14 +54,14 @@
               </button>
               <ul x-show="open" class="py-2 space-y-2" x-cloak>
                 <!-- Job create -->
-                  @can('job-index')
+                 
                       <li class="{{ request()->routeIs('admin.career-opportunities.index') ? 'active' : '' }}">
                           <a href="{{ route('admin.career-opportunities.index') }}"
                              class="flex items-center w-full p-2 text-white transition duration-75 pl-11 hover:bg-gray-700">
                                Job
                           </a>
                       </li>
-                  @endcan
+                 
                   @can('catalog-index')
                   <li class="{{ request()->routeIs('admin.catalog.index') ? 'active' : '' }}">
                   <a href="{{ route('admin.catalog.index') }}"
@@ -73,6 +73,44 @@
               </ul>
 
             </li>
+
+            <li x-data="{ open: false }">
+              <button
+                @click="open = !open"
+                class="flex items-center w-full p-2 text-white rounded-lg hover:bg-gray-700 overflow-hidden"
+                :class="{'justify-center': miniSidebar}"
+              >
+                <i class="fas fa-shopping-cart w-6 h-6"></i>
+                <span
+                  class="flex-1 ml-3 text-left whitespace-nowrap"
+                  x-show="!miniSidebar"
+                  x-cloak
+                  >Submission</span
+                >
+                <i
+                  class="fas fa-chevron-down ml-auto"
+                  x-show="!miniSidebar"
+                  x-cloak
+                ></i>
+              </button>
+              <ul x-show="open" class="py-2 space-y-2" x-cloak>
+                <li>
+                <li class="{{ request()->routeIs('admin.submission.index') ? 'active' : ''}}">
+                  <a href="{{ route('admin.submission.index') }}"
+                    class="flex items-center w-full p-2 text-white transition duration-75 pl-11 hover:bg-gray-700">
+                    Submission
+                  </a>
+              </li>
+
+              </ul>
+            </li>
+
+            <li x-cloak class="">
+            <a href="{{ route('admin.offer.create',  ['id' => 1]) }}"
+            class="flex items-center w-full p-2 text-white transition duration-75 pl-11 hover:bg-gray-700">
+                               offer
+                          </a>
+                      </li>
             <!-- <li>
               <a
                 href="#"
