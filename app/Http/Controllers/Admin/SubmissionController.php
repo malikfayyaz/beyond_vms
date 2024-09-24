@@ -40,7 +40,7 @@ class SubmissionController extends Controller
                     return $row->workerType ? $row->workerType->title : 'N/A';
                 })
                 ->addColumn('action', function($row) {
-                    return '<a href="' . route('vendor.submission.show', $row->id) . '"
+                    return '<a href="' . route('admin.submission.show', $row->id) . '"
                                 class="text-blue-500 hover:text-blue-700 mr-2 bg-transparent hover:bg-transparent">
                                     <i class="fas fa-eye"></i>
                             </a>';
@@ -48,5 +48,13 @@ class SubmissionController extends Controller
                 ->make(true);
         }
         return view('admin.submission.index');
+    }
+
+    public function show($id)
+    {
+        $submission = CareerOpportunitySubmission::findOrFail($id);
+        
+        // Return a view or other response with the submission details
+        return view('admin.submission.view', compact('submission'));
     }
 }
