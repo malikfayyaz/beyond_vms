@@ -99,9 +99,15 @@ Route::middleware(['user_role:admin'])->group(function () {
 
         // offer
         Route::get('offer/{id}/create', [CareerOpportunitiesOfferController::class, 'create'])->name('offer.create');
+        Route::get('offer/index', [CareerOpportunitiesOfferController::class, 'index'])->name('offer.index');
+        Route::get('offer/{id}', [CareerOpportunitiesOfferController::class, 'show'])->name('submission.show');
+        
+        //workflow
         Route::match(['get', 'post'], 'workflow/edit/{id}', [GenericDataController::class, 'workflowEdit'])->name('workflow.edit');
         Route::match(['get', 'post'], 'workflow/store', [GenericDataController::class, 'workflowStore'])->name('workflow.store');
+        
+        //submission
         Route::match(['get', 'post'], 'submission/index', [SubmissionController::class, 'index'])->name('submission.index');
-        Route::get('/submission/{id}', [SubmissionController::class, 'show'])->name('submission.show');
+        Route::get('submission/{id}', [SubmissionController::class, 'show'])->name('submission.show');
     });
 });
