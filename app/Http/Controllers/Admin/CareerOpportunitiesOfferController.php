@@ -7,15 +7,47 @@ use App\Models\CareerOpportunitiesOffer;
 use App\Models\CareerOpportunitySubmission;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use Yajra\DataTables\Facades\DataTables;
 
 class CareerOpportunitiesOfferController extends BaseController
 {
     // Display a listing of career opportunities
-    public function index()
+    public function index(Request $request)
     {
-        // $offers = CareerOpportunitiesOffer::all();
-        $offers = "offer";
-        return view('admin.offer.index', compact('offers'));
+        if ($request->ajax()) {
+            $offers = CareerOpportunitiesOffer::with(['consultant','careerOpportunity','hiringManager','venDor'])->get();
+            return DataTables::of($offers)
+                ->addColumn('consultant_name', function($row) {
+                    return $row->consultant ? $row->consultant->full_name : 'N/A';
+                })
+                ->addColumn('career_opportunity', function($row) {
+                    return $row->careerOpportunity ? $row->careerOpportunity->title . '('.$row->careerOpportunity->id.')' : 'N/A';
+                })
+                ->addColumn('hiring_manger', function($row) {
+                    return $row->hiringManager ? $row->hiringManager->full_name : 'N/A';
+                })
+                ->addColumn('vendor_name', function($row) {
+                    return $row->venDor ? $row->venDor->full_name : 'N/A';
+                })
+                ->addColumn('created_at', function($row) {
+                    return $row->created_at ? $row->created_at->format('Y-m-d') : 'N/A';
+                })
+                ->addColumn('wo_status', function($row) {
+                    return  '';
+                })->addColumn('worker_type', function($row) {
+                    return $row->careerOpportunity && $row->careerOpportunity->workerType 
+                        ? $row->careerOpportunity->workerType->title
+                        : 'N/A';
+                })
+                ->addColumn('action', function($row) {
+                    return '<a href="' . route('admin.offer.show', $row->id) . '"
+                                class="text-blue-500 hover:text-blue-700 mr-2 bg-transparent hover:bg-transparent">
+                                    <i class="fas fa-eye"></i>
+                            </a>';
+                })
+                ->make(true);
+            }
+        return view('admin.offer.index');
     }
 
     // Show the form for creating a new career opportunity offer
