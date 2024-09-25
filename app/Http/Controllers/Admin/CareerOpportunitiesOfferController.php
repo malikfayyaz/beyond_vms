@@ -24,7 +24,7 @@ class CareerOpportunitiesOfferController extends BaseController
                     return $row->careerOpportunity ? $row->careerOpportunity->title . '('.$row->careerOpportunity->id.')' : 'N/A';
                 })
                 ->addColumn('hiring_manger', function($row) {
-                    return $row->hiringManager ? $row->hiringManager->full_name : 'N/A';
+                    return $row->careerOpportunity->hiringManager ? $row->careerOpportunity->hiringManager->fullname : 'N/A';
                 })
                 ->addColumn('vendor_name', function($row) {
                     return $row->venDor ? $row->venDor->full_name : 'N/A';
@@ -152,8 +152,7 @@ class CareerOpportunitiesOfferController extends BaseController
     // Show a specific career opportunity offer
     public function show($id)
     {
-        // $offer = CareerOpportunitiesOffer::findOrFail($id);
-        $offer = "offer";
+        $offer = CareerOpportunitiesOffer::findOrFail($id);
         return view('admin.offer.show', compact('offer'));
     }
 
