@@ -23,7 +23,7 @@ class AdminManagementController extends Controller
         if ($request->ajax()) {
             // Eager load the role relationship
             $admins = Admin::with('role','user')->get();
-            
+
             return datatables()->of($admins)
                 ->addColumn('role', function($admin) {
                     return $admin->role ? $admin->role->name : 'N/A'; // Access the role name
@@ -47,7 +47,7 @@ class AdminManagementController extends Controller
                         >
                         <i class="fas fa-edit"></i>
                         </a>
-                    
+
                             <form action="'. route('admin.admin-users.destroy', $admin->id) .'" method="POST" style="display:inline;" onsubmit="return confirm(\'Are you sure?\');">
                             ' . csrf_field() . method_field('DELETE') . '
                             <button type="submit" class="text-red-500 hover:text-red-700 bg-transparent hover:bg-transparent">
@@ -73,7 +73,7 @@ class AdminManagementController extends Controller
         $user = Auth::user();
         $countries = Country::all();
         // dd($roles);
-        
+
         return view('admin.users.admin_users.create', compact('roles', 'countries'));
     }
 
@@ -82,7 +82,7 @@ class AdminManagementController extends Controller
      */
     public function store(Request $request)
     {
-        $login_user = Auth::user();   
+        $login_user = Auth::user();
         $countries = Country::all();
         // Validation
         $validatedData = $request->validate([
@@ -95,14 +95,13 @@ class AdminManagementController extends Controller
             'profile_image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048'
         ]);
 
-        $request_email = $request->validate(['email' => 'required|email|unique:users,email']);
+        $request_email = $request->validate(['email' => 'required|email:users,email']);
 
         $user = User::where('email', $request_email)->first();
-       
         if ($user) {
-        
+
             $adminRecord = Admin::where('user_id', $user->id)->first();
-            
+
             if ($adminRecord) {
 
                 $errorMessage = 'An admin record already exists for this email.';
@@ -116,7 +115,7 @@ class AdminManagementController extends Controller
             } else {
 
                 $validatedData['user_id'] = $user->id;
-                
+
                 $admin = Admin::create($validatedData);
 
                 // Handle the profile image upload if provided
@@ -135,7 +134,7 @@ class AdminManagementController extends Controller
             ];
 
             $user = User::create($userData);
-            
+
             $validatedData['user_id'] = $user->id;
 
             $admin = Admin::create($validatedData);
@@ -151,11 +150,11 @@ class AdminManagementController extends Controller
 
         $role = $validatedData['member_access'];
 
-        $this->updateRoles($admin,$role);         
+        $this->updateRoles($admin,$role);
 
         $successMessage = 'Admin created successfully!';
         session()->flash('success', $successMessage);
-    
+
         return response()->json([
             'success' => true,
             'message' => $successMessage,
@@ -179,8 +178,8 @@ class AdminManagementController extends Controller
      * Show the form for editing the specified resource.
      */
     public function edit($id)
-    { 
-        $admin = Admin::findOrFail($id);      
+    {
+        $admin = Admin::findOrFail($id);
         $roles = Role::where('user_type_id', 1)->get();
         $countries = Country::all();
 
@@ -189,8 +188,8 @@ class AdminManagementController extends Controller
             'roles' => $roles,
             'countries' => $countries,
             'editMode' => true ,
-            'editIndex' => $id  
-        ]);  
+            'editIndex' => $id
+        ]);
     }
 
     /**
@@ -209,7 +208,7 @@ class AdminManagementController extends Controller
         ]);
 
         $admin = Admin::findOrFail($id);
-        
+
         $admin->update([
             'first_name' => $validatedData['first_name'],
             'last_name' => $validatedData['last_name'],
@@ -218,28 +217,28 @@ class AdminManagementController extends Controller
             'country' => $validatedData['country'],
             'admin_status' => $validatedData['admin_status'],
         ]);
-    
+
         // Handle profile image upload if provided
         if ($request->hasFile('profile_image')) {
             // Delete old image if exists
             if ($admin->profile_image) {
                 Storage::disk('public')->delete($admin->profile_image);
             }
-    
+
             // Upload new profile image
             $imagePath = handleFileUpload($request, 'profile_image', 'admin_profile');
             if ($imagePath) {
                 $admin->update(['profile_image' => $imagePath]); // Mass assign the image path
             }
         }
-        
+
         $role = $validatedData['member_access'];
-        
+
         $this->updateRoles($admin,$role);
-      
+
         $successMessage = 'Admin updated successfully!';
         session()->flash('success', $successMessage);
-    
+
         return response()->json([
             'success' => true,
             'message' => $successMessage,
@@ -260,7 +259,7 @@ class AdminManagementController extends Controller
         if ($admin->profile_image && \Storage::exists('public/' . $admin->profile_image)) {
             \Storage::delete('public/' . $admin->profile_image);
         }
-        
+
 
         // Delete the admin record
         $admin->delete();
