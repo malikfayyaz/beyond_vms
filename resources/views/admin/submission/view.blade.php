@@ -355,9 +355,10 @@
             </div>
             <div class="w-2/4 bg-white h-[1024px] mx-4 rounded p-8">
             @if ($submission->resume)
+           @php $fileExtension = pathinfo($submission->resume, PATHINFO_EXTENSION); @endphp
               <object
                 data="{{ asset('storage/submission_resume/' . $submission->resume) }}"
-                type="application/pdf"
+                type="application/{{$fileExtension}}"
                 width="100%"
                 height="100%"
               >
