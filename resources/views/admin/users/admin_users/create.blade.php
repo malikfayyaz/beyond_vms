@@ -40,7 +40,7 @@
             </div>
 
             <div class="mb-4">
-                <label for="phone" class="block mb-2">Phone Number</label>
+                <label for="phone" class="block mb-2">Phone Number <span class="text-red-500">*</span></label>
                 <input type="text" id="phone" x-model="formData.phone" class="w-full p-2 border rounded h-10">
                 <p x-show="phoneError" class="text-red-500 text-sm mt-1" x-text="phoneError"></p>
             </div>

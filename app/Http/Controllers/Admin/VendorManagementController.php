@@ -82,7 +82,7 @@ class VendorManagementController extends Controller
     public function store(Request $request)
     {
         $user = Auth::user();
-        $countries = Country::all();
+        $countries = Country::all(); 
 
         // Validation
         $validatedData = $request->validate([
@@ -128,7 +128,7 @@ class VendorManagementController extends Controller
                 'name' => $validatedData['first_name'],
                 'email' => $request_email['email'],
                 'password' => Hash::make('password'),
-                'is_admin' => 1,
+                'is_vendor' => 1,
             ];
 
             $user = User::create($userData);
