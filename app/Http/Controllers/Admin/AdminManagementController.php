@@ -3,8 +3,11 @@
 namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
+use App\Mail\AdminCreated;
+use App\Mail\VendorCreated;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 use App\Models\Country;
@@ -151,7 +154,7 @@ class AdminManagementController extends Controller
         $role = $validatedData['member_access'];
 
         $this->updateRoles($admin,$role);
-
+        Mail::to($request_email)->send(new AdminCreated($admin, $user));
         $successMessage = 'Admin created successfully!';
         session()->flash('success', $successMessage);
 

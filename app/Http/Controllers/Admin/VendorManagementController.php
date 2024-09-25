@@ -82,7 +82,7 @@ class VendorManagementController extends Controller
     public function store(Request $request)
     {
         $user = Auth::user();
-        $countries = Country::all(); 
+        $countries = Country::all();
 
         // Validation
         $validatedData = $request->validate([
@@ -179,7 +179,7 @@ class VendorManagementController extends Controller
         $vendor = Vendor::findOrFail($id);
 
         // Fetch roles for vendors (assuming user_type_id 2 is for vendors)
-        $roles = Role::where('user_type_id', 2)->get();
+        $roles = Role::where('user_type_id', 3)->get();
 
         // Fetch all countries
         $countries = Country::all();

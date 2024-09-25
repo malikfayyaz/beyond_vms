@@ -9,18 +9,18 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class VendorCreated extends Mailable
+class AdminCreated extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public $vendor;
+    public $admin;
 
     /**
      * Create a new message instance.
      */
-    public function __construct($vendor, $user)
+    public function __construct($admin, $user)
     {
-        $this->vendor = $vendor;
+        $this->admin = $admin;
         $this->user = $user;
     }
 
@@ -29,10 +29,10 @@ class VendorCreated extends Mailable
      */
     public function build()
     {
-        return $this->subject('Your Vendor Account Created')
-            ->view('emails.vendor_created')
+        return $this->subject('Your Admin Account Created')
+            ->view('emails.admin_created')
             ->with([
-                'vendor' => $this->vendor,
+                'admin' => $this->admin,
                 'user' => $this->user,
             ]);
     }
