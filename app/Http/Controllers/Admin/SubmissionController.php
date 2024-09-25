@@ -12,7 +12,7 @@ class SubmissionController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $submissions = CareerOpportunitySubmission::with(['consultant','vendor','careerOpportunity.hiringManager','workerType','location'])->get();
+            $submissions = CareerOpportunitySubmission::with(['consultant','vendor','careerOpportunity.hiringManager','location'])->get();
 
             return DataTables::of($submissions)
                 ->addColumn('consultant_name', function($row) {
@@ -22,7 +22,6 @@ class SubmissionController extends Controller
                     return $row->consultant ? $row->consultant->unique_id : 'N/A';
                 })
                 ->addColumn('hiring_manager_name', function($row) {
-                    // Access the hiring manager through the careerOpportunity relationship
                     return $row->careerOpportunity && $row->careerOpportunity->hiringManager 
                         ? $row->careerOpportunity->hiringManager->full_name 
                         : 'N/A';
@@ -34,10 +33,12 @@ class SubmissionController extends Controller
                     return $row->vendor ? $row->vendor->full_name : 'N/A';
                 })
                 ->addColumn('career_opportunity_title', function($row) {
-                    return $row->careerOpportunity ? $row->careerOpportunity->title : 'N/A';
+                    return $row->careerOpportunity ? $row->careerOpportunity->title . '('.$row->careerOpportunity->id.')' : 'N/A';
                 })
                 ->addColumn('worker_type', function ($row) {
-                    return $row->workerType ? $row->workerType->title : 'N/A';
+                    return $row->careerOpportunity && $row->careerOpportunity->workerType 
+                    ? $row->careerOpportunity->workerType->title
+                    : 'N/A';
                 })
                 ->addColumn('action', function($row) {
                     return '<a href="' . route('admin.submission.show', $row->id) . '"
