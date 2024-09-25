@@ -98,7 +98,7 @@ class AdminManagementController extends Controller
             'profile_image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048'
         ]);
 
-        $request_email = $request->validate(['email' => 'required|email:users,email']);
+        $request_email = $request->validate(['email' => 'required|email']);
 
         $user = User::where('email', $request_email)->first();
         if ($user) {
