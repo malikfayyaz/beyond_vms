@@ -82,7 +82,7 @@ class VendorManagementController extends Controller
     public function store(Request $request)
     {
         $user = Auth::user();
-        $countries = Country::all(); 
+        $countries = Country::all();
 
         // Validation
         $validatedData = $request->validate([
