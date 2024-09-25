@@ -98,6 +98,7 @@ Route::middleware(['user_role:admin'])->group(function () {
 
         // offer
         Route::get('offer/{id}/create', [CareerOpportunitiesOfferController::class, 'create'])->name('offer.create');
+        Route::post('offer/store', [CareerOpportunitiesOfferController::class, 'store'])->name('offer.store');
         Route::match(['get', 'post'], 'workflow/edit/{id}', [GenericDataController::class, 'workflowEdit'])->name('workflow.edit');
         Route::match(['get', 'post'], 'workflow/store', [GenericDataController::class, 'workflowStore'])->name('workflow.store');
 

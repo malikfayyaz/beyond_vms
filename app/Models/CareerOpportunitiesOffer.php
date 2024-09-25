@@ -7,5 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class CareerOpportunitiesOffer extends Model
 {
-    use HasFactory;
+    protected $table = 'career_opportunities_offer';
+    protected $guarded = [
+        // List attributes you want to guard from mass assignment
+        // e.g., 'id', 'created_at', 'updated_at'
+    ];
 }
