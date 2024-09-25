@@ -1,11 +1,11 @@
-@extends('vendor.layouts.app')
+@extends('admin.layouts.app')
 
 @section('content')
     <!-- Sidebar -->
-    @include('vendor.layouts.partials.dashboard_side_bar')
+    @include('admin.layouts.partials.dashboard_side_bar')
 
     <div class="ml-16">
-        @include('vendor.layouts.partials.header')
+        @include('admin.layouts.partials.header')
 
         <div>
           <div class="mx-4 rounded p-8">
@@ -28,7 +28,7 @@
               >
                 reject candidate
               </button>
-              <a href="{{ route('vendor.submission.index') }}">
+              <a href="{{ route('admin.submission.index') }}">
                   <button
                       type="button"
                       class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 capitalize"
@@ -365,7 +365,7 @@
                   Alternative text - include a link
                   <a href="{{ asset('storage/submission_resume/' . $submission->resume) }}">to the PDF!</a>
                 </p>
-              </object>
+              </object> 
             @else
               <p>No resume available.</p>
             @endif

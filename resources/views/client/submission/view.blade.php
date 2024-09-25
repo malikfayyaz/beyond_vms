@@ -1,11 +1,11 @@
-@extends('vendor.layouts.app')
+@extends('client.layouts.app')
 
 @section('content')
     <!-- Sidebar -->
-    @include('vendor.layouts.partials.dashboard_side_bar')
+    @include('client.layouts.partials.dashboard_side_bar')
 
     <div class="ml-16">
-        @include('vendor.layouts.partials.header')
+        @include('client.layouts.partials.header')
 
         <div>
           <div class="mx-4 rounded p-8">
@@ -28,7 +28,7 @@
               >
                 reject candidate
               </button>
-              <a href="{{ route('vendor.submission.index') }}">
+              <a href="{{ route('client.submission.index') }}">
                   <button
                       type="button"
                       class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 capitalize"

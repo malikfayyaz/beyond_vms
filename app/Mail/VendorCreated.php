@@ -1,26 +1,27 @@
 <?php
+
 namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
+use Illuminate\Mail\Mailables\Content;
+use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class ClientCreated extends Mailable
+class VendorCreated extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public $client;
-    public $password;
+    public $vendor;
 
     /**
      * Create a new message instance.
      */
-    public function __construct($client, $user, $password)
+    public function __construct($vendor, $user)
     {
-        $this->client = $client;
+        $this->vendor = $vendor;
         $this->user = $user;
-        $this->password = $password;
     }
 
     /**
@@ -28,12 +29,11 @@ class ClientCreated extends Mailable
      */
     public function build()
     {
-        return $this->subject('Your Client Account Created')
-            ->view('emails.client_created')
+        return $this->subject('Your Vendor Account Created')
+            ->view('emails.vendor_created')
             ->with([
-                'client' => $this->client,
+                'client' => $this->vendor,
                 'user' => $this->user,
-                'password' => $this->password,
             ]);
     }
 }

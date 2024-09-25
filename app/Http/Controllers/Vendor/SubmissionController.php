@@ -274,7 +274,7 @@ class SubmissionController extends Controller
             'vendor_id' =>\Auth::id(),
             'unique_id'=>generateUniqueUserCode(),
             'resume'=>$resume,
-            'gendor' =>$validatedData['gender'],
+            'gender' =>$validatedData['gender'],
             'ethnicity' =>$validatedData['race'],
             'user_id'=>  $user->id,
             'addtional_document' =>$additional_doc,

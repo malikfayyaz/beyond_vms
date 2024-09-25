@@ -13,7 +13,8 @@ class CareerOpportunitiesOfferController extends BaseController
     // Display a listing of career opportunities
     public function index()
     {
-        $offers = CareerOpportunitiesOffer::all();
+        // $offers = CareerOpportunitiesOffer::all();
+        $offers = "offer";
         return view('admin.offer.index', compact('offers'));
     }
 
@@ -119,7 +120,8 @@ class CareerOpportunitiesOfferController extends BaseController
     // Show a specific career opportunity offer
     public function show($id)
     {
-        $offer = CareerOpportunitiesOffer::findOrFail($id);
+        // $offer = CareerOpportunitiesOffer::findOrFail($id);
+        $offer = "offer";
         return view('admin.offer.show', compact('offer'));
     }
 
