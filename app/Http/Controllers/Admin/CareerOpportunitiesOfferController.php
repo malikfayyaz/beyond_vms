@@ -15,7 +15,7 @@ class CareerOpportunitiesOfferController extends BaseController
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $offers = CareerOpportunitiesOffer::with(['consultant','careerOpportunity','hiringManager','venDor'])->get();
+            $offers = CareerOpportunitiesOffer::with(['consultant','careerOpportunity','hiringManager','vendor'])->get();
             return DataTables::of($offers)
                 ->addColumn('consultant_name', function($row) {
                     return $row->consultant ? $row->consultant->full_name : 'N/A';
@@ -27,7 +27,7 @@ class CareerOpportunitiesOfferController extends BaseController
                     return $row->careerOpportunity->hiringManager ? $row->careerOpportunity->hiringManager->fullname : 'N/A';
                 })
                 ->addColumn('vendor_name', function($row) {
-                    return $row->venDor ? $row->venDor->full_name : 'N/A';
+                    return $row->vendor ? $row->vendor->full_name : 'N/A';
                 })
                 ->addColumn('created_at', function($row) {
                     return $row->created_at ? $row->created_at->format('Y-m-d') : 'N/A';
@@ -153,7 +153,7 @@ class CareerOpportunitiesOfferController extends BaseController
     public function show($id)
     {
         $offer = CareerOpportunitiesOffer::findOrFail($id);
-        return view('admin.offer.show', compact('offer'));
+        return view('admin.offer.view', compact('offer'));
     }
 
     // Show the form for editing an existing career opportunity offer
