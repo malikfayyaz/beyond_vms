@@ -24,6 +24,11 @@ class CareerOpportunitiesOffer extends Model
         return $this->belongsTo(CareerOpportunity::class, 'career_opportunity_id' , 'id');
     }
 
+    public function submission()
+    {
+        return $this->belongsTo(CareerOpportunitySubmission::class, 'submission_id' , 'id');
+    }
+
     public function hiringManager()
     {
         return $this->belongsTo(Client::class, 'hiring_manager_id', 'id');

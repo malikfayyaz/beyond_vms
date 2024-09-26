@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Carbon\Carbon;
+
 
 class CareerOpportunitySubmission extends Model
 {
@@ -31,6 +33,16 @@ class CareerOpportunitySubmission extends Model
     public function careerOpportunity()
     {
         return $this->belongsTo(CareerOpportunity::class, 'career_opportunity_id' , 'id');
+    }
+
+    public function getEstimateStartDateAttribute()
+    {
+        return $this->attributes['estimate_start_date'] ? Carbon::parse($this->attributes['estimate_start_date'])->format('m/d/Y') : '';
+    }
+
+    public function getFormattedCreatedAtAttribute()
+    {
+        return $this->attributes['created_at'] ? Carbon::parse($this->attributes['created_at'])->format('m/d/Y') : '';
     }
    
 }

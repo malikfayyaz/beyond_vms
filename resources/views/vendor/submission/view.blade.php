@@ -16,12 +16,11 @@
               >
                 schedule interview
               </button>
-              <button
-                type="button"
+              <a href="{{ route('vendor.offer.create',  ['id' => $submission->id]) }}"
                 class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 capitalize"
               >
                 create offer
-              </button>
+              </a>
               <button
                 type="button"
                 class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 capitalize"
@@ -269,7 +268,7 @@
                           <span class="text-gray-600">Submission Date:</span>
                           <span
                             class="font-semibold"
-                          >{{$submission->created_at->format('Y-m-d')}}</span>
+                          >{{$submission->formatted_created_at}}</span>
                         </div>
                       </div>
                     </div>

@@ -118,5 +118,19 @@ if (!function_exists('calculateJobEstimates')) {
             return $estimates;
         }
     }
+
+    //workorder rates
+    if (!function_exists('calculateWorkorderEstimates')) {
+        function calculateWorkorderEstimates($model,$jobData){
+            $startDate = date('Y-m-d',strtotime($model->start_date));
+            $endDate = date('Y-m-d',strtotime($model->end_date));
+            $noOfDays = numberOfWorkingDays($startDate,$endDate);
+
+            $estimatedBudget = estimateWithPaymentType($noOfDays,$model->wo_bill_rate,$jobData);
+            $model->single_resource_job_approved_budget = $estimatedBudget;
+            $model->job_other_amount = $jobData->overtime_hours_cost+$jobData->expense_cost;
+            $model->save();
+        }
+    }
     
 }

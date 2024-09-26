@@ -120,7 +120,7 @@ class CareerOpportunitiesOfferController extends Controller
             "location_id" =>$validatedData['location'],
             "markup" =>$validatedData['markup'],
             "created_by_id" =>\Auth::id(),
-            "created_by_type" =>1,
+            "created_by_type" =>2,
             "status" =>1,
             "offer_pay_rate" =>removeComma($validatedData['payRate']),
             "offer_bill_rate" =>removeComma($validatedData['billRate']),

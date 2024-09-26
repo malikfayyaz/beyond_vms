@@ -16,8 +16,8 @@
               >
                 schedule interview
               </button>
-              <a href="{{ route('admin.offer.create',  ['id' => 1]) }}"
               <a href="{{ route('admin.offer.create',  ['id' => $submission->id]) }}"
+                type="button"
                 class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 capitalize"
               >
                 create offer
@@ -273,7 +273,7 @@
                           <span class="text-gray-600">Submission Date:</span>
                           <span
                             class="font-semibold"
-                          >{{$submission->created_at->format('Y-m-d')}}</span>
+                          >{{$submission->formatted_created_at}}</span>
                         </div>
                       </div>
                     </div>
@@ -359,9 +359,10 @@
             </div>
             <div class="w-2/4 bg-white h-[1024px] mx-4 rounded p-8">
             @if ($submission->resume)
+           @php $fileExtension = pathinfo($submission->resume, PATHINFO_EXTENSION); @endphp
               <object
                 data="{{ asset('storage/submission_resume/' . $submission->resume) }}"
-                type="application/pdf"
+                type="application/{{$fileExtension}}"
                 width="100%"
                 height="100%"
               >
