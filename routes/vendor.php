@@ -19,6 +19,7 @@ Route::middleware(['user_role:vendor'])->group(function () {
         Route::get('offer/{id}/create', [CareerOpportunitiesOfferController::class, 'create'])->name('offer.create');
         Route::post('offer/store', [CareerOpportunitiesOfferController::class, 'store'])->name('offer.store');
         Route::get('offer/index', [CareerOpportunitiesOfferController::class, 'index'])->name('offer.index');
+        Route::post('offer/accept-offer', [CareerOpportunitiesOfferController::class, 'acceptOffer'])->name('offer.accept');
         Route::get('offer/view/{id}', [CareerOpportunitiesOfferController::class, 'show'])->name('offer.show');
         
     });

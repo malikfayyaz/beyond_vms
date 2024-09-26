@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use App\Models\CareerOpportunitiesOffer;
 use App\Models\CareerOpportunitySubmission;
+use App\Models\CareerOpportunitiesWorkorder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Yajra\DataTables\Facades\DataTables;
@@ -155,5 +156,135 @@ class CareerOpportunitiesOfferController extends Controller
     {
         $offer = CareerOpportunitiesOffer::findOrFail($id);
         return view('vendor.offer.view', compact('offer'));
+    }
+
+    // accept career opportunity offer in the database
+    public function acceptOffer(Request $request)
+    {
+        $offer =  CareerOpportunitiesOffer::findOrFail($request->offer_id);
+        $submission = $offer->submission;
+        // dd($submission);
+        if($request->accept_reject == "accept") {
+            // if($offer->status != 1 && $offer->status !=13) {
+                $offer->offer_accept_date = date("Y-m-d H:i:s");
+                $offer->modified_by_id = \Auth::id();
+                $offer->modified_by_type = 3;
+                $offer->status = 1;
+                $offer->save();
+
+                // submission status update
+                $submission->resume_status = 9;
+                $submission->save();
+
+                $this->updateOtherRecords($offer);
+
+                if($offer->status == 1){
+                    $this->createAutoWorkorder($offer, $offer->careerOpportunity, $submission);
+                }
+                session()->flash('success', 'Offer accepted successfully!');
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Offer accepted successfully!',
+                    'redirect_url' => route('vendor.offer.index') // Redirect back URL for AJAX
+                ]);
+
+            // }
+        }
+       
+    }
+
+    public function updateOtherRecords($offer)
+    {
+        // Fetch VendorJobSubmissions with the specified conditions
+        $submissionModels = CareerOpportunitySubmission::where('id', '!=', $offer->submission_id)
+            ->where('candidate_id', $offer->candidate_id)
+            ->whereIn('resume_status', [7, 1, 2, 3, 4, 5, 15])
+            ->get();
+
+        // Update each submission
+        foreach ($submissionModels as $submission) {
+            $submission->update([
+                'rejected_type' => 3,
+                'rejected_by' => \Auth::id(),
+                'resume_status' => 11,
+                'note_for_rejection' => 'Other Offer Accepted',
+                'reason_for_rejection' => 2266,
+                'date_rejected' => now(),
+            ]);
+        }
+
+        // Fetch offers with the specified conditions
+        $offerModels = CareerOpportunitiesOffer::where('id', '!=', $offer->id)
+            ->where('candidate_id', $offer->candidate_id)
+            ->whereIn('status', [4, 11, 12])
+            ->get();
+
+        // Update each offer
+        foreach ($offerModels as $offer) {
+            $offer->update([
+                'status' => 13,
+                'withdraw_reason' => 2266,
+                'notes' => 'Other Offer Accepted',
+                'modified_by_id' => \Auth::id(),
+                'date_modified' => now(),
+                'offer_rejection_date' => now(),
+                'modified_by_type' => 3,
+            ]);
+        }
+    }
+
+    // create auto workorder after offer accept by vendor
+
+    public function createAutoWorkorder($offerModel,$jobModel,$submissionModel){
+        // dd($offerModel->start_date);
+        $workOrder = new CareerOpportunitiesWorkorder;
+
+      
+        //$total_msp_fee = RatesUtility::returnMspFee($jobData);
+
+        $workOrder->offer_id = $offerModel->id;
+        $workOrder->submission_id = $offerModel->submission_id;
+        $workOrder->career_opportunity_id = $offerModel->career_opportunity_id;
+        $workOrder->created_by_id = $offerModel->created_by_id;
+        $workOrder->created_by_type = $offerModel->created_by_type;
+        $workOrder->vendor_id = $offerModel->vendor_id;
+        $workOrder->candidate_id = $offerModel->candidate_id;
+        $workOrder->modified_by_id = $offerModel->modified_by_id;
+        $workOrder->modified_by_type = $offerModel->modified_by_type;
+        $workOrder->start_date = Carbon::createFromFormat('m/d/Y', $offerModel->start_date)->format('Y-m-d');
+        $workOrder->end_date = Carbon::createFromFormat('m/d/Y', $offerModel->end_date)->format('Y-m-d');
+        $workOrder->wo_bill_rate = $offerModel->offer_bill_rate;
+        $workOrder->wo_pay_rate = $offerModel->offer_pay_rate;
+        $workOrder->wo_over_time = $offerModel->over_time;
+        $workOrder->wo_double_time = $offerModel->double_time;
+        $workOrder->wo_client_over_time = $offerModel->client_overtime;
+        $workOrder->wo_client_double_time = $offerModel->client_doubletime;
+        $workOrder->vendor_bill_rate = $offerModel->vendor_bill_rate;
+        $workOrder->vendor_overtime_rate = $offerModel->vendor_overtime;
+        $workOrder->vendor_doubletime_rate = $offerModel->vendor_doubletime;
+        $workOrder->approval_manager = $offerModel->hiring_manager_id;
+        $workOrder->markup = $offerModel->markup;
+        $workOrder->location_id = $offerModel->location_id;
+        $workOrder->remote_option = $offerModel->remote_option;
+        $workOrder->timesheet_method = 3;
+        $workOrder->status = 1;
+        $workOrder->accept_date = now();
+        $workOrder->wo_release_date = now();
+        $workOrder->job_level = $jobModel->job_level;
+        $workOrder->job_type =  $jobModel->type;
+        $workOrder->hiring_manager_id = $jobModel->hiring_manager;
+        $workOrder->expenses_allowed = $jobModel->expenses_allowed;
+        $workOrder->division_id = $jobModel->division_id;
+     
+        if($workOrder->save()){
+            calculateWorkorderEstimates($workOrder,$jobModel);
+        }
+
+        $submissionModel->resume_status = 9;
+        $submissionModel->save();
+
+      return true;
+
+
     }
 }
