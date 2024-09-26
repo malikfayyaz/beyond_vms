@@ -141,6 +141,8 @@ export default function addSubWizarForm() {
     // removeSkill(skill) {
     //   this.formData.skills = this.formData.skills.filter((s) => s !== skill);
     // },
+      // Add your rejectCandidate method here
+
     handleResumeUpload(event) {
       const file = event.target.files[0];
       this.formData.resumeUpload = file || null;
@@ -321,7 +323,6 @@ export default function addSubWizarForm() {
     isValidPayRate(rate) {
       return this.isValidBillRate(rate);
     },
-
     // formatBillRate(value) {
     //   this.formData.billRate = this.formatBillingValue(value);
     // },
@@ -461,7 +462,11 @@ export default function addSubWizarForm() {
           }, 100); // Check every 100ms if the fields have been updated
           }
         };
-
+          this.rejectCandidate = (submissionId) => {
+              let formData = new FormData();
+              formData.append('submissionId', submissionId);
+              ajaxCall('/reject-candidate', 'POST', [[onSuccess, ['response']]], formData);
+          };
         $('#billRate, #payRate').on('change', (event) => {
           this.vendorMarkup(event);
       });
@@ -525,14 +530,8 @@ export default function addSubWizarForm() {
 
           }, 500);
       }
-
       }
     },
-
-
-
-
-
     initSelect2() {
       this.$nextTick(() => {
         $(".select2-single").each((index, element) => {

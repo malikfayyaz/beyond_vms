@@ -16,6 +16,7 @@ use App\Http\Controllers\{
 
 };
 Route::middleware(['user_role:admin'])->group(function () {
+    // In your routes file (web.php)
     Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('dashboard', [AdminController::class, 'index'])->name('dashboard');
         Route::get('/admin/catalog/{id}', [CatalogController::class, 'view'])->name('admin.catalog.view');
@@ -55,9 +56,9 @@ Route::middleware(['user_role:admin'])->group(function () {
         'status' =>  ['type' => 'select', 'label' => 'Status'],
         ]);
 
-     
 
-     
+
+
 
         Route::match(['get', 'post'], 'job-group-family-config', [GenericDataController::class, 'jobGroupConfig'])->name('data.job_group_family_config');
 
@@ -94,7 +95,7 @@ Route::middleware(['user_role:admin'])->group(function () {
         Route::post('load-job-template', [CatalogController::class, 'loadJobTemplate'])->name('load_job_template');
         Route::post('division-load', [CatalogController::class, 'divisionLoad'])->name('division_load');
         Route::post('job-rates', [RatesController::class, 'jobRates'])->name('job_rates');
-        
+
         Route::match(['get', 'post'], 'workflow', [GenericDataController::class, 'workflow'])->name('workflow');
 
         // offer
@@ -102,11 +103,11 @@ Route::middleware(['user_role:admin'])->group(function () {
         Route::post('offer/store', [CareerOpportunitiesOfferController::class, 'store'])->name('offer.store');
         Route::get('offer/index', [CareerOpportunitiesOfferController::class, 'index'])->name('offer.index');
         Route::get('offer/{id}', [CareerOpportunitiesOfferController::class, 'show'])->name('offer.show');
-        
+
         //workflow
         Route::match(['get', 'post'], 'workflow/edit/{id}', [GenericDataController::class, 'workflowEdit'])->name('workflow.edit');
         Route::match(['get', 'post'], 'workflow/store', [GenericDataController::class, 'workflowStore'])->name('workflow.store');
-        
+
         //submission
         Route::match(['get', 'post'], 'submission/index', [SubmissionController::class, 'index'])->name('submission.index');
         Route::get('submission/{id}', [SubmissionController::class, 'show'])->name('submission.show');
