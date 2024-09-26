@@ -1,7 +1,8 @@
 <?php
-namespace App\Http\Controllers\Admin;
 
-use Illuminate\Routing\Controller as BaseController;
+namespace App\Http\Controllers\Client;
+
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use App\Models\CareerOpportunitiesOffer;
 use App\Models\CareerOpportunitySubmission;
@@ -9,7 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Yajra\DataTables\Facades\DataTables;
 
-class CareerOpportunitiesOfferController extends BaseController
+class CareerOpportunitiesOfferController extends Controller
 {
     // Display a listing of career opportunities
     public function index(Request $request)
@@ -40,26 +41,25 @@ class CareerOpportunitiesOfferController extends BaseController
                         : 'N/A';
                 })
                 ->addColumn('action', function($row) {
-                    return '<a href="' . route('admin.offer.show', $row->id) . '"
+                    return '<a href="' . route('client.offer.show', $row->id) . '"
                                 class="text-blue-500 hover:text-blue-700 mr-2 bg-transparent hover:bg-transparent">
                                     <i class="fas fa-eye"></i>
                             </a>';
                 })
                 ->make(true);
             }
-        return view('admin.offer.index');
+        return view('client.offer.index');
     }
 
     // Show the form for creating a new career opportunity offer
     public function create($id)
     {
        $submission =  CareerOpportunitySubmission::findOrFail($id);
-       return view('admin.offer.create',[
+       return view('client.offer.create',[
         'submission'=>$submission
          ]);
     }
 
-    // Store a newly created career opportunity offer in the database
     public function store(Request $request)
     {
          // Define your validation rules
@@ -106,7 +106,7 @@ class CareerOpportunitiesOfferController extends BaseController
             return response()->json([
                 'success' => true,
                 'message' => 'Offer already exist!',
-                'redirect_url' => route('admin.offer.show',  ['id' => $request->submissionid]) // Redirect back URL for AJAX
+                'redirect_url' => route('client.offer.show',  ['id' => $request->submissionid]) // Redirect back URL for AJAX
             ]);
          }
          $submission = CareerOpportunitySubmission::findOrFail($request->submissionid);
@@ -144,7 +144,7 @@ class CareerOpportunitiesOfferController extends BaseController
          return response()->json([
              'success' => true,
              'message' => 'Offer saved successfully!',
-             'redirect_url' => route('admin.offer.index') // Redirect back URL for AJAX
+             'redirect_url' => route('client.offer.index') // Redirect back URL for AJAX
          ]);
 
     }
@@ -153,95 +153,6 @@ class CareerOpportunitiesOfferController extends BaseController
     public function show($id)
     {
         $offer = CareerOpportunitiesOffer::findOrFail($id);
-        return view('admin.offer.view', compact('offer'));
-    }
-
-    // Show the form for editing an existing career opportunity offer
-    public function edit($id)
-    {
-        $offer = CareerOpportunitiesOffer::findOrFail($id);
-        return view('admin.offer.edit', compact('offer'));
-    }
-
-    // Update the specified career opportunity offer in the database
-    public function update(Request $request, $id)
-    {
-        $validatedData = $request->validate([
-            'job_title' => 'required|string|max:255',
-            'job_description' => 'nullable|string',
-            'location' => 'required|string',
-            'salary' => 'nullable|numeric',
-            'employment_type' => 'required|string',
-            'company_id' => 'required|exists:companies,id',
-        ]);
-
-        $offer = CareerOpportunitiesOffer::findOrFail($id);
-        $offer->update($validatedData);
-
-        return redirect()->route('admin.offer.index')->with('success', 'Career opportunity offer updated successfully.');
-    }
-
-    // Remove the specified career opportunity offer from the database
-    public function destroy($id)
-    {
-        $offer = CareerOpportunitiesOffer::findOrFail($id);
-        $offer->delete();
-
-        return redirect()->route('admin.offer.index')->with('success', 'Career opportunity offer deleted successfully.');
-    }
-
-    public function calculateRate(Request $request)
-    {
-    //    dd($request);
-
-        $bill_rate = removeComma($request->bill_rate);
-        $pay_rate = removeComma($request->pay_rate);
-        $mark_up = $request->markup;
-
-        $pay_rate = ($pay_rate == '') ? 0 : $pay_rate;
-        $bill_rate = ($bill_rate == '') ? 0 : $bill_rate;
-
-        $payrate = getActiveRecordsByType('pay-rate')->first();
-        $billrate = getActiveRecordsByType('bill-rate')->first();
-       
-                $over_time = $payrate->name;
-                $double_time =$billrate->value;
-                $client_over_time = $billrate->name;
-                $client_double_time = $billrate->value;
-            
-        
-
-        $data = array();
-         //markup category
-            if ( $request->type == 'billRate') {
-                $data['billRate'] = $this->numberFormat($bill_rate);
-                $data['overTime'] = $this->numberFormat($bill_rate + ($bill_rate * $client_over_time));
-                $data['doubleRate'] = $this->numberFormat($bill_rate + ($bill_rate * $client_double_time));
-                $pay_rate = $bill_rate * (100 / (100 + $mark_up));
-                $data['payRate'] = $this->numberFormat($pay_rate);
-                $data['doubleTimeCandidate'] = $this->numberFormat($pay_rate + ($pay_rate * $double_time));
-                $data['overTimeCandidate'] = $this->numberFormat($pay_rate + ($pay_rate * $over_time));
-            } else {
-               
-               $bill_rate = $bill_rate * (100 / (100 + $mark_up));
-                $data['billRate'] = $this->numberFormat($bill_rate);
-                $data['overTime'] = $this->numberFormat($bill_rate + ($bill_rate * $client_over_time));
-                $data['doubleRate'] = $this->numberFormat($bill_rate + ($bill_rate * $client_double_time));
-                $data['payRate'] = $this->numberFormat($pay_rate);
-                $data['doubleTimeCandidate'] = $this->numberFormat($pay_rate + ($pay_rate * $double_time));
-                $data['overTimeCandidate'] = $this->numberFormat($pay_rate + ($pay_rate * $over_time));
-            }
-
-   
-
-        
-
-        return response()->json($data);
-      
-
-    }
-    public function numberFormat($data)
-    {
-        return number_format($data, 2);
+        return view('client.offer.view', compact('offer'));
     }
 }

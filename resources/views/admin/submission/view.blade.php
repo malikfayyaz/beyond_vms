@@ -16,14 +16,14 @@
               >
                 schedule interview
               </button>
-
               <a href="{{ route('admin.offer.create',  ['id' => 1]) }}"
+              <a href="{{ route('admin.offer.create',  ['id' => $submission->id]) }}"
                 class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 capitalize"
               >
                 create offer
               </a>
                 <div x-data="addSubWizarForm()" x-init="mounted()">
-                <button
+                <button 
                     type="button"
                     @click="rejectCandidate({{ $submission->id }})"
                     aria-label="Reject candidate {{ $submission->consultant->full_name }}"

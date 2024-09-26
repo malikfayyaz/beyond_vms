@@ -73,12 +73,11 @@
             </div>
 
             <div class="mb-4 flex-1">
-                <label for="status" class="block mb-2">Status <span class="text-red-500">*</span></label>
-                <select id="status" x-model="formData.status" class="w-full p-2 border rounded h-10">
+                <label for="profile_status" class="block mb-2">Status <span class="text-red-500">*</span></label>
+                <select id="profile_status" x-model="formData.profile_status" class="w-full p-2 border rounded h-10">
                     <option value="" disabled selected>Select Status</option>
-                    <option value="Active">Active</option>
-                    <option value="Under Review">Under Review</option>
-                    <option value="Inactive">Inactive</option>
+                    <option value="1">Active</option>
+                    <option value="0">Inactive</option>
                 </select>
                 <p x-show="statusError" class="text-red-500 text-sm mt-1" x-text="statusError"></p>
             </div>
@@ -106,7 +105,7 @@
                 profile_image: null,
                 role: '{{ old('role', $vendor->member_access ?? '') }}',
                 country: '{{ old('country', $vendor->country ?? '') }}',
-                status: '{{ old('status', $vendor->status ?? '') }}',
+                profile_status: '{{ old('profile_status', $vendor->profile_status ?? '') }}',
             },
 
             searchTerm: '',
@@ -166,7 +165,7 @@
                     this.countryError = '';
                 }
 
-                if (this.formData.status === "") {
+                if (this.formData.profile_status === "") {
                     this.statusError = "Status is required";
                     errorCount++;
                 } else {
@@ -188,7 +187,7 @@
                     }
                     formData.append('role', this.formData.role);
                     formData.append('country', this.formData.country);
-                    formData.append('status', this.formData.status);
+                    formData.append('profile_status', this.formData.profile_status);
 
                     let url = '{{ route("admin.vendor-users.store") }}';
                     if (this.editIndex !== null) {
@@ -225,7 +224,7 @@
                 this.formData.profile_image = null;
                 this.formData.role = '';
                 this.formData.country = '';
-                this.formData.status = '';
+                this.formData.profile_status = '';
             }
         }
     }

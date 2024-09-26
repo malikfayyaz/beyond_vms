@@ -1,10 +1,10 @@
-@extends('admin.layouts.app')
+@extends('client.layouts.app')
 
 @section('content')
     <!-- Sidebar -->
-    @include('admin.layouts.partials.dashboard_side_bar')
+    @include('client.layouts.partials.dashboard_side_bar')
     <div class="ml-16">
-        @include('admin.layouts.partials.header')
+        @include('client.layouts.partials.header')
         <div class="bg-white mx-4 my-8 rounded p-8">
             <div >
                 <div class="flex justify-between items-center mb-6">
@@ -86,7 +86,7 @@
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         if (window.$) {
-            initializeDataTable('#listing', '/admin/offer/index', [
+            initializeDataTable('#listing', '/client/offer/index', [
                 { data: 'status', name: 'status' },
                 { data: 'id', name: 'id' },
                 { data: 'consultant_name', name: 'consultant_name' }, 

@@ -86,7 +86,7 @@
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         if (window.$) {
-            initializeDataTable('#listing', '/admin/offer/index', [
+            initializeDataTable('#listing', '/vendor/offer/index', [
                 { data: 'status', name: 'status' },
                 { data: 'id', name: 'id' },
                 { data: 'consultant_name', name: 'consultant_name' }, 

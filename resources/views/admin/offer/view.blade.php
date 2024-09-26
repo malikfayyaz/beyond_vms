@@ -226,7 +226,7 @@
                         <p class="font-light">
                           <span
                             class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full text-white bg-purple-400"
-                            >Withdrawn</span
+                            >{{$offer->status}}</span
                           >
                         </p>
                       </div>
@@ -239,7 +239,7 @@
                       </div>
                       <div class="w-2/4">
                         <p class="font-light capitalize font-semibold">
-                          <a href="#" class="text-blue-400">Dolly Parton</a>
+                          <a href="#" class="text-blue-400">{{$offer->consultant->full_name}}</a>
                         </p>
                       </div>
                     </div>
@@ -250,7 +250,7 @@
                         <h4 class="font-medium">Hiring Manager:</h4>
                       </div>
                       <div class="w-2/4">
-                        <p class="font-light">A James Jardanowski</p>
+                        <p class="font-light">{{$offer->careerOpportunity->hiringManager->fullname}}</p>
                       </div>
                     </div>
                     <div
@@ -262,7 +262,7 @@
                         </h4>
                       </div>
                       <div class="w-2/4">
-                        <p class="font-light">A James Jardanowski</p>
+                        <p class="font-light">{{$offer->hiringManager->full_name}}</p>
                       </div>
                     </div>
                     <div
@@ -273,20 +273,11 @@
                       </div>
                       <div class="w-2/4">
                         <p class="font-light">
-                          Axa XL - Axa@yopmail.com (Axa XL)
+                          {{$offer->vendor->full_name}}
                         </p>
                       </div>
                     </div>
-                    <div
-                      class="flex items-center justify-between py-4 border-t"
-                    >
-                      <div class="w-2/4">
-                        <h4 class="font-medium">Timesheet Week Duration:</h4>
-                      </div>
-                      <div class="w-2/4">
-                        <p class="font-light">Sunday to Saturday</p>
-                      </div>
-                    </div>
+                    
                     <div
                       class="flex items-center justify-between py-4 border-t"
                     >
@@ -294,7 +285,7 @@
                         <h4 class="font-medium">Division:</h4>
                       </div>
                       <div class="w-2/4">
-                        <p class="font-light">Gallagher Bassett Services</p>
+                        <p class="font-light">{{$offer->careerOpportunity->division->name}}</p>
                       </div>
                     </div>
                     <div
@@ -304,7 +295,7 @@
                         <h4 class="font-medium">Region:</h4>
                       </div>
                       <div class="w-2/4">
-                        <p class="font-light">North America Operations</p>
+                        <p class="font-light">{{$offer->careerOpportunity->regionZone->name}}</p>
                       </div>
                     </div>
                     <div
@@ -314,7 +305,7 @@
                         <h4 class="font-medium">Remote:</h4>
                       </div>
                       <div class="w-2/4">
-                        <p class="font-light">Yes</p>
+                        <p class="font-light">{{$offer->remote_option}}</p>
                       </div>
                     </div>
                     <div
@@ -326,7 +317,7 @@
                       <div class="w-2/4">
                         <p class="font-light">
                           <a href="#" class="text-blue-400 font-semibold"
-                            >Administrative Assistant (4665)</a
+                            >{{$offer->careerOpportunity->title}} ({{$offer->careerOpportunity->id}})</a
                           >
                         </p>
                       </div>
@@ -338,7 +329,7 @@
                         <h4 class="font-medium">Job Duration:</h4>
                       </div>
                       <div class="w-2/4">
-                        <p class="font-light">07/12/2024 - 11/26/2024</p>
+                        <p class="font-light">{{$offer->careerOpportunity->date_range }}</p>
                       </div>
                     </div>
                     <div
@@ -350,7 +341,7 @@
                         </h4>
                       </div>
                       <div class="w-2/4">
-                        <p class="font-light">$26,264.00</p>
+                        <p class="font-light">${{$offer->careerOpportunity->all_resources_total_cost}} </p>
                       </div>
                     </div>
                     <div
@@ -360,7 +351,7 @@
                         <h4 class="font-medium">Client Billable:</h4>
                       </div>
                       <div class="w-2/4">
-                        <p class="font-light">No</p>
+                        <p class="font-light"> {{$offer->careerOpportunity->client_billable}} </p>
                       </div>
                     </div>
                     <!-- Offer Dates and Location -->
@@ -384,7 +375,7 @@
                         <h4 class="font-medium">Start Date:</h4>
                       </div>
                       <div class="w-2/4">
-                        <p class="font-light">07/12/2024</p>
+                        <p class="font-light"> {{$offer->start_date}} </p>
                       </div>
                     </div>
                     <div
@@ -394,7 +385,7 @@
                         <h4 class="font-medium">End Date:</h4>
                       </div>
                       <div class="w-2/4">
-                        <p class="font-light">11/26/2024</p>
+                        <p class="font-light"> {{$offer->end_date}} </p>
                       </div>
                     </div>
                     <div
@@ -404,9 +395,7 @@
                         <h4 class="font-medium">Location:</h4>
                       </div>
                       <div class="w-2/4">
-                        <p class="font-light">
-                          US Rolling Meadows 2850 West Golf Road-2850 West Golf
-                          Road-Rolling Meadows-Illinois-60008
+                        <p class="font-light"> {{$offer->CareerOpportunity->location->LocationDetails}}
                         </p>
                       </div>
                     </div>
@@ -442,7 +431,7 @@
                       <h4 class="font-medium">Bill Rate:</h4>
                     </div>
                     <div class="w-2/4">
-                      <p class="font-light">$100.00</p>
+                      <p class="font-light">${{$offer->offer_bill_rate}} </p>
                     </div>
                   </div>
                   <div class="flex items-center justify-between py-4 border-t">
@@ -450,7 +439,7 @@
                       <h4 class="font-medium">Over Time Rate:</h4>
                     </div>
                     <div class="w-2/4">
-                      <p class="font-light">$150.00</p>
+                      <p class="font-light">${{$offer->over_time}}</p>
                     </div>
                   </div>
                   <div class="flex items-center justify-between py-4 border-t">
@@ -469,7 +458,7 @@
                       <h4 class="font-medium">Bill Rate:</h4>
                     </div>
                     <div class="w-2/4">
-                      <p class="font-light">$100.00</p>
+                      <p class="font-light">${{$offer->vendor_bill_rate}}</p>
                     </div>
                   </div>
                   <div class="flex items-center justify-between py-4 border-y">
@@ -477,7 +466,7 @@
                       <h4 class="font-medium">Over Time Rate:</h4>
                     </div>
                     <div class="w-2/4">
-                      <p class="font-light">$150.00</p>
+                      <p class="font-light">${{$offer->vendor_overtime}}</p>
                     </div>
                   </div>
                   <div class="flex items-center justify-between py-4 border-y">
@@ -485,7 +474,7 @@
                       <h4 class="font-medium">Regular Hours Estimated Cost:</h4>
                     </div>
                     <div class="w-2/4">
-                      <p class="font-light">$78,400.00</p>
+                      <p class="font-light">${{$offer->careerOpportunity->regular_hours_cost}} </p>
                     </div>
                   </div>
                 </div>

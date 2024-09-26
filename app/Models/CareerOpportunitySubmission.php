@@ -32,10 +32,5 @@ class CareerOpportunitySubmission extends Model
     {
         return $this->belongsTo(CareerOpportunity::class, 'career_opportunity_id' , 'id');
     }
-    
-    public function workerType()
-    {
-        return $this->belongsTo(Setting::class, 'worker_type_id', 'id');
-    }
    
 }
