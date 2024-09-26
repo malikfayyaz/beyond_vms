@@ -262,7 +262,7 @@
                         </h4>
                       </div>
                       <div class="w-2/4">
-                        <p class="font-light">{{$offer->careerOpportunity->hiringManager->fullname}}</p>
+                        <p class="font-light">{{$offer->hiringManager->full_name}}</p>
                       </div>
                     </div>
                     <div
@@ -273,20 +273,11 @@
                       </div>
                       <div class="w-2/4">
                         <p class="font-light">
-                          {{$offer->venDor->full_name}} - {{$offer->venDor->user->email}} ({{$offer->venDor->first_name}})
+                          {{$offer->vendor->full_name}}
                         </p>
                       </div>
                     </div>
-                    <div
-                      class="flex items-center justify-between py-4 border-t"
-                    >
-                      <div class="w-2/4">
-                        <h4 class="font-medium">Timesheet Week Duration:</h4>
-                      </div>
-                      <div class="w-2/4">
-                        <p class="font-light">Sunday to Saturday</p>
-                      </div>
-                    </div>
+                    
                     <div
                       class="flex items-center justify-between py-4 border-t"
                     >
@@ -314,7 +305,7 @@
                         <h4 class="font-medium">Remote:</h4>
                       </div>
                       <div class="w-2/4">
-                        <p class="font-light">{{$offer->careerOpportunity->remote_option}}</p>
+                        <p class="font-light">{{$offer->remote_option}}</p>
                       </div>
                     </div>
                     <div
@@ -338,7 +329,7 @@
                         <h4 class="font-medium">Job Duration:</h4>
                       </div>
                       <div class="w-2/4">
-                        <p class="font-light">{{ \Carbon\Carbon::parse($offer->careerOpportunity->start_date)->format('m/d/y') }} - {{ \Carbon\Carbon::parse($offer->careerOpportunity->end_date)->format('m/d/y') }}</p>
+                        <p class="font-light">{{$offer->careerOpportunity->date_range }}</p>
                       </div>
                     </div>
                     <div
@@ -384,7 +375,7 @@
                         <h4 class="font-medium">Start Date:</h4>
                       </div>
                       <div class="w-2/4">
-                        <p class="font-light"> {{\Carbon\Carbon::parse($offer->careerOpportunity->start_date)->format('m/d/y')}} </p>
+                        <p class="font-light"> {{$offer->start_date}} </p>
                       </div>
                     </div>
                     <div
@@ -394,7 +385,7 @@
                         <h4 class="font-medium">End Date:</h4>
                       </div>
                       <div class="w-2/4">
-                        <p class="font-light"> {{\Carbon\Carbon::parse($offer->careerOpportunity->end_date)->format('m/d/y')}} </p>
+                        <p class="font-light"> {{$offer->end_date}} </p>
                       </div>
                     </div>
                     <div
