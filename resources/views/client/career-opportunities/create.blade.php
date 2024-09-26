@@ -17,6 +17,9 @@
                Job is Added Successfully.
              </div> -->
             <!-- Progress bar -->
+            <script>
+                var sessionrole = "{{ $sessionrole }}";
+            </script>
             <div class="mb-8">
                 <div class="flex mb-2">
                     <nav aria-label="Progress" class="w-full">

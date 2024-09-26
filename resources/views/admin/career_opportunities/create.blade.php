@@ -6,7 +6,7 @@
 <div class="ml-16">
     @include('admin.layouts.partials.header')
     <div class="bg-white mx-4 my-8 rounded p-8" x-data='wizardForm({!! json_encode($careerOpportunity) !!},{!! json_encode($businessUnitsData) !!})' x-init="mounted()">
-    
+
     <!-- Success Notification -->
         @include('admin.layouts.partials.alerts')
         <!-- Include the partial view -->
@@ -17,6 +17,9 @@
            Job is Added Successfully.
          </div> -->
         <!-- Progress bar -->
+        <script>
+            var sessionrole = "{{ $sessionrole }}";
+        </script>
         <div class="mb-8">
             <div class="flex mb-2">
                 <nav aria-label="Progress" class="w-full">
@@ -74,7 +77,7 @@
         <form @submit.prevent="submitForm" id="addjobformwizard" method="POST" enctype="multipart/form-data">
          @if(isset($careerOpportunity->id))
                 @method('PUT')
-                @endif    
+                @endif
         <!-- Step 1: Basic Info -->
             <div x-show="currentStep === 1">
                 <h2 class="text-2xl font-bold mb-4">Basic Information</h2>
@@ -336,14 +339,14 @@
                          endPicker.set('minDate', dateStr);
                        }
                    });
-       
+
                    let endPicker = flatpickr(this.$refs.endPicker, {
                        dateFormat: 'Y/m/d',
                        onChange: (selectedDates, dateStr) => {
                          this.formData.endDate = dateStr;
                        }
                    });
-       
+
                    this.$watch('startDate', value => startPicker.setDate(value));
                    this.$watch('endDate', value => endPicker.setDate(value));
                }

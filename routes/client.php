@@ -1,7 +1,8 @@
-<?php 
+<?php
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\{
+    Admin\RatesController,
     Client\SubmissionController,
     Client\CareerOpportunitiesOfferController,
 };
@@ -16,7 +17,8 @@ Route::middleware(['user_role:client'])->group(function () {
          Route::post('offer/store', [CareerOpportunitiesOfferController::class, 'store'])->name('offer.store');
          Route::get('offer/index', [CareerOpportunitiesOfferController::class, 'index'])->name('offer.index');
          Route::get('offer/view/{id}', [CareerOpportunitiesOfferController::class, 'show'])->name('offer.show');
-         
+        Route::post('job-rates', [RatesController::class, 'jobRates'])->name('job_rates');
+
     });
 });
 

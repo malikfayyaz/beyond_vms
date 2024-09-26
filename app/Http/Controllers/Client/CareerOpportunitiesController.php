@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\Client;
 
 use App\Http\Controllers\Controller;
+use App\Models\CareerOpportunitiesBu;
 use App\Models\CareerOpportunity;
 use App\Models\JobTemplates;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -107,7 +109,7 @@ class CareerOpportunitiesController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'Job saved successfully!',
-                'redirect_url' => route('admin.career-opportunities.index') // Redirect back URL for AJAX
+                'redirect_url' => route('client.career-opportunities.index') // Redirect back URL for AJAX
             ]);
         }catch (ValidationException $e) {
             // Handle the validation error and return a JSON response
@@ -138,15 +140,61 @@ class CareerOpportunitiesController extends Controller
      */
     public function edit(string $id)
     {
+        $user = Auth::user();
+        $sessionrole = session('selected_role');
+        $careerOpportunity = CareerOpportunity::with('careerOpportunitiesBu')->findOrFail($id);
+
+        $businessUnitsData  = $careerOpportunity->careerOpportunitiesBu->map(function ($item) {
+            return [
+                'id' => $item->buName->id,
+                'unit' => $item->buName->name,
+                'percentage' => $item->percentage
+            ];
+        })->toArray();
+        // dd( $businessUnitsData);
+        return view('client.career-opportunities.create', [
+            'careerOpportunity' => $careerOpportunity,
+            'businessUnitsData' => $businessUnitsData,
+            'sessionrole' => $sessionrole,
+        ] );
         //
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, $id)
     {
-        //
+        // dd($request->input('businessUnits'));
+        try {
+
+            $validatedData = $this->validateJobOpportunity($request);
+
+            $job = CareerOpportunity::findOrFail($id);
+            $jobTemplate = JobTemplates::findOrFail($validatedData['jobTitle']);
+            $filename = handleFileUpload($request, 'attachment', 'career_opportunities', $job->attachment); // Keep existing if no new file
+            if($filename == null || $filename == "") {
+                $filename = $job->attachment;
+            }
+            $mappedData = $this->mapJobData($validatedData, $jobTemplate, $request, $filename,$job );
+            $job->update($mappedData);
+
+            $this->syncBusinessUnits($request->input('businessUnits'), $job->id);
+            calculateJobEstimates($job);
+            session()->flash('success', 'Job updated successfully!');
+            return response()->json([
+                'success' => true,
+                'message' => 'Job updated successfully!',
+                'redirect_url' => route('client.career-opportunities.index')
+            ]);
+        }catch (ValidationException $e) {
+            // Handle the validation error and return a JSON response
+            return response()->json([
+                'success' => false,
+                'errors' => $e->errors(),  // Returns all the validation errors
+                'message' => 'Validation failed!',
+            ], 422);
+        }
     }
 
     /**
@@ -156,4 +204,133 @@ class CareerOpportunitiesController extends Controller
     {
         //
     }
+    protected function syncBusinessUnits(array $businessUnits, $jobId)
+    {
+        CareerOpportunitiesBu::where('career_opportunity_id', $jobId)->delete();
+        foreach ($businessUnits as $unitJson) {
+            $unitData = json_decode($unitJson, true);
+            if (!empty($unitData) && isset($unitData['id'], $unitData['percentage'])) {
+                CareerOpportunitiesBu::create([
+                    'career_opportunity_id' => $jobId,
+                    'bu_unit' => $unitData['id'],
+                    'percentage' => $unitData['percentage'],
+                ]);
+            }
+        }
+    }
+
+    protected function validateJobOpportunity(Request $request)
+    {
+        return $request->validate([
+            'jobLaborCategory' => 'required',
+            'jobTitle' => 'required',
+            'hiringManager' => 'required',
+            'jobLevel' => 'required',
+            'workLocation' => 'required',
+            'currency' => 'required',
+            'billRate' => 'required',
+            'maxBillRate' => 'required',
+            'preIdentifiedCandidate' => 'required',
+            'laborType' => 'required',
+            'jobDescriptionEditor' => 'required',
+            'qualificationSkillsEditor' => 'required',
+            'additionalRequirementEditor' => 'required',
+            'division' => 'required',
+            'regionZone' => 'required',
+            'branch' => 'required',
+            'expensesAllowed' => 'required',
+            'travelRequired' => 'required',
+            'glCode' => 'required',
+            'startDate' => 'required|date_format:Y/m/d',
+            'endDate' => 'required|date_format:Y/m/d',
+            'workerType' => 'required',
+            'clientBillable' => 'required',
+            'requireOT' => 'required',
+            'virtualRemote' => 'required',
+            'payment_type' => 'required',
+            'timeType' => 'required',
+            'estimatedHoursPerDay' => 'required',
+            'workDaysPerWeek' => 'required',
+            'numberOfPositions' => 'required',
+            'businessReason' => 'required',
+            'subLedgerType' => 'nullable',
+            'attachment' => 'nullable',
+            'termsAccepted' => 'accepted',
+
+            // Conditional fields
+            'estimatedExpense' => 'nullable|required_if:expensesAllowed,Yes',
+            'clientName' => 'nullable|required_if:clientBillable,Yes',
+            'candidateFirstName' => 'nullable|required_if:preIdentifiedCandidate,Yes',
+            'candidateLastName' => 'nullable|required_if:preIdentifiedCandidate,Yes',
+            'candidatePhone' => 'nullable|required_if:preIdentifiedCandidate,Yes',
+            'candidateEmail' => 'nullable|required_if:preIdentifiedCandidate,Yes',
+            'workerPayRate' => 'nullable|required_if:preIdentifiedCandidate,Yes',
+            'subLedgerCode' => 'nullable|required_if:subLedgerType,33',
+
+            // nullable fields
+            'jobTitleEmailSignature' => 'nullable',
+            'candidateMiddleName' => 'nullable',
+            'job_code' => 'nullable',
+        ]);
+    }
+    protected function mapJobData(array $validatedData, $jobTemplate, $request, $filename,$job= null)
+    {
+        return [
+            'cat_id' => $validatedData['jobLaborCategory'],
+            'template_id' => $validatedData['jobTitle'],
+            'title' => $jobTemplate->job_title,
+            'hiring_manager' => $validatedData['hiringManager'],
+            'job_level' => $validatedData['jobLevel'],
+            'location_id' => $validatedData['workLocation'],
+            'currency_id' => $validatedData['currency'],
+            'min_bill_rate' => $validatedData['billRate'],
+            'user_subclient_id' => isset($job) ? $job->user_subclient_id  : \Auth::id(),
+            'attachment' => $filename,
+            'user_id' => isset($job) ? $job->user_id  : \Auth::id(),
+            'user_type' => isset($job) ? $job->user_type  : 2,
+            'interview_process' => 'Yes',
+            'jobStatus' => isset($job) ? $job->jobStatus : 1,
+            'max_bill_rate' => $validatedData['maxBillRate'],
+            'pre_candidate' => $validatedData['preIdentifiedCandidate'],
+            'labour_type' => $validatedData['laborType'],
+            'description' => $validatedData['jobDescriptionEditor'],
+            'skills' => $validatedData['qualificationSkillsEditor'],
+            'internal_notes' => $validatedData['additionalRequirementEditor'],
+            'division_id' => $validatedData['division'],
+            'region_zone_id' => $validatedData['regionZone'],
+            'branch_id' => $validatedData['branch'],
+            'expenses_allowed' => $validatedData['expensesAllowed'],
+            'travel_required' => $validatedData['travelRequired'],
+            'gl_code_id' => $validatedData['glCode'],
+            'worker_type_id' => $validatedData['workerType'],
+            'client_billable' => $validatedData['clientBillable'],
+            'background_check_required' => $validatedData['requireOT'],
+            'remote_option' => $validatedData['virtualRemote'],
+            'payment_type' => $validatedData['payment_type'],
+            'type_of_job' => $validatedData['timeType'],
+            'hours_per_day' => $validatedData['estimatedHoursPerDay'],
+            'day_per_week' => $validatedData['workDaysPerWeek'],
+            'job_code' => $validatedData['job_code'],
+            'num_openings' => $validatedData['numberOfPositions'],
+            'hire_reason_id' => $validatedData['businessReason'],
+            'start_date' => Carbon::createFromFormat('Y/m/d', $validatedData['startDate'])->format('Y-m-d'),
+            'end_date' => Carbon::createFromFormat('Y/m/d', $validatedData['endDate'])->format('Y-m-d'),
+            // Conditional fields
+            'expense_cost' => $validatedData['estimatedExpense'] ?? null,
+            'client_name' => $validatedData['clientName'] ?? null,
+            'pre_name' => $validatedData['candidateFirstName'] ?? null,
+            'pre_last_name' => $validatedData['candidateLastName'] ?? null,
+            'candidate_phone' => $validatedData['candidatePhone'] ?? null,
+            'pre_current_rate' => $validatedData['workerPayRate'] ?? null,
+            'candidate_email' => $validatedData['candidateEmail'] ?? null,
+            'alternative_job_title' => $validatedData['jobTitleEmailSignature'] ?? null,
+            'pre_middle_name' => $validatedData['candidateMiddleName'] ?? null,
+            'ledger_type_id' => $validatedData['subLedgerType'] ?? null,
+            'ledger_code' => $validatedData['subLedgerCode'] ?? null,
+        ];
+
+
+        return true;
+    }
+
 }

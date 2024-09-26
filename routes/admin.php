@@ -16,6 +16,11 @@ use App\Http\Controllers\{
 
 };
 Route::middleware(['user_role:admin'])->group(function () {
+    Route::resource('/admin/career-opportunities', CareerOpportunitiesController::class);
+
+// Define the custom copy route
+    Route::post('/admin/career-opportunities/{id}/copy', [CareerOpportunitiesController::class, 'copy'])
+        ->name('admin.career-opportunities.copy');
     // In your routes file (web.php)
     Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('dashboard', [AdminController::class, 'index'])->name('dashboard');
