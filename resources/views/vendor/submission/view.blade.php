@@ -268,7 +268,7 @@
                           <span class="text-gray-600">Submission Date:</span>
                           <span
                             class="font-semibold"
-                          >{{$submission->created_at->format('Y-m-d')}}</span>
+                          >{{$submission->formatted_created_at}}</span>
                         </div>
                       </div>
                     </div>
