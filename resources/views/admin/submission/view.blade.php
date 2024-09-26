@@ -23,7 +23,7 @@
                 create offer
               </a>
                 <div x-data="addSubWizarForm()" x-init="mounted()">
-                <button 
+                <button
                     type="button"
                     @click="rejectCandidate({{ $submission->id }})"
                     aria-label="Reject candidate {{ $submission->consultant->full_name }}"
