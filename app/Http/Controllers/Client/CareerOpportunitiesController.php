@@ -159,7 +159,23 @@ class CareerOpportunitiesController extends Controller
         ] );
         //
     }
-
+    public function copy($id)
+    {
+        try {
+            $originalOpportunity = CareerOpportunity::findOrFail($id);
+            $newOpportunity = $originalOpportunity->replicate();
+            $newOpportunity->title = $originalOpportunity->title;
+            $newOpportunity->created_at = Carbon::now();
+            $newOpportunity->updated_at = Carbon::now();
+            $newOpportunity->save();
+            $this->syncBusinessUnits($originalOpportunity->careerOpportunitiesBu->pluck('bu_unit')->toArray(), $newOpportunity->id);
+            session()->flash('success', 'Career Opportunity Copied successfully!');
+            return redirect()->route('client.career-opportunities.edit', $newOpportunity->id);
+        } catch (\Exception $e) {
+            session()->flash('error', 'Error!');
+        }
+        return redirect()->route('client.career-opportunities.index');
+    }
     /**
      * Update the specified resource in storage.
      */

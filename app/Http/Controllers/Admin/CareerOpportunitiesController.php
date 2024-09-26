@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Models\GenericData;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use App\Models\JobTemplates;
 use App\Models\CareerOpportunity;
@@ -48,12 +49,6 @@ class CareerOpportunitiesController extends BaseController
                      >
                        <i class="fas fa-edit"></i>
                      </a>';
-                    $copyBtn = '<form action="' . route('admin.career-opportunities.copy', $row->id) . '" method="POST" style="display: inline-block;" onsubmit="return confirm(\'Are you sure you want to copy this career opportunity?\');">
-        ' . csrf_field() . '
-        <button type="submit" class="text-yellow-500 hover:text-yellow-700 bg-transparent hover:bg-transparent">
-            <i class="fas fa-copy"></i>
-        </button>
-    </form>';
                     $deleteBtn = '<form action="' . route('admin.career-opportunities.destroy', $row->id) . '" method="POST" style="display: inline-block;" onsubmit="return confirm(\'Are you sure?\');">
                      ' . csrf_field() . method_field('DELETE') . '
                      <button type="submit" class="text-red-500 hover:text-red-700 bg-transparent hover:bg-transparent">
@@ -61,7 +56,7 @@ class CareerOpportunitiesController extends BaseController
                      </button>
                    </form>';
 
-                    return $btn .$copyBtn . $deleteBtn;
+                    return $btn . $deleteBtn;
                 })
                 ->rawColumns(['action'])
                 ->make(true);
@@ -154,6 +149,8 @@ class CareerOpportunitiesController extends BaseController
      */
     public function edit(string $id)
     {
+        $user = Auth::user();
+        $sessionrole = session('selected_role');
         $careerOpportunity = CareerOpportunity::with('careerOpportunitiesBu')->findOrFail($id);
 
         $businessUnitsData  = $careerOpportunity->careerOpportunitiesBu->map(function ($item) {
@@ -163,10 +160,11 @@ class CareerOpportunitiesController extends BaseController
                 'percentage' => $item->percentage
             ];
         })->toArray();
-        // dd( $businessUnitsData);
+//         dd($careerOpportunity);
         return view('admin.career_opportunities.create', [
             'careerOpportunity' => $careerOpportunity,
             'businessUnitsData' => $businessUnitsData,
+            'sessionrole' => $sessionrole,
         ] );
         //
     }
@@ -179,19 +177,18 @@ class CareerOpportunitiesController extends BaseController
         try {
             $originalOpportunity = CareerOpportunity::findOrFail($id);
             $newOpportunity = $originalOpportunity->replicate();
-            $newOpportunity->title = $originalOpportunity->title; // Change the title to indicate it's a copy
-            $newOpportunity->created_at = Carbon::now(); // Update timestamps if needed
+            $newOpportunity->title = $originalOpportunity->title;
+            $newOpportunity->created_at = Carbon::now();
             $newOpportunity->updated_at = Carbon::now();
             $newOpportunity->save();
             $this->syncBusinessUnits($originalOpportunity->careerOpportunitiesBu->pluck('bu_unit')->toArray(), $newOpportunity->id);
             session()->flash('success', 'Career Opportunity Copied successfully!');
+            return redirect()->route('admin.career-opportunities.edit', $newOpportunity->id);
         } catch (\Exception $e) {
             session()->flash('error', 'Error!');
         }
-        return redirect()->route('admin.career-opportunities.index')->with('success', 'Career Opportunity copied successfully.');
+        return redirect()->route('admin.career-opportunities.index');
     }
-
-
     /**
      * Update the specified resource in storage.
      */

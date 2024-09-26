@@ -8,6 +8,9 @@ use App\Http\Controllers\{
 };
 
 Route::middleware(['user_role:client'])->group(function () {
+    Route::resource('/client/career-opportunities', \App\Http\Controllers\Client\CareerOpportunitiesController::class);
+    Route::post('/client/career-opportunities/{id}/copy', [\App\Http\Controllers\Client\CareerOpportunitiesController::class, 'copy'])
+        ->name('client.career-opportunities.copy');
     Route::prefix('client')->name('client.')->group(function () {
         Route::match(['get', 'post'], 'submission/index', [SubmissionController::class, 'index'])->name('submission.index');
         Route::get('/submission/{id}', [SubmissionController::class, 'show'])->name('submission.show');
