@@ -51,6 +51,105 @@ class CareerOpportunitiesOfferController extends Controller
         return view('vendor.offer.index');
     }
 
+    // Show the form for creating a new career opportunity offer
+    public function create($id)
+    {
+       $submission =  CareerOpportunitySubmission::findOrFail($id);
+       return view('vendor.offer.create',[
+        'submission'=>$submission
+         ]);
+    }
+
+    // Store a newly created career opportunity offer in the database
+    public function store(Request $request)
+    {
+        // Define your validation rules
+        $rules = [
+            'startDate' => 'required|date_format:Y/m/d',
+            'endDate' => 'required|date_format:Y/m/d',
+            'approvingManager' => 'required|integer',
+            'markup' => 'required',
+            'submissionid' => 'required|integer',
+            'location' => 'required|integer',
+            'remote' => 'required|in:Yes,No',
+            'payRate' => 'required|numeric|min:0',
+            'billRate' => 'required|numeric|min:0',
+            'overTime' => 'nullable',
+            'doubleRate' => 'nullable',
+            'overTimeCandidate' => 'nullable',
+            'doubleTimeCandidate' => 'nullable',
+        
+        ];
+
+        $messages = [
+        
+            // Add more custom messages as needed
+        ];
+
+        $validator = Validator::make($request->all(), $rules, $messages);
+        
+        
+        // dd($validator );
+        // If validation fails, return JSON response with errors
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'errors' => $validator->errors(),
+            ], 422); // 422 Unprocessable Entity status
+        }
+        $validatedData = $validator->validated();
+        $existingOffer = CareerOpportunitiesOffer::where('submission_id', $request->submissionid)
+        ->whereIn('status', [4, 1])
+        ->first();
+        if($existingOffer){
+            
+            session()->flash('success', 'Offer already exist!');
+            return response()->json([
+                'success' => true,
+                'message' => 'Offer already exist!',
+                'redirect_url' => route('vendor.offer.show',  ['id' => $request->submissionid]) // Redirect back URL for AJAX
+            ]);
+        }
+        $submission = CareerOpportunitySubmission::findOrFail($request->submissionid);
+        $jobData = $submission->careerOpportunity;
+        $mapedData = [
+            "submission_id" =>$validatedData['submissionid'],
+            "vendor_id" =>$submission->vendor_id,
+            "candidate_id" =>$submission->candidate_id,
+            "hiring_manager_id" =>$validatedData['approvingManager'],
+            "career_opportunity_id" =>$submission->career_opportunity_id,
+            "location_id" =>$validatedData['location'],
+            "markup" =>$validatedData['markup'],
+            "created_by_id" =>\Auth::id(),
+            "created_by_type" =>3,
+            "status" =>1,
+            "offer_pay_rate" =>removeComma($validatedData['payRate']),
+            "offer_bill_rate" =>removeComma($validatedData['billRate']),
+            "over_time" =>removeComma($validatedData['overTime']),
+            "client_overtime" =>removeComma($validatedData['overTimeCandidate']),
+            "double_time" =>removeComma($validatedData['doubleRate']),
+            "client_doubletime" =>removeComma($validatedData['doubleTimeCandidate']),
+
+            "remote_option" =>$validatedData['remote'],
+            // "notes" =>$validatedData['notes'],
+            "start_date" =>!empty($validatedData['startDate']) 
+            ? Carbon::createFromFormat('Y/m/d', $validatedData['startDate'])->format('Y-m-d')  : null,
+            "end_date" =>!empty($validatedData['endDate']) 
+            ? Carbon::createFromFormat('Y/m/d', $validatedData['endDate'])->format('Y-m-d')  : null,
+        ];
+        $offerCreate = CareerOpportunitiesOffer::create( $mapedData );
+        calculateVendorRates($offerCreate,$offerCreate->offer_bill_rate,$offerCreate->client_overtime,$offerCreate->client_doubletime);
+        calculateOfferEstimates($offerCreate,$jobData);
+    
+        session()->flash('success', 'Offer saved successfully!');
+        return response()->json([
+            'success' => true,
+            'message' => 'Offer saved successfully!',
+            'redirect_url' => route('vendor.offer.index') // Redirect back URL for AJAX
+        ]);
+
+    }
+
     // Show a specific career opportunity offer
     public function show($id)
     {
