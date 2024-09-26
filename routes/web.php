@@ -68,10 +68,11 @@ Route::middleware(['ensure_role_is_selected'])->group(function () {
     Route::post('consultant-id', [VendorController::class, 'consultantDetail'])->name('consultant_detail');
     Route::post('show-vendor-markup', [VendorController::class, 'showVendorMarkup'])->name('show_vendor_markup');
     Route::post('calculate-rate', [CareerOpportunitiesOfferController::class, 'calculateRate'])->name('calculate_rate');
-    
+
     // Role-specific dashboards
     Route::middleware(['user_role:admin'])->group(function () {
         Route::get('/dashboard', [AdminController::class, 'index'])->name('dashboard');
+        Route::post('/reject-candidate', [\App\Http\Controllers\Admin\SubmissionController::class, 'rejectCandidate']);
     });
     Route::middleware(['user_role:vendor'])->group(function () {
     Route::get('/vendor/dashboard', [VendorController::class, 'index'])->name('vendor.dashboard');

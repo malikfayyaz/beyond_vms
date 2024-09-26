@@ -16,18 +16,22 @@
               >
                 schedule interview
               </button>
-              
+              <a href="{{ route('admin.offer.create',  ['id' => 1]) }}"
               <a href="{{ route('admin.offer.create',  ['id' => $submission->id]) }}"
                 class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 capitalize"
               >
                 create offer
               </a>
-              <button
-                type="button"
-                class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 capitalize"
-              >
-                reject candidate
-              </button>
+                <div x-data="addSubWizarForm()" x-init="mounted()">
+                <button
+                    type="button"
+                    @click="rejectCandidate({{ $submission->id }})"
+                    aria-label="Reject candidate {{ $submission->consultant->full_name }}"
+                    class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 capitalize"
+                >
+                    Reject Candidate
+                </button>
+                </div>
               <a href="{{ route('admin.submission.index') }}">
                   <button
                       type="button"
@@ -301,7 +305,7 @@
                             <span class="text-gray-600">Bill Rate:</span>
                             <span
                               class="font-semibold"
-                              
+
                             >${{$submission->vendor_bill_rate}}</span>
                           </div>
                           <div class="flex justify-between items-center mt-1">
@@ -366,7 +370,7 @@
                   Alternative text - include a link
                   <a href="{{ asset('storage/submission_resume/' . $submission->resume) }}">to the PDF!</a>
                 </p>
-              </object> 
+              </object>
             @else
               <p>No resume available.</p>
             @endif
@@ -375,5 +379,4 @@
         </div>
 
     </div>
-
     @endsection

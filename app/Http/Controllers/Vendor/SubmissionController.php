@@ -25,7 +25,7 @@ class SubmissionController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $submissions = CareerOpportunitySubmission::with(['consultant','vendor','careerOpportunity.hiringManager','workerType','location'])->get();
+            $submissions = CareerOpportunitySubmission::with(['consultant','vendor','careerOpportunity.hiringManager','location'])->get();
 
             return DataTables::of($submissions)
                 ->addColumn('consultant_name', function($row) {

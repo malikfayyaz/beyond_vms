@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Carbon\Carbon;
 
 class CareerOpportunitiesOffer extends Model
 {
@@ -28,8 +29,18 @@ class CareerOpportunitiesOffer extends Model
         return $this->belongsTo(Client::class, 'hiring_manager_id', 'id');
     }
 
-    public function venDor()
+    public function vendor()
     {
         return $this->belongsTo(Vendor::class, 'vendor_id', 'id');
+    }
+
+    public function getStartDateAttribute()
+    {
+        return $this->attributes['start_date'] ? Carbon::parse($this->attributes['start_date'])->format('m/d/Y') : '';
+    }
+
+    public function getEndDateAttribute()
+    {
+        return $this->attributes['end_date'] ? Carbon::parse($this->attributes['end_date'])->format('m/d/Y') : '';
     }
 }
