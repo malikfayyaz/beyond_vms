@@ -25,14 +25,14 @@ class VendorManagementController extends Controller
     {
         if ($request->ajax()) {
             // Eager load the role relationship (if vendors have roles)
-            $vendors = Vendor::with('role', 'user')->get();
+            $vendors = Vendor::with('user')->get();
 
             return datatables()->of($vendors)
-            ->addColumn('role', function($vendor) {
-                return $vendor->role ? $vendor->role->name : 'N/A'; // Access the role name
-            })
             ->addColumn('full_name', function ($vendor) {
                 return $vendor->full_name; // Use the accessor method to get full name
+            })
+            ->addColumn('profile_status', function ($vendor) {
+                return $vendor->profile_status == 1 ? 'Active' : 'Inactive'; // Check status and return text
             })
             ->addColumn('email', function ($vendor) {
                 return $vendor->user->email; // Fetch email from the related User model
@@ -91,7 +91,7 @@ class VendorManagementController extends Controller
             'phone' => 'nullable|string|max:20',
             'role' => 'required|exists:roles,id',
             'country' => 'required|exists:countries,id',
-            'status' => 'required|string|in:Active,Under Review,Inactive',
+            'profile_status' => 'required|boolean',
             'profile_image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048'
         ]);
 
@@ -206,7 +206,7 @@ class VendorManagementController extends Controller
             'phone' => 'nullable|string|max:20',
             'role' => 'required|exists:roles,id',
             'country' => 'required|exists:countries,id',
-            'status' => 'required|string|in:Active,Under Review,Inactive',
+            'profile_status' => 'required|boolean',
             'profile_image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048'
         ]);
 
@@ -219,7 +219,7 @@ class VendorManagementController extends Controller
             'last_name' => $validatedData['last_name'],
             'phone' => $validatedData['phone'],
             'country' => $validatedData['country'],
-            'status' => $validatedData['status'],
+            'profile_status' => $validatedData['profile_status'],
         ]);
 
         // Handle the profile image upload if provided
