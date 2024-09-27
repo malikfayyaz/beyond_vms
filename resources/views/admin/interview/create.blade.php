@@ -56,7 +56,7 @@
     </div>
     <div>
         <!-- Form -->
-        <div x-data="createOffer">
+        <div x-data="createInterview">
             <form id="generalformwizard" @submit.prevent="validateForm">
                 <div class="bg-white mx-4 my-8 rounded p-8">
                 <h2
@@ -73,9 +73,10 @@
                     <input
                         type="text"
                         class="w-full h-12 px-4 text-gray-500 border border-gray-300 rounded-md shadow-sm focus:outline-none"
-                        placeholder="Interview Schedule for {{$submission->consultant->first_name}} {{$submission->consultant->last_name}}"
+                        value="Interview Schedule for {{$submission->consultant->full_name}}"
                         disabled
                         id="eventName"
+                        x-model="eventName"
                     />
                     </div>
                     <div class="flex-1">
@@ -86,6 +87,7 @@
                     <select
                         class="w-full select2-single custom-style"
                         id="interviewDuration"
+                        x-model="interviewDuration"
                     >
                         <option value="">Select</option>
                         @foreach (checksetting(13) as $key => $value)
@@ -106,6 +108,7 @@
                     <select
                         class="w-full select2-single custom-style"
                         id="timeZone"
+                        x-model="timeZone"
                     >
                         <option value="">Select</option>
                         @foreach (checksetting(14) as $key => $value)
@@ -118,19 +121,20 @@
                     ></p>
                     </div>
                     <div class="flex-1">
-                    <label class="block mb-2"
+                    <label for="remote" class="block mb-2"
                         >Interview Type <span class="text-red-500">*</span></label
                     >
                     <select
                         class="w-full select2-single custom-style"
                         id="remote"
+                        x-model="remote"
                     >
                         <option value="">Select</option>
                         @foreach (checksetting(15) as $key => $value)
                             <option value="{{ $key }}">{{ $value }}</option>
                         @endforeach
                     </select>
-                    <p class="text-red-500 text-sm mt-1"></p>
+                    <p class="text-red-500 text-sm mt-1" x-text="remoteError"></p>
                     </div>
                 </div>
                 </div>
@@ -144,7 +148,7 @@
                     class="text-xl font-bold"
                     :style="{'color': 'var(--primary-color)'}"
                     >
-                    Recommended Interviev Date
+                    Recommended Interview Date
                     </h2>
                 </div>
                 <!--  Dates and Other Information -->
@@ -162,47 +166,51 @@
                         >
                         <input
                             id="startDate"
+                            x-model="startDate"
                             class="w-full h-12 px-4 text-gray-500 border rounded-md shadow-sm focus:outline-none pl-7"
                             type="text"
-                            placeholder="Select start date"
+                            placeholder="Select recommended date"
                         />
-                        <p class="text-red-500 text-sm mt-1"></p>
+                        <p class="text-red-500 text-sm mt-1" x-text="startDateError"></p>
                         </div>
                         <div class="flex-1">
-                        <label for="endDate" class="block mb-2"
+                        <label for="otherDate1" class="block mb-2"
                             >Other Dates - 1 <span class="text-red-500"></span
                         ></label>
                         <input
-                            id="endDate"
+                            id="otherDate1"
+                            x-model="otherDate1"
                             class="w-full h-12 px-4 text-gray-500 border rounded-md shadow-sm focus:outline-none pl-7"
                             type="text"
-                            placeholder="Select end date"
+                            placeholder="Select other date"
                         />
                         <p class="text-red-500 text-sm mt-1"></p>
                         </div>
                     </div>
                     <div class="flex space-x-4 mt-4">
                         <div class="flex-1">
-                        <label for="startDate" class="block mb-2"
+                        <label for="otherDate2" class="block mb-2"
                             >Other Dates - 2 <span class="text-red-500"></span
                         ></label>
                         <input
-                            id="startDate"
+                            id="otherDate2"
+                            x-model="otherDate2"
                             class="w-full h-12 px-4 text-gray-500 border rounded-md shadow-sm focus:outline-none pl-7"
                             type="text"
-                            placeholder="Select start date"
+                            placeholder="Select other date"
                         />
                         <p class="text-red-500 text-sm mt-1"></p>
                         </div>
                         <div class="flex-1">
-                        <label for="endDate" class="block mb-2"
+                        <label for="otherDate3" class="block mb-2"
                             >Other Dates - 3 <span class="text-red-500"></span
                         ></label>
                         <input
-                            id="endDate"
+                            id="otherDate3"
+                            x-model="otherDate3"
                             class="w-full h-12 px-4 text-gray-500 border rounded-md shadow-sm focus:outline-none pl-7"
                             type="text"
-                            placeholder="Select end date"
+                            placeholder="Select other date"
                         />
                         <p class="text-red-500 text-sm mt-1"></p>
                         </div>
@@ -248,7 +256,7 @@
                             {{ locationName($value->id) }}</option>
                             @endforeach
                         </select>
-                        <p class="text-red-500 text-sm mt-1"></p>
+                        <p class="text-red-500 text-sm mt-1" x-text="locationError"></p>
                         </div>
                         <div class="flex-1">
                         <div class="mt-1.5">
@@ -262,16 +270,19 @@
                             id="jobAttachment"
                             name="jobAttachment"
                             class="block w-full px-2 py-3 text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none"
+                            @change="handleFileUpload"
                             />
                         </div>
                         </div>
                     </div>
                     <div class="flex space-x-4 mt-4">
                         <div class="flex-1">
-                        <label class="block mb-2">Interviev Instructions</label>
+                        <label class="block mb-2">Interview Instructions</label>
                         <textarea
                             class="w-full border rounded"
                             rows="5"
+                            x-model="interviewInstructions"
+                            id="interviewInstructions"
                             :style="{'border-color': 'var(--primary-color)'}"
                         ></textarea>
                         </div>
@@ -294,15 +305,15 @@
                     </h2>
                 </div>
                 <div class="flex-1">
-                    <label for="jobCode" class="block mb-2"
+                    <label for="members" class="block mb-2"
                     >Select interviev member (including yourself) to access
                     their calenders on the next page
                     <span class="text-red-500">*</span></label
                     >
 
                     <select
-                    class="w-full select2-single custom-style"
-                    multiple="multiple"
+                    class="w-full select2-single custom-style border"
+                    multiple="multiple" id="members" x-model="members"
                     >
                         @php $clients = \App\Models\Client::byStatus();@endphp
                         @foreach ($clients as $key => $value)
@@ -327,24 +338,25 @@
 </div>
 <script>
     document.addEventListener("alpine:init", () => {
-    Alpine.data("createOffer", () => ({
+    Alpine.data("createInterview", () => ({
+        eventName:'Interview Schedule for {{$submission->consultant->full_name}}',
         interviewDuration: "",
         timeZone: "",
+        remote: "",
+        interviewInstructions: '', // Initialize as an empty string
+        members: [],
+        location: "",
+        startDate: "",
+        otherDate1: '',
+        otherDate2: '',
+        otherDate3: '',
+
         interviewDurationError: "",
         timeZoneError: "",
-        //   endDate: "",
-        //   approvingManager: "",
-        //   location: "",
-        //   remote: "",
-        //   billRate: "",
-        //   payRate: "",
-        //   startDateError: "",
-        //   endDateError: "",
-        //   approvingManagerError: "",
-        //   locationError: "",
-        //   remoteError: "",
-        //   billRateError: "",
-        //   payRateError: "",
+        startDateError: "",
+        locationError: "",
+        remoteError: "",
+       
 
         init() {
         this.initDatePickers();
@@ -355,25 +367,29 @@
         const startPicker = flatpickr("#startDate", {
             dateFormat: "Y/m/d",
             onChange: (selectedDates, dateStr) => {
-            this.startDate = dateStr;
-            this.startDateError = "";
-            if (
-                this.endDate &&
-                new Date(dateStr) > new Date(this.endDate)
-            ) {
-                this.endDate = "";
-                this.endDateError = "End date must be after start date";
-                endPicker.clear();
-            }
-            endPicker.set("minDate", dateStr);
+                this.startDate = dateStr; // Set the selected date to startDate
+                this.startDateError = ""; // Clear the error message
             },
         });
 
-        const endPicker = flatpickr("#endDate", {
+        const otherDatePicker1 = flatpickr("#otherDate1", {
             dateFormat: "Y/m/d",
             onChange: (selectedDates, dateStr) => {
-            this.endDate = dateStr;
-            this.endDateError = "";
+                this.otherDate1 = dateStr; // Set the selected date 
+            },
+        });
+
+        const otherDatePicker2 = flatpickr("#otherDate2", {
+            dateFormat: "Y/m/d",
+            onChange: (selectedDates, dateStr) => {
+                this.otherDate2 = dateStr; // Set the selected date 
+            },
+        });
+
+        const otherDatePicker3 = flatpickr("#otherDate3", {
+            dateFormat: "Y/m/d",
+            onChange: (selectedDates, dateStr) => {
+                this.otherDate3 = dateStr; // Set the selected date
             },
         });
         },
@@ -431,35 +447,50 @@
             isValid = false;
         }
 
-        if (!this.endDate) {
-            this.endDateError = "Please select an end date.";
+        if (!this.startDate) {
+        this.startDateError = "Please select a recomended date.";
             isValid = false;
-        } else if (new Date(this.startDate) > new Date(this.endDate)) {
-            this.endDateError = "End date must be after start date";
-            isValid = false;
+        } else {
+            this.startDateError = ""; // Clear the error if start date is valid
         }
-
-        if (!this.approvingManager) {
-            this.approvingManagerError =
-            "Please select timesheet approving manager.";
-            isValid = false;
-        }
-
+        
         if (!this.location) {
             this.locationError = "Please select a location.";
             isValid = false;
         }
 
         if (!this.remote) {
-            this.remoteError = "Please select remote option.";
+            this.remoteError = "Please select interview type.";
             isValid = false;
         }
 
         if (!isValid) {
             e.preventDefault();
+            console.log()
         } else {
-            console.log("Form is valid. Submitting...");
-            // Add your form submission logic here
+            
+            const formElement = document.querySelector("#generalformwizard");
+            const formData = new FormData(formElement);
+
+            // Append additional fields manually if needed
+            formData.append("eventName", this.eventName);
+            formData.append("interviewDuration", this.interviewDuration);
+            formData.append("timeZone", this.timeZone);
+            formData.append("remote", this.remote);
+            formData.append("interviewInstructions", this.interviewInstructions);
+            formData.append("members", this.members);
+            formData.append("location", this.location);
+            formData.append("startDate", this.startDate);
+            formData.append("otherDate1", this.otherDate1);
+            formData.append("otherDate2", this.otherDate2);
+            formData.append("otherDate3", this.otherDate3);
+            formData.append("submissionid", {{$submission->id}});
+           
+            url = '{{ route("admin.interview.store") }}';
+            
+            console.log(formData);
+            // Use your custom ajaxCall function
+            ajaxCall(url, 'POST', [[this.onSuccess, ['response']]], formData);
         }
         },
     }));

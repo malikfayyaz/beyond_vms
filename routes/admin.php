@@ -13,7 +13,7 @@ use App\Http\Controllers\{
     Admin\VendorManagementController,
     Admin\CareerOpportunitiesOfferController,
     Admin\SubmissionController,
-
+    Admin\InterviewController,
 };
 Route::middleware(['user_role:admin'])->group(function () {
     Route::resource('/admin/career-opportunities', CareerOpportunitiesController::class);
@@ -124,6 +124,7 @@ Route::middleware(['user_role:admin'])->group(function () {
     
         //interview
         Route::get('interview/{id}/create', [InterviewController::class, 'create'])->name('interview.create');
+        Route::post('interview/store', [InterviewController::class, 'store'])->name('interview.store');
    
     });
 });
