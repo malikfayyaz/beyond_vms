@@ -16,12 +16,12 @@
               >
                 schedule interview
               </button>
-              <button
+              <a href="{{ route('client.offer.create',  ['id' => $submission->id]) }}"
                 type="button"
                 class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 capitalize"
               >
                 create offer
-              </button>
+              </a>
               <button
                 type="button"
                 class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 capitalize"
@@ -183,7 +183,7 @@
                           <span class="text-gray-600">Resume:</span>
                           <span
                             class="font-semibold"
-                            >{{$submission->consultant->resume}}</span>
+                            >{{$submission->resume}}</span>
                         </div>
                         <div class="flex justify-between py-3 px-4">
                           <span class="text-gray-600">Vendor Name:</span>
@@ -269,7 +269,7 @@
                           <span class="text-gray-600">Submission Date:</span>
                           <span
                             class="font-semibold"
-                          >{{$submission->created_at->format('Y-m-d')}}</span>
+                          >{{$submission->formatted_created_at}}</span>
                         </div>
                       </div>
                     </div>
@@ -355,19 +355,19 @@
             </div>
             <div class="w-2/4 bg-white h-[1024px] mx-4 rounded p-8">
             @if ($submission->resume)
-            <object
+              <object
                 data="{{ asset('storage/submission_resume/' . $submission->resume) }}"
                 type="application/pdf"
                 width="100%"
                 height="100%"
-            >
+              >
                 <p>
-                    Alternative text - include a link
-                    <a href="{{ asset('storage/submission_resume/' . $submission->resume) }}">to the PDF!</a>
+                  Alternative text - include a link
+                  <a href="{{ asset('storage/submission_resume/' . $submission->resume) }}">to the PDF!</a>
                 </p>
-            </object>
+              </object>
             @else
-                <p>No resume available.</p>
+              <p>No resume available.</p>
             @endif
             </div>
           </div>

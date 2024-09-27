@@ -6,6 +6,7 @@
       <div class="ml-16">
           @include('admin.layouts.partials.header')
 
+
           <div  x-data="{ tab: 'activejobs' }" class="bg-white mx-4 my-8 rounded p-8">
           <div class="mb-4">
             <ul
@@ -115,6 +116,21 @@
             </ul>
           </div>
           <div x-show="tab === 'activejobs'" class="flex w-full gap-4">
+
+
+          <div class="bg-white mx-4 my-8 rounded p-8">
+              <div class="flex justify-between items-center mb-6">
+                  <h2 class="text-2xl font-bold"></h2>
+                  <div class="flex space-x-2">
+                      <form action="{{ route('admin.career-opportunities.copy', $job->id) }}" method="POST" style="display: inline-block;">
+                          @csrf
+                          <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 capitalize">
+                              Copy Career Opportunity <i class="fas fa-copy"></i>
+                          </button>
+                      </form>
+                  </div>
+              </div>
+          <div class="flex w-full gap-4">
 
             <!-- Left Column -->
             <div

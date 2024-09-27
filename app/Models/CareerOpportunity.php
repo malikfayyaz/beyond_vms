@@ -20,7 +20,7 @@ class CareerOpportunity extends Model
     }
     public function workerType()
     {
-        return $this->belongsTo(Setting::class, 'worker_type_id', 'id');
+        return $this->belongsTo(Setting::class, 'job_type', 'id');
     }
     public function careerOpportunitiesBu()
     {
@@ -75,6 +75,11 @@ class CareerOpportunity extends Model
      }
     public function submissions() {
         return $this->hasMany(CareerOpportunitySubmission::class);
+    }
+
+    public function location()
+    {
+        return $this->belongsTo(Location::class, 'location_id', 'id');
     }
 
 }

@@ -6,6 +6,17 @@
     <div class="ml-16">
         @include('client.layouts.partials.header')
         <div class="bg-white mx-4 my-8 rounded p-8">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-bold"></h2>
+                <div class="flex space-x-2">
+                    <form action="{{ route('client.career-opportunities.copy', $job->id) }}" method="POST" style="display: inline-block;">
+                        @csrf
+                        <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 capitalize">
+                            Copy Career Opportunity <i class="fas fa-copy"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
             <div class="mb-4">
                 <ul
                     class="grid grid-flow-col text-center text-gray-500 bg-gray-100 rounded-lg p-1"

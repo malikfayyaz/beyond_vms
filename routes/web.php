@@ -12,11 +12,12 @@ use App\Http\Controllers\{
     Admin\AdminController,
     Admin\GenericDataController,
     Admin\PermissionController,
+    Admin\CareerOpportunitiesOfferController,
     Admin\RoleController,
     Client\ClientController,
     Auth\AuthController,
     Auth\ForgotPasswordController,
-    Auth\ResetPasswordController
+    Auth\ResetPasswordController,
 };
 require base_path('routes/client.php');
 require base_path('routes/admin.php');
@@ -73,10 +74,12 @@ Route::middleware(['ensure_role_is_selected'])->group(function () {
 
     Route::match(['post'], 'workflow/jobWorkFlowUpdate', [GenericDataController::class, 'workflowStore'])->name('admin.workflow.jobWorkFlowUpdate');
 
+    Route::post('calculate-rate', [CareerOpportunitiesOfferController::class, 'calculateRate'])->name('calculate_rate');
 
     // Role-specific dashboards
     Route::middleware(['user_role:admin'])->group(function () {
         Route::get('/dashboard', [AdminController::class, 'index'])->name('dashboard');
+        Route::post('/reject-candidate', [\App\Http\Controllers\Admin\SubmissionController::class, 'rejectCandidate']);
     });
     Route::middleware(['user_role:vendor'])->group(function () {
     Route::get('/vendor/dashboard', [VendorController::class, 'index'])->name('vendor.dashboard');

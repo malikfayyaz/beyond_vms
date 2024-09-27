@@ -31,7 +31,7 @@ export default function addSubWizarForm() {
           "race",
           "workLocation",
           "preferredName",
-          
+
           "supplierAccountManager",
           "availableDate",
           "needSponsorship",
@@ -121,9 +121,9 @@ export default function addSubWizarForm() {
       client_over_time_rate:"0.00",
       client_double_time_rate:"0.00",
       vendor_bill_rate:"0.00",
-           
-             
-            
+
+
+
     },
 
     // selectedSkills: [],
@@ -141,6 +141,8 @@ export default function addSubWizarForm() {
     // removeSkill(skill) {
     //   this.formData.skills = this.formData.skills.filter((s) => s !== skill);
     // },
+      // Add your rejectCandidate method here
+
     handleResumeUpload(event) {
       const file = event.target.files[0];
       this.formData.resumeUpload = file || null;
@@ -186,7 +188,7 @@ export default function addSubWizarForm() {
     formatBillRate(value) {
       this.formData.billRate = this.formatRateValue(value);
       console.log(this.formData.billRate );
-      
+
       this.validateAllRates();
     },
 
@@ -202,7 +204,7 @@ export default function addSubWizarForm() {
     validateAllRates() {
       this.validateBillRate();
       this.validatePayRate();
-      
+
     },
 
     validatePayRate() {
@@ -321,7 +323,6 @@ export default function addSubWizarForm() {
     isValidPayRate(rate) {
       return this.isValidBillRate(rate);
     },
-
     // formatBillRate(value) {
     //   this.formData.billRate = this.formatBillingValue(value);
     // },
@@ -378,7 +379,7 @@ export default function addSubWizarForm() {
           disabledFields: (disable = true) => {
             console.log(this.formData);
 
-            
+
           // Empty the input values and clear formData
           if (!disable) {
             console.log(disable);
@@ -391,7 +392,7 @@ export default function addSubWizarForm() {
               $('#lastFourNationalId').val('');
               $('#candidateEmail').val('');
               // console.log("dsfsdf");
-              
+
               this.formData.candidateFirstName = '';
               this.formData.candidateMiddleName = '';
               this.formData.candidateLastName = '';
@@ -399,7 +400,7 @@ export default function addSubWizarForm() {
               this.formData.lastFourNationalId = '';
               this.formData.candidateEmail = '';
           }
-          
+
           // Disable or enable the fields based on the parameter
           $('#candidateFirstName').prop('disabled', disable);
           $('#candidateMiddleName').prop('disabled', disable);
@@ -411,16 +412,16 @@ export default function addSubWizarForm() {
       };
 
       $('#candidateType').on('change', function() {
-        
+
         if($(this).val() == 1) {
           myObject.disabledFields(false);
         }
     });
-      
+
         this.loadExistingCandidate = () => {
           var candidate_id = $('#candidateSelection').find(':selected').val();
-          
-         
+
+
           let url = `/consultant-id`;
 
           if (candidate_id != '') {
@@ -444,7 +445,7 @@ export default function addSubWizarForm() {
               const dobDate = $('#dobDate').val();
               const lastFourNationalId = $('#lastFourNationalId').val();
               const candidateEmail = $('#candidateEmail').val();
-
+                myObject.disabledFields(true);
               // Only set formData when all the required fields have been populated
               if (candidateFirstName && candidateLastName && dobDate && lastFourNationalId) {
                   this.formData.candidateFirstName = candidateFirstName;
@@ -454,7 +455,6 @@ export default function addSubWizarForm() {
                   this.formData.lastFourNationalId = lastFourNationalId;
                   this.formData.candidateEmail = candidateEmail;
                   // Enable the fields or do further processing
-                  myObject.disabledFields(true);
 
                   // Clear the interval
                   clearInterval(intervalId);
@@ -462,16 +462,20 @@ export default function addSubWizarForm() {
           }, 100); // Check every 100ms if the fields have been updated
           }
         };
-
+          this.rejectCandidate = (submissionId) => {
+              let formData = new FormData();
+              formData.append('submissionId', submissionId);
+              ajaxCall('/reject-candidate', 'POST', [[onSuccess, ['response']]], formData);
+          };
         $('#billRate, #payRate').on('change', (event) => {
           this.vendorMarkup(event);
       });
 
-      
+
 
       this.vendorMarkup = (event) => {
         // let formData = this.formData || {};
-    
+
           // Get values from form fields or fallback to formData
           let payRate = this.formData.payRate || $('#payRate').val();
           let billRate = this.formData.billRate || $('#billRate').val();
@@ -506,7 +510,7 @@ export default function addSubWizarForm() {
               '#client_over_time_rate': { type: 'value', field: 'client_over_time_rate' },
               '#client_double_time_rate': { type: 'value', field: 'client_double_time_rate' },
               '#vendor_bill_rate': { type: 'value', field: 'vendor_bill_rate' },
-             
+
               // Add more mappings if needed
           };
 
@@ -521,19 +525,13 @@ export default function addSubWizarForm() {
             this.formData.client_over_time_rate = $('#client_over_time_rate').val();
             this.formData.client_double_time_rate = $('#client_double_time_rate').val();
             this.formData.vendor_bill_rate = $('#vendor_bill_rate').val();
-           
+
             console.log(this.formData);
-            
+
           }, 500);
       }
-      
       }
     },
-
-    
-
-    
-
     initSelect2() {
       this.$nextTick(() => {
         $(".select2-single").each((index, element) => {
@@ -671,6 +669,7 @@ export default function addSubWizarForm() {
             this.formData.candidateType !== "" &&
             (this.formData.candidateType !== "2" ||
               this.formData.candidateSelection !== "") &&
+            this.isFieldValid("candidateEmail")  &&
             this.formData.dobDate.trim() !== "" &&
             this.isValidNationalId(this.formData.lastFourNationalId)
           );
@@ -687,8 +686,6 @@ export default function addSubWizarForm() {
             this.isFieldValid("gender") &&
             this.isFieldValid("race") &&
             this.isFieldValid("workLocation") &&
-            
-            this.isFieldValid("candidateEmail") &&
             this.isFieldValid("supplierAccountManager") &&
             this.isFieldValid("resumeUpload") &&
             (this.formData.phoneNumber === "" ||
@@ -761,7 +758,7 @@ export default function addSubWizarForm() {
         const url = "/vendor/submission/store";
         ajaxCall(url,'POST', [[onSuccess, ['response']]], formData);
         // this.showSuccessMessage = true;
-      
+
         // this.showSuccessMessage = true;
         // this.resetForm();
         // this.currentStep = 1;
@@ -786,7 +783,7 @@ export default function addSubWizarForm() {
         billRate: "0.00",
         preferredName: "",
         // skills: [],
-       
+
         candidateEmail: "",
         phoneNumber: "",
         supplierAccountManager: "",
@@ -808,7 +805,7 @@ export default function addSubWizarForm() {
         client_over_time_rate:"0.00",
         client_double_time_rate:"0.00",
         vendor_bill_rate:"0.00",
-        
+
       };
       if (document.getElementById("resumeUpload")) {
         document.getElementById("resumeUpload").value = "";

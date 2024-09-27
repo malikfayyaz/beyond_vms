@@ -16,6 +16,12 @@ use App\Http\Controllers\{
 
 };
 Route::middleware(['user_role:admin'])->group(function () {
+    Route::resource('/admin/career-opportunities', CareerOpportunitiesController::class);
+
+// Define the custom copy route
+    Route::post('/admin/career-opportunities/{id}/copy', [CareerOpportunitiesController::class, 'copy'])
+        ->name('admin.career-opportunities.copy');
+    // In your routes file (web.php)
     Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('dashboard', [AdminController::class, 'index'])->name('dashboard');
         Route::get('/admin/catalog/{id}', [CatalogController::class, 'view'])->name('admin.catalog.view');
@@ -55,9 +61,9 @@ Route::middleware(['user_role:admin'])->group(function () {
         'status' =>  ['type' => 'select', 'label' => 'Status'],
         ]);
 
-     
 
-     
+
+
 
         Route::match(['get', 'post'], 'job-group-family-config', [GenericDataController::class, 'jobGroupConfig'])->name('data.job_group_family_config');
 
@@ -94,7 +100,7 @@ Route::middleware(['user_role:admin'])->group(function () {
         Route::post('load-job-template', [CatalogController::class, 'loadJobTemplate'])->name('load_job_template');
         Route::post('division-load', [CatalogController::class, 'divisionLoad'])->name('division_load');
         Route::post('job-rates', [RatesController::class, 'jobRates'])->name('job_rates');
-        
+
         Route::match(['get', 'post'], 'workflow', [GenericDataController::class, 'workflow'])->name('workflow');
 
 
@@ -104,10 +110,26 @@ Route::middleware(['user_role:admin'])->group(function () {
 
         // offer
         Route::get('offer/{id}/create', [CareerOpportunitiesOfferController::class, 'create'])->name('offer.create');
+        Route::post('offer/store', [CareerOpportunitiesOfferController::class, 'store'])->name('offer.store');
+        Route::get('offer/index', [CareerOpportunitiesOfferController::class, 'index'])->name('offer.index');
+        Route::get('offer/{id}', [CareerOpportunitiesOfferController::class, 'show'])->name('offer.show');
+        Route::get('offer/view/{id}', [CareerOpportunitiesOfferController::class, 'show'])->name('offer.show');
+        // WorkOrder
+        Route::get('workorder/{id}/create', [\App\Http\Controllers\Admin\CareerOpportunitiesWorkOrderController::class, 'create'])->name('workorder.create');
+        Route::post('workorder/store', [\App\Http\Controllers\Admin\CareerOpportunitiesWorkOrderController::class, 'store'])->name('workorder.store');
+        Route::get('workorder/index', [\App\Http\Controllers\Admin\CareerOpportunitiesWorkOrderController::class, 'index'])->name('workorder.index');
+        Route::get('workorder/{id}', [\App\Http\Controllers\Admin\CareerOpportunitiesWorkOrderController::class, 'show'])->name('workorder.show');
+        Route::get('workorder/view/{id}', [\App\Http\Controllers\Admin\CareerOpportunitiesWorkOrderController::class, 'show'])->name('workorder.show');
+        //workflow
         Route::match(['get', 'post'], 'workflow/edit/{id}', [GenericDataController::class, 'workflowEdit'])->name('workflow.edit');
         Route::match(['get', 'post'], 'workflow/store', [GenericDataController::class, 'workflowStore'])->name('workflow.store');
+        //submission
         Route::match(['get', 'post'], 'submission/index', [SubmissionController::class, 'index'])->name('submission.index');
-        Route::get('/submission/{id}', [SubmissionController::class, 'show'])->name('submission.show');
 
+        Route::get('submission/{id}', [SubmissionController::class, 'show'])->name('submission.show');
+    
+        //interview
+        Route::get('interview/{id}/create', [InterviewController::class, 'create'])->name('interview.create');
+   
     });
 });

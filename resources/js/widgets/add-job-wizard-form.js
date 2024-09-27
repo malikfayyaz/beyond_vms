@@ -116,7 +116,7 @@ export default function wizardForm(careerOpportunity = null,businessUnitsData = 
         var isLedgerCodeRequired = $("#ledger_type :selected").val() === "33";
         $("#ledger_code").prop('required', isLedgerCodeRequired);
         $(".ledger_code_").toggleClass('fa-asterisk', isLedgerCodeRequired);
-        
+
         $("#ledger_type").on('change').on('change', () => {
           var isLedgerCodeRequired = $(this).val() === "33";
           $("#ledger_code").prop('required', isLedgerCodeRequired);
@@ -201,7 +201,19 @@ export default function wizardForm(careerOpportunity = null,businessUnitsData = 
           data.append('opening', openings);
           data.append('hours_per_day', hours_per_day);
           data.append('days_per_week', hours_per_week);
-          let url = `/admin/job-rates/`;
+            let url;
+            if (sessionrole === 'admin') {
+                url = `/admin/job-rates/`;
+            } else if (sessionrole === 'client') {
+                url = `/client/job-rates/`;
+            }
+            else if (sessionrole === 'vendor') {
+                url = `/vendor/job-rates/`;
+            }
+            else if (sessionrole === 'consultant') {
+                url = `/consultant/job-rates/`;
+            }
+            /*          let url = `/admin/job-rates/`;*/
           const updates = {
             '#regular_cost': { type: 'value', field: 'regularBillRate' },
             '#single_resource_cost': { type: 'value', field: 'singleResourceCost' },
@@ -225,10 +237,10 @@ export default function wizardForm(careerOpportunity = null,businessUnitsData = 
           return parseFloat(num).toFixed(2);
         };
       }
-    
+
     },
 
-    
+
      // Define the formatDate method
      formatDate(dateStr) {
       if (!dateStr) return "";
@@ -268,11 +280,11 @@ export default function wizardForm(careerOpportunity = null,businessUnitsData = 
         percentage: parseFloat(this.budgetPercentage),
       });
       console.log(this.formData.businessUnits);
-      
+
       let url = `/admin/division-load`;
       let data = new FormData();
                 data.append('bu_id', this.selectedBusinessUnit);
-                
+
                 const updates = {
                     '#regionZone': { type: 'select2append', field: 'zone' },
                     '#branch': { type: 'select2append', field: 'branch' },
@@ -344,8 +356,8 @@ export default function wizardForm(careerOpportunity = null,businessUnitsData = 
     },
 
     formatBillRate(value) {
-    
-      
+
+
       this.formData.billRate = this.formatBillingValue(value);
     },
 
@@ -491,7 +503,7 @@ export default function wizardForm(careerOpportunity = null,businessUnitsData = 
     },
     init() {
       console.log(this.formData);
-     
+
       this.initSelect2();
       this.initQuill([
         "jobDescriptionEditor",
@@ -499,7 +511,7 @@ export default function wizardForm(careerOpportunity = null,businessUnitsData = 
         "additionalRequirementEditor",
       ]);
       this.initFlatpickr();
-     
+
              // If in edit mode, populate the form with initialData
       if (careerOpportunity.id) {
 
@@ -516,13 +528,13 @@ export default function wizardForm(careerOpportunity = null,businessUnitsData = 
             $(".ledger_code__").toggle(isLedgerCodeRequired);
         // If the quill editors need to load data
         this.$nextTick(() => {
-          
+
           this.calculateRate();
           if (this.quill) {
             if (this.quill.jobDescriptionEditor) {
               this.quill.jobDescriptionEditor.root.innerHTML =
                 careerOpportunity.description || "";
-               
+
             }
             if (this.quill.qualificationSkillsEditor) {
               this.quill.qualificationSkillsEditor.root.innerHTML =
@@ -535,7 +547,7 @@ export default function wizardForm(careerOpportunity = null,businessUnitsData = 
           }
         });
       }
-    
+
     },
 
     initFlatpickr() {
@@ -608,7 +620,7 @@ export default function wizardForm(careerOpportunity = null,businessUnitsData = 
                 this.formData.candidateLastName.trim() !== "" &&
                 this.isValidPhone(this.formData.candidatePhone) &&
                 this.isValidEmail(this.formData.candidateEmail) &&
-                this.isValidPayRate(this.formData.workerPayRate) 
+                this.isValidPayRate(this.formData.workerPayRate)
                 )) &&
             this.formData.laborType !== "" &&
             this.formData.startDate.trim() !== "" &&
@@ -693,14 +705,14 @@ export default function wizardForm(careerOpportunity = null,businessUnitsData = 
         this.formData.termsAccepted
       );
     },
-    
+
     submitForm() {
-     
+
       this.showErrors = true;
       if (this.isFormValid) {
-        
+
         console.log("Form submitted:", this.formData.job_code);
-     
+
         let formData = new FormData();
         Object.keys(this.formData).forEach((key) => {
           if (Array.isArray(this.formData[key])) {
@@ -712,19 +724,26 @@ export default function wizardForm(careerOpportunity = null,businessUnitsData = 
             formData.append(key, this.formData[key]);
           }
         });
-        
+
         formData.append("jobTitleEmailSignature", this.formData.jobTitleEmailSignature);
         // Append the file (if any)
       if (this.attachmentFile) {
         formData.append("attachment", this.attachmentFile);
       }
       if(careerOpportunity.id) {
-      formData.append('_method', 'PUT'); 
+      formData.append('_method', 'PUT');
       }
       let methodtype = careerOpportunity.id ? 'POST' : 'POST';
-      const url = careerOpportunity.id
-        ? `/admin/career-opportunities/${careerOpportunity.id}`
-        : "/admin/career-opportunities";
+      let url;
+          if (sessionrole === 'admin') {
+              url = careerOpportunity.id
+                  ? `/admin/career-opportunities/${careerOpportunity.id}`
+                  : "/admin/career-opportunities";
+          } else if (sessionrole === 'client') {
+              url = careerOpportunity.id
+                  ? `/client/career-opportunities/${careerOpportunity.id}`
+                  : "/client/career-opportunities";
+          }
         ajaxCall(url,methodtype, [[onSuccess, ['response']]], formData);
         this.showSuccessMessage = true;
         // this.resetForm();
@@ -811,7 +830,7 @@ export default function wizardForm(careerOpportunity = null,businessUnitsData = 
       }
     },
   };
-  
+
 }
 
 

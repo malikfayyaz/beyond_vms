@@ -3,8 +3,12 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Mail\ClientCreated;
+use App\Mail\VendorCreated;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\VendorCreatedMail;
 use Spatie\Permission\Models\Role;
 use App\Models\Country;
 use App\Models\Vendor;
@@ -21,14 +25,14 @@ class VendorManagementController extends Controller
     {
         if ($request->ajax()) {
             // Eager load the role relationship (if vendors have roles)
-            $vendors = Vendor::with('role', 'user')->get();
-            
+            $vendors = Vendor::with('user')->get();
+
             return datatables()->of($vendors)
-            ->addColumn('role', function($vendor) {
-                return $vendor->role ? $vendor->role->name : 'N/A'; // Access the role name
-            })
             ->addColumn('full_name', function ($vendor) {
                 return $vendor->full_name; // Use the accessor method to get full name
+            })
+            ->addColumn('profile_status', function ($vendor) {
+                return $vendor->profile_status == 1 ? 'Active' : 'Inactive'; // Check status and return text
             })
             ->addColumn('email', function ($vendor) {
                 return $vendor->user->email; // Fetch email from the related User model
@@ -43,7 +47,7 @@ class VendorManagementController extends Controller
                         >
                         <i class="fas fa-edit"></i>
                         </a>
-                    
+
                             <form action="'. route('admin.vendor-users.destroy', $vendor->id) .'" method="POST" style="display:inline;" onsubmit="return confirm(\'Are you sure?\');">
                             ' . csrf_field() . method_field('DELETE') . '
                             <button type="submit" class="text-red-500 hover:text-red-700 bg-transparent hover:bg-transparent">
@@ -65,10 +69,10 @@ class VendorManagementController extends Controller
     public function create()
     {
         // Assuming user_type_id for vendors is different from admins, e.g., 2 for vendors
-        $roles = Role::where('user_type_id', 2)->get();
+        $roles = Role::where('user_type_id', 3)->get();
         $user = Auth::user();
         $countries = Country::all();
-        
+
         return view('admin.users.vendor_users.create', compact('roles', 'countries'));
     }
 
@@ -77,7 +81,7 @@ class VendorManagementController extends Controller
      */
     public function store(Request $request)
     {
-        $user = Auth::user();   
+        $user = Auth::user();
         $countries = Country::all();
 
         // Validation
@@ -87,18 +91,17 @@ class VendorManagementController extends Controller
             'phone' => 'nullable|string|max:20',
             'role' => 'required|exists:roles,id',
             'country' => 'required|exists:countries,id',
-            'status' => 'required|string|in:Active,Under Review,Inactive',
+            'profile_status' => 'required|boolean',
             'profile_image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048'
         ]);
 
-        $request_email = $request->validate(['email' => 'required|email|unique:users,email']);
+        $request_email = $request->validate(['email' => 'required|email']);
 
         $user = User::where('email', $request_email)->first();
-    
+
         if ($user) {
             // Check if a vendor record already exists for this user
             $vendorRecord = Vendor::where('user_id', $user->id)->first();
-            
             if ($vendorRecord) {
                 $errorMessage = 'A vendor record already exists for this email.';
                 session()->flash('error', $errorMessage);
@@ -117,7 +120,7 @@ class VendorManagementController extends Controller
                     $vendor->profile_image = $imagePath;
                     $vendor->save(); // Save after updating the profile image
                 }
-                
+
             }
         } else {
 
@@ -125,7 +128,7 @@ class VendorManagementController extends Controller
                 'name' => $validatedData['first_name'],
                 'email' => $request_email['email'],
                 'password' => Hash::make('password'),
-                'is_admin' => 1,
+                'is_vendor' => 1,
             ];
 
             $user = User::create($userData);
@@ -133,7 +136,7 @@ class VendorManagementController extends Controller
             $validatedData['user_id'] = $user->id;
 
             $vendor = Vendor::create($validatedData);
-            
+
             if ($request->hasFile('profile_image')) {
                 $imagePath = handleFileUpload($request, 'profile_image', 'vendor_profile');
                 $vendor->profile_image = $imagePath;
@@ -143,8 +146,9 @@ class VendorManagementController extends Controller
 
         $role = $validatedData['role'];
 
-        // $this->updateRoles($vendor,$role);
+        $this->updateRoles($vendor,$role);
 
+        Mail::to($request_email)->send(new VendorCreated($vendor, $user));
         $successMessage = 'Vendor created successfully!';
         session()->flash('success', $successMessage);
 
@@ -173,10 +177,10 @@ class VendorManagementController extends Controller
     {
         // Find the vendor by ID
         $vendor = Vendor::findOrFail($id);
-        
+
         // Fetch roles for vendors (assuming user_type_id 2 is for vendors)
-        $roles = Role::where('user_type_id', 2)->get();
-        
+        $roles = Role::where('user_type_id', 3)->get();
+
         // Fetch all countries
         $countries = Country::all();
 
@@ -202,20 +206,20 @@ class VendorManagementController extends Controller
             'phone' => 'nullable|string|max:20',
             'role' => 'required|exists:roles,id',
             'country' => 'required|exists:countries,id',
-            'status' => 'required|string|in:Active,Under Review,Inactive',
+            'profile_status' => 'required|boolean',
             'profile_image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048'
         ]);
 
         $vendor = Vendor::findOrFail($id);
 
         $role = $validatedData['role'];
-       
+
         $vendor->update([
             'first_name' => $validatedData['first_name'],
             'last_name' => $validatedData['last_name'],
             'phone' => $validatedData['phone'],
             'country' => $validatedData['country'],
-            'status' => $validatedData['status'],
+            'profile_status' => $validatedData['profile_status'],
         ]);
 
         // Handle the profile image upload if provided
@@ -228,12 +232,12 @@ class VendorManagementController extends Controller
             $imagePath = handleFileUpload($request, 'profile_image', 'vendor_profile');
             if ($imagePath) {
                 $vendor->profile_image = $imagePath;
-                $vendor->save(); 
+                $vendor->save();
             }
         }
 
 
-        // $this->updateRoles($vendor,$role);
+        $this->updateRoles($vendor,$role);
 
         // Return success response
         $successMessage = 'Vendor updated successfully!';
@@ -268,51 +272,48 @@ class VendorManagementController extends Controller
     }
 
     public function updateRoles($vendor,$role) {
-       
+
         $userTypeId = 3;
 
         $user = User::findOrFail($vendor->user_id);
 
-        // code for already exist role 
-        $existing_role = $user->with(['roles' => function ($query) use ($userTypeId) {
-            $query->where('user_type_id', 2)
-                  ->select('id', 'name', 'user_type_id'); // Select specific columns
-        }])
-        ->findOrFail($vendor->user_id);
+        // Get the existing roles for the user (with user_type_id = 1)
+        $alreadyRoles = $user->roles()->where('user_type_id', $userTypeId)->pluck('name')->toArray();
 
-        $alreadyroles = [];
-        foreach($existing_role->roles as $rolesvalue) {
-            $alreadyroles[] =$rolesvalue->name; 
+        // Check if $role is an ID or a name
+        if (is_numeric($role)) {
+            // If it's a number (ID), find the role by ID
+            $roleModel = \Spatie\Permission\Models\Role::find($role);
+
+            // Check if the role exists
+            if (!$roleModel) {
+                return response()->json(['error' => 'Role ID does not exist.'], 404);
+            }
+
+            $newUpdatedRole = $roleModel->name; // Get the role name from the model
+        } else {
+            $newUpdatedRole = $role; // If it's a name, use it directly
         }
 
-        $newUpdatedRole =  $role;
-
-        // Iterate through the already assigned roles
-        foreach ($alreadyroles as $roles) {
-            // Remove roles that are not in the new role set
-            if (!in_array($roles, [$newUpdatedRole])) {
-                // Fetch permissions associated with the role being removed
-                $roleModel = \Spatie\Permission\Models\Role::findByName($roles);
-                $permissionsToRemove = $roleModel->permissions->pluck('name')->toArray();
-                // Remove the permissions from the user
-                $user->revokePermissionTo($permissionsToRemove);
-        
-                // Remove the role
-                $user->removeRole($roles);
+        // Remove roles that are not in the new role set
+        foreach ($alreadyRoles as $existingRole) {
+            if ($existingRole !== $newUpdatedRole) {
+                // Remove the role and its permissions
+                $user->removeRole($existingRole);
             }
         }
 
-        // Add the new role if it's not already assigned
-        if (!in_array($newUpdatedRole, $alreadyroles)) {
-            $user->assignRole($newUpdatedRole); // Assign the new role
+        // Assign the new role if it's not already assigned
+        if (!in_array($newUpdatedRole, $alreadyRoles)) {
+            $user->assignRole($newUpdatedRole);
         }
 
-         // Fetch permissions associated with the new role
+        // Fetch permissions associated with the new role
         $roleModel = \Spatie\Permission\Models\Role::findByName($newUpdatedRole);
-
-        $permissions = $roleModel->permissions->pluck('name')->toArray(); // Get permission names
-
-        // Sync user's permissions with the ones associated with the new role
-        $user->syncPermissions($permissions);
+        if ($roleModel) {
+            $permissions = $roleModel->permissions->pluck('name')->toArray();
+            // Sync user's permissions with the ones associated with the new role
+            $user->syncPermissions($permissions);
+        }
     }
 }

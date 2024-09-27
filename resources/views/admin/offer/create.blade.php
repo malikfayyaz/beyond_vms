@@ -13,6 +13,7 @@
               <div class="w-full space-y-4">
                 <!-- First Tab-->
                 <div
+                
                   x-data="{
                           id: 1,
                           get expanded() {
@@ -22,6 +23,7 @@
                               this.active = value ? this.id : null
                           },
                       }"
+                    
                   role="region"
                   class="bg-white"
                 >
@@ -436,14 +438,7 @@
                           </h2>
                         </div>
                         <!-- Date Picker-->
-                        <div class="flex space-x-4 mt-4" x-data="{
-                            formData: {
-                                startDate: '{{ old('startDate',  $submission->careerOpportunity->start_date ? \Carbon\Carbon::parse( $submission->careerOpportunity->start_date)->format('Y/m/d') : '') }}',
-                                endDate: '{{ old('endDate',  $submission->careerOpportunity->end_date ? \Carbon\Carbon::parse( $submission->careerOpportunity->end_date)->format('Y/m/d') : '') }}',
-                                approvingManager: '{{ old('approvingManager', $submission->careerOpportunity->hiring_manager ?? '') }}',
-                            },
-                            startDateError: '',
-                        }">
+                        <div class="flex space-x-4 mt-4" >
                           <div class="flex-1">
                             <label for="startDate" class="block mb-2"
                               >Choose Start Date:
@@ -464,7 +459,7 @@
                             />
                             <p
                               class="text-red-500 text-sm mt-1"
-                              x-text="startDateError"
+                              x-text="formData.startDateError"
                             ></p>
                           </div>
                           <div class="flex-1">
@@ -487,7 +482,7 @@
                             />
                             <p
                               class="text-red-500 text-sm mt-1"
-                              x-text="endDateError"
+                              x-text="formData.endDateError"
                             ></p>
                           </div>
                           <div class="flex-1">
@@ -512,17 +507,11 @@
                             </select>
                             <p
                               class="text-red-500 text-sm mt-1"
-                              x-text="approvingManagerError"
+                              x-text="formData.approvingManagerError"
                             ></p>
                           </div>
                         </div>
-                        <div class="flex space-x-4 mt-4" x-data="{
-                            formData: {
-                                 location: '{{ old('location', $submission->careerOpportunity->location_id ?? '') }}',
-                                 remote: '{{ old('remote', $submission->careerOpportunity->remote_option ?? '') }}',
-                                 },
-                           
-                        }">
+                        <div class="flex space-x-4 mt-4" >
                           <div class="flex-1">
                             <label class="block mb-2"
                               >Location
@@ -542,7 +531,7 @@
                             </select>
                             <p
                               class="text-red-500 text-sm mt-1"
-                              x-text="locationError"
+                              x-text="formData.locationError"
                             ></p>
                           </div>
                           <div class="flex-1">
@@ -560,7 +549,7 @@
                             </select>
                             <p
                               class="text-red-500 text-sm mt-1"
-                              x-text="remoteError"
+                              x-text="formData.remoteError"
                             ></p>
                           </div>
                           <div class="flex-1"></div>
@@ -568,7 +557,7 @@
                         <div class="flex space-x-4 mt-4">
                           <div class="flex-1">
                             <label class="block mb-2">Notes for Program</label>
-                            <textarea
+                            <textarea x-model="formData.notes"
                               class="w-full border rounded"
                               rows="5"
                               :style="{'border-color': 'var(--primary-color)'}"
@@ -595,7 +584,7 @@
                             Offer Rates
                           </h2>
                         </div>
-                        <div class="flex space-x-4 mt-4">
+                        <div class="flex space-x-4 mt-4" >
                           <div class="flex-1">
                             <label for="billRate" class="block mb-2 capitalize"
                               >Bill Rate
@@ -612,14 +601,14 @@
                                   class="w-full h-12 px-4 text-gray-500 border rounded-md shadow-sm focus:outline-none pl-7"
                                   placeholder="00.00"
                                   id="billRate"
-                                  x-model="billRate"
+                                  x-model="formData.billRate"
                                   @input="formatRate('billRate', $event)"
                                   @blur="formatRate('billRate', $event)"
                                 />
                               </div>
                               <p
                                 class="text-red-500 text-sm mt-1"
-                                x-text="billRateError"
+                                x-text="formData.billRateError"
                               ></p>
                             </div>
                           </div>
@@ -639,19 +628,19 @@
                                   class="w-full h-12 px-4 text-gray-500 border rounded-md shadow-sm focus:outline-none pl-7"
                                   placeholder="00.00"
                                   id="payRate"
-                                  x-model="payRate"
+                                  x-model="formData.payRate"
                                   @input="formatRate('payRate', $event)"
                                   @blur="formatRate('payRate', $event)"
                                 />
                               </div>
                               <p
                                 class="text-red-500 text-sm mt-1"
-                                x-text="payRateError"
+                                x-text="formData.payRateError"
                               ></p>
                             </div>
                           </div>
                         </div>
-                        <div class="flex space-x-4 mt-4">
+                        <div class="flex space-x-4 mt-4" >
                           <div class="flex-1">
                             <label for="overTime" class="block mb-2 capitalize"
                               >Over Time Rate for Client</label
@@ -665,7 +654,8 @@
                                 type="text"
                                 class="w-full h-12 px-4 text-gray-500 border rounded-md shadow-sm focus:outline-none pl-7"
                                 placeholder="00.00"
-                                value="150.00"
+                             
+                                x-model="formData.overTime"
                                 disabled
                                 id="overTime"
                               />
@@ -686,7 +676,7 @@
                                 type="text"
                                 class="w-full h-12 px-4 text-gray-500 border rounded-md shadow-sm focus:outline-none pl-7"
                                 placeholder="00.00"
-                                value="200.00"
+                                x-model="formData.doubleRate"
                                 disabled
                                 id="doubleRate"
                               />
@@ -709,7 +699,7 @@
                                 type="text"
                                 class="w-full h-12 px-4 text-gray-500 border rounded-md shadow-sm focus:outline-none pl-7"
                                 placeholder="00.00"
-                                value="37.50"
+                                x-model="formData.overTimeCandidate"
                                 disabled
                                 id="overTimeCandidate"
                               />
@@ -730,7 +720,7 @@
                                 type="text"
                                 class="w-full h-12 px-4 text-gray-500 border rounded-md shadow-sm focus:outline-none pl-7"
                                 placeholder="00.00"
-                                value="50.00"
+                                x-model="formData.doubleTimeCandidate"
                                 disabled
                                 id="doubleTimeCandidate"
                               />
@@ -757,20 +747,99 @@
     <script>
       document.addEventListener("alpine:init", () => {
         Alpine.data("createOffer", () => ({
-        startDate: "",
-        endDate: '',
-        approvingManager: '',
-        location: '',
-          remote: "",
-          billRate: "",
-          payRate: "",
-          startDateError: "",
-          endDateError: "",
-          approvingManagerError: "",
-          locationError: "",
-          remoteError: "",
-          billRateError: "",
-          payRateError: "",
+          formData: {
+                      startDate: '{{ old('startDate',  $submission->careerOpportunity->start_date ? \Carbon\Carbon::parse( $submission->careerOpportunity->start_date)->format('Y/m/d') : '') }}',
+                      endDate: '{{ old('endDate',  $submission->careerOpportunity->end_date ? \Carbon\Carbon::parse( $submission->careerOpportunity->end_date)->format('Y/m/d') : '') }}',
+                      approvingManager: '{{ old('approvingManager', $submission->careerOpportunity->hiring_manager ?? '') }}',
+                      markup: '{{ old('markup', $submission->markup ?? '0') }}',
+                      submissionid: '{{ old("submissionid", $submission->id ?? "0") }}',
+                      location: '{{ old('location', $submission->careerOpportunity->location_id ?? '') }}',
+                      remote: '{{ old('remote', $submission->careerOpportunity->remote_option ?? '') }}',
+                      billRate: '{{ old('billRate', $submission->bill_rate ?? '') }}',
+                      payRate: '{{ old('payRate', $submission->candidate_pay_rate ?? '0.00') }}',
+                      overTime: '{{ old('overTime', $submission->client_over_time_rate ?? '') }}',
+                      doubleRate: '{{ old('doubleRate', $submission->client_double_time_rate ?? '') }}',
+                      overTimeCandidate: '{{ old('overTimeCandidate', $submission->over_time_rate ?? '') }}',
+                      doubleTimeCandidate: '{{ old('doubleTimeCandidate', $submission->double_time_rate ?? '') }}',
+                      startDateError: "",
+                      endDateError: "",
+                      approvingManagerError: "",
+                      locationError: "",
+                      remoteError: "",
+                      billRateError: "",
+                      payRateError: "",
+          },
+             
+              calculateRates(event){
+                      var bill_rate = document.getElementById("billRate").value;
+                      var payRateElement = document.getElementById("payRate");
+                      var pay_rate;
+
+                      if (payRateElement) {
+                          pay_rate = payRateElement.value;
+                      } else {
+                          pay_rate = 0;
+                      }
+
+                      pay_rate = parseFloat(pay_rate); // Ensure it's a number
+                    
+
+                      // console.log(markup);
+                      
+                      // $('#pay_rate_error_message').html('');
+
+                      if (pay_rate == '') {
+                          pay_rate = 0;
+                      }
+                      let url = `/calculate-rate`;
+                      let data = new FormData();
+
+                      // Append form data
+                      data.append('pay_rate', pay_rate);
+                      data.append('bill_rate', bill_rate);
+                    
+                      data.append('markup', this.formData.markup);
+                      data.append('submission_id', this.formData.submissionid);
+
+                      // Determine which field was changed
+                    
+                      data.append('type', event);
+                  
+                        // console.log(this.formData); return false;
+                        
+                      // AJAX call to update fields based on pay rate or bill rate change
+                      const updates = {
+                          '#billRate': { type: 'value', field: 'billRate' },
+                          '#payRate': { type: 'value', field: 'payRate' },
+                          '#doubleTimeCandidate': { type: 'value', field: 'doubleTimeCandidate' },
+                          '#overTimeCandidate': { type: 'value', field: 'overTimeCandidate' },
+                          '#doubleRate': { type: 'value', field: 'doubleRate' },
+                        // Add more mappings as needed
+                      };
+                      ajaxCall(url, 'POST', [[updateElements, ['response', updates]]], data);
+                      const intervalId = setInterval(() => {
+                          const billRate = $('#billRate').val();
+                          const payRate = $('#payRate').val();
+                          const doubleTimeCandidate = $('#doubleTimeCandidate').val();
+                          const overTimeCandidate = $('#overTimeCandidate').val();
+                          const doubleRate = $('#doubleRate').val();
+
+                          // Only set formData when all the required fields have been populated
+                              this.formData.billRate = billRate;
+                              this.formData.payRate = payRate;
+                              this.formData.doubleTimeCandidate = doubleTimeCandidate;
+                              this.formData.overTimeCandidate = overTimeCandidate;
+                              this.formData.doubleRate =doubleRate;
+                              // Enable the fields or do further processing
+
+                              // Clear the interval
+                              clearInterval(intervalId);
+                      }, 100);
+                     
+                   
+              },
+
+           
 
           init() {
             this.initDatePickers();
@@ -781,14 +850,14 @@
             const startPicker = flatpickr("#startDate", {
               dateFormat: "Y/m/d",
               onChange: (selectedDates, dateStr) => {
-                this.startDate = dateStr;
-                this.startDateError = "";
+                this.formData.startDate = dateStr;
+                this.formData.startDateError = "";
                 if (
-                  this.endDate &&
-                  new Date(dateStr) > new Date(this.endDate)
+                  this.formData.endDate &&
+                  new Date(dateStr) > new Date(this.formData.endDate)
                 ) {
-                  this.endDate = "";
-                  this.endDateError = "End date must be after start date";
+                  this.formData.endDate = "";
+                  this.formData.endDateError = "End date must be after start date";
                   endPicker.clear();
                 }
                 endPicker.set("minDate", dateStr);
@@ -798,11 +867,13 @@
             const endPicker = flatpickr("#endDate", {
               dateFormat: "Y/m/d",
               onChange: (selectedDates, dateStr) => {
-                this.endDate = dateStr;
-                this.endDateError = "";
+                this.formData.endDate = dateStr;
+                this.formData.endDateError = "";
               },
             });
           },
+
+         
 
           initSelect2() {
             this.$nextTick(() => {
@@ -811,11 +882,11 @@
                   width: "100%",
                 })
                 .on("select2:select", (e) => {
-                  this.approvingManager = e.params.data.id;
-                  this.approvingManagerError = "";
+                  this.formData.approvingManager = e.params.data.id;
+                  this.formData.approvingManagerError = "";
                 })
                 .on("select2:unselect", () => {
-                  this.approvingManager = "";
+                  this.formData.approvingManager = "";
                 });
 
               $("#location")
@@ -823,11 +894,11 @@
                   width: "100%",
                 })
                 .on("select2:select", (e) => {
-                  this.location = e.params.data.id;
-                  this.locationError = "";
+                  this.formData.location = e.params.data.id;
+                  this.formData.locationError = "";
                 })
                 .on("select2:unselect", () => {
-                  this.location = "";
+                  this.formData.location = "";
                 });
 
               $("#remote")
@@ -835,20 +906,23 @@
                   width: "100%",
                 })
                 .on("select2:select", (e) => {
-                  this.remote = e.params.data.id;
-                  this.remoteError = "";
+                  this.formData.remote = e.params.data.id;
+                  this.formData.remoteError = "";
                 })
                 .on("select2:unselect", () => {
-                  this.remote = "";
+                  this.formData.remote = "";
                 });
             });
           },
 
           formatRate(field, event) {
             const input = event.target;
+            
+            
             const cursorPosition = input.selectionStart;
-            const lengthBefore = this[field].length;
-            let value = this[field].replace(/[^\d.]/g, "");
+            console.log(cursorPosition);
+            const lengthBefore = this.formData[field].length;
+            let value = this.formData[field].replace(/[^\d.]/g, "");
             let parts = value.split(".");
 
             // Handle the whole number part
@@ -863,7 +937,7 @@
             }
 
             const formattedValue = parts.join(".");
-            this[field] = formattedValue;
+            this.formData[field] = formattedValue;
 
             // Adjust cursor position
             let newPosition;
@@ -885,68 +959,84 @@
             this.$nextTick(() => {
               input.setSelectionRange(newPosition, newPosition);
             });
-
+            this.calculateRates(field);
             this.validateRate(field);
           },
 
           validateRate(field) {
-            const value = this[field];
+            const value = this.formData[field];
             const regex = /^\d+\.\d{2}$/;
 
             if (!value) {
-              this[`${field}Error`] = `Please enter a ${
+              this.formData[`${field}Error`] = `Please enter a ${
                 field === "billRate" ? "Bill" : "Pay"
               } Rate.`;
             } else if (!regex.test(value)) {
-              this[
+              this.formData[
                 `${field}Error`
               ] = `Please enter a valid rate in the format 00.00`;
             } else {
-              this[`${field}Error`] = "";
+              this.formData[`${field}Error`] = "";
+              
             }
           },
+          
 
           validateForm(e) {
             let isValid = true;
 
-            if (!this.startDate) {
-              this.startDateError = "Please select a start date.";
+            if (!this.formData.startDate) {
+              this.formData.startDateError = "Please select a start date.";
               isValid = false;
             }
 
-            if (!this.endDate) {
-              this.endDateError = "Please select an end date.";
+            if (!this.formData.endDate) {
+              this.formData.endDateError = "Please select an end date.";
               isValid = false;
-            } else if (new Date(this.startDate) > new Date(this.endDate)) {
-              this.endDateError = "End date must be after start date";
+            } else if (new Date(this.formData.startDate) > new Date(this.formData.endDate)) {
+              this.formData.endDateError = "End date must be after start date";
               isValid = false;
             }
 
-            if (!this.approvingManager) {
-              this.approvingManagerError =
+            if (!this.formData.approvingManager) {
+              this.formData.approvingManagerError =
                 "Please select timesheet approving manager.";
               isValid = false;
             }
 
-            if (!this.location) {
-              this.locationError = "Please select a location.";
+            if (!this.formData.location) {
+              this.formData.locationError = "Please select a location.";
               isValid = false;
             }
 
-            if (!this.remote) {
-              this.remoteError = "Please select remote option.";
+            if (!this.formData.remote) {
+              this.formData.remoteError = "Please select remote option.";
               isValid = false;
             }
 
             this.validateRate("billRate");
             this.validateRate("payRate");
-            if (this.billRateError || this.payRateError) {
+            if (this.formData.billRateError || this.formData.payRateError) {
               isValid = false;
             }
 
             if (!isValid) {
               e.preventDefault();
             } else {
+              console.log("Form submitted:", this.formData);
+                let formData = new FormData();
+                Object.keys(this.formData).forEach((key) => {
+                  if (Array.isArray(this.formData[key])) {
+                    // If the key is an array (like businessUnits), handle each item
+                    this.formData[key].forEach((item, index) => {
+                      formData.append(`${key}[${index}]`, JSON.stringify(item));
+                    });
+                  } else {
+                    formData.append(key, this.formData[key]);
+                  }
+                });
+                const url = "/admin/offer/store";
+              ajaxCall(url,'POST', [[onSuccess, ['response']]], formData);
               console.log("Form is valid. Submitting...");
               // Add your form submission logic here
             }

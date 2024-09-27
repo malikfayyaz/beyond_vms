@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Models\GenericData;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use App\Models\JobTemplates;
 use App\Models\CareerOpportunity;
@@ -159,6 +160,8 @@ class CareerOpportunitiesController extends BaseController
      */
     public function edit(string $id)
     {
+        $user = Auth::user();
+        $sessionrole = session('selected_role');
         $careerOpportunity = CareerOpportunity::with('careerOpportunitiesBu')->findOrFail($id);
 
         $businessUnitsData  = $careerOpportunity->careerOpportunitiesBu->map(function ($item) {
@@ -168,12 +171,40 @@ class CareerOpportunitiesController extends BaseController
                 'percentage' => $item->percentage
             ];
         })->toArray();
-        // dd( $businessUnitsData);
         return view('admin.career_opportunities.create', [
             'careerOpportunity' => $careerOpportunity,
             'businessUnitsData' => $businessUnitsData,
+            'sessionrole' => $sessionrole,
         ] );
-        //
+    }
+
+    /**
+     * Copy the specified resource.
+     */
+    public function copy($id)
+    {
+        try {
+            $originalOpportunity = CareerOpportunity::with('careerOpportunitiesBu')->findOrFail($id);
+            $newOpportunity = $originalOpportunity->replicate();
+            $newOpportunity->title = $originalOpportunity->title;
+            $newOpportunity->created_at = Carbon::now();
+            $newOpportunity->updated_at = Carbon::now();
+            $newOpportunity->save();
+            $businessUnitsData = $originalOpportunity->careerOpportunitiesBu->map(function ($item) {
+                return [
+                    'id' => $item->buName->id,
+                    'percentage' => $item->percentage,
+                ];
+            })->toArray();
+            $this->syncBusinessUnits($businessUnitsData, $newOpportunity->id);
+            session()->flash('success', 'Career Opportunity Copied successfully!');
+            return redirect()->route('admin.career-opportunities.edit', $newOpportunity->id);
+
+        } catch (\Exception $e) {
+            session()->flash('error', 'Error!');
+        }
+
+        return redirect()->route('admin.career-opportunities.index');
     }
 
     /**
@@ -229,17 +260,29 @@ class CareerOpportunitiesController extends BaseController
     protected function syncBusinessUnits(array $businessUnits, $jobId)
     {
         CareerOpportunitiesBu::where('career_opportunity_id', $jobId)->delete();
-        foreach ($businessUnits as $unitJson) {
-            $unitData = json_decode($unitJson, true);
-            if (!empty($unitData) && isset($unitData['id'], $unitData['percentage'])) {
+
+        foreach ($businessUnits as $unitData) {
+            // If it's already an array, skip json_decode
+            if (is_array($unitData) && isset($unitData['id'], $unitData['percentage'])) {
                 CareerOpportunitiesBu::create([
                     'career_opportunity_id' => $jobId,
                     'bu_unit' => $unitData['id'],
                     'percentage' => $unitData['percentage'],
                 ]);
+            } elseif (is_string($unitData)) {
+                // If it's a JSON string, decode it
+                $decodedData = json_decode($unitData, true);
+                if (!empty($decodedData) && isset($decodedData['id'], $decodedData['percentage'])) {
+                    CareerOpportunitiesBu::create([
+                        'career_opportunity_id' => $jobId,
+                        'bu_unit' => $decodedData['id'],
+                        'percentage' => $decodedData['percentage'],
+                    ]);
+                }
             }
         }
     }
+
 
     protected function validateJobOpportunity(Request $request)
     {
@@ -311,6 +354,7 @@ class CareerOpportunitiesController extends BaseController
             'user_id' => isset($job) ? $job->user_id  : \Auth::id(),
             'user_type' => isset($job) ? $job->user_type  : 1,
             'interview_process' => 'Yes',
+            'job_type' => 10,
             'jobStatus' => isset($job) ? $job->jobStatus : 1,
             'max_bill_rate' => $validatedData['maxBillRate'],
             'pre_candidate' => $validatedData['preIdentifiedCandidate'],

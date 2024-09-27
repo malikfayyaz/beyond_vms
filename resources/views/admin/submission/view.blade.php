@@ -10,24 +10,28 @@
         <div>
           <div class="mx-4 rounded p-8">
             <div class="w-full flex justify-end items-center gap-4">
-              <button
+              <a href="{{ route('admin.interview.create',  ['id' => $submission->id]) }}"
                 type="button"
                 class="px-4 py-2 capitalize bg-blue-500 text-white rounded hover:bg-blue-600 capitalize"
               >
                 schedule interview
-              </button>
-              <button
+              </a>
+              <a href="{{ route('admin.offer.create',  ['id' => $submission->id]) }}"
                 type="button"
                 class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 capitalize"
               >
                 create offer
-              </button>
-              <button
-                type="button"
-                class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 capitalize"
-              >
-                reject candidate
-              </button>
+              </a>
+                <div x-data="addSubWizarForm()" x-init="mounted()">
+                <button
+                    type="button"
+                    @click="rejectCandidate({{ $submission->id }})"
+                    aria-label="Reject candidate {{ $submission->consultant->full_name }}"
+                    class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 capitalize"
+                >
+                    Reject Candidate
+                </button>
+                </div>
               <a href="{{ route('admin.submission.index') }}">
                   <button
                       type="button"
@@ -183,7 +187,7 @@
                           <span class="text-gray-600">Resume:</span>
                           <span
                             class="font-semibold"
-                            >{{$submission->consultant->resume}}</span>
+                            >{{$submission->resume}}</span>
                         </div>
                         <div class="flex justify-between py-3 px-4">
                           <span class="text-gray-600">Vendor Name:</span>
@@ -269,7 +273,7 @@
                           <span class="text-gray-600">Submission Date:</span>
                           <span
                             class="font-semibold"
-                          >{{$submission->created_at->format('Y-m-d')}}</span>
+                          >{{$submission->formatted_created_at}}</span>
                         </div>
                       </div>
                     </div>
@@ -301,7 +305,7 @@
                             <span class="text-gray-600">Bill Rate:</span>
                             <span
                               class="font-semibold"
-                              
+
                             >${{$submission->vendor_bill_rate}}</span>
                           </div>
                           <div class="flex justify-between items-center mt-1">
@@ -355,24 +359,24 @@
             </div>
             <div class="w-2/4 bg-white h-[1024px] mx-4 rounded p-8">
             @if ($submission->resume)
-            <object
+           @php $fileExtension = pathinfo($submission->resume, PATHINFO_EXTENSION); @endphp
+              <object
                 data="{{ asset('storage/submission_resume/' . $submission->resume) }}"
-                type="application/pdf"
+                type="application/{{$fileExtension}}"
                 width="100%"
                 height="100%"
-            >
+              >
                 <p>
-                    Alternative text - include a link
-                    <a href="{{ asset('storage/submission_resume/' . $submission->resume) }}">to the PDF!</a>
+                  Alternative text - include a link
+                  <a href="{{ asset('storage/submission_resume/' . $submission->resume) }}">to the PDF!</a>
                 </p>
-            </object>
+              </object>
             @else
-                <p>No resume available.</p>
+              <p>No resume available.</p>
             @endif
             </div>
           </div>
         </div>
 
     </div>
-
     @endsection

@@ -28,4 +28,10 @@ class Client extends Model
             ->wherePivot('model_type', 'App\Models\User')
             ->wherePivot('model_id', $this->user_id);  // This ensures it uses the user_id
     }
+
+    public function scopeByStatus($query)
+    {
+        return $query->where('profile_status', '1')
+                     ->get();
+    }
 }

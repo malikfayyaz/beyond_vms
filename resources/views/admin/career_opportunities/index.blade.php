@@ -6,6 +6,11 @@
 <div class="ml-16">
 @include('admin.layouts.partials.header')
        <div class="bg-white mx-4 my-8 rounded p-8">
+           @if (session('success'))
+               <div class="alert alert-success">
+                   {{ session('success') }}
+               </div>
+           @endif
          <div >
              <div class="flex justify-between items-center mb-6">
                  <h2 class="text-2xl font-bold">Jobs</h2>
