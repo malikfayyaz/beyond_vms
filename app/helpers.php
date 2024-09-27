@@ -42,7 +42,7 @@ if (!function_exists('getActiveRoles')) {
 
         if ($user->is_vendor) {
             $vendor = $user->vendor;
-            if ($vendor && $vendor->status === 'Active') {
+            if ($vendor && $vendor->profile_status == 1) {
                 $activeRoles['vendor'] = true;
             }
         }
@@ -110,8 +110,8 @@ if (!function_exists('locationName')) {
     function locationName($id) {
 
         $location_query = Location::find($id);
-        
-            
+
+
         return $location_query->name . '-' . $location_query->address1 . '-' . $location_query->city . '-' . $location_query->state->name . '-' . $location_query->zip_code;
     }
 }
@@ -132,7 +132,7 @@ if (!function_exists('numberOfWorkingDays')) {
         $days = ($endDate - $startDate) / 86400 + 1; // Convert difference to days
         $no_full_weeks = floor($days / 7); // Full weeks
         $no_remaining_days = fmod($days, 7); // Remaining days
-        
+
         $the_first_day_of_week = date("N", $startDate); // Day of the week for start date
         $the_last_day_of_week = date("N", $endDate); // Day of the week for end date
 
