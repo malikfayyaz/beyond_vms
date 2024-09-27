@@ -175,6 +175,7 @@ class CareerOpportunitiesController extends BaseController
         try {
             $originalOpportunity = CareerOpportunity::with('careerOpportunitiesBu')->findOrFail($id);
             $newOpportunity = $originalOpportunity->replicate();
+            $newOpportunity->jobstep2_complete = '0';
             $newOpportunity->title = $originalOpportunity->title;
             $newOpportunity->created_at = Carbon::now();
             $newOpportunity->updated_at = Carbon::now();
