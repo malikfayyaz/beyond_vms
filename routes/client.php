@@ -21,6 +21,12 @@ Route::middleware(['user_role:client'])->group(function () {
          Route::get('offer/index', [CareerOpportunitiesOfferController::class, 'index'])->name('offer.index');
          Route::get('offer/view/{id}', [CareerOpportunitiesOfferController::class, 'show'])->name('offer.show');
         Route::post('job-rates', [RatesController::class, 'jobRates'])->name('job_rates');
+        // WorkOrder
+        Route::get('workorder/{id}/create', [\App\Http\Controllers\Client\CareerOpportunitiesWorkOrderController::class, 'create'])->name('workorder.create');
+        Route::post('workorder/store', [\App\Http\Controllers\Client\CareerOpportunitiesWorkOrderController::class, 'store'])->name('workorder.store');
+        Route::get('workorder/index', [\App\Http\Controllers\Client\CareerOpportunitiesWorkOrderController::class, 'index'])->name('workorder.index');
+        Route::get('workorder/{id}', [\App\Http\Controllers\Client\CareerOpportunitiesWorkOrderController::class, 'show'])->name('workorder.show');
+        Route::get('workorder/view/{id}', [\App\Http\Controllers\Client\CareerOpportunitiesWorkOrderController::class, 'show'])->name('workorder.show');
 
     });
 });

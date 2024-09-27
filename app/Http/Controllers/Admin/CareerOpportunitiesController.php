@@ -160,13 +160,11 @@ class CareerOpportunitiesController extends BaseController
                 'percentage' => $item->percentage
             ];
         })->toArray();
-//         dd($careerOpportunity);
         return view('admin.career_opportunities.create', [
             'careerOpportunity' => $careerOpportunity,
             'businessUnitsData' => $businessUnitsData,
             'sessionrole' => $sessionrole,
         ] );
-        //
     }
 
     /**
@@ -175,20 +173,29 @@ class CareerOpportunitiesController extends BaseController
     public function copy($id)
     {
         try {
-            $originalOpportunity = CareerOpportunity::findOrFail($id);
+            $originalOpportunity = CareerOpportunity::with('careerOpportunitiesBu')->findOrFail($id);
             $newOpportunity = $originalOpportunity->replicate();
             $newOpportunity->title = $originalOpportunity->title;
             $newOpportunity->created_at = Carbon::now();
             $newOpportunity->updated_at = Carbon::now();
             $newOpportunity->save();
-            $this->syncBusinessUnits($originalOpportunity->careerOpportunitiesBu->pluck('bu_unit')->toArray(), $newOpportunity->id);
+            $businessUnitsData = $originalOpportunity->careerOpportunitiesBu->map(function ($item) {
+                return [
+                    'id' => $item->buName->id,
+                    'percentage' => $item->percentage,
+                ];
+            })->toArray();
+            $this->syncBusinessUnits($businessUnitsData, $newOpportunity->id);
             session()->flash('success', 'Career Opportunity Copied successfully!');
             return redirect()->route('admin.career-opportunities.edit', $newOpportunity->id);
+
         } catch (\Exception $e) {
             session()->flash('error', 'Error!');
         }
+
         return redirect()->route('admin.career-opportunities.index');
     }
+
     /**
      * Update the specified resource in storage.
      */
