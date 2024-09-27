@@ -121,5 +121,9 @@ Route::middleware(['user_role:admin'])->group(function () {
         //submission
         Route::match(['get', 'post'], 'submission/index', [SubmissionController::class, 'index'])->name('submission.index');
         Route::get('submission/{id}', [SubmissionController::class, 'show'])->name('submission.show');
+    
+        //interview
+        Route::get('interview/{id}/create', [InterviewController::class, 'create'])->name('interview.create');
+   
     });
 });
