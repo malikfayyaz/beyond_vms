@@ -33,7 +33,19 @@
                   </div>
                 </div>
               </div> -->
-              <div
+              <div  x-data="{ 
+                openModal: false, 
+                currentRowId: null,
+                rows: [
+                  { id: 1, name: 'A James Jardanowski', type: 'Hiring Manager' },
+                  { id: 2, name: 'A James Jardanowski', type: 'Hiring Manager' },
+                  { id: 3, name: 'A James Jardanowski', type: 'Hiring Manager' },
+                  { id: 4, name: 'A James Jardanowski', type: 'Hiring Manager' },
+                  { id: 5, name: 'A James Jardanowski', type: 'Hiring Manager' },
+                  { id: 6, name: 'A James Jardanowski', type: 'Hiring Manager' },
+                  { id: 7, name: 'A James Jardanowski', type: 'Hiring Manager' },
+                ]
+              }"
                 class="p-[30px] rounded border mt-4"
                 :style="{'border-color': 'var(--primary-color)'}"
               >
@@ -51,7 +63,7 @@
                 </div>
                 <div class="bg-white shadow rounded-lg">
                   <div class="overflow-hidden">
-                    <table class="w-full">
+                  <table class="w-full">
                       <thead>
                         <tr class="bg-gray-50 text-left">
                           <th
@@ -94,109 +106,151 @@
                           >
                             Status
                           </th>
+                          <th
+                            class="py-4 px-4 text-center font-semibold text-sm text-gray-600"
+                          >
+                            Action
+                          </th>
                         </tr>
                       </thead>
                       <tbody class="divide-y divide-gray-200">
-                        <tr>
-                          <td class="py-4 px-4 text-center text-sm">1</td>
-                          <td class="py-4 px-4 text-center text-sm">
-                            A James Jardanowski
-                          </td>
-                          <td class="py-4 px-4 text-center text-sm">
-                            Hiring Manager
-                          </td>
-                          <td class="py-4 px-4 text-center text-sm"></td>
-                          <td class="py-4 px-4 text-center text-sm"></td>
-                          <td class="py-4 px-4 text-center text-sm"></td>
-                          <td class="py-4 px-4 text-center text-sm"></td>
-                          <td class="py-4 px-4 text-center text-sm"></td>
-                        </tr>
-                        <tr>
-                          <td class="py-4 px-4 text-center text-sm">2</td>
-                          <td class="py-4 px-4 text-center text-sm">
-                            A James Jardanowski
-                          </td>
-                          <td class="py-4 px-4 text-center text-sm">
-                            Hiring Manager
-                          </td>
-                          <td class="py-4 px-4 text-center text-sm"></td>
-                          <td class="py-4 px-4 text-center text-sm"></td>
-                          <td class="py-4 px-4 text-center text-sm"></td>
-                          <td class="py-4 px-4 text-center text-sm"></td>
-                          <td class="py-4 px-4 text-center text-sm"></td>
-                        </tr>
-                        <tr>
-                          <td class="py-4 px-4 text-center text-sm">3</td>
-                          <td class="py-4 px-4 text-center text-sm">
-                            A James Jardanowski
-                          </td>
-                          <td class="py-4 px-4 text-center text-sm">
-                            Hiring Manager
-                          </td>
-                          <td class="py-4 px-4 text-center text-sm"></td>
-                          <td class="py-4 px-4 text-center text-sm"></td>
-                          <td class="py-4 px-4 text-center text-sm"></td>
-                          <td class="py-4 px-4 text-center text-sm"></td>
-                          <td class="py-4 px-4 text-center text-sm"></td>
-                        </tr>
-                        <tr>
-                          <td class="py-4 px-4 text-center text-sm">4</td>
-                          <td class="py-4 px-4 text-center text-sm">
-                            A James Jardanowski
-                          </td>
-                          <td class="py-4 px-4 text-center text-sm">
-                            Hiring Manager
-                          </td>
-                          <td class="py-4 px-4 text-center text-sm"></td>
-                          <td class="py-4 px-4 text-center text-sm"></td>
-                          <td class="py-4 px-4 text-center text-sm"></td>
-                          <td class="py-4 px-4 text-center text-sm"></td>
-                          <td class="py-4 px-4 text-center text-sm"></td>
-                        </tr>
-                        <tr>
-                          <td class="py-4 px-4 text-center text-sm">5</td>
-                          <td class="py-4 px-4 text-center text-sm">
-                            A James Jardanowski
-                          </td>
-                          <td class="py-4 px-4 text-center text-sm">
-                            Hiring Manager
-                          </td>
-                          <td class="py-4 px-4 text-center text-sm"></td>
-                          <td class="py-4 px-4 text-center text-sm"></td>
-                          <td class="py-4 px-4 text-center text-sm"></td>
-                          <td class="py-4 px-4 text-center text-sm"></td>
-                          <td class="py-4 px-4 text-center text-sm"></td>
-                        </tr>
-                        <tr>
-                          <td class="py-4 px-4 text-center text-sm">6</td>
-                          <td class="py-4 px-4 text-center text-sm">
-                            A James Jardanowski
-                          </td>
-                          <td class="py-4 px-4 text-center text-sm">
-                            Hiring Manager
-                          </td>
-                          <td class="py-4 px-4 text-center text-sm"></td>
-                          <td class="py-4 px-4 text-center text-sm"></td>
-                          <td class="py-4 px-4 text-center text-sm"></td>
-                          <td class="py-4 px-4 text-center text-sm"></td>
-                          <td class="py-4 px-4 text-center text-sm"></td>
-                        </tr>
-                        <tr>
-                          <td class="py-4 px-4 text-center text-sm">7</td>
-                          <td class="py-4 px-4 text-center text-sm">
-                            A James Jardanowski
-                          </td>
-                          <td class="py-4 px-4 text-center text-sm">
-                            Hiring Manager
-                          </td>
-                          <td class="py-4 px-4 text-center text-sm"></td>
-                          <td class="py-4 px-4 text-center text-sm"></td>
-                          <td class="py-4 px-4 text-center text-sm"></td>
-                          <td class="py-4 px-4 text-center text-sm"></td>
-                          <td class="py-4 px-4 text-center text-sm"></td>
-                        </tr>
+                        <template x-for="row in rows" :key="row.id">
+                          <tr>
+                            <td
+                              class="py-4 px-4 text-center text-sm"
+                              x-text="row.id"
+                            ></td>
+                            <td
+                              class="py-4 px-4 text-center text-sm"
+                              x-text="row.name"
+                            ></td>
+                            <td
+                              class="py-4 px-4 text-center text-sm"
+                              x-text="row.type"
+                            ></td>
+                            <td class="py-4 px-4 text-center text-sm"></td>
+                            <td class="py-4 px-4 text-center text-sm"></td>
+                            <td class="py-4 px-4 text-center text-sm"></td>
+                            <td class="py-4 px-4 text-center text-sm"></td>
+                            <td class="py-4 px-4 text-center text-sm"></td>
+                            <td class="py-4 px-4 text-center text-sm">
+                              <button
+                                @click="openModal = true; currentRowId = row.id"
+                                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                              >
+                                Accept
+                              </button>
+                            </td>
+                          </tr>
+                        </template>
                       </tbody>
                     </table>
+                  </div>
+                </div>
+                  <!-- Modal -->
+                <!-- Modal -->
+                <div
+                  x-show="openModal"
+                  @click.away="openModal = false"
+                  class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full"
+                  x-transition:enter="transition ease-out duration-300"
+                  x-transition:enter-start="opacity-0"
+                  x-transition:enter-end="opacity-100"
+                  x-transition:leave="transition ease-in duration-300"
+                  x-transition:leave-start="opacity-100"
+                  x-transition:leave-end="opacity-0"
+                >
+                  <div
+                    class="relative top-20 mx-auto p-5 border w-[600px] shadow-lg rounded-md bg-white"
+                    @click.stop
+                  >
+                    <!-- Header -->
+                    <!-- Header -->
+                    <div class="flex items-center justify-between border-b p-4">
+                      <h2
+                        class="text-xl font-semibold"
+                        :id="$id('modal-title')"
+                      >
+                        Reject Candidate
+                      </h2>
+                      <button
+                        @click="openModal = false"
+                        class="text-gray-400 hover:text-gray-600 bg-transparent hover:bg-transparent"
+                      >
+                        &times;
+                      </button>
+                    </div>
+
+                    <!-- Content -->
+                    <div class="p-4">
+                      <form @submit.prevent="submitForm" id="generalformwizard">
+                        <div class="mb-4">
+                          <div class="mt-2 px-7 py-3">
+                            <p class="text-sm text-gray-500">
+                              You are about to accept the offer for row ID:
+                              <span x-text="currentRowId"></span>
+                            </p>
+                          </div>
+                          <label
+                            for="reason"
+                            class="block text-sm font-medium text-gray-700 mb-1"
+                          >
+                            Reason for Rejection
+                            <span class="text-red-500">*</span>
+                          </label>
+                          <select id="reason" class="w-full">
+                            <option value="">Select</option>
+                            <option value="1">Not qualified</option>
+                            <option value="2">Lack of experience</option>
+                            <option value="3">Poor communication skills</option>
+                            <option value="4">Overqualified</option>
+                          </select>
+                        </div>
+                        <div class="mb-4">
+                          <label
+                            for="note"
+                            class="block text-sm font-medium text-gray-700 mb-1"
+                          >
+                            Note <span class="text-red-500">*</span>
+                          </label>
+                          <textarea
+                            id="note"
+                            rows="4"
+                            class="w-full border border-gray-300 rounded-md shadow-sm"
+                          ></textarea>
+                        </div>
+                        <div class="mb-4">
+                          <label
+                            for="jobAttachment"
+                            class="block text-sm font-medium text-gray-700 mb-2"
+                            >Job Attachment</label
+                          >
+                          <input
+                            type="file"
+                            id="jobAttachment"
+                            name="jobAttachment"
+                            class="block w-full px-2 py-3 text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none"
+                          />
+                        </div>
+                      </form>
+                    </div>
+
+                    <!-- Footer -->
+                    <div class="flex justify-end space-x-2 border-t p-4">
+                      <button
+                        type="button"
+                        @click="openModal = false"
+                        class="rounded-md bg-gray-200 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-300"
+                      >
+                        Close
+                      </button>
+                      <button
+                        type="button"
+                        class="rounded-md bg-green-500 px-4 py-2 text-sm font-medium text-white hover:bg-green-600"
+                      >
+                        Save
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>
