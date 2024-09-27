@@ -343,6 +343,7 @@ class CareerOpportunitiesController extends BaseController
             'user_id' => isset($job) ? $job->user_id  : \Auth::id(),
             'user_type' => isset($job) ? $job->user_type  : 1,
             'interview_process' => 'Yes',
+            'job_type' => 10,
             'jobStatus' => isset($job) ? $job->jobStatus : 1,
             'max_bill_rate' => $validatedData['maxBillRate'],
             'pre_candidate' => $validatedData['preIdentifiedCandidate'],

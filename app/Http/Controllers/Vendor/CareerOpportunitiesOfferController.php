@@ -271,7 +271,7 @@ class CareerOpportunitiesOfferController extends Controller
         $workOrder->accept_date = now();
         $workOrder->wo_release_date = now();
         $workOrder->job_level = $jobModel->job_level;
-        $workOrder->job_type =  $jobModel->type;
+        $workOrder->job_type =  $jobModel->job_type;
         $workOrder->hiring_manager_id = $jobModel->hiring_manager;
         $workOrder->expenses_allowed = $jobModel->expenses_allowed;
         $workOrder->division_id = $jobModel->division_id;
