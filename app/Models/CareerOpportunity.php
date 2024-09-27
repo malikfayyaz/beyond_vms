@@ -20,7 +20,7 @@ class CareerOpportunity extends Model
     }
     public function workerType()
     {
-        return $this->belongsTo(Setting::class, 'worker_type_id', 'id');
+        return $this->belongsTo(Setting::class, 'job_type', 'id');
     }
     public function careerOpportunitiesBu()
     {

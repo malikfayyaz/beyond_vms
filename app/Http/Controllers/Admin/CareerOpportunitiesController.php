@@ -249,17 +249,29 @@ class CareerOpportunitiesController extends BaseController
     protected function syncBusinessUnits(array $businessUnits, $jobId)
     {
         CareerOpportunitiesBu::where('career_opportunity_id', $jobId)->delete();
-        foreach ($businessUnits as $unitJson) {
-            $unitData = json_decode($unitJson, true);
-            if (!empty($unitData) && isset($unitData['id'], $unitData['percentage'])) {
+
+        foreach ($businessUnits as $unitData) {
+            // If it's already an array, skip json_decode
+            if (is_array($unitData) && isset($unitData['id'], $unitData['percentage'])) {
                 CareerOpportunitiesBu::create([
                     'career_opportunity_id' => $jobId,
                     'bu_unit' => $unitData['id'],
                     'percentage' => $unitData['percentage'],
                 ]);
+            } elseif (is_string($unitData)) {
+                // If it's a JSON string, decode it
+                $decodedData = json_decode($unitData, true);
+                if (!empty($decodedData) && isset($decodedData['id'], $decodedData['percentage'])) {
+                    CareerOpportunitiesBu::create([
+                        'career_opportunity_id' => $jobId,
+                        'bu_unit' => $decodedData['id'],
+                        'percentage' => $decodedData['percentage'],
+                    ]);
+                }
             }
         }
     }
+
 
     protected function validateJobOpportunity(Request $request)
     {
