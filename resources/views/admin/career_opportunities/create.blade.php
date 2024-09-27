@@ -17,6 +17,9 @@
            Job is Added Successfully.
          </div> -->
         <!-- Progress bar -->
+        @php         $user = Auth::user();
+        $sessionrole = session('selected_role');
+        @endphp
         <script>
             var sessionrole = "{{ $sessionrole }}";
         </script>
