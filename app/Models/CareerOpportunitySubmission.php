@@ -14,7 +14,7 @@ class CareerOpportunitySubmission extends Model
         // List attributes you want to guard from mass assignment
         // e.g., 'id', 'created_at', 'updated_at'
     ];
-    
+
     public function consultant()
     {
         return $this->belongsTo(Consultant::class, 'candidate_id', 'id');
@@ -44,5 +44,5 @@ class CareerOpportunitySubmission extends Model
     {
         return $this->attributes['created_at'] ? Carbon::parse($this->attributes['created_at'])->format('m/d/Y') : '';
     }
-   
+
 }
