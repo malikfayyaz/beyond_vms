@@ -5,6 +5,7 @@ use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Support\Facades\Validator;
 use App\Models\CareerOpportunitiesOffer;
 use App\Models\CareerOpportunitySubmission;
+use App\Facades\CareerOpportunitiesOffer as offerHelper;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Yajra\DataTables\Facades\DataTables;
@@ -106,7 +107,7 @@ class CareerOpportunitiesOfferController extends BaseController
             return response()->json([
                 'success' => true,
                 'message' => 'Offer already exist!',
-                'redirect_url' => route('admin.offer.show',  ['id' => $request->submissionid]) // Redirect back URL for AJAX
+                // 'redirect_url' => route('admin.offer.show',  ['id' => $request->submissionid]) // Redirect back URL for AJAX
             ]);
          }
          $submission = CareerOpportunitySubmission::findOrFail($request->submissionid);
@@ -139,7 +140,7 @@ class CareerOpportunitiesOfferController extends BaseController
          $offerCreate = CareerOpportunitiesOffer::create( $mapedData );
          calculateVendorRates($offerCreate,$offerCreate->offer_bill_rate,$offerCreate->client_overtime,$offerCreate->client_doubletime);
          calculateOfferEstimates($offerCreate,$jobData);
-       
+         offerHelper::createOfferWorkflow($offerCreate);
          session()->flash('success', 'Offer saved successfully!');
          return response()->json([
              'success' => true,
