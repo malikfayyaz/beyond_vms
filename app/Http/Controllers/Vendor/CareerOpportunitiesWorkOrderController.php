@@ -54,4 +54,9 @@ class CareerOpportunitiesWorkOrderController extends Controller
         // Logic to get and display catalog items
         return view('vendor.workorder.index'); // Assumes you have a corresponding Blade view
     }
+    public function show($id)
+    {
+        $workorder = CareerOpportunitiesWorkorder::findOrFail($id);
+        return view('vendor.workorder.show', compact('workorder'));
+    }
 }

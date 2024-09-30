@@ -1,11 +1,11 @@
-@extends('client.layouts.app')
+@extends('vendor.layouts.app')
 
 @section('content')
     <!-- Sidebar -->
-    @include('client.layouts.partials.dashboard_side_bar')
+    @include('vendor.layouts.partials.dashboard_side_bar')
 
     <div class="ml-16">
-        @include('client.layouts.partials.header')
+        @include('vendor.layouts.partials.header')
         <div class="ml-16">
             <div class="bg-white mx-4 my-8 rounded p-8">
                 <div class="flex w-full gap-4">
