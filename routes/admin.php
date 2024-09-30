@@ -122,7 +122,11 @@ Route::middleware(['user_role:admin'])->group(function () {
         Route::get('submission/{id}', [SubmissionController::class, 'show'])->name('submission.show');
 
         //interview
+        Route::match(['get', 'post'], 'interview/index', [InterviewController::class, 'index'])->name('interview.index');
         Route::get('interview/{id}/create', [InterviewController::class, 'create'])->name('interview.create');
         Route::post('interview/store', [InterviewController::class, 'store'])->name('interview.store');
+        Route::get('interview/{id}/edit', [InterviewController::class, 'edit'])->name('interview.edit');
+        Route::put('interview/{id}/update', [InterviewController::class, 'update'])->name('interview.update');
+
     });
 });

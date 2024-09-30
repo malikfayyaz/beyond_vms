@@ -23,6 +23,11 @@ class CareerOpportunitiesInterview extends Model
     {
         return $this->belongsTo(CareerOpportunity::class, 'career_opportunity_id' , 'id');
     }
+    
+    public function submission()
+    {
+        return $this->belongsTo(CareerOpportunitySubmission::class, 'submission_id' , 'id');
+    }
 
     public function duration() {
         return $this->belongsTo(Setting::class, 'interview_duration', 'id');

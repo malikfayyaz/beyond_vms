@@ -76,7 +76,7 @@
                         value="Interview Schedule for {{$submission->consultant->full_name}}"
                         disabled
                         id="eventName"
-                        x-model="eventName"
+                        x-model="formData.eventName"
                     />
                     </div>
                     <div class="flex-1">
@@ -87,7 +87,7 @@
                     <select
                         class="w-full select2-single custom-style"
                         id="interviewDuration"
-                        x-model="interviewDuration"
+                        x-model="formData.interviewDuration"
                     >
                         <option value="">Select</option>
                         @foreach (checksetting(13) as $key => $value)
@@ -108,7 +108,7 @@
                     <select
                         class="w-full select2-single custom-style"
                         id="timeZone"
-                        x-model="timeZone"
+                        x-model="formData.timeZone"
                     >
                         <option value="">Select</option>
                         @foreach (checksetting(14) as $key => $value)
@@ -127,7 +127,7 @@
                     <select
                         class="w-full select2-single custom-style"
                         id="remote"
-                        x-model="remote"
+                        x-model="formData.remote"
                     >
                         <option value="">Select</option>
                         @foreach (checksetting(15) as $key => $value)
@@ -166,7 +166,7 @@
                         >
                         <input
                             id="startDate"
-                            x-model="startDate"
+                            x-model="formData.startDate"
                             class="w-full h-12 px-4 text-gray-500 border rounded-md shadow-sm focus:outline-none pl-7"
                             type="text"
                             placeholder="Select recommended date"
@@ -179,7 +179,7 @@
                         ></label>
                         <input
                             id="otherDate1"
-                            x-model="otherDate1"
+                            x-model="formData.otherDate1"
                             class="w-full h-12 px-4 text-gray-500 border rounded-md shadow-sm focus:outline-none pl-7"
                             type="text"
                             placeholder="Select other date"
@@ -194,7 +194,7 @@
                         ></label>
                         <input
                             id="otherDate2"
-                            x-model="otherDate2"
+                            x-model="formData.otherDate2"
                             class="w-full h-12 px-4 text-gray-500 border rounded-md shadow-sm focus:outline-none pl-7"
                             type="text"
                             placeholder="Select other date"
@@ -207,7 +207,7 @@
                         ></label>
                         <input
                             id="otherDate3"
-                            x-model="otherDate3"
+                            x-model="formData.otherDate3"
                             class="w-full h-12 px-4 text-gray-500 border rounded-md shadow-sm focus:outline-none pl-7"
                             type="text"
                             placeholder="Select other date"
@@ -245,7 +245,7 @@
                             >Where <span class="text-red-500">*</span></label
                         >
                         @php $location = \App\Models\Location::byStatus();@endphp
-                        <select x-model="location"
+                        <select x-model="formData.location"
                             class="w-full select2-single border rounded mt-1 p-3"
                             id="location" x-ref="location"
                         >
@@ -281,7 +281,7 @@
                         <textarea
                             class="w-full border rounded"
                             rows="5"
-                            x-model="interviewInstructions"
+                            x-model="formData.interviewInstructions"
                             id="interviewInstructions"
                             :style="{'border-color': 'var(--primary-color)'}"
                         ></textarea>
@@ -313,7 +313,7 @@
 
                     <select
                     class="w-full select2-single custom-style border"
-                    multiple="multiple" id="members" x-model="members"
+                    multiple="multiple" id="members" x-model="formData.members"
                     >
                         @php $clients = \App\Models\Client::byStatus();@endphp
                         @foreach ($clients as $key => $value)
@@ -329,7 +329,7 @@
                     class="px-4 py-2 text-white capitalize rounded"
                     :style="{'background-color': 'var(--primary-color)', 'background-color:hover': 'var(--primary-hover)'}"
                 >
-                    create interview
+                    <span x-text="editMode ? 'Update Interview' : 'Create Interview'"></span>
                 </button>
                 </div>
             </form>
@@ -339,17 +339,20 @@
 <script>
     document.addEventListener("alpine:init", () => {
     Alpine.data("createInterview", () => ({
-        eventName:'Interview Schedule for {{$submission->consultant->full_name}}',
-        interviewDuration: "",
-        timeZone: "",
-        remote: "",
-        interviewInstructions: '', // Initialize as an empty string
-        members: [],
-        location: "",
-        startDate: "",
-        otherDate1: '',
-        otherDate2: '',
-        otherDate3: '',
+        editMode: @json(isset($editMode) ? $editMode : false), 
+        formData: {
+            eventName: 'Interview Schedule for {{$submission->consultant->full_name}}',
+            interviewDuration: "{{ old('interviewDuration', $interview->interview_duration ?? '') }}",
+            startDate: "{{ old('startDate', $interview->recommended_date ?? '') }}",
+            timeZone: "{{ old('timeZone', $interview->time_zone ?? '') }}",
+            remote: "{{ old('remote', $interview->interview_type ?? '') }}",
+            interviewInstructions: '{{ old('interviewInstructions', $interview->interview_instructions ?? '') }}', // Initialize as an empty string
+            members: @json(old('members', $interview->interview_members ?? [])),
+            location: "{{ old('location', $interview->location_id ?? '') }}",
+            otherDate1: '{{ old('otherDate1', $interview->other_date_1 ?? '') }}',
+            otherDate2: '{{ old('otherDate2', $interview->other_date_2 ?? '') }}',
+            otherDate3: '{{ old('otherDate3', $interview->other_date_3 ?? '') }}',
+        },
 
         interviewDurationError: "",
         timeZoneError: "",
@@ -401,11 +404,11 @@
                 width: "100%",
             })
             .on("select2:select", (e) => {
-                this.interviewDuration = e.params.data.id;
+                this.formData.interviewDuration = e.params.data.id;
                 this.interviewDurationError = "";
             })
             .on("select2:unselect", () => {
-                this.interviewDuration = "";
+                this.formData.interviewDuration = "";
             });
 
             $("#timeZone")
@@ -413,11 +416,11 @@
                 width: "100%",
             })
             .on("select2:select", (e) => {
-                this.timeZone = e.params.data.id;
+                this.formData.timeZone = e.params.data.id;
                 this.timeZoneError = "";
             })
             .on("select2:unselect", () => {
-                this.timeZone = "";
+                this.formData.timeZone = "";
             });
 
             $("#remote")
@@ -425,11 +428,11 @@
                 width: "100%",
             })
             .on("select2:select", (e) => {
-                this.remote = e.params.data.id;
+                this.formData.remote = e.params.data.id;
                 this.remoteError = "";
             })
             .on("select2:unselect", () => {
-                this.remote = "";
+                this.formData.remote = "";
             });
         });
         },
@@ -437,29 +440,29 @@
         validateForm(e) {
         let isValid = true;
 
-        if (!this.interviewDuration) {
+        if (!this.formData.interviewDuration) {
             this.interviewDurationError = "Please select interview duration.";
             isValid = false;
         }
 
-        if (!this.timeZone) {
-            this.timeZoneError = "Please select time zone.";
+        if (!this.formData.timeZone) {
+            this.formData.timeZoneError = "Please select time zone.";
             isValid = false;
         }
 
-        if (!this.startDate) {
+        if (!this.formData.startDate) {
         this.startDateError = "Please select a recomended date.";
             isValid = false;
         } else {
             this.startDateError = ""; // Clear the error if start date is valid
         }
         
-        if (!this.location) {
+        if (!this.formData.location) {
             this.locationError = "Please select a location.";
             isValid = false;
         }
 
-        if (!this.remote) {
+        if (!this.formData.remote) {
             this.remoteError = "Please select interview type.";
             isValid = false;
         }
@@ -473,26 +476,42 @@
             const formData = new FormData(formElement);
 
             // Append additional fields manually if needed
-            formData.append("eventName", this.eventName);
-            formData.append("interviewDuration", this.interviewDuration);
-            formData.append("timeZone", this.timeZone);
-            formData.append("remote", this.remote);
-            formData.append("interviewInstructions", this.interviewInstructions);
-            formData.append("members", this.members);
-            formData.append("location", this.location);
-            formData.append("startDate", this.startDate);
-            formData.append("otherDate1", this.otherDate1);
-            formData.append("otherDate2", this.otherDate2);
-            formData.append("otherDate3", this.otherDate3);
+            formData.append("eventName", this.formData.eventName);
+            formData.append("interviewDuration", this.formData.interviewDuration);
+            formData.append("timeZone", this.formData.timeZone);
+            formData.append("remote", this.formData.remote);
+            formData.append("interviewInstructions", this.formData.interviewInstructions);
+            formData.append("members", this.formData.members);
+            formData.append("location", this.formData.location);
+            formData.append("startDate", this.formData.startDate);
+            formData.append("otherDate1", this.formData.otherDate1);
+            formData.append("otherDate2", this.formData.otherDate2);
+            formData.append("otherDate3", this.formData.otherDate3);
             formData.append("submissionid", {{$submission->id}});
-           
-            url = '{{ route("admin.interview.store") }}';
-            
-            console.log(formData);
+
+            let url = '';
+            @if(isset($editMode) && $editMode)
+                url = '{{ route("admin.interview.update", $editIndex) }}';
+                formData.append('_method', 'PUT'); // Required for PUT requests in forms
+            @else
+                url = '{{ route("admin.interview.store") }}';
+            @endif
+
             // Use your custom ajaxCall function
             ajaxCall(url, 'POST', [[this.onSuccess, ['response']]], formData);
         }
         },
+        onSuccess(response) {
+            if (response.success) {
+                // Display a success message
+                // alert(response.message); // Replace with a custom notification if needed
+                if (response.redirect_url) {
+                    window.location.href = response.redirect_url; // Redirect the user
+                }
+            } else {
+                console.log("Unexpected response:", response);
+            }
+        }
     }));
     });
 </script>
