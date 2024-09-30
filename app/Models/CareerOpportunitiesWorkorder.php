@@ -36,4 +36,8 @@ class CareerOpportunitiesWorkorder extends Model
 
         return $start && $end ? "$start - $end" : '';
     }
+    public function location()
+    {
+        return $this->belongsTo(Location::class, 'location_id', 'id');
+    }
 }

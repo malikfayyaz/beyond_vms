@@ -113,7 +113,6 @@ Route::middleware(['user_role:admin'])->group(function () {
         Route::get('workorder/{id}/create', [\App\Http\Controllers\Admin\CareerOpportunitiesWorkOrderController::class, 'create'])->name('workorder.create');
         Route::post('workorder/store', [\App\Http\Controllers\Admin\CareerOpportunitiesWorkOrderController::class, 'store'])->name('workorder.store');
         Route::get('workorder/index', [\App\Http\Controllers\Admin\CareerOpportunitiesWorkOrderController::class, 'index'])->name('workorder.index');
-        Route::get('workorder/{id}', [\App\Http\Controllers\Admin\CareerOpportunitiesWorkOrderController::class, 'show'])->name('workorder.show');
         Route::get('workorder/view/{id}', [\App\Http\Controllers\Admin\CareerOpportunitiesWorkOrderController::class, 'show'])->name('workorder.show');
         //workflow
         Route::match(['get', 'post'], 'workflow/edit/{id}', [GenericDataController::class, 'workflowEdit'])->name('workflow.edit');
@@ -121,9 +120,9 @@ Route::middleware(['user_role:admin'])->group(function () {
         //submission
         Route::match(['get', 'post'], 'submission/index', [SubmissionController::class, 'index'])->name('submission.index');
         Route::get('submission/{id}', [SubmissionController::class, 'show'])->name('submission.show');
-    
+
         //interview
         Route::get('interview/{id}/create', [InterviewController::class, 'create'])->name('interview.create');
-   
+
     });
 });
