@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Validator;
 use App\Models\CareerOpportunitiesOffer;
 use App\Models\CareerOpportunitySubmission;
 use App\Models\CareerOpportunitiesWorkorder;
+use App\Facades\CareerOpportunitiesOffer as offerHelper;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Yajra\DataTables\Facades\DataTables;
@@ -102,15 +103,15 @@ class CareerOpportunitiesOfferController extends Controller
         $existingOffer = CareerOpportunitiesOffer::where('submission_id', $request->submissionid)
         ->whereIn('status', [4, 1])
         ->first();
-        if($existingOffer){
+        // if($existingOffer){
             
-            session()->flash('success', 'Offer already exist!');
-            return response()->json([
-                'success' => true,
-                'message' => 'Offer already exist!',
-                'redirect_url' => route('vendor.offer.show',  ['id' => $request->submissionid]) // Redirect back URL for AJAX
-            ]);
-        }
+        //     session()->flash('success', 'Offer already exist!');
+        //     return response()->json([
+        //         'success' => true,
+        //         'message' => 'Offer already exist!',
+        //         'redirect_url' => route('vendor.offer.show',  ['id' => $request->submissionid]) // Redirect back URL for AJAX
+        //     ]);
+        // }
         $submission = CareerOpportunitySubmission::findOrFail($request->submissionid);
         $jobData = $submission->careerOpportunity;
         $mapedData = [
@@ -141,7 +142,7 @@ class CareerOpportunitiesOfferController extends Controller
         $offerCreate = CareerOpportunitiesOffer::create( $mapedData );
         calculateVendorRates($offerCreate,$offerCreate->offer_bill_rate,$offerCreate->client_overtime,$offerCreate->client_doubletime);
         calculateOfferEstimates($offerCreate,$jobData);
-    
+        offerHelper::createOfferWorkflow($offerCreate);
         session()->flash('success', 'Offer saved successfully!');
         return response()->json([
             'success' => true,

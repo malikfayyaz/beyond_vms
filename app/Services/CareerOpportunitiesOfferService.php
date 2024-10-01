@@ -10,7 +10,7 @@ class CareerOpportunitiesOfferService
     {
         // Fetch all workflows for the hiring manager of the offer
         $workflows = Workflow::where('client_id', $offer->careerOpportunity->hiring_manager)->get();
-        
+        // dd($workflows);
         // If there are no workflows, return early
         if ($workflows->isEmpty()) {
             return false;
@@ -30,7 +30,7 @@ class CareerOpportunitiesOfferService
                 'approval_number' => $wf->approval_number,
                 'status' => 'Pending',
                 'status_time' => now(),
-                'approval_required' => $wf->approval_required,
+                'approval_required' => $wf->approval_required == 'yes' ? 1 : 0,
             ];
         }
 
