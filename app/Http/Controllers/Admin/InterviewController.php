@@ -89,7 +89,7 @@ class InterviewController extends Controller
             "interview_instructions" =>$validatedData['interviewInstructions'],
             "interview_members" =>$validatedData['members'],
             "status" => 1,
-            "created_by_user" => 2,
+            "created_by_user" => 1,
         ];
 
         $InterviewCreate = CareerOpportunitiesInterview::create( $mapedData );
