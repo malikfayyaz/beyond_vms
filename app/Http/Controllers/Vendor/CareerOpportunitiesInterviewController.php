@@ -8,7 +8,7 @@ use App\Models\CareerOpportunitySubmission;
 use App\Models\CareerOpportunitiesInterview;
 use Yajra\DataTables\Facades\DataTables;
 
-class InterviewController extends Controller
+class CareerOpportunitiesInterviewController extends Controller
 {
     public function index(Request $request)
     {
