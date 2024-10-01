@@ -1,6 +1,8 @@
 <?php
 namespace App\Http\Controllers\Admin;
 
+use App\Models\CareerOpportunitiesWorkflow;
+use App\Models\OfferWorkFlow;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Support\Facades\Validator;
 use App\Models\CareerOpportunitiesOffer;
@@ -36,7 +38,7 @@ class CareerOpportunitiesOfferController extends BaseController
                 ->addColumn('wo_status', function($row) {
                     return  '';
                 })->addColumn('worker_type', function($row) {
-                    return $row->careerOpportunity && $row->careerOpportunity->workerType 
+                    return $row->careerOpportunity && $row->careerOpportunity->workerType
                         ? $row->careerOpportunity->workerType->title
                         : 'N/A';
                 })
@@ -78,17 +80,17 @@ class CareerOpportunitiesOfferController extends BaseController
             'doubleRate' => 'nullable',
             'overTimeCandidate' => 'nullable',
             'doubleTimeCandidate' => 'nullable',
-           
+
         ];
 
         $messages = [
-           
+
             // Add more custom messages as needed
         ];
 
         $validator = Validator::make($request->all(), $rules, $messages);
-        
-        
+
+
         // dd($validator );
         // If validation fails, return JSON response with errors
         if ($validator->fails()) {
@@ -102,7 +104,7 @@ class CareerOpportunitiesOfferController extends BaseController
         ->whereIn('status', [4, 1])
         ->first();
         if($existingOffer){
-            
+
             session()->flash('success', 'Offer already exist!');
             return response()->json([
                 'success' => true,
@@ -132,9 +134,9 @@ class CareerOpportunitiesOfferController extends BaseController
 
             "remote_option" =>$validatedData['remote'],
             // "notes" =>$validatedData['notes'],
-            "start_date" =>!empty($validatedData['startDate']) 
+            "start_date" =>!empty($validatedData['startDate'])
             ? Carbon::createFromFormat('Y/m/d', $validatedData['startDate'])->format('Y-m-d')  : null,
-            "end_date" =>!empty($validatedData['endDate']) 
+            "end_date" =>!empty($validatedData['endDate'])
             ? Carbon::createFromFormat('Y/m/d', $validatedData['endDate'])->format('Y-m-d')  : null,
          ];
          $offerCreate = CareerOpportunitiesOffer::create( $mapedData );
@@ -153,8 +155,9 @@ class CareerOpportunitiesOfferController extends BaseController
     // Show a specific career opportunity offer
     public function show($id)
     {
+        $workflows = OfferWorkFlow::where('offer_id', $id)->get();
         $offer = CareerOpportunitiesOffer::findOrFail($id);
-        return view('admin.offer.view', compact('offer'));
+        return view('admin.offer.view', compact('offer','workflows'));
     }
 
     // Show the form for editing an existing career opportunity offer
@@ -204,13 +207,13 @@ class CareerOpportunitiesOfferController extends BaseController
 
         $payrate = getActiveRecordsByType('pay-rate')->first();
         $billrate = getActiveRecordsByType('bill-rate')->first();
-       
+
                 $over_time = $payrate->name;
                 $double_time =$billrate->value;
                 $client_over_time = $billrate->name;
                 $client_double_time = $billrate->value;
-            
-        
+
+
 
         $data = array();
          //markup category
@@ -223,7 +226,7 @@ class CareerOpportunitiesOfferController extends BaseController
                 $data['doubleTimeCandidate'] = $this->numberFormat($pay_rate + ($pay_rate * $double_time));
                 $data['overTimeCandidate'] = $this->numberFormat($pay_rate + ($pay_rate * $over_time));
             } else {
-               
+
                $bill_rate = $bill_rate * (100 / (100 + $mark_up));
                 $data['billRate'] = $this->numberFormat($bill_rate);
                 $data['overTime'] = $this->numberFormat($bill_rate + ($bill_rate * $client_over_time));
@@ -233,12 +236,12 @@ class CareerOpportunitiesOfferController extends BaseController
                 $data['overTimeCandidate'] = $this->numberFormat($pay_rate + ($pay_rate * $over_time));
             }
 
-   
 
-        
+
+
 
         return response()->json($data);
-      
+
 
     }
     public function numberFormat($data)
