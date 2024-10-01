@@ -146,9 +146,10 @@
                                     <div class="flex-1">
                                         <label class="block mb-2">First Name</label>
                                         <input
+                                         x-model="formData.first_name"
                                             type="text"
                                             class="w-full h-12 px-4 text-gray-500 border border-gray-300 rounded-md shadow-sm focus:outline-none"
-                                            placeholder="{{$workorder->consultant->first_name}}"
+                                            placeholder="First Name"
                                             disabled
                                             id="candidateFirstName"
                                         />
@@ -156,18 +157,20 @@
                                     <div class="flex-1">
                                         <label class="block mb-2">Middle Name</label>
                                         <input
+                                            x-model="formData.middle_name"
                                             type="text"
                                             class="w-full h-12 px-4 text-gray-500 border border-gray-300 rounded-md shadow-sm focus:outline-none"
-                                            placeholder="{{$workorder->consultant->middle_name}}"
+                                            placeholder="Middle Name"
                                             disabled
                                         />
                                     </div>
                                     <div class="flex-1">
                                         <label class="block mb-2">Last Name</label>
                                         <input
+                                            x-model="formData.last_name"
                                             type="text"
                                             class="w-full h-12 px-4 text-gray-500 border border-gray-300 rounded-md shadow-sm focus:outline-none"
-                                            placeholder="{{$workorder->consultant->last_name}}"
+                                            placeholder="Last Name"
                                             id="candidateLastName"
                                             disabled
                                         />
@@ -185,6 +188,7 @@
                                             class="w-full h-12 px-4 text-gray-500 border border-gray-300 rounded-md shadow-sm focus:outline-none"
                                             placeholder="Enter personal email address N/A"
                                             id="personalEmailAddress"
+                                            disabled
                                         />
                                         <p
                                             x-show="errors.personalEmailAddress"
@@ -399,7 +403,10 @@
       document.addEventListener("alpine:init", () => {
         Alpine.data("workOrderForm", () => ({
           formData: {
-            personalEmailAddress: "",
+            personalEmailAddress: '{{ old('personalEmailAddress', $workorder->consultant->user->email ?? '') }}',
+            first_name:'{{ old('first_name', $workorder->consultant->first_name ?? '') }}' ,
+            middle_name:'{{ old('middle_name', $workorder->consultant->middle_name ?? '') }}' ,
+            last_name:'{{ old('last_name', $workorder->consultant->last_name ?? '') }}' ,
             accountManager: "",
             recruitmentManager: "",
             codeOfConduct: false,
