@@ -63,6 +63,7 @@ class CareerOpportunitiesInterviewController extends Controller
             'startDate' => 'required|date',
             'location' => 'nullable|integer',
             'remote' => 'required|integer',
+            'interview_detail' => 'required|string',
             'interviewInstructions' => 'nullable|string',
             'members' => 'nullable',
             'otherDate1' => 'nullable|date',
@@ -87,6 +88,7 @@ class CareerOpportunitiesInterviewController extends Controller
             "location_id" =>$validatedData['location'],
             "interview_instructions" =>$validatedData['interviewInstructions'],
             "interview_members" =>$validatedData['members'],
+            "interview_detail" =>$validatedData['interview_detail'],
             "status" => 1,
             "created_by_user" => 3,
         ];
@@ -124,6 +126,7 @@ class CareerOpportunitiesInterviewController extends Controller
             'startDate' => 'required|date',
             'location' => 'nullable|integer',
             'remote' => 'required|integer',
+            'interview_detail' => 'required|string',
             'interviewInstructions' => 'nullable|string',
             'members' => 'nullable',
             'otherDate1' => 'nullable|date',
@@ -146,6 +149,7 @@ class CareerOpportunitiesInterviewController extends Controller
             "location_id" =>$validatedData['location'],
             "interview_instructions" =>$validatedData['interviewInstructions'],
             "interview_members" =>$validatedData['members'],
+            "interview_detail" =>$validatedData['interview_detail'],
             
         ];
 
