@@ -276,25 +276,6 @@
 
                <div class="flex space-x-4 mb-4">
                    <div class="flex-1">
-                       <label class="block mb-2"
-                       >Candidate Email Address
-                           <span class="text-red-500">*</span></label
-                       >
-                       <input
-                           type="email"
-                           x-model="formData.candidateEmail"
-{{--                           :readonly="formData.candidateType === '2'"--}}
-                           class="w-full h-12 px-4 text-gray-500 border border-gray-300 rounded-md shadow-sm focus:outline-none"
-                           placeholder="Enter email address"
-                           id="candidateEmail"
-                       />
-                       <p
-                           x-show="showErrors && !isFieldValid('candidateEmail')"
-                           class="text-red-500 text-sm mt-1"
-                           x-text="getErrorMessageById('candidateEmail')"
-                       ></p>
-                   </div>
-                   <div class="flex-1">
                    <label class="block mb-2"
                      >First Name <span class="text-red-500">*</span></label
                    >
@@ -396,6 +377,25 @@
                      x-text="getErrorMessageById('lastFourNationalId')"
                    ></p>
                  </div>
+                   <div class="flex-1">
+                       <label class="block mb-2"
+                       >Candidate Email Address
+                           <span class="text-red-500">*</span></label
+                       >
+                       <input
+                           type="email"
+                           x-model="formData.candidateEmail"
+                           {{--                           :readonly="formData.candidateType === '2'"--}}
+                           class="w-full h-12 px-4 text-gray-500 border border-gray-300 rounded-md shadow-sm focus:outline-none"
+                           placeholder="Enter email address"
+                           id="candidateEmail"
+                       />
+                       <p
+                           x-show="showErrors && !isFieldValid('candidateEmail')"
+                           class="text-red-500 text-sm mt-1"
+                           x-text="getErrorMessageById('candidateEmail')"
+                       ></p>
+                   </div>
                  <div class="flex-1"></div>
                </div>
              </div>
@@ -520,6 +520,7 @@
                          @focus="$event.target.setSelectionRange(0, $event.target.value.length)"
                          class="bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                          placeholder="75.00"
+                         x-bind:disabled="true"
                        />
                      </div>
                    </div>

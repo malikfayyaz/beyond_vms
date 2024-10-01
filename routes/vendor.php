@@ -4,18 +4,20 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\{
     Vendor\VendorController,
-    Vendor\SubmissionController,
+    Vendor\CareerOpportunitiesSubmissionController,
     Vendor\CareerOpportunitiesOfferController,
-    Vendor\InterviewController,
+    Vendor\CareerOpportunitiesInterviewController,
 };
 Route::middleware(['user_role:vendor'])->group(function () {
     Route::prefix('vendor')->name('vendor.')->group(function () {
         Route::get('/dashboard', [VendorController::class, 'index'])->name('vendor.dashboard');
         Route::resource('career-opportunities', \App\Http\Controllers\Vendor\CareerOpportunitiesController::class);
-        Route::get('submission/{id}/create', [SubmissionController::class, 'create'])->name('submission.create');
-        Route::post('submission/store', [SubmissionController::class, 'store'])->name('submission.store');
-        Route::match(['get', 'post'], 'submission/index', [SubmissionController::class, 'index'])->name('submission.index');
-        Route::get('/submission/{id}', [SubmissionController::class, 'show'])->name('submission.show');
+        
+        //submission
+        Route::get('submission/{id}/create', [CareerOpportunitiesSubmissionController::class, 'create'])->name('submission.create');
+        Route::post('submission/store', [CareerOpportunitiesSubmissionController::class, 'store'])->name('submission.store');
+        Route::match(['get', 'post'], 'submission/index', [CareerOpportunitiesSubmissionController::class, 'index'])->name('submission.index');
+        Route::get('/submission/{id}', [CareerOpportunitiesSubmissionController::class, 'show'])->name('submission.show');
         // offer
         Route::get('offer/{id}/create', [CareerOpportunitiesOfferController::class, 'create'])->name('offer.create');
         Route::post('offer/store', [CareerOpportunitiesOfferController::class, 'store'])->name('offer.store');
@@ -26,11 +28,11 @@ Route::middleware(['user_role:vendor'])->group(function () {
         Route::get('workorder/{id}', [\App\Http\Controllers\Vendor\CareerOpportunitiesWorkOrderController::class, 'show'])->name('workorder.show');
 
          //interview
-         Route::match(['get', 'post'], 'interview/index', [InterviewController::class, 'index'])->name('interview.index');
-         Route::get('interview/{id}/create', [InterviewController::class, 'create'])->name('interview.create');
-         Route::post('interview/store', [InterviewController::class, 'store'])->name('interview.store');
-         Route::get('interview/{id}/edit', [InterviewController::class, 'edit'])->name('interview.edit');
-         Route::put('interview/{id}/update', [InterviewController::class, 'update'])->name('interview.update');
+         Route::match(['get', 'post'], 'interview/index', [CareerOpportunitiesInterviewController::class, 'index'])->name('interview.index');
+         Route::get('interview/{id}/create', [CareerOpportunitiesInterviewController::class, 'create'])->name('interview.create');
+         Route::post('interview/store', [CareerOpportunitiesInterviewController::class, 'store'])->name('interview.store');
+         Route::get('interview/{id}/edit', [CareerOpportunitiesInterviewController::class, 'edit'])->name('interview.edit');
+         Route::put('interview/{id}/update', [CareerOpportunitiesInterviewController::class, 'update'])->name('interview.update');
  
     });
 

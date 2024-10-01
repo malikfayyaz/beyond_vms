@@ -17,7 +17,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Yajra\DataTables\Facades\DataTables;
 
-class SubmissionController extends Controller
+class CareerOpportunitiesSubmissionController extends Controller
 {
     /**
      * Display a listing of the resource.

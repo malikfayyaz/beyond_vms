@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Vendor;
+namespace App\Http\Controllers\Client;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -8,7 +8,7 @@ use App\Models\CareerOpportunitySubmission;
 use App\Models\CareerOpportunitiesInterview;
 use Yajra\DataTables\Facades\DataTables;
 
-class InterviewController extends Controller
+class CareerOpportunitiesInterviewController extends Controller
 {
     public function index(Request $request)
     {
@@ -37,21 +37,21 @@ class InterviewController extends Controller
             })
             
             ->addColumn('action', function($row) {
-                return '<a href="' . route('vendor.interview.edit', $row->id) . '"
+                return '<a href="' . route('client.interview.edit', $row->id) . '"
                             class="text-green-500 hover:text-green-700 mr-2 bg-transparent hover:bg-transparent">
                                 <i class="fas fa-edit"></i>
                         </a>';
             })
             ->make(true);
         }
-        return view('vendor.interview.index');
+        return view('client.interview.index');
     }
 
     public function create($id)
     {
         $submission =  CareerOpportunitySubmission::findOrFail($id);
 
-        return view('vendor.interview.create', compact('submission'));
+        return view('client.interview.create', compact('submission'));
     }
 
     public function store(Request $request)
@@ -88,7 +88,7 @@ class InterviewController extends Controller
             "interview_instructions" =>$validatedData['interviewInstructions'],
             "interview_members" =>$validatedData['members'],
             "status" => 1,
-            "created_by_user" => 3,
+            "created_by_user" => 2,
         ];
 
         $InterviewCreate = CareerOpportunitiesInterview::create( $mapedData );
@@ -97,7 +97,7 @@ class InterviewController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Interview saved successfully!',
-            'redirect_url' => route('vendor.interview.index') // Redirect back URL for AJAX
+            'redirect_url' => route('client.interview.index') // Redirect back URL for AJAX
         ]);
     }
 
@@ -106,7 +106,7 @@ class InterviewController extends Controller
         $interview =  CareerOpportunitiesInterview::findOrFail($id);
         $submission =  CareerOpportunitySubmission::findOrFail($interview->submission_id);
 
-        return view('vendor.interview.create', compact('interview','submission'))
+        return view('client.interview.create', compact('interview','submission'))
         ->with(['editMode' => true, 'editIndex' => $id]);
     }
 
@@ -157,7 +157,7 @@ class InterviewController extends Controller
         return response()->json([
             'success' => true,
             'message' => $successMessage,
-            'redirect_url' => route('vendor.interview.index')  // Redirect URL for AJAX
+            'redirect_url' => route('client.interview.index')  // Redirect URL for AJAX
         ]);
     }
 }

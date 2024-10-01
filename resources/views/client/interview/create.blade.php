@@ -446,7 +446,7 @@
         }
 
         if (!this.formData.timeZone) {
-            this.formData.timeZoneError = "Please select time zone.";
+            this.timeZoneError = "Please select time zone.";
             isValid = false;
         }
 
