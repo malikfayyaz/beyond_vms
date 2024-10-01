@@ -12,8 +12,8 @@ use App\Http\Controllers\{
     Admin\ClientManagementController,
     Admin\VendorManagementController,
     Admin\CareerOpportunitiesOfferController,
-    Admin\SubmissionController,
-    Admin\InterviewController,
+    Admin\CareerOpportunitiesSubmissionController,
+    Admin\CareerOpportunitiesInterviewController,
 };
 Route::middleware(['user_role:admin'])->group(function () {
     Route::resource('/admin/career-opportunities', CareerOpportunitiesController::class);
@@ -118,15 +118,15 @@ Route::middleware(['user_role:admin'])->group(function () {
         Route::match(['get', 'post'], 'workflow/edit/{id}', [GenericDataController::class, 'workflowEdit'])->name('workflow.edit');
         Route::match(['get', 'post'], 'workflow/store', [GenericDataController::class, 'workflowStore'])->name('workflow.store');
         //submission
-        Route::match(['get', 'post'], 'submission/index', [SubmissionController::class, 'index'])->name('submission.index');
-        Route::get('submission/{id}', [SubmissionController::class, 'show'])->name('submission.show');
+        Route::match(['get', 'post'], 'submission/index', [CareerOpportunitiesSubmissionController::class, 'index'])->name('submission.index');
+        Route::get('submission/{id}', [CareerOpportunitiesSubmissionController::class, 'show'])->name('submission.show');
 
         //interview
-        Route::match(['get', 'post'], 'interview/index', [InterviewController::class, 'index'])->name('interview.index');
-        Route::get('interview/{id}/create', [InterviewController::class, 'create'])->name('interview.create');
-        Route::post('interview/store', [InterviewController::class, 'store'])->name('interview.store');
-        Route::get('interview/{id}/edit', [InterviewController::class, 'edit'])->name('interview.edit');
-        Route::put('interview/{id}/update', [InterviewController::class, 'update'])->name('interview.update');
+        Route::match(['get', 'post'], 'interview/index', [CareerOpportunitiesInterviewController::class, 'index'])->name('interview.index');
+        Route::get('interview/{id}/create', [CareerOpportunitiesInterviewController::class, 'create'])->name('interview.create');
+        Route::post('interview/store', [CareerOpportunitiesInterviewController::class, 'store'])->name('interview.store');
+        Route::get('interview/{id}/edit', [CareerOpportunitiesInterviewController::class, 'edit'])->name('interview.edit');
+        Route::put('interview/{id}/update', [CareerOpportunitiesInterviewController::class, 'update'])->name('interview.update');
 
     });
 });
