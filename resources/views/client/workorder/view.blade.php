@@ -146,6 +146,7 @@
                                     <div class="flex-1">
                                         <label class="block mb-2">First Name</label>
                                         <input
+                                            x-model="formData.first_name"
                                             type="text"
                                             class="w-full h-12 px-4 text-gray-500 border border-gray-300 rounded-md shadow-sm focus:outline-none"
                                             placeholder="{{$workorder->consultant->first_name}}"
@@ -156,6 +157,7 @@
                                     <div class="flex-1">
                                         <label class="block mb-2">Middle Name</label>
                                         <input
+                                            x-model="formData.middle_name"
                                             type="text"
                                             class="w-full h-12 px-4 text-gray-500 border border-gray-300 rounded-md shadow-sm focus:outline-none"
                                             placeholder="{{$workorder->consultant->middle_name}}"
@@ -165,6 +167,7 @@
                                     <div class="flex-1">
                                         <label class="block mb-2">Last Name</label>
                                         <input
+                                            x-model="formData.last_name"
                                             type="text"
                                             class="w-full h-12 px-4 text-gray-500 border border-gray-300 rounded-md shadow-sm focus:outline-none"
                                             placeholder="{{$workorder->consultant->last_name}}"
@@ -399,7 +402,10 @@
     document.addEventListener("alpine:init", () => {
         Alpine.data("workOrderForm", () => ({
             formData: {
-                personalEmailAddress: "",
+                personalEmailAddress: '{{ old('personalEmailAddress', $workorder->consultant->user->email ?? '') }}',
+                first_name:'{{ old('first_name', $workorder->consultant->first_name ?? '') }}' ,
+                middle_name:'{{ old('middle_name', $workorder->consultant->middle_name ?? '') }}' ,
+                last_name:'{{ old('last_name', $workorder->consultant->last_name ?? '') }}' ,
                 accountManager: "",
                 recruitmentManager: "",
                 codeOfConduct: false,
