@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\CareerOpportunitySubmission;
 use Yajra\DataTables\Facades\DataTables;
 
-class SubmissionController extends Controller
+class CareerOpportunitiesSubmissionController extends Controller
 {
     public function index(Request $request)
     {
