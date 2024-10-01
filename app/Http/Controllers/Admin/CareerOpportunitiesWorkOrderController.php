@@ -59,6 +59,6 @@ class CareerOpportunitiesWorkOrderController extends Controller
     public function show($id)
     {
         $workorder = CareerOpportunitiesWorkorder::findOrFail($id);
-        return view('admin.workorder.show', compact('workorder'));
+        return view('admin.workorder.view', compact('workorder'));
     }
 }
