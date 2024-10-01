@@ -6,6 +6,7 @@ use App\Http\Controllers\{
     Vendor\VendorController,
     Vendor\SubmissionController,
     Vendor\CareerOpportunitiesOfferController,
+    Vendor\InterviewController,
 };
 Route::middleware(['user_role:vendor'])->group(function () {
     Route::prefix('vendor')->name('vendor.')->group(function () {
@@ -24,6 +25,13 @@ Route::middleware(['user_role:vendor'])->group(function () {
         Route::get('workorder/index', [\App\Http\Controllers\Vendor\CareerOpportunitiesWorkOrderController::class, 'index'])->name('workorder.index');
         Route::get('workorder/{id}', [\App\Http\Controllers\Vendor\CareerOpportunitiesWorkOrderController::class, 'show'])->name('workorder.show');
 
+         //interview
+         Route::match(['get', 'post'], 'interview/index', [InterviewController::class, 'index'])->name('interview.index');
+         Route::get('interview/{id}/create', [InterviewController::class, 'create'])->name('interview.create');
+         Route::post('interview/store', [InterviewController::class, 'store'])->name('interview.store');
+         Route::get('interview/{id}/edit', [InterviewController::class, 'edit'])->name('interview.edit');
+         Route::put('interview/{id}/update', [InterviewController::class, 'update'])->name('interview.update');
+ 
     });
 
 });
