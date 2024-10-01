@@ -137,6 +137,20 @@
                     <p class="text-red-500 text-sm mt-1" x-text="remoteError"></p>
                     </div>
                 </div>
+                <div x-show="formData.remote" class="mt-4">
+                        <label for="interview_detail" class="block mb-2">
+                            <span x-text="getInterviewLabel()"></span> <span class="text-red-500">*</span>
+                        </label>
+                        <textarea
+                            class="w-full border rounded p-3"
+                            rows="5"
+                            id="interview_detail"
+                            x-model="formData.interview_detail"
+                            placeholder="Enter interview detail"
+                        />
+                        </textarea>
+                        <p class="text-red-500 text-sm mt-1" x-text="interview_detailError"></p>
+                    </div>
                 </div>
                 <div class="bg-white mx-4 my-8 rounded p-8">
                 <div class="mb-4 flex items-center gap-4">
@@ -321,6 +335,7 @@
                             {{ $value->full_name }}</option>
                         @endforeach
                     </select>
+                    <p class="text-red-500 text-sm mt-1" x-text="membersError"></p>
                 </div>
                 </div>
                 <div class="mx-4 my-4">
@@ -352,6 +367,20 @@
             otherDate1: '{{ old('otherDate1', $interview->other_date_1 ?? '') }}',
             otherDate2: '{{ old('otherDate2', $interview->other_date_2 ?? '') }}',
             otherDate3: '{{ old('otherDate3', $interview->other_date_3 ?? '') }}',
+            interview_detail: '{{ old('interview_detail', $interview->interview_detail ?? '') }}',
+        },
+
+        getInterviewLabel() {
+            switch (this.formData.remote) {
+                case '58':
+                    return 'In Person Interview Detail';
+                case '59':
+                    return 'Phone Interview Detail';
+                case '60':
+                    return 'Virtual Interview Detail';
+                default:
+                    return 'Interview Detail';
+            }
         },
 
         interviewDurationError: "",
@@ -359,6 +388,8 @@
         startDateError: "",
         locationError: "",
         remoteError: "",
+        membersError: "",
+        interview_detailError:"",
        
 
         init() {
@@ -467,6 +498,18 @@
             isValid = false;
         }
 
+        if (!this.formData.members || this.formData.members.length === 0) {
+            this.membersError = "Please select member(s).";
+            isValid = false;
+        }else {
+            this.membersError = "";
+        }
+
+        if (!this.formData.interview_detail) {
+            this.interview_detailError = "Please type details here.";
+            isValid = false;
+        }
+
         if (!isValid) {
             e.preventDefault();
             console.log()
@@ -487,6 +530,7 @@
             formData.append("otherDate1", this.formData.otherDate1);
             formData.append("otherDate2", this.formData.otherDate2);
             formData.append("otherDate3", this.formData.otherDate3);
+            formData.append("interview_detail", this.formData.interview_detail);
             formData.append("submissionid", {{$submission->id}});
 
             let url = '';
