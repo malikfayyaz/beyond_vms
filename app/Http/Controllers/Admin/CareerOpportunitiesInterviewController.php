@@ -56,7 +56,7 @@ class CareerOpportunitiesInterviewController extends Controller
     }
 
     public function store(Request $request)
-    {
+    {   
         $validatedData = $request->validate([
             'eventName' => 'required|string|max:255',
             'interviewDuration' => 'required|integer',
@@ -65,6 +65,7 @@ class CareerOpportunitiesInterviewController extends Controller
             'location' => 'nullable|integer',
             'remote' => 'required|integer',
             'interviewInstructions' => 'nullable|string',
+            'interview_detail' => 'required|string',
             'members' => 'nullable',
             'otherDate1' => 'nullable|date',
             'otherDate2' => 'nullable|date',
@@ -88,6 +89,7 @@ class CareerOpportunitiesInterviewController extends Controller
             "location_id" =>$validatedData['location'],
             "interview_instructions" =>$validatedData['interviewInstructions'],
             "interview_members" =>$validatedData['members'],
+            "interview_detail" =>$validatedData['interview_detail'],
             "status" => 1,
             "created_by_user" => 1,
         ];
@@ -125,6 +127,7 @@ class CareerOpportunitiesInterviewController extends Controller
             'startDate' => 'required|date',
             'location' => 'nullable|integer',
             'remote' => 'required|integer',
+            'interview_detail' => 'required|string',
             'interviewInstructions' => 'nullable|string',
             'members' => 'nullable',
             'otherDate1' => 'nullable|date',
@@ -140,6 +143,7 @@ class CareerOpportunitiesInterviewController extends Controller
             "interview_duration" =>$validatedData['interviewDuration'],
             "time_zone" =>$validatedData['timeZone'],
             "interview_type" =>$validatedData['remote'],
+            "interview_detail" =>$validatedData['interview_detail'],
             "recommended_date" =>$validatedData['startDate'],
             "other_date_1" =>$validatedData['otherDate1'],
             "other_date_2" =>$validatedData['otherDate2'],
