@@ -395,3 +395,137 @@
         </div>
     </div>
 @endsection
+<script>
+    document.addEventListener("alpine:init", () => {
+        Alpine.data("workOrderForm", () => ({
+            formData: {
+                personalEmailAddress: "",
+                accountManager: "",
+                recruitmentManager: "",
+                codeOfConduct: false,
+                dataPrivacy: false,
+                nonDisclosure: false,
+                criminalBackground: false,
+            },
+            errors: {},
+
+            init() {
+                this.initSelect2();
+            },
+
+            initSelect2() {
+                this.$nextTick(() => {
+                    $("#accountManager")
+                        .select2({
+                            width: "100%",
+                        })
+                        .on("select2:select", (e) => {
+                            this.formData.accountManager = e.params.data.id;
+                            this.errors.accountManager = "";
+                        })
+                        .on("select2:unselect", () => {
+                            this.formData.accountManager = "";
+                        });
+
+                    $("#recruitmentManager")
+                        .select2({
+                            width: "100%",
+                        })
+                        .on("select2:select", (e) => {
+                            this.formData.recruitmentManager = e.params.data.id;
+                            this.errors.recruitmentManager = "";
+                        })
+                        .on("select2:unselect", () => {
+                            this.formData.recruitmentManager = "";
+                        });
+                });
+            },
+
+            validateEmail(email) {
+                const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                return re.test(email);
+            },
+
+            validateForm() {
+                this.errors = {};
+                let isValid = true;
+
+                console.log("Current form data:", this.formData);
+
+                if (!this.formData.personalEmailAddress) {
+                    this.errors.personalEmailAddress =
+                        "Personal Email Address is required.";
+                    isValid = false;
+                    console.log("Personal Email validation failed");
+                } else if (
+                    !this.validateEmail(this.formData.personalEmailAddress)
+                ) {
+                    this.errors.personalEmailAddress =
+                        "Please enter a valid email address.";
+                    isValid = false;
+                    console.log("Personal Email format validation failed");
+                }
+
+                if (!this.formData.accountManager) {
+                    this.errors.accountManager = "Please select an Account Manager.";
+                    isValid = false;
+                    console.log("Account Manager validation failed");
+                }
+
+                if (!this.formData.recruitmentManager) {
+                    this.errors.recruitmentManager =
+                        "Please select a Recruitment Manager.";
+                    isValid = false;
+                    console.log("Recruitment Manager validation failed");
+                }
+
+                if (!this.formData.codeOfConduct) {
+                    this.errors.codeOfConduct = "Please confirm Code of Conduct.";
+                    isValid = false;
+                    console.log("Code of Conduct validation failed");
+                }
+
+                if (!this.formData.dataPrivacy) {
+                    this.errors.dataPrivacy =
+                        "Please confirm Data Privacy / Data Handling.";
+                    isValid = false;
+                    console.log("Data Privacy validation failed");
+                }
+
+                if (!this.formData.nonDisclosure) {
+                    this.errors.nonDisclosure = "Please confirm Non-Disclosure.";
+                    isValid = false;
+                    console.log("Non-Disclosure validation failed");
+                }
+
+                if (!this.formData.criminalBackground) {
+                    this.errors.criminalBackground =
+                        "Please confirm Criminal Background.";
+                    isValid = false;
+                    console.log("Criminal Background validation failed");
+                }
+
+                console.log("Validation result:", isValid ? "Passed" : "Failed");
+                console.log("Errors:", this.errors);
+
+                return isValid;
+            },
+
+            submitForm(action) {
+                console.log("Submitting form...");
+                const isValid = this.validateForm();
+                if (isValid) {
+                    if (action === "save") {
+                        console.log("Form is valid. Saving...");
+                        // Add your save logic here
+                    } else if (action === "saveAndSubmit") {
+                        console.log("Form is valid. Saving and submitting...");
+                        // Add your save and submit logic here
+                    }
+                } else {
+                    console.log("Form validation failed");
+                }
+            },
+        }));
+    });
+</script>
