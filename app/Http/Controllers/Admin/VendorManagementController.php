@@ -96,8 +96,7 @@ class VendorManagementController extends Controller
             'profile_image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048'
         ]);
 
-        // dd($validatedData["organization"]);
-
+        $validatedData['profile_approve'] = 'Yes';
 
         $request_email = $request->validate(['email' => 'required|email']);
 
