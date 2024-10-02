@@ -33,173 +33,76 @@
                   </div>
                 </div>
               </div> -->
-              <div
-                class="p-[30px] rounded border mt-4"
-                :style="{'border-color': 'var(--primary-color)'}"
-              >
-                <div class="mb-4 flex items-center gap-2">
-                  <i
-                    class="fa-regular fa-square-check"
-                    :style="{'color': 'var(--primary-color)'}"
-                  ></i>
-                  <h2
-                    class="text-xl font-bold"
-                    :style="{'color': 'var(--primary-color)'}"
-                  >
-                    Offer Workflow
-                  </h2>
-                </div>
-                <div class="bg-white shadow rounded-lg">
-                  <div class="overflow-hidden">
-                    <table class="w-full">
-                      <thead>
-                        <tr class="bg-gray-50 text-left">
-                          <th
-                            class="py-4 px-4 text-center font-semibold text-sm text-gray-600"
-                          >
-                            S.NO
-                          </th>
-                          <th
-                            class="py-4 px-4 text-center font-semibold text-sm text-gray-600"
-                          >
-                            Approver Name
-                          </th>
-                          <th
-                            class="py-4 px-4 text-center font-semibold text-sm text-gray-600"
-                          >
-                            Approver Type
-                          </th>
-                          <th
-                            class="py-4 px-4 text-center font-semibold text-sm text-gray-600"
-                          >
-                            Approved/Rejected By
-                          </th>
-                          <th
-                            class="py-4 px-4 text-center font-semibold text-sm text-gray-600"
-                          >
-                            Approved/Rejected Date & Time
-                          </th>
-                          <th
-                            class="py-4 px-4 text-center font-semibold text-sm text-gray-600"
-                          >
-                            Approval Notes
-                          </th>
-                          <th
-                            class="py-4 px-4 text-center font-semibold text-sm text-gray-600"
-                          >
-                            Approval Document
-                          </th>
-                          <th
-                            class="py-4 px-4 text-center font-semibold text-sm text-gray-600"
-                          >
-                            Status
-                          </th>
-                        </tr>
-                      </thead>
-                      <tbody class="divide-y divide-gray-200">
-                        <tr>
-                          <td class="py-4 px-4 text-center text-sm">1</td>
-                          <td class="py-4 px-4 text-center text-sm">
-                            A James Jardanowski
-                          </td>
-                          <td class="py-4 px-4 text-center text-sm">
-                            Hiring Manager
-                          </td>
-                          <td class="py-4 px-4 text-center text-sm"></td>
-                          <td class="py-4 px-4 text-center text-sm"></td>
-                          <td class="py-4 px-4 text-center text-sm"></td>
-                          <td class="py-4 px-4 text-center text-sm"></td>
-                          <td class="py-4 px-4 text-center text-sm"></td>
-                        </tr>
-                        <tr>
-                          <td class="py-4 px-4 text-center text-sm">2</td>
-                          <td class="py-4 px-4 text-center text-sm">
-                            A James Jardanowski
-                          </td>
-                          <td class="py-4 px-4 text-center text-sm">
-                            Hiring Manager
-                          </td>
-                          <td class="py-4 px-4 text-center text-sm"></td>
-                          <td class="py-4 px-4 text-center text-sm"></td>
-                          <td class="py-4 px-4 text-center text-sm"></td>
-                          <td class="py-4 px-4 text-center text-sm"></td>
-                          <td class="py-4 px-4 text-center text-sm"></td>
-                        </tr>
-                        <tr>
-                          <td class="py-4 px-4 text-center text-sm">3</td>
-                          <td class="py-4 px-4 text-center text-sm">
-                            A James Jardanowski
-                          </td>
-                          <td class="py-4 px-4 text-center text-sm">
-                            Hiring Manager
-                          </td>
-                          <td class="py-4 px-4 text-center text-sm"></td>
-                          <td class="py-4 px-4 text-center text-sm"></td>
-                          <td class="py-4 px-4 text-center text-sm"></td>
-                          <td class="py-4 px-4 text-center text-sm"></td>
-                          <td class="py-4 px-4 text-center text-sm"></td>
-                        </tr>
-                        <tr>
-                          <td class="py-4 px-4 text-center text-sm">4</td>
-                          <td class="py-4 px-4 text-center text-sm">
-                            A James Jardanowski
-                          </td>
-                          <td class="py-4 px-4 text-center text-sm">
-                            Hiring Manager
-                          </td>
-                          <td class="py-4 px-4 text-center text-sm"></td>
-                          <td class="py-4 px-4 text-center text-sm"></td>
-                          <td class="py-4 px-4 text-center text-sm"></td>
-                          <td class="py-4 px-4 text-center text-sm"></td>
-                          <td class="py-4 px-4 text-center text-sm"></td>
-                        </tr>
-                        <tr>
-                          <td class="py-4 px-4 text-center text-sm">5</td>
-                          <td class="py-4 px-4 text-center text-sm">
-                            A James Jardanowski
-                          </td>
-                          <td class="py-4 px-4 text-center text-sm">
-                            Hiring Manager
-                          </td>
-                          <td class="py-4 px-4 text-center text-sm"></td>
-                          <td class="py-4 px-4 text-center text-sm"></td>
-                          <td class="py-4 px-4 text-center text-sm"></td>
-                          <td class="py-4 px-4 text-center text-sm"></td>
-                          <td class="py-4 px-4 text-center text-sm"></td>
-                        </tr>
-                        <tr>
-                          <td class="py-4 px-4 text-center text-sm">6</td>
-                          <td class="py-4 px-4 text-center text-sm">
-                            A James Jardanowski
-                          </td>
-                          <td class="py-4 px-4 text-center text-sm">
-                            Hiring Manager
-                          </td>
-                          <td class="py-4 px-4 text-center text-sm"></td>
-                          <td class="py-4 px-4 text-center text-sm"></td>
-                          <td class="py-4 px-4 text-center text-sm"></td>
-                          <td class="py-4 px-4 text-center text-sm"></td>
-                          <td class="py-4 px-4 text-center text-sm"></td>
-                        </tr>
-                        <tr>
-                          <td class="py-4 px-4 text-center text-sm">7</td>
-                          <td class="py-4 px-4 text-center text-sm">
-                            A James Jardanowski
-                          </td>
-                          <td class="py-4 px-4 text-center text-sm">
-                            Hiring Manager
-                          </td>
-                          <td class="py-4 px-4 text-center text-sm"></td>
-                          <td class="py-4 px-4 text-center text-sm"></td>
-                          <td class="py-4 px-4 text-center text-sm"></td>
-                          <td class="py-4 px-4 text-center text-sm"></td>
-                          <td class="py-4 px-4 text-center text-sm"></td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              </div>
+                <div  x-data="{
+                openModal: false,
+                currentRowId: null
+              }"
+                      class="p-[30px] rounded border mt-4"
+                      :style="{'border-color': 'var(--primary-color)'}"
+                >
+                    <div class="mb-4 flex items-center gap-2">
+                        <i
+                            class="fa-regular fa-square-check"
+                            :style="{'color': 'var(--primary-color)'}"
+                        ></i>
+                        <h2
+                            class="text-xl font-bold"
+                            :style="{'color': 'var(--primary-color)'}"
+                        >
+                            Offer Workflow
+                        </h2>
+                    </div>
+                    <div class="bg-white shadow rounded-lg">
+                        <div class="overflow-hidden">
+                            <table class="w-full">
+                                <thead>
+                                <tr class="bg-gray-50 text-left">
+                                    <th class="py-4 px-4 text-center font-semibold text-sm text-gray-600">S.NO</th>
+                                    <th class="py-4 px-4 text-center font-semibold text-sm text-gray-600">Approver Name</th>
+                                    <th class="py-4 px-4 text-center font-semibold text-sm text-gray-600">Approver Type</th>
+                                    <th class="py-4 px-4 text-center font-semibold text-sm text-gray-600">Approved/Rejected By</th>
+                                    <th class="py-4 px-4 text-center font-semibold text-sm text-gray-600">Approved/Rejected Date & Time</th>
+                                    <th class="py-4 px-4 text-center font-semibold text-sm text-gray-600">Approval Notes</th>
+                                    <th class="py-4 px-4 text-center font-semibold text-sm text-gray-600">Approval Document</th>
+                                    <th class="py-4 px-4 text-center font-semibold text-sm text-gray-600">Status</th>
+                                    <th class="py-4 px-4 text-center font-semibold text-sm text-gray-600">Action</th>
+                                </tr>
+                                </thead>
+                                <tbody class="divide-y divide-gray-200">
+                                @if($workflows->isEmpty())
+                                    <tr>
+                                        <td colspan="9" class="py-4 px-4 text-center text-sm text-gray-600">
+                                            No workflows available.
+                                        </td>
+                                    </tr>
+                                @else
+                                    @foreach($workflows as $index => $workflow)
+                                    <tr>
+                                        <td class="py-4 px-4 text-center text-sm">{{ $index + 1 }}</td>
+                                        <td class="py-4 px-4 text-center text-sm">{{ $workflow->hiringManager->full_name }}</td>
+                                        <td class="py-4 px-4 text-center text-sm">{{ $workflow->approve_reject_type }}</td>
+                                        <td class="py-4 px-4 text-center text-sm">{{ $workflow->approve_reject_by ?? 'N/A' }}</td>
+                                        <td class="py-4 px-4 text-center text-sm">{{ $workflow->approved_datetime ?? 'N/A' }}</td>
+                                        <td class="py-4 px-4 text-center text-sm">{{ $workflow->approval_notes ?? 'N/A' }}</td>
+                                        <td class="py-4 px-4 text-center text-sm">{{ $workflow->approval_doc ?? 'N/A' }}</td>
+                                        <td class="py-4 px-4 text-center text-sm">{{ $workflow->status }}</td>
+                                        <td class="py-4 px-4 text-center text-sm">
+                                            <button
+                                                @click="openModal = true; currentRowId = {{ $workflow->id }}"
+                                                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                                            >
+                                                Accept
+                                            </button>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                                @endif
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <!-- Modal -->
+                    <!-- Modal -->
               <div class="flex w-full gap-4 mt-4">
                 <!-- Left Column -->
                 <div
@@ -277,7 +180,7 @@
                         </p>
                       </div>
                     </div>
-                    
+
                     <div
                       class="flex items-center justify-between py-4 border-t"
                     >
@@ -724,9 +627,9 @@
                                   <option value="custom">Custom</option>
                               </select>
                               <div x-show="itemsPerPage === 'custom'" class="flex items-center">
-                                  <input 
-                                      type="number" 
-                                      x-model.number="customItemsPerPage" 
+                                  <input
+                                      type="number"
+                                      x-model.number="customItemsPerPage"
                                       @input="updateCustomPagination()"
                                       min="1"
                                       class="border rounded px-2 py-1 w-20"

@@ -5,6 +5,13 @@
     @include('client.layouts.partials.dashboard_side_bar')
     <div class="ml-16">
         @include('client.layouts.partials.header')
+        <div class="bg-white mx-4 my-8 rounded p-8">
+            @if (session('success'))
+                <div class="alert alert-success">
+                    {{ session('success') }}
+                </div>
+            @endif
+            <div >
         <div class="bg-white mx-4 my-8 rounded p-8" x-data='wizardForm({!! json_encode($careerOpportunity) !!},{!! json_encode($businessUnitsData) !!})' x-init="mounted()">
 
             <!-- Success Notification -->
@@ -17,6 +24,9 @@
                Job is Added Successfully.
              </div> -->
             <!-- Progress bar -->
+            @php         $user = Auth::user();
+        $sessionrole = session('selected_role');
+            @endphp
             <script>
                 var sessionrole = "{{ $sessionrole }}";
             </script>

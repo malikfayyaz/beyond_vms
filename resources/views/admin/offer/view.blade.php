@@ -33,18 +33,9 @@
                   </div>
                 </div>
               </div> -->
-              <div  x-data="{ 
-                openModal: false, 
-                currentRowId: null,
-                rows: [
-                  { id: 1, name: 'A James Jardanowski', type: 'Hiring Manager' },
-                  { id: 2, name: 'A James Jardanowski', type: 'Hiring Manager' },
-                  { id: 3, name: 'A James Jardanowski', type: 'Hiring Manager' },
-                  { id: 4, name: 'A James Jardanowski', type: 'Hiring Manager' },
-                  { id: 5, name: 'A James Jardanowski', type: 'Hiring Manager' },
-                  { id: 6, name: 'A James Jardanowski', type: 'Hiring Manager' },
-                  { id: 7, name: 'A James Jardanowski', type: 'Hiring Manager' },
-                ]
+              <div  x-data="{
+                openModal: false,
+                currentRowId: null
               }"
                 class="p-[30px] rounded border mt-4"
                 :style="{'border-color': 'var(--primary-color)'}"
@@ -65,84 +56,47 @@
                   <div class="overflow-hidden">
                   <table class="w-full">
                       <thead>
-                        <tr class="bg-gray-50 text-left">
-                          <th
-                            class="py-4 px-4 text-center font-semibold text-sm text-gray-600"
-                          >
-                            S.NO
-                          </th>
-                          <th
-                            class="py-4 px-4 text-center font-semibold text-sm text-gray-600"
-                          >
-                            Approver Name
-                          </th>
-                          <th
-                            class="py-4 px-4 text-center font-semibold text-sm text-gray-600"
-                          >
-                            Approver Type
-                          </th>
-                          <th
-                            class="py-4 px-4 text-center font-semibold text-sm text-gray-600"
-                          >
-                            Approved/Rejected By
-                          </th>
-                          <th
-                            class="py-4 px-4 text-center font-semibold text-sm text-gray-600"
-                          >
-                            Approved/Rejected Date & Time
-                          </th>
-                          <th
-                            class="py-4 px-4 text-center font-semibold text-sm text-gray-600"
-                          >
-                            Approval Notes
-                          </th>
-                          <th
-                            class="py-4 px-4 text-center font-semibold text-sm text-gray-600"
-                          >
-                            Approval Document
-                          </th>
-                          <th
-                            class="py-4 px-4 text-center font-semibold text-sm text-gray-600"
-                          >
-                            Status
-                          </th>
-                          <th
-                            class="py-4 px-4 text-center font-semibold text-sm text-gray-600"
-                          >
-                            Action
-                          </th>
-                        </tr>
+                      <tr class="bg-gray-50 text-left">
+                          <th class="py-4 px-4 text-center font-semibold text-sm text-gray-600">S.NO</th>
+                          <th class="py-4 px-4 text-center font-semibold text-sm text-gray-600">Approver Name</th>
+                          <th class="py-4 px-4 text-center font-semibold text-sm text-gray-600">Approver Type</th>
+                          <th class="py-4 px-4 text-center font-semibold text-sm text-gray-600">Approved/Rejected By</th>
+                          <th class="py-4 px-4 text-center font-semibold text-sm text-gray-600">Approved/Rejected Date & Time</th>
+                          <th class="py-4 px-4 text-center font-semibold text-sm text-gray-600">Approval Notes</th>
+                          <th class="py-4 px-4 text-center font-semibold text-sm text-gray-600">Approval Document</th>
+                          <th class="py-4 px-4 text-center font-semibold text-sm text-gray-600">Status</th>
+                          <th class="py-4 px-4 text-center font-semibold text-sm text-gray-600">Action</th>
+                      </tr>
                       </thead>
                       <tbody class="divide-y divide-gray-200">
-                        <template x-for="row in rows" :key="row.id">
+                      @if($workflows->isEmpty())
                           <tr>
-                            <td
-                              class="py-4 px-4 text-center text-sm"
-                              x-text="row.id"
-                            ></td>
-                            <td
-                              class="py-4 px-4 text-center text-sm"
-                              x-text="row.name"
-                            ></td>
-                            <td
-                              class="py-4 px-4 text-center text-sm"
-                              x-text="row.type"
-                            ></td>
-                            <td class="py-4 px-4 text-center text-sm"></td>
-                            <td class="py-4 px-4 text-center text-sm"></td>
-                            <td class="py-4 px-4 text-center text-sm"></td>
-                            <td class="py-4 px-4 text-center text-sm"></td>
-                            <td class="py-4 px-4 text-center text-sm"></td>
-                            <td class="py-4 px-4 text-center text-sm">
-                              <button
-                                @click="openModal = true; currentRowId = row.id"
-                                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                              >
-                                Accept
-                              </button>
-                            </td>
+                              <td colspan="9" class="py-4 px-4 text-center text-sm text-gray-600">
+                                  No workflows available.
+                              </td>
                           </tr>
-                        </template>
+                      @else
+                      @foreach($workflows as $index => $workflow)
+                          <tr>
+                              <td class="py-4 px-4 text-center text-sm">{{ $index + 1 }}</td>
+                              <td class="py-4 px-4 text-center text-sm">{{ $workflow->hiringManager->full_name }}</td>
+                              <td class="py-4 px-4 text-center text-sm">{{ $workflow->approve_reject_type }}</td>
+                              <td class="py-4 px-4 text-center text-sm">{{ $workflow->approve_reject_by ?? 'N/A' }}</td>
+                              <td class="py-4 px-4 text-center text-sm">{{ $workflow->approved_datetime ?? 'N/A' }}</td>
+                              <td class="py-4 px-4 text-center text-sm">{{ $workflow->approval_notes ?? 'N/A' }}</td>
+                              <td class="py-4 px-4 text-center text-sm">{{ $workflow->approval_doc ?? 'N/A' }}</td>
+                              <td class="py-4 px-4 text-center text-sm">{{ $workflow->status }}</td>
+                              <td class="py-4 px-4 text-center text-sm">
+                                  <button
+                                      @click="openModal = true; currentRowId = {{ $workflow->id }}"
+                                      class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                                  >
+                                      Accept
+                                  </button>
+                              </td>
+                          </tr>
+                      @endforeach
+                      @endif
                       </tbody>
                     </table>
                   </div>
@@ -331,7 +285,7 @@
                         </p>
                       </div>
                     </div>
-                    
+
                     <div
                       class="flex items-center justify-between py-4 border-t"
                     >
@@ -778,9 +732,9 @@
                                   <option value="custom">Custom</option>
                               </select>
                               <div x-show="itemsPerPage === 'custom'" class="flex items-center">
-                                  <input 
-                                      type="number" 
-                                      x-model.number="customItemsPerPage" 
+                                  <input
+                                      type="number"
+                                      x-model.number="customItemsPerPage"
                                       @input="updateCustomPagination()"
                                       min="1"
                                       class="border rounded px-2 py-1 w-20"

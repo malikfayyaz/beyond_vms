@@ -17,6 +17,10 @@ class Consultant extends Model
         return trim($this->first_name . ' ' . ($this->middle_name ?? '') . ' ' . $this->last_name);
     }
 
+    public function user() {
+        return $this->belongsTo(User::class, 'user_id', 'id');
+    }
+
     public function race() {
         return $this->belongsTo(Setting::class, 'ethnicity', 'id');
     }

@@ -32,11 +32,18 @@
             </div>
 
             <!-- Other Form Fields -->
-            <div class="mb-4" :disabled="editIndex !== null">
-                <label for="email" class="block mb-2">Email Address <span class="text-red-500">*</span></label>
-                <input type="email" id="email" x-model="formData.email" class="w-full p-2 border rounded h-10" :disabled="editIndex !== null">
-                <p x-show="emailError" class="text-red-500 text-sm mt-1" x-text="emailError"></p>
-                <p id="error-message" class="hidden text-red-500"></p>
+            <div class="flex mb-4" >
+                <div class="w-1/2 pr-2">
+                    <label for="email" class="block mb-2">Email Address <span class="text-red-500">*</span></label>
+                    <input type="email" id="email" x-model="formData.email" class="w-full p-2 border rounded h-10" :disabled="editIndex !== null">
+                    <p x-show="emailError" class="text-red-500 text-sm mt-1" x-text="emailError"></p>
+                    <p id="error-message" class="hidden text-red-500"></p>
+                </div>
+                <div class="w-1/2 pl-2">
+                    <label for="organization" class="block mb-2">Organization <span class="text-red-500">*</span></label>
+                    <input type="text" id="organization" x-model="formData.organization" class="w-full p-2 border rounded h-10" :disabled="editIndex !== null">
+                    <p x-show="organizationError" class="text-red-500 text-sm mt-1" x-text="organizationError"></p>
+                </div>
             </div>
 
             <div class="mb-4">
@@ -106,6 +113,7 @@
                 role: '{{ old('role', $vendor->member_access ?? '') }}',
                 country: '{{ old('country', $vendor->country ?? '') }}',
                 profile_status: '{{ old('profile_status', $vendor->profile_status ?? '') }}',
+                organization: '{{ old('organization', $vendor->organization ?? '') }}',
             },
 
             searchTerm: '',
@@ -119,6 +127,7 @@
             countryError: '',
             statusError: '',
             phoneError: '',
+            organizationError: '',
 
             validateFields() {
                 let errorCount = 0;
@@ -142,6 +151,13 @@
                     errorCount++;
                 } else {
                     this.emailError = '';
+                }
+                
+                if (this.formData.organization.trim() === "") {
+                    this.organizationError = "Organization is required";
+                    errorCount++;
+                } else {
+                    this.organizationError = '';
                 }
 
                 if (this.formData.phone.trim() === "") {
@@ -181,6 +197,7 @@
                     formData.append('first_name', this.formData.first_name);
                     formData.append('last_name', this.formData.last_name);
                     formData.append('email', this.formData.email);
+                    formData.append('organization', this.formData.organization);
                     formData.append('phone', this.formData.phone);
                     if (this.profile_image) {
                         formData.append('profile_image', this.formData.profile_image);

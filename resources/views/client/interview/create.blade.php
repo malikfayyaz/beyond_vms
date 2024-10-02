@@ -1,9 +1,9 @@
-@extends('admin.layouts.app')
+@extends('client.layouts.app')
 @section('content')
 <!-- Sidebar -->
-@include('admin.layouts.partials.dashboard_side_bar')
+@include('client.layouts.partials.dashboard_side_bar')
 <div class="ml-16">
-    @include('admin.layouts.partials.header')
+    @include('client.layouts.partials.header')
     
     <div class="mx-4 my-8 rounded">
         <div class="flex gap-4 w-full mt-4">
@@ -137,7 +137,7 @@
                     <p class="text-red-500 text-sm mt-1" x-text="remoteError"></p>
                     </div>
                 </div>
-                    <div x-show="formData.remote" class="mt-4">
+                <div x-show="formData.remote" class="mt-4">
                         <label for="interview_detail" class="block mb-2">
                             <span x-text="getInterviewLabel()"></span> <span class="text-red-500">*</span>
                         </label>
@@ -151,7 +151,6 @@
                         </textarea>
                         <p class="text-red-500 text-sm mt-1" x-text="interview_detailError"></p>
                     </div>
-
                 </div>
                 <div class="bg-white mx-4 my-8 rounded p-8">
                 <div class="mb-4 flex items-center gap-4">
@@ -383,7 +382,7 @@
                     return 'Interview Detail';
             }
         },
-        
+
         interviewDurationError: "",
         timeZoneError: "",
         startDateError: "",
@@ -492,15 +491,13 @@
         if (!this.formData.location) {
             this.locationError = "Please select a location.";
             isValid = false;
-        }else {
-            this.locationError = "";
         }
 
         if (!this.formData.remote) {
             this.remoteError = "Please select interview type.";
             isValid = false;
         }
-        
+
         if (!this.formData.members || this.formData.members.length === 0) {
             this.membersError = "Please select member(s).";
             isValid = false;
@@ -512,7 +509,7 @@
             this.interview_detailError = "Please type details here.";
             isValid = false;
         }
-        
+
         if (!isValid) {
             e.preventDefault();
             console.log()
@@ -538,10 +535,10 @@
 
             let url = '';
             @if(isset($editMode) && $editMode)
-                url = '{{ route("admin.interview.update", $editIndex) }}';
+                url = '{{ route("client.interview.update", $editIndex) }}';
                 formData.append('_method', 'PUT'); // Required for PUT requests in forms
             @else
-                url = '{{ route("admin.interview.store") }}';
+                url = '{{ route("client.interview.store") }}';
             @endif
 
             // Use your custom ajaxCall function

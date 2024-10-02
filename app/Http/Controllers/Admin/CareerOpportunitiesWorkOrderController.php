@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\CareerOpportunitiesOffer;
 use App\Models\CareerOpportunitiesWorkorder;
 use App\Models\CareerOpportunity;
 use Illuminate\Http\Request;
@@ -55,4 +56,9 @@ class CareerOpportunitiesWorkOrderController extends Controller
         // Logic to get and display catalog items
         return view('admin.workorder.index'); // Assumes you have a corresponding Blade view
     }    //
+    public function show($id)
+    {
+        $workorder = CareerOpportunitiesWorkorder::findOrFail($id);
+        return view('admin.workorder.view', compact('workorder'));
+    }
 }

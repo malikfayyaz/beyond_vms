@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\CareerOpportunitySubmission;
 use Yajra\DataTables\Facades\DataTables;
 
-class SubmissionController extends Controller
+class CareerOpportunitiesSubmissionController extends Controller
 {
     public function index(Request $request)
     {
@@ -23,8 +23,8 @@ class SubmissionController extends Controller
                 })
                 ->addColumn('hiring_manager_name', function($row) {
                     // Access the hiring manager through the careerOpportunity relationship
-                    return $row->careerOpportunity && $row->careerOpportunity->hiringManager 
-                        ? $row->careerOpportunity->hiringManager->full_name 
+                    return $row->careerOpportunity && $row->careerOpportunity->hiringManager
+                        ? $row->careerOpportunity->hiringManager->full_name
                         : 'N/A';
                 })
                 ->addColumn('location_name', function($row) {
@@ -37,7 +37,9 @@ class SubmissionController extends Controller
                     return $row->careerOpportunity ? $row->careerOpportunity->title : 'N/A';
                 })
                 ->addColumn('worker_type', function ($row) {
-                    return $row->workerType ? $row->workerType->title : 'N/A';
+                    return $row->careerOpportunity && $row->careerOpportunity->workerType
+                        ? $row->careerOpportunity->workerType->title
+                        : 'N/A';
                 })
                 ->addColumn('action', function($row) {
                     return '<a href="' . route('client.submission.show', $row->id) . '"
@@ -53,7 +55,7 @@ class SubmissionController extends Controller
     public function show($id)
     {
         $submission = CareerOpportunitySubmission::findOrFail($id);
-        
+
         // Return a view or other response with the submission details
         return view('client.submission.view', compact('submission'));
     }

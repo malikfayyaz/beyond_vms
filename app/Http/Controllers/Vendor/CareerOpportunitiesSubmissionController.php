@@ -17,7 +17,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Yajra\DataTables\Facades\DataTables;
 
-class SubmissionController extends Controller
+class CareerOpportunitiesSubmissionController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -50,7 +50,9 @@ class SubmissionController extends Controller
                     return $row->careerOpportunity ? $row->careerOpportunity->title : 'N/A';
                 })
                 ->addColumn('worker_type', function ($row) {
-                    return $row->workerType ? $row->workerType->title : 'N/A';
+                    return $row->careerOpportunity && $row->careerOpportunity->workerType
+                        ? $row->careerOpportunity->workerType->title
+                        : 'N/A';
                 })
                 ->addColumn('action', function($row) {
                     return '<a href="' . route('vendor.submission.show', $row->id) . '"
