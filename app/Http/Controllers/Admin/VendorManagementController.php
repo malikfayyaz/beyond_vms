@@ -13,6 +13,7 @@ use Spatie\Permission\Models\Role;
 use App\Models\Country;
 use App\Models\Vendor;
 use App\Models\User;
+use App\Models\VendorTeammember;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
 
@@ -87,7 +88,7 @@ class VendorManagementController extends Controller
         $validatedData = $request->validate([
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
-            'organization' => 'required|string|max:255',
+            // 'organization' => 'required|string|max:255',
             'phone' => 'nullable|string|max:20',
             'role' => 'required|exists:roles,id',
             'country' => 'required|exists:countries,id',
@@ -102,6 +103,23 @@ class VendorManagementController extends Controller
 
         $user = User::where('email', $request_email)->first();
 
+                $getParentvendor = Vendor::where('member_type', 0)
+                ->where('organization', $request->organization)
+                ->first();
+            
+            if (!empty($getParentvendor)) {
+                $organization = '';
+                $memberType = 3;
+                $parentVendorID = $getParentvendor->id;
+            } else {
+                $organization = $request->organization;
+                $parentVendorID = 0;
+                $memberType = 0;
+            }
+            $validatedData['member_type'] = $memberType;
+            $validatedData['parent_id'] =  $parentVendorID;
+            $validatedData['organization'] = $organization;
+            
         if ($user) {
             // Check if a vendor record already exists for this user
             $vendorRecord = Vendor::where('user_id', $user->id)->first();
@@ -114,7 +132,7 @@ class VendorManagementController extends Controller
                     'redirect_url' => route('admin.vendor-users.create') // Update redirect URL for vendors
                 ]);
             } else {
-
+                
                 $validatedData['user_id'] = $user->id;
                 $vendor = Vendor::create($validatedData);
 
@@ -123,6 +141,8 @@ class VendorManagementController extends Controller
                     $vendor->profile_image = $imagePath;
                     $vendor->save(); // Save after updating the profile image
                 }
+               
+
 
             }
         } else {
@@ -146,6 +166,16 @@ class VendorManagementController extends Controller
                 $vendor->save(); // Save after updating the profile image
             }
         }
+        $vendorteamMember = [
+            'vendor_id' => $parentVendorID,
+            'teammember_id' => $vendor->id,
+        ];
+        if (!empty($getParentvendor)) {
+            VendorTeammember::create($vendorteamMember);
+        }
+
+        
+
 
         $role = $validatedData['role'];
 
@@ -206,7 +236,6 @@ class VendorManagementController extends Controller
         $validatedData = $request->validate([
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
-            'organization' => 'required|string|max:255',
             'phone' => 'nullable|string|max:20',
             'role' => 'required|exists:roles,id',
             'country' => 'required|exists:countries,id',
@@ -221,7 +250,6 @@ class VendorManagementController extends Controller
         $vendor->update([
             'first_name' => $validatedData['first_name'],
             'last_name' => $validatedData['last_name'],
-            'organization' => $validatedData['organization'],
             'phone' => $validatedData['phone'],
             'country' => $validatedData['country'],
             'profile_status' => $validatedData['profile_status'],
