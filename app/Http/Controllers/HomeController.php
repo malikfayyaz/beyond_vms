@@ -34,7 +34,7 @@ class HomeController extends Controller
                 return redirect()->route(redirectToDashboard($role));
             }
             // Redirect to the appropriate dashboard based on the selected role
-            
+
         }
         return view('home');
     }

@@ -166,6 +166,7 @@ class CareerOpportunitiesController extends Controller
             $newOpportunity = $originalOpportunity->replicate();
             $newOpportunity->jobstep2_complete = '0';
             $newOpportunity->title = $originalOpportunity->title;
+            $newOpportunity->user_id = Auth::id();
             $newOpportunity->created_at = Carbon::now();
             $newOpportunity->updated_at = Carbon::now();
             $newOpportunity->save();

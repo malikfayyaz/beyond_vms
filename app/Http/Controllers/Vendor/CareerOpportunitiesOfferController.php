@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Vendor;
 
 use App\Http\Controllers\Controller;
 use App\Models\OfferWorkFlow;
+use App\Models\Vendor;
 use Illuminate\Support\Facades\Validator;
 use App\Models\CareerOpportunitiesOffer;
 use App\Models\CareerOpportunitySubmission;
@@ -115,9 +116,10 @@ class CareerOpportunitiesOfferController extends Controller
         // }
         $submission = CareerOpportunitySubmission::findOrFail($request->submissionid);
         $jobData = $submission->careerOpportunity;
+        $vendorId = Vendor::getVendorIdByUserId(\Auth::id());
         $mapedData = [
             "submission_id" =>$validatedData['submissionid'],
-            "vendor_id" =>$submission->vendor_id,
+            "vendor_id" =>$vendorId,
             "candidate_id" =>$submission->candidate_id,
             "hiring_manager_id" =>$validatedData['approvingManager'],
             "career_opportunity_id" =>$submission->career_opportunity_id,

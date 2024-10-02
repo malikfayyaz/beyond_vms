@@ -35,4 +35,9 @@ class Admin extends Model
     {
         return trim($this->first_name . ' ' . ($this->middle_name ?? '') . ' ' . $this->last_name);
     }
+    public static function getAdminIdByUserId($userId)
+    {
+        $admin = self::where('user_id', $userId)->first();
+        return $admin ? $admin->id : null;
+    }
 }

@@ -36,8 +36,8 @@ class CareerOpportunitiesSubmissionController extends Controller
                 })
                 ->addColumn('hiring_manager_name', function($row) {
                     // Access the hiring manager through the careerOpportunity relationship
-                    return $row->careerOpportunity && $row->careerOpportunity->hiringManager 
-                        ? $row->careerOpportunity->hiringManager->full_name 
+                    return $row->careerOpportunity && $row->careerOpportunity->hiringManager
+                        ? $row->careerOpportunity->hiringManager->full_name
                         : 'N/A';
                 })
                 ->addColumn('location_name', function($row) {
@@ -76,8 +76,8 @@ class CareerOpportunitiesSubmissionController extends Controller
                 ->orWhereIn('vendor_id', [\Auth::id()])
                 ->first();
                 $markupValue = $markup ? $markup->markup_value : 0;
-        $location = Location::byStatus();  
-        // dd($countries);     
+        $location = Location::byStatus();
+        // dd($countries);
         $vendor = Vendor::where('user_id', \Auth::id())->first();
         return view('vendor.submission.create',[
             'career_opportunity'=>$career_opportunity,
@@ -90,7 +90,7 @@ class CareerOpportunitiesSubmissionController extends Controller
      */
     public function store(Request $request)
     {
-        
+
         // Define your validation rules
         $rules = [
             'candidateType' => 'required|integer',
@@ -121,7 +121,7 @@ class CareerOpportunitiesSubmissionController extends Controller
             'virtualRemoteCandidate' => 'required|in:yes,no',
             'rightToRepresent' => 'required|in:yes,no',
             'virtualCity' => 'nullable|required_if:workedForGallagher,Yes',
-            
+
             'availToInterviewNotes' => 'nullable|string',
             'comment' => 'nullable|string',
             'jobId' => 'required|integer',
@@ -149,8 +149,8 @@ class CareerOpportunitiesSubmissionController extends Controller
 
         // Validate the request
         $validator = Validator::make($request->all(), $rules, $messages);
-            
-        
+
+
         // dd($validator );
         // If validation fails, return JSON response with errors
         if ($validator->fails()) {
@@ -159,22 +159,22 @@ class CareerOpportunitiesSubmissionController extends Controller
                 'errors' => $validator->errors(),
             ], 422); // 422 Unprocessable Entity status
         }
-        $consultant = $request->filled('candidateSelection') 
+        $consultant = $request->filled('candidateSelection')
         ?Consultant::where('user_id', $request->candidateSelection)->first()
         : new Consultant();
         // Handle the file upload for resume, use the existing resume if it's not uploaded
-        $resume = $request->hasFile('resumeUpload') 
-        ? handleFileUpload($request, 'resumeUpload', 'candidate_resume') 
+        $resume = $request->hasFile('resumeUpload')
+        ? handleFileUpload($request, 'resumeUpload', 'candidate_resume')
         : ($consultant->resume ?? null);
 
         // Handle the file upload for additional documents, use the existing document if it's not uploaded
-        $additional_doc = $request->hasFile('additionaldoc') 
-        ? handleFileUpload($request, 'additionaldoc', 'candidate_additional_doc') 
+        $additional_doc = $request->hasFile('additionaldoc')
+        ? handleFileUpload($request, 'additionaldoc', 'candidate_additional_doc')
         : ($consultant->additional_document ?? null);
-     
-        
+
+
         $mappedData = $this->mapConsultantData($validator->validated(), $consultant, $request,$resume, $additional_doc);
-        
+
         // Define an array of fields that need to be processed
             $fieldsToProcess = [
                 'over_time',
@@ -197,15 +197,15 @@ class CareerOpportunitiesSubmissionController extends Controller
         }
 
         // Assign processed values to individual variables, if needed
-       
+
 
          $submission = new CareerOpportunitySubmission();
-    
+
          $submission_resume =  handleFileUpload($request, 'resumeUpload', 'submission_resume');
- 
+
          // Handle the file upload for additional documents, use the existing document if it's not uploaded
          $submission_additional_doc =  handleFileUpload($request, 'additionaldoc', 'submission_additional_doc');
-      
+
          $mappedSubmissionData = $this->mapSubmissionData($validator->validated(), $submission, $request,$processedValues,$mappedData,$submission_resume, $submission_additional_doc);
          $submissionCreate = CareerOpportunitySubmission::create( $mappedSubmissionData );
          session()->flash('success', 'Submission saved successfully!');
@@ -214,7 +214,7 @@ class CareerOpportunitiesSubmissionController extends Controller
                     'message' => 'Submission saved successfully!',
                     'redirect_url' => route('vendor.career-opportunities.index') // Redirect back URL for AJAX
                 ]);
-        }   
+        }
 
 
     /**
@@ -223,7 +223,7 @@ class CareerOpportunitiesSubmissionController extends Controller
     public function show($id)
     {
         $submission = CareerOpportunitySubmission::findOrFail($id);
-        
+
         // Return a view or other response with the submission details
         return view('vendor.submission.view', compact('submission'));
     }
@@ -254,10 +254,11 @@ class CareerOpportunitiesSubmissionController extends Controller
 
     protected function mapConsultantData(array $validatedData, $consultant, $request,$resume, $additional_doc)
     {
+        $vendorId = Vendor::getVendorIdByUserId(\Auth::id());
         $user = User::where('email', $validatedData['candidateEmail'])->first();
         if (!$user) {
-        
-            $user = new User;      
+
+            $user = new User;
             $user->name = $validatedData['candidateFirstName'].' '.$validatedData['candidateMiddleName'].' '.$validatedData['candidateLastName'];
             $user->email = $validatedData['candidateEmail'];
             $user->password = Hash::make('password');
@@ -265,7 +266,7 @@ class CareerOpportunitiesSubmissionController extends Controller
 
             $user->save();
         }
-        
+
         $mappedData = [
             'first_name' => $validatedData['candidateFirstName'],
             'middle_name' => $validatedData['candidateMiddleName'],
@@ -273,7 +274,7 @@ class CareerOpportunitiesSubmissionController extends Controller
             'dob' =>  Carbon::createFromFormat('d/m/Y', $validatedData['dobDate'])->format('Y-m-d'),
             'national_id' =>$validatedData['lastFourNationalId'],
             // 'email' =>$validatedData['candidateEmail'],
-            'vendor_id' =>\Auth::id(),
+            'vendor_id' =>$vendorId,
             'unique_id'=>generateUniqueUserCode(),
             'resume'=>$resume,
             'gender' =>$validatedData['gender'],
@@ -286,7 +287,6 @@ class CareerOpportunitiesSubmissionController extends Controller
         ];
         // Check if the consultant with the given user_id already exists
             $consultantModel = Consultant::where('user_id', $user->id)->first();
-
             if ($consultantModel) {
                 // Update the existing consultant record
                 $consultantModel->update($mappedData);
@@ -300,6 +300,7 @@ class CareerOpportunitiesSubmissionController extends Controller
 
     protected function mapSubmissionData(array $validatedData, $submission, $request,$processedValues,$consultantModel,$submission_resume, $submission_additional_doc)
     {
+        $vendorId = Vendor::getVendorIdByUserId(\Auth::id());
         $over_time= $processedValues['over_time'] ?? null;
         $payrate = $processedValues['payRate'] ?? null;
         $bill_rate = $processedValues['billRate'] ?? null;
@@ -309,14 +310,14 @@ class CareerOpportunitiesSubmissionController extends Controller
         $client_over_time_rate = $processedValues['client_over_time_rate'] ?? null;
         $client_double_time_rate = $processedValues['client_double_time_rate'] ?? null;
         return [
-            'created_by_user' => \Auth::id(),
+            'created_by_user' => $vendorId,
             'candidate_id' => $consultantModel,
             'career_opportunity_id' => $validatedData['jobId'],
             'location_id' =>  $validatedData['workLocation'],
             'current_location'=>$validatedData['candidateHomeCity'],
             'category_id' =>$validatedData['category_id'],
             'markup' =>$validatedData['vendorMarkup'],
-            'vendor_id' =>\Auth::id(),
+            'vendor_id' =>$vendorId,
             'actuall_markup' =>$validatedData['adjustedMarkup'],
             'vendor_bill_rate' =>$vendor_bill_rate,
             'candidate_pay_rate' =>$payrate,
@@ -332,18 +333,18 @@ class CareerOpportunitiesSubmissionController extends Controller
             'capacity' =>$validatedData['gallagherCapacity'],
             'willing_relocate' =>$validatedData['willingToCommute'],
             'emp_msp_account_mngr' =>$validatedData['supplierAccountManager'],
-            'start_date' =>!empty($validatedData['gallagherStartDate']) 
+            'start_date' =>!empty($validatedData['gallagherStartDate'])
             ? Carbon::createFromFormat('d/m/Y', $validatedData['gallagherStartDate'])->format('Y-m-d')
             : null,
-            'end_date' => !empty($validatedData['gallagherLastDate']) 
-                ? Carbon::createFromFormat('d/m/Y', $validatedData['gallagherLastDate'])->format('Y-m-d') 
+            'end_date' => !empty($validatedData['gallagherLastDate'])
+                ? Carbon::createFromFormat('d/m/Y', $validatedData['gallagherLastDate'])->format('Y-m-d')
                 : null,
 
-            'estimate_start_date' => !empty($validatedData['availableDate']) 
-                ? Carbon::createFromFormat('d/m/Y', $validatedData['availableDate'])->format('Y-m-d') 
+            'estimate_start_date' => !empty($validatedData['availableDate'])
+                ? Carbon::createFromFormat('d/m/Y', $validatedData['availableDate'])->format('Y-m-d')
                 : null,
             'virtual_city'=>$validatedData['virtualCity'],
-            'resume'=>$submission_resume,       
+            'resume'=>$submission_resume,
             'optional_document' =>$submission_additional_doc,
             'comment'=>$validatedData['comment'],
             'notes'=>$validatedData['availToInterviewNotes'],

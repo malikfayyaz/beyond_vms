@@ -28,5 +28,10 @@ class Vendor extends Model
     {
         return $this->belongsTo(User::class, 'user_id');
     }
+    public static function getVendorIdByUserId($userId)
+    {
+        $vendor = self::where('user_id', $userId)->first();
+        return $vendor ? $vendor->id : null;
+    }
 
 }
