@@ -119,6 +119,7 @@ class VendorManagementController extends Controller
             $validatedData['member_type'] = $memberType;
             $validatedData['parent_id'] =  $parentVendorID;
             $validatedData['organization'] = $organization;
+            
         if ($user) {
             // Check if a vendor record already exists for this user
             $vendorRecord = Vendor::where('user_id', $user->id)->first();
@@ -235,7 +236,6 @@ class VendorManagementController extends Controller
         $validatedData = $request->validate([
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
-            'organization' => 'required|string|max:255',
             'phone' => 'nullable|string|max:20',
             'role' => 'required|exists:roles,id',
             'country' => 'required|exists:countries,id',
@@ -250,7 +250,6 @@ class VendorManagementController extends Controller
         $vendor->update([
             'first_name' => $validatedData['first_name'],
             'last_name' => $validatedData['last_name'],
-            'organization' => $validatedData['organization'],
             'phone' => $validatedData['phone'],
             'country' => $validatedData['country'],
             'profile_status' => $validatedData['profile_status'],
