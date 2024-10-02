@@ -12,7 +12,7 @@ class Vendor extends Model
     use HasFactory;
 
     protected $fillable = [
-        'first_name', 'last_name', 'phone', 'role_id', 'country', 'status','profile_status', 'profile_image', 'member_access','user_id'
+        'first_name', 'last_name', 'phone', 'role_id', 'country', 'status','profile_status', 'profile_image', 'member_access','user_id','organization',
     ];
 
     public function getFullNameAttribute()
