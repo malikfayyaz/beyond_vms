@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Vendor;
 
 use App\Http\Controllers\Controller;
+use App\Models\OfferWorkFlow;
 use Illuminate\Support\Facades\Validator;
 use App\Models\CareerOpportunitiesOffer;
 use App\Models\CareerOpportunitySubmission;
@@ -38,7 +39,7 @@ class CareerOpportunitiesOfferController extends Controller
                 ->addColumn('wo_status', function($row) {
                     return  '';
                 })->addColumn('worker_type', function($row) {
-                    return $row->careerOpportunity && $row->careerOpportunity->workerType 
+                    return $row->careerOpportunity && $row->careerOpportunity->workerType
                         ? $row->careerOpportunity->workerType->title
                         : 'N/A';
                 })
@@ -80,17 +81,17 @@ class CareerOpportunitiesOfferController extends Controller
             'doubleRate' => 'nullable',
             'overTimeCandidate' => 'nullable',
             'doubleTimeCandidate' => 'nullable',
-        
+
         ];
 
         $messages = [
-        
+
             // Add more custom messages as needed
         ];
 
         $validator = Validator::make($request->all(), $rules, $messages);
-        
-        
+
+
         // dd($validator );
         // If validation fails, return JSON response with errors
         if ($validator->fails()) {
@@ -104,7 +105,7 @@ class CareerOpportunitiesOfferController extends Controller
         ->whereIn('status', [4, 1])
         ->first();
         // if($existingOffer){
-            
+
         //     session()->flash('success', 'Offer already exist!');
         //     return response()->json([
         //         'success' => true,
@@ -134,9 +135,9 @@ class CareerOpportunitiesOfferController extends Controller
 
             "remote_option" =>$validatedData['remote'],
             // "notes" =>$validatedData['notes'],
-            "start_date" =>!empty($validatedData['startDate']) 
+            "start_date" =>!empty($validatedData['startDate'])
             ? Carbon::createFromFormat('Y/m/d', $validatedData['startDate'])->format('Y-m-d')  : null,
-            "end_date" =>!empty($validatedData['endDate']) 
+            "end_date" =>!empty($validatedData['endDate'])
             ? Carbon::createFromFormat('Y/m/d', $validatedData['endDate'])->format('Y-m-d')  : null,
         ];
         $offerCreate = CareerOpportunitiesOffer::create( $mapedData );
@@ -155,8 +156,9 @@ class CareerOpportunitiesOfferController extends Controller
     // Show a specific career opportunity offer
     public function show($id)
     {
+        $workflows = OfferWorkFlow::where('offer_id', $id)->get();
         $offer = CareerOpportunitiesOffer::findOrFail($id);
-        return view('vendor.offer.view', compact('offer'));
+        return view('vendor.offer.view', compact('offer', 'workflows'));
     }
 
     // accept career opportunity offer in the database
@@ -191,7 +193,7 @@ class CareerOpportunitiesOfferController extends Controller
 
             // }
         }
-       
+
     }
 
     public function updateOtherRecords($offer)
@@ -240,7 +242,7 @@ class CareerOpportunitiesOfferController extends Controller
         // dd($offerModel->start_date);
         $workOrder = new CareerOpportunitiesWorkorder;
 
-      
+
         //$total_msp_fee = RatesUtility::returnMspFee($jobData);
 
         $workOrder->offer_id = $offerModel->id;
@@ -276,7 +278,7 @@ class CareerOpportunitiesOfferController extends Controller
         $workOrder->hiring_manager_id = $jobModel->hiring_manager;
         $workOrder->expenses_allowed = $jobModel->expenses_allowed;
         $workOrder->division_id = $jobModel->division_id;
-     
+
         if($workOrder->save()){
             calculateWorkorderEstimates($workOrder,$jobModel);
         }

@@ -69,6 +69,13 @@
                       </tr>
                       </thead>
                       <tbody class="divide-y divide-gray-200">
+                      @if($workflows->isEmpty())
+                          <tr>
+                              <td colspan="9" class="py-4 px-4 text-center text-sm text-gray-600">
+                                  No workflows available.
+                              </td>
+                          </tr>
+                      @else
                       @foreach($workflows as $index => $workflow)
                           <tr>
                               <td class="py-4 px-4 text-center text-sm">{{ $index + 1 }}</td>
@@ -89,6 +96,7 @@
                               </td>
                           </tr>
                       @endforeach
+                      @endif
                       </tbody>
                     </table>
                   </div>
