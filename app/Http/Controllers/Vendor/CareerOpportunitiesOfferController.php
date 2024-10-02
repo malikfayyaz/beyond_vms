@@ -160,6 +160,7 @@ class CareerOpportunitiesOfferController extends Controller
     {
         $workflows = OfferWorkFlow::where('offer_id', $id)->get();
         $offer = CareerOpportunitiesOffer::findOrFail($id);
+
         return view('vendor.offer.view', compact('offer', 'workflows'));
     }
 
