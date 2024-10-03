@@ -29,7 +29,7 @@ class CareerOpportunitiesOfferController extends Controller
                     return $row->careerOpportunity ? $row->careerOpportunity->title . '('.$row->careerOpportunity->id.')' : 'N/A';
                 })
                 ->addColumn('hiring_manger', function($row) {
-                    return $row->careerOpportunity->hiringManager ? $row->careerOpportunity->hiringManager->fullname : 'N/A';
+                    return $row->hiringManager ? $row->hiringManager->fullname : 'N/A';
                 })
                 ->addColumn('vendor_name', function($row) {
                     return $row->vendor ? $row->vendor->full_name : 'N/A';

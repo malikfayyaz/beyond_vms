@@ -5,7 +5,7 @@
     @include('admin.layouts.partials.dashboard_side_bar')
     <div class="ml-16">
         @include('admin.layouts.partials.header')
-        <div class="bg-white mx-4 my-8 rounded p-8" x-data="accountManager()">
+        <div class="bg-white mx-4 my-8 rounded p-8" x-data="accountManager({{ $editIndex ?? 'null' }})">
             @include('admin.layouts.partials.alerts') <!-- Include the partial view -->
 
             <div class="container mx-auto p-4">
@@ -14,10 +14,10 @@
                         <label class="block mb-2">Client <span class="text-red-500">*</span></label>
                         <input
                             type="text"
-                            x-model="client" 
+                            x-model="formData.clientName" 
                             class="w-full p-2 border rounded h-10 bg-gray-200 text-gray-500"
                             :disabled="true"
-                            :placeholder="clientName" 
+                            :placeholder="formData.clientName" 
                         >
                     </div>
 
@@ -27,12 +27,13 @@
                             id="arroval_role"
                             name="arroval_role"
                             class="w-full p-2 border rounded h-10 bg-white"
-                            x-model="arroval_role"
+                            x-model="formData.arroval_role"
                         >
                             <option value="" disabled>Select Approval Role</option>
-                            @foreach ($roles as $role)
-                                <option value="{{ $role->id }}">{{ $role->name }}</option>
+                            @foreach ($roles as $key => $value)
+                                <option value="{{ $key }}">{{ $value }}</option>
                             @endforeach
+                           
                         </select>
                         <p class="text-red-500 text-sm mt-1" x-text="arroval_roleError"></p>
                     </div>
@@ -47,7 +48,7 @@
                             id="hiring_manager"
                             name="hiring_manager"
                             class="w-full p-2 border rounded h-10 bg-white"
-                            x-model="hiring_manager"
+                            x-model="formData.hiring_manager"
                         >
                             <option value="" disabled>Select Hiring Manager</option>
                             @foreach ($clients as $client)
@@ -59,7 +60,7 @@
 
                     <div class="w-1/2 mt-2 pr-2">
                         <label for="approval_req" class="block mb-2">Approval Required <span class="text-red-500">*</span></label>
-                        <select id="approval_req" x-model="approval_req" class="w-full p-2 border rounded h-10">
+                        <select id="approval_req" x-model="formData.approval_req" class="w-full p-2 border rounded h-10">
                             <option value="" disabled selected>Select Approval Required</option>
                             <option value="yes">Yes</option>
                             <option value="no">No</option>
@@ -73,88 +74,106 @@
                         @click="submitData()"
                         class="bg-blue-500 text-white px-4 py-2 rounded mr-2"
                     >
-                       Create
+                       
+                        @if(isset($editMode) && $editMode)
+                        Update 
+                        @else
+                            Create 
+                        @endif
                     </button>
                 </div>
+                <div x-data="{ editMode: {{ json_encode($editMode) }} }">
+                    <div class="mb-4" x-show="!editMode">
+                        <input
+                            type="text"
+                            placeholder="Search Client"
+                            class="w-full p-2 border rounded"
+                            x-model="searchTerm"
+                        />
+                    </div>
 
-                <div class="mb-4">
-                    <input
-                        type="text"
-                        placeholder="Search Client"
-                        class="w-full p-2 border rounded"
-                        x-model="searchTerm"
-                    />
+                    <table class="w-full border-collapse border" x-show="!editMode">
+                        <thead>
+                            <tr>
+                                <th class="border p-2">Sr #</th>
+                                <th class="border p-2">Client</th>
+                                <th class="border p-2">Approval Role</th>
+                                <th class="border p-2">Hiring Manager</th>
+                                <th class="border p-2">Approval Required</th>
+                                <th class="border p-2">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        @foreach ($table_data as $data)
+                            <tr>
+                                <td class="border p-2">{{ $loop->index + 1 }}</td>
+                                <td class="border p-2">{{ $data->client->full_name ?? 'N/A' }}</td>
+                                <td class="border p-2">{{ $data->approvalRole->title ?? 'N/A' }}</td>
+                                <td class="border p-2">{{ $data->hiringManager->full_name ?? 'N/A' }}</td>
+                                <td class="border p-2">{{ $data->approval_required == "yes" ? "Yes" : "No" ?? 'N/A' }}</td>
+                                <td class="border p-2">
+                                    <span @click="editItem({{ json_encode($data) }})" class="text-gray-600 cursor-pointer">
+                                        <a href="{{route('admin.workflow.edit', $data->id)}}"
+                                        class="text-green-500 hover:text-green-700 mr-2 bg-transparent hover:bg-transparent"
+                                        >
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                    </span>
+                                </td>
+                            </tr>
+                        @endforeach
+                        </tbody>
+                    </table>
                 </div>
-
-                <table class="w-full border-collapse border">
-                    <thead>
-                        <tr>
-                            <th class="border p-2">Sr #</th>
-                            <th class="border p-2">Client</th>
-                            <th class="border p-2">Approval Role</th>
-                            <th class="border p-2">Hiring Manager</th>
-                            <th class="border p-2">Approval Required</th>
-                            <!-- <th class="border p-2">Action</th> -->
-                        </tr>
-                    </thead>
-                    <tbody>
-                    @foreach ($table_data as $data)
-                        <tr>
-                            <td class="border p-2 text-center">{{ $loop->index + 1 }}</td>
-                            <td class="border p-2 text-center">{{ $data->client->full_name ?? 'N/A' }}</td>
-                            <td class="border p-2 text-center">{{ $data->approvalRole->name ?? 'N/A' }}</td>
-                            <td class="border p-2 text-center">{{ $data->hiringManager->full_name ?? 'N/A' }}</td>
-                            <td class="border p-2 text-center">{{ $data->approval_required ?? 'N/A' }}</td>
-                            <!-- <td class="border p-2 text-center">
-                                <span @click="editItem({{ json_encode($data) }})" class="text-gray-600 cursor-pointer">
-                                    <i class="fa-regular fa-pen-to-square"></i>
-                                </span>
-                            </td> -->
-                        </tr>
-                    @endforeach
-                    </tbody>
-                </table>
             </div>
         </div>
     </div>
 
     <script>
-    function accountManager() {
+    function accountManager(editIndex) {
         return {
-            clientId: "{{ $client_data->id }}", // Store client ID
-            clientName: "{{ $client_data->full_name }}", 
-            client: "",
-            arroval_role: "",
-            hiring_manager: "",
-            approval_req: "",
+            formData: {
+                clientId: "{{ $client_data->id }}", // Store client ID
+                clientName: "{{ $client_data->full_name }}", 
+                client: '{{ old('client', $workflow->client_id ?? '') }}',
+                arroval_role: '{{ old('arroval_role', $workflow->approval_role_id ?? '') }}',
+                hiring_manager: '{{ old('hiring_manager', $workflow->hiring_manager_id ?? '') }}',
+                approval_req: '{{ old('approval_req', $workflow->approval_required ?? '') }}',
+            },
+            // clientId: "{{ $client_data->id }}", // Store client ID
+            // clientName: "{{ $client_data->full_name }}", 
+            // client: "",
+            // arroval_role: "",
+            // hiring_manager: "",
+            // approval_req: "",
 
             arroval_roleError: "",
             hiring_managerError: "",
             approval_reqError: "",
             // items: @json($table_data), // Initialize items with tableData
-            
+            editIndex: editIndex,
             searchTerm: "",
-            editIndex: null,
+            // editIndex: null,
             error: 0,
             currentUrl: `{{ url()->current() }}`,
 
             validateFields() {
                 this.error = 0; 
-                if (this.arroval_role.trim() === "") {
+                if (this.formData.arroval_role.trim() === "") {
                     this.arroval_roleError = `Please select an Approval Role`;
                     this.error += 1;
                 } else {
                     this.arroval_roleError = "";
                 }
 
-                if (this.hiring_manager.trim() === "") {
+                if (this.formData.hiring_manager.trim() === "") {
                     this.hiring_managerError = `Please select a Hiring Manager`;
                     this.error += 1;
                 } else {
                     this.hiring_managerError = "";
                 }
 
-                if (this.approval_req.trim() === "") {
+                if (this.formData.approval_req.trim() === "") {
                     this.approval_reqError = `Please select an Approval Status`;
                     this.error += 1;
                 } else {
@@ -166,15 +185,23 @@
                 this.validateFields();
                 if (this.error === 0) {
                     let formData = new FormData();  // Prepare the form data
-                    let url = '{{ route('admin.workflow.store') }}';
-                    
                     // Add your form data (you can add more if needed)
-                    formData.append('client_id', this.clientId);
-                    formData.append('approval_role_id', this.arroval_role);
-                    formData.append('hiring_manager_id', this.hiring_manager);
-                    formData.append('approval_required', this.approval_req);
+                    formData.append('client_id', this.formData.clientId);
+                    formData.append('approval_role_id', this.formData.arroval_role);
+                    formData.append('hiring_manager_id', this.formData.hiring_manager);
+                    formData.append('approval_required', this.formData.approval_req);
+                    console.log(this.formData.approval_req);
+                    let url = '{{ route('admin.workflow.store') }}';
+                    if (this.editIndex !== null) {
+                        
+                        url = '{{ route("admin.workflow.update", ":id") }}'; // Update URL
+                        url = url.replace(':id', editIndex); // Replace placeholder with actual ID
+                        formData.append('_method', 'PUT'); // Laravel expects PUT method for updates
+                    };
+                    // console.log(url);
+
                     ajaxCall(url, 'POST', [[this.onSuccess, ['response']]], formData);
-                    this.cancelEdit();
+                    // this.cancelEdit();
                 }
             },
 

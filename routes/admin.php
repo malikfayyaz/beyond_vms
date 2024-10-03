@@ -101,11 +101,11 @@ Route::middleware(['user_role:admin'])->group(function () {
         Route::post('division-load', [CatalogController::class, 'divisionLoad'])->name('division_load');
         Route::post('job-rates', [RatesController::class, 'jobRates'])->name('job_rates');
 
-        Route::match(['get', 'post'], 'workflow', [GenericDataController::class, 'workflow'])->name('workflow');
 
         // offer
         Route::get('offer/{id}/create', [CareerOpportunitiesOfferController::class, 'create'])->name('offer.create');
         Route::post('offer/store', [CareerOpportunitiesOfferController::class, 'store'])->name('offer.store');
+        Route::post('offer/offerworkflowAccept', [CareerOpportunitiesOfferController::class, 'offerworkflowAccept'])->name('offer.offerworkflowAccept');
         Route::get('offer/index', [CareerOpportunitiesOfferController::class, 'index'])->name('offer.index');
         Route::get('offer/{id}', [CareerOpportunitiesOfferController::class, 'show'])->name('offer.show');
         Route::get('offer/view/{id}', [CareerOpportunitiesOfferController::class, 'show'])->name('offer.show');
@@ -114,10 +114,15 @@ Route::middleware(['user_role:admin'])->group(function () {
         Route::post('workorder/store', [\App\Http\Controllers\Admin\CareerOpportunitiesWorkOrderController::class, 'store'])->name('workorder.store');
         Route::get('workorder/index', [\App\Http\Controllers\Admin\CareerOpportunitiesWorkOrderController::class, 'index'])->name('workorder.index');
         Route::get('workorder/view/{id}', [\App\Http\Controllers\Admin\CareerOpportunitiesWorkOrderController::class, 'show'])->name('workorder.show');
+      
         //workflow
-        Route::match(['get', 'post'], 'workflow/edit/{id}', [GenericDataController::class, 'workflowEdit'])->name('workflow.edit');
-        Route::match(['get', 'post'], 'workflow/store', [GenericDataController::class, 'workflowStore'])->name('workflow.store');
-        //submission
+       Route::match(['get', 'post'], 'workflow', [GenericDataController::class, 'workflow'])->name('workflow');
+       Route::match(['get', 'post'], 'workflow/create/{id}', [GenericDataController::class, 'workflowCreate'])->name('workflow.create');
+       Route::match(['get', 'post'], 'workflow/store', [GenericDataController::class, 'workflowStore'])->name('workflow.store');
+       Route::match(['get', 'post'], 'workflow/edit/{id}', [GenericDataController::class, 'workflowEdit'])->name('workflow.edit');
+       Route::put('workflow/{id}/update', [GenericDataController::class, 'workflowUpdate'])->name('workflow.update');
+      
+       //submission
         Route::match(['get', 'post'], 'submission/index', [CareerOpportunitiesSubmissionController::class, 'index'])->name('submission.index');
         Route::get('submission/{id}', [CareerOpportunitiesSubmissionController::class, 'show'])->name('submission.show');
 

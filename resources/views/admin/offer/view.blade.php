@@ -33,184 +33,228 @@
                   </div>
                 </div>
               </div> -->
-              <div  x-data="{
-                openModal: false,
-                currentRowId: null
-              }"
-                class="p-[30px] rounded border mt-4"
-                :style="{'border-color': 'var(--primary-color)'}"
-              >
-                <div class="mb-4 flex items-center gap-2">
-                  <i
-                    class="fa-regular fa-square-check"
-                    :style="{'color': 'var(--primary-color)'}"
-                  ></i>
-                  <h2
-                    class="text-xl font-bold"
-                    :style="{'color': 'var(--primary-color)'}"
-                  >
-                    Offer Workflow
-                  </h2>
-                </div>
-                <div class="bg-white shadow rounded-lg">
-                  <div class="overflow-hidden">
-                  <table class="w-full">
-                      <thead>
-                      <tr class="bg-gray-50 text-left">
-                          <th class="py-4 px-4 text-center font-semibold text-sm text-gray-600">S.NO</th>
-                          <th class="py-4 px-4 text-center font-semibold text-sm text-gray-600">Approver Name</th>
-                          <th class="py-4 px-4 text-center font-semibold text-sm text-gray-600">Approver Type</th>
-                          <th class="py-4 px-4 text-center font-semibold text-sm text-gray-600">Approved/Rejected By</th>
-                          <th class="py-4 px-4 text-center font-semibold text-sm text-gray-600">Approved/Rejected Date & Time</th>
-                          <th class="py-4 px-4 text-center font-semibold text-sm text-gray-600">Approval Notes</th>
-                          <th class="py-4 px-4 text-center font-semibold text-sm text-gray-600">Approval Document</th>
-                          <th class="py-4 px-4 text-center font-semibold text-sm text-gray-600">Status</th>
-                          <th class="py-4 px-4 text-center font-semibold text-sm text-gray-600">Action</th>
-                      </tr>
-                      </thead>
-                      <tbody class="divide-y divide-gray-200">
-                      @if($workflows->isEmpty())
-                          <tr>
-                              <td colspan="9" class="py-4 px-4 text-center text-sm text-gray-600">
-                                  No workflows available.
-                              </td>
-                          </tr>
-                      @else
-                      @foreach($workflows as $index => $workflow)
-                          <tr>
-                              <td class="py-4 px-4 text-center text-sm">{{ $index + 1 }}</td>
-                              <td class="py-4 px-4 text-center text-sm">{{ $workflow->hiringManager->full_name }}</td>
-                              <td class="py-4 px-4 text-center text-sm">{{ $workflow->approve_reject_type }}</td>
-                              <td class="py-4 px-4 text-center text-sm">{{ $workflow->approve_reject_by ?? 'N/A' }}</td>
-                              <td class="py-4 px-4 text-center text-sm">{{ $workflow->approved_datetime ?? 'N/A' }}</td>
-                              <td class="py-4 px-4 text-center text-sm">{{ $workflow->approval_notes ?? 'N/A' }}</td>
-                              <td class="py-4 px-4 text-center text-sm">{{ $workflow->approval_doc ?? 'N/A' }}</td>
-                              <td class="py-4 px-4 text-center text-sm">{{ $workflow->status }}</td>
-                              <td class="py-4 px-4 text-center text-sm">
-                                  @if($workflow->hiringManager->user_id == auth()->user()->id && $workflow->status == 'Pending')
-                                      <button
-                                          @click="openModal = true; currentRowId = {{ $workflow->id }}"
-                                          class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                                      >
-                                          Accept
-                                      </button>
-                                  @endif
-                              </td>
-                          </tr>
-                      @endforeach
-                      @endif
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-                  <!-- Modal -->
-                <!-- Modal -->
-                <div
-                  x-show="openModal"
-                  @click.away="openModal = false"
-                  class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full"
-                  x-transition:enter="transition ease-out duration-300"
-                  x-transition:enter-start="opacity-0"
-                  x-transition:enter-end="opacity-100"
-                  x-transition:leave="transition ease-in duration-300"
-                  x-transition:leave-start="opacity-100"
-                  x-transition:leave-end="opacity-0"
+                <!--    submitForm() {
+                        if (this.validateForm()) {
+                            console.log('Form submitted successfully');
+                            this.openModal = false;
+                        }
+                    },-->
+
+                <div x-data="{
+    openModal: false,
+    currentRowId: null,
+    reason: '',
+    note: '',
+    errors: {},
+    validateForm() {
+        this.errors = {};
+<!--        if (!this.reason) this.errors.reason = 'Please select a reason';-->
+        if (!this.note.trim()) this.errors.note = 'Please enter a note';
+        return Object.keys(this.errors).length === 0;
+    },
+
+    submitForm() {
+    console.log('Form submitted successfully');
+    const isValid = this.validateForm();
+    if (isValid) {
+        console.log('here');
+
+        // Create FormData object
+        const formData = new FormData();
+        formData.append('rowId', this.currentRowId); // Use currentRowId for identification
+<!--        formData.append('reason', this.reason);-->
+        formData.append('note', this.note);
+
+        // Get the file input element and append the file if it exists
+        const fileInput = document.getElementById('jobAttachment');
+        if (fileInput.files.length > 0) {
+            formData.append('jobAttachment', fileInput.files[0]); // Append the first selected file
+        }
+        // Call the AJAX function
+                        const url = '/admin/offer/offerworkflowAccept';
+                ajaxCall(url,'POST', [[onSuccess, ['response']]], formData);
+    } else {
+        console.log('Form validation failed');
+    }
+},
+
+
+
+
+    clearError(field) {
+        delete this.errors[field];
+    }
+}"
+                     class="p-[30px] rounded border mt-4"
+                     :style="{'border-color': 'var(--primary-color)'}"
                 >
-                  <div
-                    class="relative top-20 mx-auto p-5 border w-[600px] shadow-lg rounded-md bg-white"
-                    @click.stop
-                  >
-                    <!-- Header -->
-                    <!-- Header -->
-                    <div class="flex items-center justify-between border-b p-4">
-                      <h2
-                        class="text-xl font-semibold"
-                        :id="$id('modal-title')"
-                      >
-                        Reject Candidate
-                      </h2>
-                      <button
-                        @click="openModal = false"
-                        class="text-gray-400 hover:text-gray-600 bg-transparent hover:bg-transparent"
-                      >
-                        &times;
-                      </button>
+                    <div class="mb-4 flex items-center gap-2">
+                        <i
+                            class="fa-regular fa-square-check"
+                            :style="{'color': 'var(--primary-color)'}"
+                        ></i>
+                        <h2
+                            class="text-xl font-bold"
+                            :style="{'color': 'var(--primary-color)'}"
+                        >
+                            Offer Workflow
+                        </h2>
+                    </div>
+                    <div class="bg-white shadow rounded-lg">
+                        <div class="overflow-hidden">
+                            <table class="w-full">
+                                <thead>
+                                <tr class="bg-gray-50 text-left">
+                                    <th class="py-4 px-4 text-center font-semibold text-sm text-gray-600">S.NO</th>
+                                    <th class="py-4 px-4 text-center font-semibold text-sm text-gray-600">Approver Name</th>
+                                    <th class="py-4 px-4 text-center font-semibold text-sm text-gray-600">Approver Type</th>
+                                    <th class="py-4 px-4 text-center font-semibold text-sm text-gray-600">Approved/Rejected By</th>
+                                    <th class="py-4 px-4 text-center font-semibold text-sm text-gray-600">Approved/Rejected Date & Time</th>
+                                    <th class="py-4 px-4 text-center font-semibold text-sm text-gray-600">Approval Notes</th>
+                                    <th class="py-4 px-4 text-center font-semibold text-sm text-gray-600">Approval Document</th>
+                                    <th class="py-4 px-4 text-center font-semibold text-sm text-gray-600">Status</th>
+                                    <th class="py-4 px-4 text-center font-semibold text-sm text-gray-600">Action</th>
+                                </tr>
+                                </thead>
+                                <tbody class="divide-y divide-gray-200">
+                                @if($workflows->isEmpty())
+                                    <tr>
+                                        <td colspan="9" class="py-4 px-4 text-center text-sm text-gray-600">
+                                            No workflows available.
+                                        </td>
+                                    </tr>
+                                @else
+                                    @foreach($workflows as $index => $workflow)
+                                        <tr>
+                                            <td class="py-4 px-4 text-center text-sm">{{ $index + 1 }}</td>
+                                            <td class="py-4 px-4 text-center text-sm">{{ $workflow->hiringManager->full_name }}</td>
+                                            <td class="py-4 px-4 text-center text-sm">{{ $workflow->approve_reject_type }}</td>
+                                            <td class="py-4 px-4 text-center text-sm">{{ $workflow->approve_reject_by ?? 'N/A' }}</td>
+                                            <td class="py-4 px-4 text-center text-sm">{{ $workflow->approved_datetime ?? 'N/A' }}</td>
+                                            <td class="py-4 px-4 text-center text-sm">{{ $workflow->approval_notes ?? 'N/A' }}</td>
+                                            <td class="py-4 px-4 text-center text-sm">{{ $workflow->approval_doc ?? 'N/A' }}</td>
+                                            <td class="py-4 px-4 text-center text-sm">{{ $workflow->status }}</td>
+                                            <td class="py-4 px-4 text-center text-sm">
+                                                @if($workflow->hiringManager->user_id == auth()->user()->id && $workflow->status == 'Pending' && $workflow->email_sent == '1')
+                                                    <button
+                                                        @click="openModal = true; currentRowId = {{ $workflow->id }}"
+                                                        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                                                    >
+                                                        Accept
+                                                    </button>
+                                                @endif
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                @endif
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
 
-                    <!-- Content -->
-                    <div class="p-4">
-                      <form @submit.prevent="submitForm" id="generalformwizard">
-                        <div class="mb-4">
-                          <div class="mt-2 px-7 py-3">
-                            <p class="text-sm text-gray-500">
-                              You are about to accept the offer for row ID:
-                              <span x-text="currentRowId"></span>
-                            </p>
-                          </div>
-                          <label
-                            for="reason"
-                            class="block text-sm font-medium text-gray-700 mb-1"
-                          >
-                            Reason for Rejection
-                            <span class="text-red-500">*</span>
-                          </label>
-                          <select id="reason" class="w-full">
-                            <option value="">Select</option>
-                            <option value="1">Not qualified</option>
-                            <option value="2">Lack of experience</option>
-                            <option value="3">Poor communication skills</option>
-                            <option value="4">Overqualified</option>
-                          </select>
-                        </div>
-                        <div class="mb-4">
-                          <label
-                            for="note"
-                            class="block text-sm font-medium text-gray-700 mb-1"
-                          >
-                            Note <span class="text-red-500">*</span>
-                          </label>
-                          <textarea
-                            id="note"
-                            rows="4"
-                            class="w-full border border-gray-300 rounded-md shadow-sm"
-                          ></textarea>
-                        </div>
-                        <div class="mb-4">
-                          <label
-                            for="jobAttachment"
-                            class="block text-sm font-medium text-gray-700 mb-2"
-                            >Job Attachment</label
-                          >
-                          <input
-                            type="file"
-                            id="jobAttachment"
-                            name="jobAttachment"
-                            class="block w-full px-2 py-3 text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none"
-                          />
-                        </div>
-                      </form>
-                    </div>
+                    <!-- Modal -->
+                    <div
+                        x-show="openModal"
+                        @click.away="openModal = false"
+                        class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full"
+                        x-transition:enter="transition ease-out duration-300"
+                        x-transition:enter-start="opacity-0"
+                        x-transition:enter-end="opacity-100"
+                        x-transition:leave="transition ease-in duration-300"
+                        x-transition:leave-start="opacity-100"
+                        x-transition:leave-end="opacity-0"
+                    >
+                        <div
+                            class="relative top-20 mx-auto p-5 border w-[600px] shadow-lg rounded-md bg-white"
+                            @click.stop
+                        >
+                            <!-- Header -->
+                            <div class="flex items-center justify-between border-b p-4">
+                                <h2 class="text-xl font-semibold"><!--Reject--> Accept Candidate</h2>
+                                <button
+                                    @click="openModal = false"
+                                    class="text-gray-400 hover:text-gray-600 bg-transparent hover:bg-transparent"
+                                >
+                                    &times;
+                                </button>
+                            </div>
 
-                    <!-- Footer -->
-                    <div class="flex justify-end space-x-2 border-t p-4">
-                      <button
-                        type="button"
-                        @click="openModal = false"
-                        class="rounded-md bg-gray-200 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-300"
-                      >
-                        Close
-                      </button>
-                      <button
-                        type="button"
-                        class="rounded-md bg-green-500 px-4 py-2 text-sm font-medium text-white hover:bg-green-600"
-                      >
-                        Save
-                      </button>
+                            <!-- Content -->
+                            <div class="p-4">
+                                <form @submit.prevent="submitForm" id="generalformwizard">
+                                    <div class="mb-4">
+                                        <div class="mt-2 px-7 py-3">
+                                            <p class="text-sm text-gray-500">
+                                                You are about to accept the offer for Offer WorkFlow ID:
+                                                <span x-text="currentRowId"></span>
+                                            </p>
+                                        </div>
+                                        {{--                                        <label for="reason" class="block text-sm font-medium text-gray-700 mb-1">
+                                                                                    Reason for Rejection
+                                                                                    <span class="text-red-500">*</span>
+                                                                                </label>
+                                                                                <select id="reason" x-model="reason" @input="clearError('reason')" class="w-full">
+                                                                                    <option value="">Select</option>
+                                                                                    <option value="1">Not qualified</option>
+                                                                                    <option value="2">Lack of experience</option>
+                                                                                    <option value="3">Poor communication skills</option>
+                                                                                    <option value="4">Overqualified</option>
+                                                                                </select>
+                                                                                <p x-show="errors.reason" class="text-red-500 text-sm mt-1" x-text="errors.reason"></p>
+                                                                            </div>--}}
+                                    <div class="mb-4">
+                                        <label for="note" class="block text-sm font-medium text-gray-700 mb-1">
+                                            Note <span class="text-red-500">*</span>
+                                        </label>
+                                        <textarea
+                                            id="note"
+                                            x-model="note"
+                                            @input="clearError('note')"
+                                            rows="4"
+                                            class="w-full border border-gray-300 rounded-md shadow-sm"
+                                        ></textarea>
+                                        <p x-show="errors.note" class="text-red-500 text-sm mt-1" x-text="errors.note"></p>
+                                    </div>
+                                    <div class="mb-4">
+                                        <label for="jobAttachment" class="block text-sm font-medium text-gray-700 mb-2">Job Attachment</label>
+                                        <input
+                                            type="file"
+                                            id="jobAttachment"
+                                            name="jobAttachment"
+                                            class="block w-full px-2 py-3 text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none"
+                                        />
+                                    </div>
+                                </form>
+                            </div>
+
+                            <!-- Footer -->
+                            <div class="flex justify-end space-x-2 border-t p-4">
+                                <button
+                                    type="button"
+                                    @click="openModal = false"
+                                    class="rounded-md bg-gray-200 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-300"
+                                >
+                                    Close
+                                </button>
+                                <button
+                                    type="button"
+                                    @click="submitForm"
+                                    class="rounded-md bg-green-500 px-4 py-2 text-sm font-medium text-white hover:bg-green-600"
+                                >
+                                    Save
+                                </button>
+                            </div>
+                        </div>
                     </div>
-                  </div>
                 </div>
-              </div>
-              <div class="flex w-full gap-4 mt-4">
+
+
+
+
+
+
+
+                <div class="flex w-full gap-4 mt-4">
                 <!-- Left Column -->
                 <div
                   class="w-1/2 p-[30px] rounded border"

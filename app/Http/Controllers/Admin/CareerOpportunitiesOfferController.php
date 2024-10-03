@@ -248,4 +248,39 @@ class CareerOpportunitiesOfferController extends BaseController
     {
         return number_format($data, 2);
     }
+    public function offerworkflowAccept(Request $request)
+    {
+        $validated = $request->validate([
+            'rowId' => 'required|integer',
+/*            'reason' => 'required|string',*/
+            'note' => 'required|string',
+            'jobAttachment' => 'nullable|file',
+        ]);
+        $filename = handleFileUpload($request, 'jobAttachment', 'offer_workflow_attachments');
+        $workflow = OfferWorkFlow::findOrFail($validated['rowId']);
+        $workflow->status = 'Approved'; // Update the status to approved
+        $workflow->approval_notes = $validated['note'];
+        $workflow->approval_doc = $filename;
+        $workflow->updated_at = now();
+        $workflow->save();
+        $nextWorkflow = OfferWorkFlow::where([
+            ['offer_id', '=', $workflow->offer_id],
+            ['status', '=', 'Pending'],
+            ['email_sent', '=', 0]
+        ])
+            ->orderBy('id')
+            ->first();
+        if ($nextWorkflow) {
+            $nextWorkflow->email_sent = 1;
+            $nextWorkflow->save();
+        }
+        $redirectUrl = route('admin.offer.show', ['id' => $workflow->offer_id]);
+        return response()->json([
+            'success' => true,
+            'message' => 'Offer Workflow accepted successfully!',
+            'redirect_url' => $redirectUrl
+        ]);
+
+    }
+
 }

@@ -19,7 +19,7 @@ class AuthController extends Controller
         if (Auth::check()) {
             // Get the selected role from the session
             $role = session('selected_role');
-            dd($role);
+//            dd($role);
             // Redirect to the appropriate dashboard based on the selected role
             return redirect()->route(redirectToDashboard($role));
         }

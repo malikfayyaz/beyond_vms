@@ -39,4 +39,9 @@ class Client extends Model
         $client = self::where('user_id', $userId)->first();
         return $client ? $client->id : null;
     }
+    public function careerOpportunitiesOffers()
+    {
+        return $this->hasMany(CareerOpportunitiesOffer::class, 'hiring_manager_id', 'id');
+    }
+
 }
