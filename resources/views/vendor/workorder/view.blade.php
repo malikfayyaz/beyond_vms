@@ -7,7 +7,9 @@
     <div class="ml-16">
         @include('vendor.layouts.partials.header')
         <div class="ml-16">
+        
             <div class="bg-white mx-4 my-8 rounded p-8">
+            @include('vendor.layouts.partials.alerts')
                 <div class="flex w-full gap-4">
                     <!-- Left Column -->
                     <div
@@ -135,7 +137,13 @@
                                 >
                             </div>
                         </div>
-                        <div x-data="workOrderForm">
+                        @php   
+                                $disabled = true;
+                                if ( $workorder->verification_status == 0 ) {
+                                    $disabled = false;
+                                }
+                         @endphp
+                         <div x-data="workOrderForm">
                             <form
                                 action="#"
                                 class="mt-4"
@@ -197,6 +205,9 @@
                                         ></p>
                                     </div>
                                 </div>
+                                @php $vendorrecords = $workorder->vendor->teamMembers;
+                              
+                                @endphp
                                 <div class="flex space-x-4 mb-4">
                                     <div class="flex-1">
                                         <label class="block mb-2"
@@ -208,13 +219,24 @@
                                             class="w-full select2-single custom-style"
                                             data-field="accountManager"
                                             id="accountManager"
+                                            :disabled="isDisabled"
                                         >
-                                            <option value="">Select a category</option>
-                                            <option value="javascript">JavaScript</option>
-                                            <option value="python">Python</option>
-                                            <option value="java">Java</option>
-                                            <option value="csharp">C#</option>
-                                            <option value="ruby">Ruby</option>
+                                       
+                                            <option value="">Select Account Manager</option>
+                                            
+                                            @isset($workorder->vendor)
+                                            <option value="{{ $workorder->vendor->id }}" 
+                                               >
+                                                {{ $workorder->vendor->full_name }} 
+                                            </option>
+                                            {{-- Team Members --}}
+                                                @foreach($workorder->vendor->teamMembers as $team)
+                                                <option value="{{$team->teammember_id}}" 
+                                               
+                                                >{{$team->teammember->full_name}}</option>
+                                                @endforeach
+                                            @endisset
+                                            
                                         </select>
                                         <p
                                             x-show="errors.accountManager"
@@ -232,13 +254,21 @@
                                             class="w-full select2-single custom-style"
                                             data-field="recruitmentManager"
                                             id="recruitmentManager"
+                                             :disabled="isDisabled"
                                         >
-                                            <option value="">Select a category</option>
-                                            <option value="javascript">JavaScript</option>
-                                            <option value="python">Python</option>
-                                            <option value="java">Java</option>
-                                            <option value="csharp">C#</option>
-                                            <option value="ruby">Ruby</option>
+                                            <option value="">Select Recruitment Manager</option>
+                                            @isset($workorder->vendor)
+                                            <option value="{{ $workorder->vendor->id }}" 
+                                               >
+                                                {{ $workorder->vendor->full_name }} 
+                                            </option>
+                                            {{-- Team Members --}}
+                                                @foreach($workorder->vendor->teamMembers as $team)
+                                                <option value="{{$team->teammember_id}}" 
+                                                
+                                                >{{$team->teammember->full_name}}</option>
+                                                @endforeach
+                                            @endisset
                                         </select>
                                         <p
                                             x-show="errors.recruitmentManager"
@@ -252,10 +282,11 @@
                                         <label class="block mb-2 capitalize">location tax</label>
                                         <input
                                             type="number"
-                                            x-model="formData.candidateFirstName"
+                                            x-model="formData.locationTax"
                                             class="w-full h-12 px-4 text-gray-500 border border-gray-300 rounded-md shadow-sm focus:outline-none"
                                             placeholder="0.00%"
-                                            id="candidateFirstName"
+                                            id="locationTax"
+                                             :disabled="isDisabled"
                                         />
                                     </div>
                                     <div class="flex-1"></div>
@@ -279,6 +310,7 @@
                                                 class="flex items-center space-x-3 cursor-pointer"
                                             >
                                                 <input
+                                                 :disabled="isDisabled"
                                                     type="checkbox"
                                                     x-model="formData.codeOfConduct"
                                                     class="form-checkbox h-5 w-5 text-blue-600 rounded focus:ring-blue-500 border-gray-300 cursor-pointer"
@@ -299,6 +331,7 @@
                                                 class="flex items-center space-x-3 cursor-pointer"
                                             >
                                                 <input
+                                                 :disabled="isDisabled"
                                                     type="checkbox"
                                                     x-model="formData.dataPrivacy"
                                                     class="form-checkbox h-5 w-5 text-blue-600 rounded focus:ring-blue-500 border-gray-300 cursor-pointer"
@@ -321,6 +354,7 @@
                                                 class="flex items-center space-x-3 cursor-pointer"
                                             >
                                                 <input
+                                                 :disabled="isDisabled"
                                                     type="checkbox"
                                                     x-model="formData.nonDisclosure"
                                                     class="form-checkbox h-5 w-5 text-blue-600 rounded focus:ring-blue-500 border-gray-300 cursor-pointer"
@@ -342,6 +376,7 @@
                                                 class="flex items-center space-x-3 cursor-pointer"
                                             >
                                                 <input
+                                                 :disabled="isDisabled"
                                                     type="checkbox"
                                                     x-model="formData.criminalBackground"
                                                     class="form-checkbox h-5 w-5 text-blue-600 rounded focus:ring-blue-500 border-gray-300 cursor-pointer"
@@ -368,7 +403,9 @@
                                         >Document</label
                                         >
                                         <input
+                                         :disabled="isDisabled"
                                             type="file"
+                                            @change="handleFileUpload"
                                             id="document"
                                             name="document"
                                             class="block w-full px-2 py-3 text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none"
@@ -377,6 +414,7 @@
                                 </div>
                                 <div class="flex-1 flex items-end gap-2">
                                     <button
+                                    :disabled="isDisabled"
                                         @click="submitForm('save')"
                                         type="submit"
                                         class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
@@ -384,6 +422,7 @@
                                         Save
                                     </button>
                                     <button
+                                    :disabled="isDisabled"
                                         @click="submitForm('saveAndSubmit')"
                                         type="button"
                                         class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
@@ -395,6 +434,8 @@
                         </div>
                     </div>
                 </div>
+
+
             </div>
         </div>
     </div>
@@ -402,23 +443,32 @@
 <script>
       document.addEventListener("alpine:init", () => {
         Alpine.data("workOrderForm", () => ({
+            isDisabled: @json($disabled),
           formData: {
             personalEmailAddress: '{{ old('personalEmailAddress', $workorder->consultant->user->email ?? '') }}',
             first_name:'{{ old('first_name', $workorder->consultant->first_name ?? '') }}' ,
             middle_name:'{{ old('middle_name', $workorder->consultant->middle_name ?? '') }}' ,
             last_name:'{{ old('last_name', $workorder->consultant->last_name ?? '') }}' ,
-            accountManager: "",
-            recruitmentManager: "",
-            codeOfConduct: false,
-            dataPrivacy: false,
-            nonDisclosure: false,
-            criminalBackground: false,
+            accountManager: '{{ old('accountManager', $workorder->submission->emp_msp_account_mngr ?? '') }}',
+            recruitmentManager: '{{ old('recruitmentManager', $workorder->submission->emp_msp_account_mngr ?? '') }}',
+            workorder_id:'{{ old('workorder_id', $workorder->id ?? '') }}' ,
+            locationTax:'{{ old('locationTax', $workorder->location_tax ?? '') }}',
+            fileUpload:'',
+            codeOfConduct: {{ old('codeOfConduct', $workorder->workorderbackground->code_of_conduct ? 'true' : 'false') }},
+            dataPrivacy: {{ old('dataPrivacy', $workorder->workorderbackground->data_privacy ? 'true' : 'false') }},
+            nonDisclosure: {{ old('nonDisclosure', $workorder->workorderbackground->non_disclosure ? 'true' : 'false') }},
+            criminalBackground: {{ old('criminalBackground', $workorder->workorderbackground->criminal_background ? 'true' : 'false') }},
           },
           errors: {},
 
           init() {
             this.initSelect2();
           },
+
+          handleFileUpload(event) {
+            const file = event.target.files[0];
+            this.formData.fileUpload = file || null;
+            },
 
           initSelect2() {
             this.$nextTick(() => {
@@ -523,9 +573,38 @@
             const isValid = this.validateForm();
             if (isValid) {
               if (action === "save") {
+                let formData = new FormData();
+                Object.keys(this.formData).forEach((key) => {
+                  if (Array.isArray(this.formData[key])) {
+                    // If the key is an array (like businessUnits), handle each item
+                    this.formData[key].forEach((item, index) => {
+                      formData.append(`${key}[${index}]`, JSON.stringify(item));
+                    });
+                  } else {
+                    formData.append(key, this.formData[key]);
+                  }
+                });
+                formData.append('type', 'save');
+                const url = "/vendor/workorder/store";
+              ajaxCall(url,'POST', [[onSuccess, ['response']]], formData);
+
                 console.log("Form is valid. Saving...");
                 // Add your save logic here
               } else if (action === "saveAndSubmit") {
+                let formData = new FormData();
+                Object.keys(this.formData).forEach((key) => {
+                  if (Array.isArray(this.formData[key])) {
+                    // If the key is an array (like businessUnits), handle each item
+                    this.formData[key].forEach((item, index) => {
+                      formData.append(`${key}[${index}]`, JSON.stringify(item));
+                    });
+                  } else {
+                    formData.append(key, this.formData[key]);
+                  }
+                });
+                formData.append('type', 'saveAndSubmit');
+                const url = "/vendor/workorder/store";
+              ajaxCall(url,'POST', [[onSuccess, ['response']]], formData);
                 console.log("Form is valid. Saving and submitting...");
                 // Add your save and submit logic here
               }

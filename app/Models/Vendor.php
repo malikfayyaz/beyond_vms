@@ -34,4 +34,9 @@ class Vendor extends Model
         return $vendor ? $vendor->id : null;
     }
 
+    public function teamMembers()
+    {
+        return $this->hasMany(VendorTeammember::class, 'vendor_id');
+    }
+
 }
