@@ -33,6 +33,10 @@ class CareerOpportunitiesWorkorder extends Model
     {
         return $this->belongsTo(Consultant::class, 'candidate_id', 'id');
     }
+    public function workorderbackground()
+    {
+        return $this->belongsTo(WorkorderBackground::class, 'id', 'workorder_id');
+    }
     public function getDateRangeAttribute()
     {
         $start = $this->start_date ? Carbon::parse($this->start_date)->format('m/d/Y') : '';

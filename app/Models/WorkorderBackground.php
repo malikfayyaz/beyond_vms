@@ -7,5 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class WorkorderBackground extends Model
 {
-    use HasFactory;
+    protected $guarded = [
+        // List attributes you want to guard from mass assignment
+        // e.g., 'id', 'created_at', 'updated_at'
+    ];
 }

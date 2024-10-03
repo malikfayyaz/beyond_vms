@@ -3,7 +3,10 @@
 namespace App\Http\Controllers\Vendor;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Validator;
 use App\Models\CareerOpportunitiesWorkorder;
+use App\Models\Vendor;
+use App\Models\WorkorderBackground;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -58,6 +61,13 @@ class CareerOpportunitiesWorkOrderController extends Controller
     public function store(Request $request)
     {
        
+         // Convert "true"/"false" strings to boolean for the relevant fields
+        $request->merge([
+            'codeOfConduct' => filter_var($request->codeOfConduct, FILTER_VALIDATE_BOOLEAN),
+            'dataPrivacy' => filter_var($request->dataPrivacy, FILTER_VALIDATE_BOOLEAN),
+            'nonDisclosure' => filter_var($request->nonDisclosure, FILTER_VALIDATE_BOOLEAN),
+            'criminalBackground' => filter_var($request->criminalBackground, FILTER_VALIDATE_BOOLEAN),
+        ]);
         // Define your validation rules
         $rules = [
             'codeOfConduct' => 'required|boolean',
@@ -67,6 +77,7 @@ class CareerOpportunitiesWorkOrderController extends Controller
             'accountManager' => 'required|integer',
             'recruitmentManager' => 'required|integer',
             'workorder_id'=> 'required|integer',
+            'fileUpload' => 'nullable|mimes:pdf,doc,docx|max:2048',
         ];
         
         $messages = [
@@ -76,11 +87,13 @@ class CareerOpportunitiesWorkOrderController extends Controller
             'criminalBackground.required' => 'You must agree to the Criminal Background Check.',
             'accountManager.required' => 'An Account Manager is required.',
             'recruitmentManager.required' => 'A Recruitment Manager is required.',
+            'fileUpload.mimes' => 'Only PDF and DOC  files are allowed.',
+            'fileUpload.max' => 'The file size must not exceed 2MB.',
             // Add more custom messages as needed
         ];
 
-
-        // dd($validator );
+        $validator = Validator::make($request->all(), $rules, $messages);
+        // dd(removeComma($request->locationTax) );
         // If validation fails, return JSON response with errors
         if ($validator->fails()) {
             return response()->json([
@@ -88,63 +101,61 @@ class CareerOpportunitiesWorkOrderController extends Controller
                 'errors' => $validator->errors(),
             ], 422); // 422 Unprocessable Entity status
         }
+        $validatedData = $validator->validated();
         $workorder = CareerOpportunitiesWorkorder::findOrFail($request->workorder_id);
+        
         $submission = $workorder->submission;
         if(isset($submission)) {
             $submission->emp_msp_account_mngr = $request->recruitmentManager;
 			$submission->save();
         }
-        $workorder->location_tax = removeComma($request->lacationTax);
-        dd($request);
-        $validatedData = $validator->validated();
-        $existingOffer = CareerOpportunitiesOffer::where('submission_id', $request->submissionid)
-        ->whereIn('status', [4, 1])
-        ->first();
-        // if($existingOffer){
+        $workorder->location_tax = removeComma($request->locationTax);
+        $workorder->save();
+        $filename = handleFileUpload($request, 'fileUpload', 'background_verify');
+        if(empty($workorder->workorderbackground)){
+            $bgVerfication = [
+                'code_of_conduct' => $validatedData['codeOfConduct'],
+                'data_privacy' => $validatedData['dataPrivacy'],
+                'non_disclosure' => $validatedData['nonDisclosure'],
+                'criminal_background' => $validatedData['criminalBackground'],
+                'workorder_id' => $workorder->id,
+                'status' => 1,
+                'file'=>$filename,
+                'markcompleted_date' => now(),
+                'markcompleted_by' =>Vendor::getVendorIdByUserId(\Auth::id()),
+            ];
+            WorkorderBackground::create($bgVerfication);
+        } else {
+            if($filename == null || empty($filename)) {
+                $filename =  $workorder->workorderbackground->file;
+            }
+            $bgVerfication = [
+                'code_of_conduct' => $validatedData['codeOfConduct'],
+                'data_privacy' => $validatedData['dataPrivacy'],
+                'non_disclosure' => $validatedData['nonDisclosure'],
+                'file'=>$filename,
+                'criminal_background' => $validatedData['criminalBackground'],
+               
+            ];
+            $workorder->workorderbackground->update($bgVerfication);
+        }
 
-        //     session()->flash('success', 'Offer already exist!');
-        //     return response()->json([
-        //         'success' => true,
-        //         'message' => 'Offer already exist!',
-        //         'redirect_url' => route('vendor.offer.show',  ['id' => $request->submissionid]) // Redirect back URL for AJAX
-        //     ]);
-        // }
-        $submission = CareerOpportunitySubmission::findOrFail($request->submissionid);
-        $jobData = $submission->careerOpportunity;
-        $mapedData = [
-            "submission_id" =>$validatedData['submissionid'],
-            "vendor_id" =>$submission->vendor_id,
-            "candidate_id" =>$submission->candidate_id,
-            "hiring_manager_id" =>$validatedData['approvingManager'],
-            "career_opportunity_id" =>$submission->career_opportunity_id,
-            "location_id" =>$validatedData['location'],
-            "markup" =>$validatedData['markup'],
-            "created_by_id" =>\Auth::id(),
-            "created_by_type" =>3,
-            "status" =>1,
-            "offer_pay_rate" =>removeComma($validatedData['payRate']),
-            "offer_bill_rate" =>removeComma($validatedData['billRate']),
-            "over_time" =>removeComma($validatedData['overTime']),
-            "client_overtime" =>removeComma($validatedData['overTimeCandidate']),
-            "double_time" =>removeComma($validatedData['doubleRate']),
-            "client_doubletime" =>removeComma($validatedData['doubleTimeCandidate']),
-
-            "remote_option" =>$validatedData['remote'],
-            // "notes" =>$validatedData['notes'],
-            "start_date" =>!empty($validatedData['startDate'])
-            ? Carbon::createFromFormat('Y/m/d', $validatedData['startDate'])->format('Y-m-d')  : null,
-            "end_date" =>!empty($validatedData['endDate'])
-            ? Carbon::createFromFormat('Y/m/d', $validatedData['endDate'])->format('Y-m-d')  : null,
-        ];
-        $offerCreate = CareerOpportunitiesOffer::create( $mapedData );
-        calculateVendorRates($offerCreate,$offerCreate->offer_bill_rate,$offerCreate->client_overtime,$offerCreate->client_doubletime);
-        calculateOfferEstimates($offerCreate,$jobData);
-        offerHelper::createOfferWorkflow($offerCreate);
-        session()->flash('success', 'Offer saved successfully!');
+        if($request->type == "saveAndSubmit") {
+                $workorder->verification_status=1;
+	        	$workorder->vendor_bg_date = now();
+	        	$workorder->verification_status_vendor=1;
+	        	$workorder->bg_reviewed_msp=1;
+				$workorder->markcompleted_by = Vendor::getVendorIdByUserId(\Auth::id());
+				$workorder->markcompleted_date = now();
+                $workorder->save();
+        }
+        
+            
+        session()->flash('success', 'Onboarding Document Background Screening submitted successfully');
         return response()->json([
             'success' => true,
-            'message' => 'Offer saved successfully!',
-            'redirect_url' => route('vendor.offer.index') // Redirect back URL for AJAX
+            'message' => 'Onboarding Document Background Screening submitted successfully',
+            'redirect_url' => route('vendor.workorder.show', ['id' => $workorder->id])// Redirect back URL for AJAX
         ]);
 
     }

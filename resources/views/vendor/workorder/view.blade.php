@@ -7,7 +7,9 @@
     <div class="ml-16">
         @include('vendor.layouts.partials.header')
         <div class="ml-16">
+        
             <div class="bg-white mx-4 my-8 rounded p-8">
+            @include('vendor.layouts.partials.alerts')
                 <div class="flex w-full gap-4">
                     <!-- Left Column -->
                     <div
@@ -198,7 +200,10 @@
                                     </div>
                                 </div>
                                 @php $vendorrecords = $workorder->vendor->teamMembers;
-                               
+                                $disabled = false;
+                                if ( $workorder->verification_status == 0 ) {
+                                    $disabled = true;
+                                }
                                 @endphp
                                 <div class="flex space-x-4 mb-4">
                                     <div class="flex-1">
@@ -416,6 +421,8 @@
                         </div>
                     </div>
                 </div>
+
+
             </div>
         </div>
     </div>
@@ -431,12 +438,12 @@
             accountManager: '{{ old('accountManager', $workorder->submission->emp_msp_account_mngr ?? '') }}',
             recruitmentManager: '{{ old('recruitmentManager', $workorder->submission->emp_msp_account_mngr ?? '') }}',
             workorder_id:'{{ old('workorder_id', $workorder->id ?? '') }}' ,
-            locationTax:"",
+            locationTax:'{{ old('locationTax', $workorder->location_tax ?? '') }}',
             fileUpload:'',
-            codeOfConduct: false,
-            dataPrivacy: false,
-            nonDisclosure: false,
-            criminalBackground: false,
+            codeOfConduct: {{ old('codeOfConduct', $workorder->workorderbackground->code_of_conduct ? 'true' : 'false') }},
+            dataPrivacy: {{ old('dataPrivacy', $workorder->workorderbackground->data_privacy ? 'true' : 'false') }},
+            nonDisclosure: {{ old('nonDisclosure', $workorder->workorderbackground->non_disclosure ? 'true' : 'false') }},
+            criminalBackground: {{ old('criminalBackground', $workorder->workorderbackground->criminal_background ? 'true' : 'false') }},
           },
           errors: {},
 

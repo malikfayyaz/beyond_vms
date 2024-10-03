@@ -22,6 +22,7 @@ return new class extends Migration
             $table->boolean('data_privacy')->default(false);
             $table->boolean('non_disclosure')->default(false);
             $table->boolean('criminal_background')->default(false);
+            $table->string('file')->nullable();
             $table->timestamps();
         });
     }
