@@ -135,7 +135,7 @@
                                             <td class="py-4 px-4 text-center text-sm">{{ $workflow->approval_doc ?? 'N/A' }}</td>
                                             <td class="py-4 px-4 text-center text-sm">{{ $workflow->status }}</td>
                                             <td class="py-4 px-4 text-center text-sm">
-                                                @if($workflow->hiringManager->user_id == auth()->user()->id && $workflow->status == 'Pending')
+                                                @if($workflow->hiringManager->user_id == auth()->user()->id && $workflow->status == 'Pending' && $workflow->email_sent == '1')
                                                     <button
                                                         @click="openModal = true; currentRowId = {{ $workflow->id }}"
                                                         class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"

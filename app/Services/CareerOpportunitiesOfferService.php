@@ -1,6 +1,7 @@
 <?php
 namespace App\Services;
 
+use App\Models\CareerOpportunitiesOffer;
 use App\Models\Workflow;
 use App\Models\OfferWorkFlow;
 
@@ -15,11 +16,14 @@ class CareerOpportunitiesOfferService
         if ($workflows->isEmpty()) {
             return false;
         }
-
         // Prepare the data to insert all at once
         $workflowData = [];
-
+        $i = 0;
         foreach ($workflows as $wf) {
+            $emailSentValue = 0;
+            if ($i == 0){
+                $emailSentValue = 1;
+            }
             $workflowData[] = [
                 'offer_id' => $offer->id,
                 'client_id' => $wf->hiring_manager_id,
@@ -31,7 +35,9 @@ class CareerOpportunitiesOfferService
                 'status' => 'Pending',
                 'status_time' => now(),
                 'approval_required' => $wf->approval_required == 'yes' ? 1 : 0,
+                'email_sent' => $emailSentValue,
             ];
+            $i++;
         }
 
         // Insert all records at once using batch insert

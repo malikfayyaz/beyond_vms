@@ -212,7 +212,7 @@ class CareerOpportunitiesSubmissionController extends Controller
                 return response()->json([
                     'success' => true,
                     'message' => 'Submission saved successfully!',
-                    'redirect_url' => route('vendor.career-opportunities.index') // Redirect back URL for AJAX
+                    'redirect_url' => route('vendor.submission.index') // Redirect back URL for AJAX
                 ]);
         }
 
