@@ -348,7 +348,12 @@ class GenericDataController extends BaseController
     public function workflow(Request $request)
     {
         // $data = GenericData::where('type', 'busines-unit')->get();
-        $data = Client::where('profile_status',1)->get();
+        $data = Client::where('profile_status',1)->get()->map(function($client) {
+            return [
+                'id' => $client->id,
+                'full_name' => $client->full_name, // Using the accessor here
+            ];
+        });
         return view('admin.workflow.index', compact('data'));
     }
 
@@ -360,8 +365,10 @@ class GenericDataController extends BaseController
 
         $roles = Role::where('id',2)->get();
 
-        $table_data = Workflow::with(['client', 'approvalRole', 'hiringManager'])->get();
-
+        $table_data = Workflow::with(['client', 'approvalRole', 'hiringManager'])
+        ->where('client_id', $id)
+        ->get();
+        // dd($table_data);
         // Fetch the item to edit
         $item = GenericData::findOrFail($id);
 
