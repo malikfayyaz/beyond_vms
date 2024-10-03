@@ -57,8 +57,6 @@
     console.log('Form submitted successfully');
     const isValid = this.validateForm();
     if (isValid) {
-        console.log('here');
-
         // Create FormData object
         const formData = new FormData();
         formData.append('rowId', this.currentRowId); // Use currentRowId for identification

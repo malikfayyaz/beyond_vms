@@ -12,15 +12,16 @@ Route::middleware(['user_role:client'])->group(function () {
     Route::resource('/client/career-opportunities', \App\Http\Controllers\Client\CareerOpportunitiesController::class);
     Route::post('/client/career-opportunities/{id}/copy', [\App\Http\Controllers\Client\CareerOpportunitiesController::class, 'copy'])
         ->name('client.career-opportunities.copy');
-    
+
         Route::prefix('client')->name('client.')->group(function () {
-       
+
         Route::match(['get', 'post'], 'submission/index', [CareerOpportunitiesSubmissionController::class, 'index'])->name('submission.index');
         Route::get('/submission/{id}', [CareerOpportunitiesSubmissionController::class, 'show'])->name('submission.show');
 
          // offer
          Route::get('offer/{id}/create', [CareerOpportunitiesOfferController::class, 'create'])->name('offer.create');
          Route::post('offer/store', [CareerOpportunitiesOfferController::class, 'store'])->name('offer.store');
+            Route::post('offer/offerworkflowAccept', [CareerOpportunitiesOfferController::class, 'offerworkflowAccept'])->name('offer.offerworkflowAccept');
          Route::get('offer/index', [CareerOpportunitiesOfferController::class, 'index'])->name('offer.index');
          Route::get('offer/view/{id}', [CareerOpportunitiesOfferController::class, 'show'])->name('offer.show');
         Route::post('job-rates', [RatesController::class, 'jobRates'])->name('job_rates');
@@ -37,7 +38,7 @@ Route::middleware(['user_role:client'])->group(function () {
          Route::post('interview/store', [CareerOpportunitiesInterviewController::class, 'store'])->name('interview.store');
          Route::get('interview/{id}/edit', [CareerOpportunitiesInterviewController::class, 'edit'])->name('interview.edit');
          Route::put('interview/{id}/update', [CareerOpportunitiesInterviewController::class, 'update'])->name('interview.update');
- 
+
     });
 });
 

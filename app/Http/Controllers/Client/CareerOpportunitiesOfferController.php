@@ -157,4 +157,31 @@ class CareerOpportunitiesOfferController extends Controller
         $offer = CareerOpportunitiesOffer::findOrFail($id);
         return view('client.offer.view', compact('offer','workflows'));
     }
+    public function offerworkflowAccept(Request $request)
+    {
+        $validated = $request->validate([
+            'rowId' => 'required|integer',
+        ]);
+        $workflow = OfferWorkFlow::findOrFail($validated['rowId']);
+        $workflow->status = 'Approved'; // Update the status to approved
+         $workflow->save();
+        $nextWorkflow = OfferWorkFlow::where([
+            ['offer_id', '=', $workflow->offer_id],
+            ['status', '=', 'Pending'],
+            ['email_sent', '=', 0]
+        ])
+            ->orderBy('id')
+            ->first();
+        if ($nextWorkflow) {
+            $nextWorkflow->email_sent = 1;
+            $nextWorkflow->save();
+        }
+        $redirectUrl = route('client.offer.show', ['id' => $workflow->offer_id]);
+        return response()->json([
+            'success' => true,
+            'message' => 'Offer Workflow accepted successfully!',
+            'redirect_url' => $redirectUrl
+        ]);
+
+    }
 }
