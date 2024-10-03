@@ -12,7 +12,7 @@ class Vendor extends Model
     use HasFactory;
 
     protected $fillable = [
-        'first_name', 'last_name', 'phone', 'role_id', 'country', 'status','profile_status', 'profile_image', 'member_access','user_id','member_type','parent_id','organization',
+        'first_name', 'last_name', 'phone', 'role_id', 'country', 'status','profile_status', 'profile_image', 'member_access','user_id','member_type','parent_id','organization','profile_approve'
     ];
 
     public function getFullNameAttribute()
@@ -27,6 +27,11 @@ class Vendor extends Model
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id');
+    }
+    public static function getVendorIdByUserId($userId)
+    {
+        $vendor = self::where('user_id', $userId)->first();
+        return $vendor ? $vendor->id : null;
     }
 
     public function teamMembers()

@@ -41,7 +41,7 @@
                 </div>
                 <div class="w-1/2 pl-2">
                     <label for="organization" class="block mb-2">Organization <span class="text-red-500">*</span></label>
-                    <input type="text" id="organization" x-model="formData.organization" class="w-full p-2 border rounded h-10">
+                    <input type="text" id="organization" x-model="formData.organization" class="w-full p-2 border rounded h-10" :disabled="editIndex !== null">
                     <p x-show="organizationError" class="text-red-500 text-sm mt-1" x-text="organizationError"></p>
                 </div>
             </div>

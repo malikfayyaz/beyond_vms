@@ -1,4 +1,4 @@
-<?php 
+<?php
 namespace App\Http\Controllers\Admin;
 
 use Illuminate\Routing\Controller as BaseController;
@@ -24,25 +24,25 @@ class GenericDataController extends BaseController
 
     public function manageData(Request $request, $formtype = null)
     {
-       
+
         $countries = Country::all();
-       
+
         $fields = $request->route()->defaults['fields'] ?? [];
             // dd($fields);
         if ($request->isMethod('get')) {
-           
+
             $data = GenericData::with(['country','setting'])->where('type', $formtype)->get();
 
             return view('admin.data_points.manage', [
                 'formtype' => $formtype,
                 'data' => $data,
                 'fields' => $fields,
-                'countries' => $countries,  
+                'countries' => $countries,
             ]);
         } elseif ($request->isMethod('post')) {
             // Get all the input fields from the request
             $input = $request->all();
-            
+
             // Rename 'country' to 'country_id' and 'symbol' to 'symbol_id' in the input data
             if (isset($input['country'])) {
                 $input['country_id'] = $input['country'];
@@ -53,11 +53,11 @@ class GenericDataController extends BaseController
                 $input['symbol_id'] = $input['symbol'];
                 unset($input['symbol']); // Remove the original 'symbol' field
             }
-            
+
             $validatedData =$input;
 
-            
-           
+
+
             // dd($validatedData, array_keys($input));
             // dd($validatedData);
             // Check if the request has an 'id' to determine whether to create or update
@@ -86,7 +86,7 @@ class GenericDataController extends BaseController
                 // $validatedData = $request->only($fields);
                 // Create a new record
                 GenericData::create(array_merge($validatedData, ['type' => $formtype]));
-                
+
 
                 // Set a success message in the session
                 $successMessage = ucfirst(str_replace('-', ' ', $formtype)) . ' saved successfully!';
@@ -97,7 +97,7 @@ class GenericDataController extends BaseController
                     'redirect_url' => url()->previous() // Redirect back URL for AJAX
                 ]);
             }
-          
+
         }
     }
 
@@ -106,9 +106,9 @@ class GenericDataController extends BaseController
         if ($request->isMethod('get')) {
             // Retrieve all JobFamilyGroupConfig entries
             $data = JobFamilyGroupConfig::with(['jobFamily', 'jobFamilyGroup'])->get();
-            
-            
-        
+
+
+
             // Pass data to the view
             return view('admin.data_points.job_group_config', [
                 'data' => $data,
@@ -155,7 +155,7 @@ class GenericDataController extends BaseController
 
             return view('admin.data_points.bu_config', [
                 'data' => $data,
-              
+
             ]);
         } elseif ($request->isMethod('post')) {
             // Validation rules
@@ -218,7 +218,7 @@ class GenericDataController extends BaseController
         }
     }
 
-    
+
 
     public function locationDetail(Request $request)
     {
@@ -242,24 +242,24 @@ class GenericDataController extends BaseController
                 'zip_code' => 'required|string|max:8',
                 'status' => 'required|in:Active,Inactive',
             ];
-    
+
             // Custom error messages (optional)
             $messages = [
                 'country_id.exists' => 'The selected country is invalid.',
                 'state_id.exists' => 'The selected state is invalid.',
                 // Add more custom messages as needed
             ];
-    
+
             // Validate the request data
             $validator = Validator::make($request->all(), $rules, $messages);
-    
+
             if ($validator->fails()) {
                 return response()->json([
                     'success' => false,
                     'errors' => $validator->errors(),
                 ]);
             }
-    
+
             $validatedData = $validator->validated(); // Get validated data
             // dd( $validatedData);
             // Check if the request has an 'id' to determine whether to create or update
@@ -267,7 +267,7 @@ class GenericDataController extends BaseController
                 // Update the existing record
                 $location = Location::find($request->input('id'));
                 $successMessage = 'Location updated successfully!';
-    
+
                 if ($location) {
                     $location->update($validatedData);
                 } else {
@@ -281,7 +281,7 @@ class GenericDataController extends BaseController
                 Location::create($validatedData);
                 $successMessage = 'Location saved successfully!';
             }
-    
+
             // Set a success message in the session and return a JSON response
             session()->flash('success', $successMessage);
             return response()->json([
@@ -314,18 +314,18 @@ class GenericDataController extends BaseController
         }elseif ($request->isMethod('post')) {
             $rules = [
                 'name' => 'required|string|max:255',
-               
+
             ];
-    
+
             // Custom error messages (optional)
             $messages = [
                'name' => 'The Category field is Required.',
                 // Add more custom messages as needed
             ];
-    
+
             // Validate the request data
             $validator = Validator::make($request->all(), $rules, $messages);
-    
+
             if ($validator->fails()) {
                 return response()->json([
                     'success' => false,
@@ -348,8 +348,12 @@ class GenericDataController extends BaseController
     public function workflow(Request $request)
     {
         // $data = GenericData::where('type', 'busines-unit')->get();
-        $data = Client::where('profile_status',1)->get();
-
+        $data = Client::where('profile_status',1)->get()->map(function($client) {
+            return [
+                'id' => $client->id,
+                'full_name' => $client->full_name, // Using the accessor here
+            ];
+        });
         return view('admin.workflow.index', compact('data'));
     }
 
@@ -361,11 +365,13 @@ class GenericDataController extends BaseController
 
         $roles = Role::where('id',2)->get();
 
-        $table_data = Workflow::with(['client', 'approvalRole', 'hiringManager'])->get();
-
+        $table_data = Workflow::with(['client', 'approvalRole', 'hiringManager'])
+        ->where('client_id', $id)
+        ->get();
+        // dd($table_data);
         // Fetch the item to edit
         $item = GenericData::findOrFail($id);
-        
+
         // Return the edit view with the item data
         return view('admin.workflow.edit', compact('item','client_data','clients','roles','table_data'));
     }
@@ -379,11 +385,10 @@ class GenericDataController extends BaseController
             'hiring_manager_id' => 'required|exists:clients,id',
             'approval_required' => 'required|in:yes,no',
         ]);
-        // dd($validatedData);
 
         $workflow = new Workflow($validatedData);
         $workflow->save();
-        
+
 
         $successMessage = 'Workflow updated successfully!';
         $redirectUrl = route('admin.workflow');
@@ -400,7 +405,7 @@ class GenericDataController extends BaseController
     {
        // dd($request);
         if ($request->isMethod('get')) {
-            $data = Markup::with('vendor', 'location', 'category')->get(); 
+            $data = Markup::with('vendor', 'location', 'category')->get();
             $vendors = Vendor::all();
             $categories = JobTemplates::all();
             $locations = Location::all();
@@ -418,9 +423,9 @@ class GenericDataController extends BaseController
                 'category_id' => 'required|string|max:255',
                 'markup_value'=> 'required|string|max:255',
                 'status'      => 'required|string|max:255',
-               
+
             ];
-    
+
             // Custom error messages (optional)
             $messages = [
                'vendor_id'    => 'The Vendor field is Required.',
@@ -430,10 +435,10 @@ class GenericDataController extends BaseController
                'status'       => 'The Status field is Required.',
                 // Add more custom messages as needed
             ];
-    
+
             // Validate the request data
             $validator = Validator::make($request->all(), $rules, $messages);
-    
+
             if ($validator->fails()) {
                 return response()->json([
                     'success' => false,
@@ -446,7 +451,7 @@ class GenericDataController extends BaseController
                 // Update the existing record
                 $location = Markup::find($request->input('id'));
                 $successMessage = 'Markup updated successfully!';
-    
+
                 if ($location) {
                     $location->update($validatedData);
                 } else {
@@ -464,7 +469,7 @@ class GenericDataController extends BaseController
 
             // Markup::create($validatedData);
             // $successMessage = 'Markup saved successfully!';
-            
+
             return response()->json([
                 'success' => true,
                 'message' => $successMessage,
@@ -477,10 +482,10 @@ class GenericDataController extends BaseController
     public function fetchSettings($categoryId)
     {
         $settings = Setting::where('category_id', $categoryId)->get();
-        
+
         $activeSettings = $settings->where('status', 'Active')->pluck('title','id');
         $inactiveSettings = $settings->where('status', 'Inactive')->pluck('title','id');
-        
+
         return response()->json([
             'active' => $activeSettings,
             'inactive' => $inactiveSettings,

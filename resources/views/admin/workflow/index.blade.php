@@ -20,7 +20,7 @@
                         <template x-for="(item, index) in filteredItems" :key="index">
                             <tr>
                                 <td class="border p-2 text-center" x-text="index + 1"></td>
-                                <td class="border p-2 text-center" x-text="item.first_name ?? 'N/A'"></td>
+                                <td class="border p-2 text-center" x-text="item.full_name ?? 'N/A'"></td>
                                 <td class="border p-2 text-center">
                                     <span @click="editItem(item)" class="text-gray-600 cursor-pointer">
                                         <i class="fa-regular fa-pen-to-square"></i>

@@ -1,10 +1,10 @@
-@extends('admin.layouts.app')
+@extends('vendor.layouts.app')
 
 @section('content')
     <!-- Sidebar -->
-    @include('admin.layouts.partials.dashboard_side_bar')
+    @include('vendor.layouts.partials.dashboard_side_bar')
     <div class="ml-16">
-        @include('admin.layouts.partials.header')
+        @include('vendor.layouts.partials.header')
         <div class="bg-white mx-4 my-8 rounded p-8">
             <div >
                 <div class="flex justify-between items-center mb-6">
@@ -34,7 +34,7 @@
                         <th
                             class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                         >
-                            Job Profile 
+                            Job Profile
                         </th>
                         <th
                             class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
@@ -71,7 +71,7 @@
                         >
                             Action
                         </th>
-                        
+
                     </tr>
                     </thead>
                     <tbody>
@@ -89,7 +89,7 @@
             initializeDataTable('#listing', '/vendor/offer/index', [
                 { data: 'status', name: 'status' },
                 { data: 'id', name: 'id' },
-                { data: 'consultant_name', name: 'consultant_name' }, 
+                { data: 'consultant_name', name: 'consultant_name' },
                 { data: 'career_opportunity', name: 'career_opportunity' },
                 { data: 'hiring_manger', name: 'hiring_manger' },
                 { data: 'vendor_name', name: 'vendor_name' },
@@ -98,7 +98,7 @@
                 { data: 'wo_status', name: 'wo_status' },
                 { data: 'worker_type', name: 'worker_type' },
                 { data: 'action', name: 'action', orderable: false, searchable: false }
-               
+
             ]);
         }
     });

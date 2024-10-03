@@ -146,12 +146,13 @@ class ClientManagementController extends Controller
                 unset($validatedData['role']);
                 $validatedData['user_id'] = $user->id;
                 $client = Client::create($validatedData);
-
                 if ($request->hasFile('profile_image')) {
                     $imagePath = handleFileUpload($request, 'profile_image', 'admin_profile');
                     $client->profile_image = $imagePath;
                     $client->save();
                 }
+                $user->is_client = 1;
+                $user->save();
             }
         } else {
             $userData = [

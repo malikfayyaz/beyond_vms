@@ -22,6 +22,7 @@ class CareerOpportunitiesController extends BaseController
     public function index(Request $request)
     {
         if ($request->ajax()) {
+            $adminId = Auth::id();
             $data = CareerOpportunity::with('hiringManager', 'workerType')
             ->withCount('submissions');
             return DataTables::of($data)
@@ -98,6 +99,7 @@ class CareerOpportunitiesController extends BaseController
                 $filename = handleFileUpload($request, 'attachment', 'career_opportunities');
                 // Mapping form fields to database column names
                 $mappedData = $this->mapJobData($validatedData, $jobTemplate, $request, $filename);
+               // dd($mappedData);
                 $job = CareerOpportunity::create( $mappedData );
 
                 $this->syncBusinessUnits($request->input('businessUnits'), $job->id);
@@ -177,6 +179,7 @@ class CareerOpportunitiesController extends BaseController
             $newOpportunity = $originalOpportunity->replicate();
             $newOpportunity->jobstep2_complete = '0';
             $newOpportunity->title = $originalOpportunity->title;
+            $newOpportunity->user_id = Auth::id();
             $newOpportunity->created_at = Carbon::now();
             $newOpportunity->updated_at = Carbon::now();
             $newOpportunity->save();

@@ -16,7 +16,7 @@ class CareerOpportunity extends Model
     ];
     public function hiringManager()
     {
-        return $this->belongsTo(Client::class, 'hiring_manager', 'user_id');
+        return $this->belongsTo(Client::class, 'hiring_manager', 'id');
     }
     public function workerType()
     {

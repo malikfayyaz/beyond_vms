@@ -51,7 +51,7 @@
                         >
                             <option value="" disabled>Select Hiring Manager</option>
                             @foreach ($clients as $client)
-                                <option value="{{ $client->id }}">{{ $client->first_name }}</option>
+                                <option value="{{ $client->id }}">{{ $client->full_name }}</option>
                             @endforeach
                         </select>
                         <p class="text-red-500 text-sm mt-1" x-text="hiring_managerError"></p>
@@ -94,24 +94,24 @@
                             <th class="border p-2">Approval Role</th>
                             <th class="border p-2">Hiring Manager</th>
                             <th class="border p-2">Approval Required</th>
-                            <th class="border p-2">Action</th>
+                            <!-- <th class="border p-2">Action</th> -->
                         </tr>
                     </thead>
                     <tbody>
-                        <template x-for="(item, index) in filteredItems" :key="index">
-                            <tr>
-                                <td class="border p-2 text-center" x-text="index + 1"></td>
-                                <td class="border p-2 text-center" x-text="item.client.first_name ?? 'N/A'"></td>
-                                <td class="border p-2 text-center" x-text="item.approval_role.name ?? 'N/A'"></td>
-                                <td class="border p-2 text-center" x-text="item.hiring_manager.first_name ?? 'N/A'"></td>
-                                <td class="border p-2 text-center" x-text="item.approval_required ?? 'N/A'"></td>
-                                <td class="border p-2 text-center">
-                                    <!-- <span @click="editItem(item)" class="text-gray-600 cursor-pointer">
-                                        <i class="fa-regular fa-pen-to-square"></i>
-                                    </span> -->
-                                </td>
-                            </tr>
-                        </template>
+                    @foreach ($table_data as $data)
+                        <tr>
+                            <td class="border p-2 text-center">{{ $loop->index + 1 }}</td>
+                            <td class="border p-2 text-center">{{ $data->client->full_name ?? 'N/A' }}</td>
+                            <td class="border p-2 text-center">{{ $data->approvalRole->name ?? 'N/A' }}</td>
+                            <td class="border p-2 text-center">{{ $data->hiringManager->full_name ?? 'N/A' }}</td>
+                            <td class="border p-2 text-center">{{ $data->approval_required ?? 'N/A' }}</td>
+                            <!-- <td class="border p-2 text-center">
+                                <span @click="editItem({{ json_encode($data) }})" class="text-gray-600 cursor-pointer">
+                                    <i class="fa-regular fa-pen-to-square"></i>
+                                </span>
+                            </td> -->
+                        </tr>
+                    @endforeach
                     </tbody>
                 </table>
             </div>
@@ -122,7 +122,7 @@
     function accountManager() {
         return {
             clientId: "{{ $client_data->id }}", // Store client ID
-            clientName: "{{ $client_data->first_name }}", 
+            clientName: "{{ $client_data->full_name }}", 
             client: "",
             arroval_role: "",
             hiring_manager: "",
@@ -131,7 +131,7 @@
             arroval_roleError: "",
             hiring_managerError: "",
             approval_reqError: "",
-            items: @json($table_data), // Initialize items with tableData
+            // items: @json($table_data), // Initialize items with tableData
             
             searchTerm: "",
             editIndex: null,

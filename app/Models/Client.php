@@ -34,4 +34,9 @@ class Client extends Model
         return $query->where('profile_status', '1')
                      ->get();
     }
+    public static function getClientIdByUserId($userId)
+    {
+        $client = self::where('user_id', $userId)->first();
+        return $client ? $client->id : null;
+    }
 }
