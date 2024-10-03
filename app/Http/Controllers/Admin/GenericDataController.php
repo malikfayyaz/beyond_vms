@@ -357,7 +357,7 @@ class GenericDataController extends BaseController
         return view('admin.workflow.index', compact('data'));
     }
 
-    public function workflowEdit($id)
+    public function workflowCreate($id)
     {
         $client_data = Client::find($id);
 
@@ -373,7 +373,13 @@ class GenericDataController extends BaseController
         $item = GenericData::findOrFail($id);
 
         // Return the edit view with the item data
-        return view('admin.workflow.edit', compact('item','client_data','clients','roles','table_data'));
+        return view('admin.workflow.create', [
+            'client_data' => $client_data,
+            'clients' => $clients,
+            'roles' => $roles,
+            'table_data' => $table_data,
+            'editMode' => false // Pass false for create mode
+        ]);
     }
 
     public function workflowStore(Request $request)
@@ -386,18 +392,93 @@ class GenericDataController extends BaseController
             'approval_required' => 'required|in:yes,no',
         ]);
 
-        $workflow = new Workflow($validatedData);
-        $workflow->save();
+        $existingWorkflow = Workflow::where('client_id', $validatedData['client_id'])
+        ->where('hiring_manager_id', $validatedData['hiring_manager_id'])
+        ->first();
 
+        if ($existingWorkflow) {
+            $failMessage = 'A workflow with the same client and hiring manager already exists.';
 
-        $successMessage = 'Workflow updated successfully!';
-        $redirectUrl = route('admin.workflow');
+            // Redirect to a specific route or return a response
+            return response()->json([
+                'success' => false,  // Indicate failure
+                'message' => $failMessage,
+                // 'redirect_url' => route('admin.workflow.create', $validatedData['client_id']), // Redirect back URL for AJAX
+            ], 409);
+        } 
+        $workflow = Workflow::create($validatedData);
+        $successMessage = 'Workflow created successfully!';
+        $redirectUrl = route('admin.workflow.create', $workflow->client_id);
 
         // Redirect to a specific route or return a response
         return response()->json([
             'success' => true,
             'message' => $successMessage,
             'redirect_url' => $redirectUrl // Redirect back URL for AJAX
+        ]);
+    }
+
+    public function workflowEdit($id)
+    {
+        $workflow = Workflow::findOrFail($id);
+        $roles = Role::where('id',2)->get();
+        $clients = Client::where('profile_status', 1)->where('id', '!=', $workflow->client_id)->get();
+        $table_data = Workflow::with(['client', 'approvalRole', 'hiringManager']);
+        $client_data = Client::findOrFail($workflow->client_id);
+        // dd($workflow);
+
+        return view('admin.workflow.create', [
+            'workflow' => $workflow,
+            'roles' => $roles,
+            'clients' => $clients,
+            'client_data' => $client_data,
+            'table_data' => $table_data,
+            'editMode' => true ,
+            'editIndex' => $id
+        ]);
+    }
+
+    public function workflowUpdate(Request $request, $id)
+    {
+        $validatedData = $request->validate([
+            'client_id' => 'required|exists:clients,id',
+            'approval_role_id' => 'required|exists:roles,id',
+            'hiring_manager_id' => 'required|exists:clients,id',
+            'approval_required' => 'required|in:yes,no',
+        ]);
+
+        $existingWorkflow = Workflow::where('client_id', $validatedData['client_id'])
+        ->where('hiring_manager_id', $validatedData['hiring_manager_id'])
+        ->where('id', '!=', $id) // Exclude the current workflow
+        ->first();
+
+        if ($existingWorkflow) {
+            $failMessage = 'A workflow with the same client and hiring manager already exists.';
+
+            // Return a JSON response indicating failure
+            return response()->json([
+                'success' => false,
+                'message' => $failMessage,
+                'redirect_url' => route('admin.workflow.create', $validatedData['client_id']), // Optional
+            ], 409); // Conflict status code
+        }
+
+        $workflow = Workflow::findOrFail($id);
+        
+        $workflow->update([
+            'client_id' => $validatedData['client_id'],
+            'approval_role_id' => $validatedData['approval_role_id'],
+            'hiring_manager_id' => $validatedData['hiring_manager_id'],
+            'approval_required' => $validatedData['approval_required'],
+        ]);
+
+        $successMessage = 'Workflow updated successfully!';
+        session()->flash('success', $successMessage);
+
+        return response()->json([
+            'success' => true,
+            'message' => $successMessage,
+            'redirect_url' =>  route('admin.workflow.create', $workflow->client_id)  // Redirect URL for AJAX
         ]);
     }
 
