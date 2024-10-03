@@ -106,6 +106,7 @@ Route::middleware(['user_role:admin'])->group(function () {
         // offer
         Route::get('offer/{id}/create', [CareerOpportunitiesOfferController::class, 'create'])->name('offer.create');
         Route::post('offer/store', [CareerOpportunitiesOfferController::class, 'store'])->name('offer.store');
+        Route::post('offer/offerworkflowAccept', [CareerOpportunitiesOfferController::class, 'offerworkflowAccept'])->name('offer.offerworkflowAccept');
         Route::get('offer/index', [CareerOpportunitiesOfferController::class, 'index'])->name('offer.index');
         Route::get('offer/{id}', [CareerOpportunitiesOfferController::class, 'show'])->name('offer.show');
         Route::get('offer/view/{id}', [CareerOpportunitiesOfferController::class, 'show'])->name('offer.show');

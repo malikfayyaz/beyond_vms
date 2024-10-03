@@ -248,4 +248,29 @@ class CareerOpportunitiesOfferController extends BaseController
     {
         return number_format($data, 2);
     }
+    public function offerworkflowAccept(Request $request)
+    {
+        $validated = $request->validate([
+            'rowId' => 'required|integer',
+/*            'reason' => 'required|string',*/
+            'note' => 'required|string',
+            'jobAttachment' => 'nullable|file',
+        ]);
+        $filename = handleFileUpload($request, 'jobAttachment', 'career_opportunities');
+        $workflow = OfferWorkFlow::findOrFail($validated['rowId']);
+        $workflow->status = 'Approved'; // Update the status to approved
+        $workflow->approval_notes = $validated['note'];
+        $workflow->approval_doc = $filename;
+        $workflow->updated_at = Carbon::now();
+//        dd($workflow);
+        $workflow->save();
+        $redirectUrl = route('admin.offer.show', ['id' => $workflow->offer_id]);
+        return response()->json([
+            'success' => true,
+            'message' => 'Offer Workflow accepted successfully!',
+            'redirect_url' => $redirectUrl 
+        ]);
+
+    }
+
 }
