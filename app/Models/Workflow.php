@@ -26,7 +26,7 @@ class Workflow extends Model
 
     public function approvalRole()
     {
-        return $this->belongsTo(Role::class, 'approval_role_id', 'id');
+        return $this->belongsTo(Setting::class, 'approval_role_id', 'id');
     }
 
     public function hiringManager()

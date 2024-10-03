@@ -30,9 +30,10 @@
                             x-model="formData.arroval_role"
                         >
                             <option value="" disabled>Select Approval Role</option>
-                            @foreach ($roles as $role)
-                                <option value="{{ $role->id }}">{{ $role->name }}</option>
+                            @foreach ($roles as $key => $value)
+                                <option value="{{ $key }}">{{ $value }}</option>
                             @endforeach
+                           
                         </select>
                         <p class="text-red-500 text-sm mt-1" x-text="arroval_roleError"></p>
                     </div>
@@ -107,9 +108,9 @@
                             <tr>
                                 <td class="border p-2">{{ $loop->index + 1 }}</td>
                                 <td class="border p-2">{{ $data->client->full_name ?? 'N/A' }}</td>
-                                <td class="border p-2">{{ $data->approvalRole->name ?? 'N/A' }}</td>
+                                <td class="border p-2">{{ $data->approvalRole->title ?? 'N/A' }}</td>
                                 <td class="border p-2">{{ $data->hiringManager->full_name ?? 'N/A' }}</td>
-                                <td class="border p-2">{{ $data->approval_required ?? 'N/A' }}</td>
+                                <td class="border p-2">{{ $data->approval_required == "yes" ? "Yes" : "No" ?? 'N/A' }}</td>
                                 <td class="border p-2">
                                     <span @click="editItem({{ json_encode($data) }})" class="text-gray-600 cursor-pointer">
                                         <a href="{{route('admin.workflow.edit', $data->id)}}"

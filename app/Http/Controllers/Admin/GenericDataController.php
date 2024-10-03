@@ -363,7 +363,7 @@ class GenericDataController extends BaseController
 
         $clients = Client::where('profile_status', 1)->where('id', '!=', $id)->get();
 
-        $roles = Role::where('id',2)->get();
+        $roles = checksetting(16);
 
         $table_data = Workflow::with(['client', 'approvalRole', 'hiringManager'])
         ->where('client_id', $id)
@@ -387,7 +387,7 @@ class GenericDataController extends BaseController
         // Validate the incoming request data
         $validatedData = $request->validate([
             'client_id' => 'required|exists:clients,id',
-            'approval_role_id' => 'required|exists:roles,id',
+            'approval_role_id' => 'required|exists:settings,id',
             'hiring_manager_id' => 'required|exists:clients,id',
             'approval_required' => 'required|in:yes,no',
         ]);
@@ -421,7 +421,7 @@ class GenericDataController extends BaseController
     public function workflowEdit($id)
     {
         $workflow = Workflow::findOrFail($id);
-        $roles = Role::where('id',2)->get();
+        $roles = checksetting(16);
         $clients = Client::where('profile_status', 1)->where('id', '!=', $workflow->client_id)->get();
         $table_data = Workflow::with(['client', 'approvalRole', 'hiringManager']);
         $client_data = Client::findOrFail($workflow->client_id);
@@ -442,7 +442,7 @@ class GenericDataController extends BaseController
     {
         $validatedData = $request->validate([
             'client_id' => 'required|exists:clients,id',
-            'approval_role_id' => 'required|exists:roles,id',
+            'approval_role_id' => 'required|exists:settings,id',
             'hiring_manager_id' => 'required|exists:clients,id',
             'approval_required' => 'required|in:yes,no',
         ]);
