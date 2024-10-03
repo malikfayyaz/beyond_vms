@@ -274,6 +274,11 @@ class CareerOpportunitiesOfferController extends BaseController
             $nextWorkflow->email_sent = 1;
             $nextWorkflow->save();
         }
+        else{
+            $offer = CareerOpportunitiesOffer::findOrFail($workflow->offer_id);
+            $offer->status = '4';
+            $offer->save();
+        }
         $redirectUrl = route('admin.offer.show', ['id' => $workflow->offer_id]);
         return response()->json([
             'success' => true,
