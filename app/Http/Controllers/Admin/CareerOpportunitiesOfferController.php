@@ -268,7 +268,7 @@ class CareerOpportunitiesOfferController extends BaseController
         return response()->json([
             'success' => true,
             'message' => 'Offer Workflow accepted successfully!',
-            'redirect_url' => $redirectUrl 
+            'redirect_url' => $redirectUrl
         ]);
 
     }
