@@ -256,6 +256,7 @@ class CareerOpportunitiesOfferController extends BaseController
             'note' => 'required|string',
             'jobAttachment' => 'nullable|file',
         ]);
+        
         $workflow = OfferWorkFlow::findOrFail($request->rowId);
         offerHelper::approveofferWorkFlow($request);
        
