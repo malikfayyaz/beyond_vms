@@ -7,6 +7,7 @@ use App\Models\OfferWorkFlow;
 use Illuminate\Support\Facades\Validator;
 use App\Models\CareerOpportunitiesOffer;
 use App\Models\CareerOpportunitySubmission;
+use App\Facades\CareerOpportunitiesOffer as offerHelper;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Yajra\DataTables\Facades\DataTables;
@@ -162,30 +163,13 @@ class CareerOpportunitiesOfferController extends Controller
         $validated = $request->validate([
             'rowId' => 'required|integer',
         ]);
-        $workflow = OfferWorkFlow::findOrFail($validated['rowId']);
-        $workflow->status = 'Approved'; // Update the status to approved
-         $workflow->save();
-        $nextWorkflow = OfferWorkFlow::where([
-            ['offer_id', '=', $workflow->offer_id],
-            ['status', '=', 'Pending'],
-            ['email_sent', '=', 0]
-        ])
-            ->orderBy('id')
-            ->first();
-        if ($nextWorkflow) {
-            $nextWorkflow->email_sent = 1;
-            $nextWorkflow->save();
-        }
-        else{
-            $offer = CareerOpportunitiesOffer::findOrFail($workflow->offer_id);
-            $offer->status = '4';
-            $offer->save();
-        }
-        $redirectUrl = route('client.offer.show', ['id' => $workflow->offer_id]);
+        $workflow = OfferWorkFlow::findOrFail($request->rowId);
+        offerHelper::approveofferWorkFlow($request);
+        
         return response()->json([
             'success' => true,
             'message' => 'Offer Workflow accepted successfully!',
-            'redirect_url' => $redirectUrl
+            'redirect_url' => route('client.offer.show', ['id' => $workflow->offer_id]),
         ]);
 
     }
