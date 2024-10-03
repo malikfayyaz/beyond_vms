@@ -197,6 +197,9 @@
                                         ></p>
                                     </div>
                                 </div>
+                                @php $vendorrecords = $workorder->vendor->teamMembers;
+                               
+                                @endphp
                                 <div class="flex space-x-4 mb-4">
                                     <div class="flex-1">
                                         <label class="block mb-2"
@@ -209,12 +212,22 @@
                                             data-field="accountManager"
                                             id="accountManager"
                                         >
-                                            <option value="">Select a category</option>
-                                            <option value="javascript">JavaScript</option>
-                                            <option value="python">Python</option>
-                                            <option value="java">Java</option>
-                                            <option value="csharp">C#</option>
-                                            <option value="ruby">Ruby</option>
+                                       
+                                            <option value="">Select Account Manager</option>
+                                            
+                                            @isset($workorder->vendor)
+                                            <option value="{{ $workorder->vendor->id }}" 
+                                               >
+                                                {{ $workorder->vendor->full_name }} 
+                                            </option>
+                                            {{-- Team Members --}}
+                                                @foreach($workorder->vendor->teamMembers as $team)
+                                                <option value="{{$team->teammember_id}}" 
+                                               
+                                                >{{$team->teammember->full_name}}</option>
+                                                @endforeach
+                                            @endisset
+                                            
                                         </select>
                                         <p
                                             x-show="errors.accountManager"
@@ -233,12 +246,19 @@
                                             data-field="recruitmentManager"
                                             id="recruitmentManager"
                                         >
-                                            <option value="">Select a category</option>
-                                            <option value="javascript">JavaScript</option>
-                                            <option value="python">Python</option>
-                                            <option value="java">Java</option>
-                                            <option value="csharp">C#</option>
-                                            <option value="ruby">Ruby</option>
+                                            <option value="">Select Recruitment Manager</option>
+                                            @isset($workorder->vendor)
+                                            <option value="{{ $workorder->vendor->id }}" 
+                                               >
+                                                {{ $workorder->vendor->full_name }} 
+                                            </option>
+                                            {{-- Team Members --}}
+                                                @foreach($workorder->vendor->teamMembers as $team)
+                                                <option value="{{$team->teammember_id}}" 
+                                                
+                                                >{{$team->teammember->full_name}}</option>
+                                                @endforeach
+                                            @endisset
                                         </select>
                                         <p
                                             x-show="errors.recruitmentManager"
@@ -252,10 +272,10 @@
                                         <label class="block mb-2 capitalize">location tax</label>
                                         <input
                                             type="number"
-                                            x-model="formData.candidateFirstName"
+                                            x-model="formData.locationTax"
                                             class="w-full h-12 px-4 text-gray-500 border border-gray-300 rounded-md shadow-sm focus:outline-none"
                                             placeholder="0.00%"
-                                            id="candidateFirstName"
+                                            id="locationTax"
                                         />
                                     </div>
                                     <div class="flex-1"></div>
@@ -369,6 +389,7 @@
                                         >
                                         <input
                                             type="file"
+                                            @change="handleFileUpload"
                                             id="document"
                                             name="document"
                                             class="block w-full px-2 py-3 text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none"
@@ -407,8 +428,11 @@
             first_name:'{{ old('first_name', $workorder->consultant->first_name ?? '') }}' ,
             middle_name:'{{ old('middle_name', $workorder->consultant->middle_name ?? '') }}' ,
             last_name:'{{ old('last_name', $workorder->consultant->last_name ?? '') }}' ,
-            accountManager: "",
-            recruitmentManager: "",
+            accountManager: '{{ old('accountManager', $workorder->submission->emp_msp_account_mngr ?? '') }}',
+            recruitmentManager: '{{ old('recruitmentManager', $workorder->submission->emp_msp_account_mngr ?? '') }}',
+            workorder_id:'{{ old('workorder_id', $workorder->id ?? '') }}' ,
+            locationTax:"",
+            fileUpload:'',
             codeOfConduct: false,
             dataPrivacy: false,
             nonDisclosure: false,
@@ -419,6 +443,11 @@
           init() {
             this.initSelect2();
           },
+
+          handleFileUpload(event) {
+            const file = event.target.files[0];
+            this.formData.fileUpload = file || null;
+            },
 
           initSelect2() {
             this.$nextTick(() => {
@@ -523,9 +552,38 @@
             const isValid = this.validateForm();
             if (isValid) {
               if (action === "save") {
+                let formData = new FormData();
+                Object.keys(this.formData).forEach((key) => {
+                  if (Array.isArray(this.formData[key])) {
+                    // If the key is an array (like businessUnits), handle each item
+                    this.formData[key].forEach((item, index) => {
+                      formData.append(`${key}[${index}]`, JSON.stringify(item));
+                    });
+                  } else {
+                    formData.append(key, this.formData[key]);
+                  }
+                });
+                formData.append('type', 'save');
+                const url = "/vendor/workorder/store";
+              ajaxCall(url,'POST', [[onSuccess, ['response']]], formData);
+
                 console.log("Form is valid. Saving...");
                 // Add your save logic here
               } else if (action === "saveAndSubmit") {
+                let formData = new FormData();
+                Object.keys(this.formData).forEach((key) => {
+                  if (Array.isArray(this.formData[key])) {
+                    // If the key is an array (like businessUnits), handle each item
+                    this.formData[key].forEach((item, index) => {
+                      formData.append(`${key}[${index}]`, JSON.stringify(item));
+                    });
+                  } else {
+                    formData.append(key, this.formData[key]);
+                  }
+                });
+                formData.append('type', 'saveAndSubmit');
+                const url = "/vendor/workorder/store";
+              ajaxCall(url,'POST', [[onSuccess, ['response']]], formData);
                 console.log("Form is valid. Saving and submitting...");
                 // Add your save and submit logic here
               }

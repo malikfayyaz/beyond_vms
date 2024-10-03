@@ -7,6 +7,7 @@ use App\Http\Controllers\{
     Vendor\CareerOpportunitiesSubmissionController,
     Vendor\CareerOpportunitiesOfferController,
     Vendor\CareerOpportunitiesInterviewController,
+    Vendor\CareerOpportunitiesWorkOrderController,
 };
 Route::middleware(['user_role:vendor'])->group(function () {
     Route::prefix('vendor')->name('vendor.')->group(function () {
@@ -24,8 +25,10 @@ Route::middleware(['user_role:vendor'])->group(function () {
         Route::get('offer/index', [CareerOpportunitiesOfferController::class, 'index'])->name('offer.index');
         Route::post('offer/accept-offer', [CareerOpportunitiesOfferController::class, 'acceptOffer'])->name('offer.accept');
         Route::get('offer/view/{id}', [CareerOpportunitiesOfferController::class, 'show'])->name('offer.show');
-        Route::get('workorder/index', [\App\Http\Controllers\Vendor\CareerOpportunitiesWorkOrderController::class, 'index'])->name('workorder.index');
-        Route::get('workorder/{id}', [\App\Http\Controllers\Vendor\CareerOpportunitiesWorkOrderController::class, 'show'])->name('workorder.show');
+        // workorder
+        Route::get('workorder/index', [CareerOpportunitiesWorkOrderController::class, 'index'])->name('workorder.index');
+        Route::get('workorder/{id}', [CareerOpportunitiesWorkOrderController::class, 'show'])->name('workorder.show');
+        Route::post('workorder/store', [CareerOpportunitiesWorkOrderController::class, 'store'])->name('workorder.store');
 
          //interview
          Route::match(['get', 'post'], 'interview/index', [CareerOpportunitiesInterviewController::class, 'index'])->name('interview.index');

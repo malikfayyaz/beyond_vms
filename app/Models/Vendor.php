@@ -29,4 +29,9 @@ class Vendor extends Model
         return $this->belongsTo(User::class, 'user_id');
     }
 
+    public function teamMembers()
+    {
+        return $this->hasMany(VendorTeammember::class, 'vendor_id');
+    }
+
 }

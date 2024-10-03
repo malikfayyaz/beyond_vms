@@ -54,6 +54,100 @@ class CareerOpportunitiesWorkOrderController extends Controller
         // Logic to get and display catalog items
         return view('vendor.workorder.index'); // Assumes you have a corresponding Blade view
     }
+
+    public function store(Request $request)
+    {
+       
+        // Define your validation rules
+        $rules = [
+            'codeOfConduct' => 'required|boolean',
+            'dataPrivacy' => 'required|boolean',
+            'nonDisclosure' => 'required|boolean',
+            'criminalBackground' => 'required|boolean',
+            'accountManager' => 'required|integer',
+            'recruitmentManager' => 'required|integer',
+            'workorder_id'=> 'required|integer',
+        ];
+        
+        $messages = [
+            'codeOfConduct.required' => 'You must agree to the Code of Conduct.',
+            'dataPrivacy.required' => 'You must agree to the Data Privacy Policy.',
+            'nonDisclosure.required' => 'You must agree to the Non-Disclosure Agreement.',
+            'criminalBackground.required' => 'You must agree to the Criminal Background Check.',
+            'accountManager.required' => 'An Account Manager is required.',
+            'recruitmentManager.required' => 'A Recruitment Manager is required.',
+            // Add more custom messages as needed
+        ];
+
+
+        // dd($validator );
+        // If validation fails, return JSON response with errors
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'errors' => $validator->errors(),
+            ], 422); // 422 Unprocessable Entity status
+        }
+        $workorder = CareerOpportunitiesWorkorder::findOrFail($request->workorder_id);
+        $submission = $workorder->submission;
+        if(isset($submission)) {
+            $submission->emp_msp_account_mngr = $request->recruitmentManager;
+			$submission->save();
+        }
+        $workorder->location_tax = removeComma($request->lacationTax);
+        dd($request);
+        $validatedData = $validator->validated();
+        $existingOffer = CareerOpportunitiesOffer::where('submission_id', $request->submissionid)
+        ->whereIn('status', [4, 1])
+        ->first();
+        // if($existingOffer){
+
+        //     session()->flash('success', 'Offer already exist!');
+        //     return response()->json([
+        //         'success' => true,
+        //         'message' => 'Offer already exist!',
+        //         'redirect_url' => route('vendor.offer.show',  ['id' => $request->submissionid]) // Redirect back URL for AJAX
+        //     ]);
+        // }
+        $submission = CareerOpportunitySubmission::findOrFail($request->submissionid);
+        $jobData = $submission->careerOpportunity;
+        $mapedData = [
+            "submission_id" =>$validatedData['submissionid'],
+            "vendor_id" =>$submission->vendor_id,
+            "candidate_id" =>$submission->candidate_id,
+            "hiring_manager_id" =>$validatedData['approvingManager'],
+            "career_opportunity_id" =>$submission->career_opportunity_id,
+            "location_id" =>$validatedData['location'],
+            "markup" =>$validatedData['markup'],
+            "created_by_id" =>\Auth::id(),
+            "created_by_type" =>3,
+            "status" =>1,
+            "offer_pay_rate" =>removeComma($validatedData['payRate']),
+            "offer_bill_rate" =>removeComma($validatedData['billRate']),
+            "over_time" =>removeComma($validatedData['overTime']),
+            "client_overtime" =>removeComma($validatedData['overTimeCandidate']),
+            "double_time" =>removeComma($validatedData['doubleRate']),
+            "client_doubletime" =>removeComma($validatedData['doubleTimeCandidate']),
+
+            "remote_option" =>$validatedData['remote'],
+            // "notes" =>$validatedData['notes'],
+            "start_date" =>!empty($validatedData['startDate'])
+            ? Carbon::createFromFormat('Y/m/d', $validatedData['startDate'])->format('Y-m-d')  : null,
+            "end_date" =>!empty($validatedData['endDate'])
+            ? Carbon::createFromFormat('Y/m/d', $validatedData['endDate'])->format('Y-m-d')  : null,
+        ];
+        $offerCreate = CareerOpportunitiesOffer::create( $mapedData );
+        calculateVendorRates($offerCreate,$offerCreate->offer_bill_rate,$offerCreate->client_overtime,$offerCreate->client_doubletime);
+        calculateOfferEstimates($offerCreate,$jobData);
+        offerHelper::createOfferWorkflow($offerCreate);
+        session()->flash('success', 'Offer saved successfully!');
+        return response()->json([
+            'success' => true,
+            'message' => 'Offer saved successfully!',
+            'redirect_url' => route('vendor.offer.index') // Redirect back URL for AJAX
+        ]);
+
+    }
     public function show($id)
     {
         $workorder = CareerOpportunitiesWorkorder::findOrFail($id);
