@@ -137,7 +137,13 @@
                                 >
                             </div>
                         </div>
-                        <div x-data="workOrderForm">
+                        @php   
+                                $disabled = true;
+                                if ( $workorder->verification_status == 0 ) {
+                                    $disabled = false;
+                                }
+                         @endphp
+                         <div x-data="workOrderForm">
                             <form
                                 action="#"
                                 class="mt-4"
@@ -200,10 +206,7 @@
                                     </div>
                                 </div>
                                 @php $vendorrecords = $workorder->vendor->teamMembers;
-                                $disabled = false;
-                                if ( $workorder->verification_status == 0 ) {
-                                    $disabled = true;
-                                }
+                              
                                 @endphp
                                 <div class="flex space-x-4 mb-4">
                                     <div class="flex-1">
@@ -216,6 +219,7 @@
                                             class="w-full select2-single custom-style"
                                             data-field="accountManager"
                                             id="accountManager"
+                                            :disabled="isDisabled"
                                         >
                                        
                                             <option value="">Select Account Manager</option>
@@ -250,6 +254,7 @@
                                             class="w-full select2-single custom-style"
                                             data-field="recruitmentManager"
                                             id="recruitmentManager"
+                                             :disabled="isDisabled"
                                         >
                                             <option value="">Select Recruitment Manager</option>
                                             @isset($workorder->vendor)
@@ -281,6 +286,7 @@
                                             class="w-full h-12 px-4 text-gray-500 border border-gray-300 rounded-md shadow-sm focus:outline-none"
                                             placeholder="0.00%"
                                             id="locationTax"
+                                             :disabled="isDisabled"
                                         />
                                     </div>
                                     <div class="flex-1"></div>
@@ -304,6 +310,7 @@
                                                 class="flex items-center space-x-3 cursor-pointer"
                                             >
                                                 <input
+                                                 :disabled="isDisabled"
                                                     type="checkbox"
                                                     x-model="formData.codeOfConduct"
                                                     class="form-checkbox h-5 w-5 text-blue-600 rounded focus:ring-blue-500 border-gray-300 cursor-pointer"
@@ -324,6 +331,7 @@
                                                 class="flex items-center space-x-3 cursor-pointer"
                                             >
                                                 <input
+                                                 :disabled="isDisabled"
                                                     type="checkbox"
                                                     x-model="formData.dataPrivacy"
                                                     class="form-checkbox h-5 w-5 text-blue-600 rounded focus:ring-blue-500 border-gray-300 cursor-pointer"
@@ -346,6 +354,7 @@
                                                 class="flex items-center space-x-3 cursor-pointer"
                                             >
                                                 <input
+                                                 :disabled="isDisabled"
                                                     type="checkbox"
                                                     x-model="formData.nonDisclosure"
                                                     class="form-checkbox h-5 w-5 text-blue-600 rounded focus:ring-blue-500 border-gray-300 cursor-pointer"
@@ -367,6 +376,7 @@
                                                 class="flex items-center space-x-3 cursor-pointer"
                                             >
                                                 <input
+                                                 :disabled="isDisabled"
                                                     type="checkbox"
                                                     x-model="formData.criminalBackground"
                                                     class="form-checkbox h-5 w-5 text-blue-600 rounded focus:ring-blue-500 border-gray-300 cursor-pointer"
@@ -393,6 +403,7 @@
                                         >Document</label
                                         >
                                         <input
+                                         :disabled="isDisabled"
                                             type="file"
                                             @change="handleFileUpload"
                                             id="document"
@@ -403,6 +414,7 @@
                                 </div>
                                 <div class="flex-1 flex items-end gap-2">
                                     <button
+                                    :disabled="isDisabled"
                                         @click="submitForm('save')"
                                         type="submit"
                                         class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
@@ -410,6 +422,7 @@
                                         Save
                                     </button>
                                     <button
+                                    :disabled="isDisabled"
                                         @click="submitForm('saveAndSubmit')"
                                         type="button"
                                         class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
@@ -430,6 +443,7 @@
 <script>
       document.addEventListener("alpine:init", () => {
         Alpine.data("workOrderForm", () => ({
+            isDisabled: @json($disabled),
           formData: {
             personalEmailAddress: '{{ old('personalEmailAddress', $workorder->consultant->user->email ?? '') }}',
             first_name:'{{ old('first_name', $workorder->consultant->first_name ?? '') }}' ,
