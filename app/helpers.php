@@ -182,6 +182,13 @@ if (!function_exists('numberOfWorkingDays')) {
             return $uniqueCode;
         }
     }
+
+    if (!function_exists('formatDate')) {
+        function formatDate($date)
+        {
+            return Carbon::parse($date)->format('m/d/Y');
+        }
+    }
 }
 
 
