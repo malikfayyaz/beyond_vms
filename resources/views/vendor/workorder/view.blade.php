@@ -412,6 +412,54 @@
                                         />
                                     </div>
                                 </div>
+                                <div class="flex items-center justify-between py-4 border-t">
+                                    <table class="w-full border-collapse border">
+                                        <thead>
+                                            <tr class="bg-gray-100">
+                                                <th class="border p-2">Document Check List</th>
+                                                <th class="border p-2">Date</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td class="border p-2">Code of Conduct</td>
+                                                <td class="border p-2">09/30/2024</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="border p-2">Data Privacy / Data Handling</td>
+                                                <td class="border p-2">09/30/2024</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="border p-2">Non-Disclosure</td>
+                                                <td class="border p-2">09/30/2024</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="border p-2">Criminal Background</td>
+                                                <td class="border p-2">09/30/2024</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <div class="flex items-center justify-between py-4 border-t">
+                                    <table class="w-full border-collapse border">
+                                        <thead>
+                                            <tr class="bg-gray-100">
+                                                <th class="border p-2">Document Type</th>
+                                                <th class="border p-2">Document List</th>
+                                                <th class="border p-2">Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td class="border p-2">Document</td>
+                                                <td class="border p-2"><a href="#">test name doc</a></td>
+                                                <td class="border p-2"><a href="#" class="text-blue-500 hover:text-blue-700"><i class="fas fa-download"></i></a></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+
                                 <div class="flex-1 flex items-end gap-2">
                                     <button
                                     :disabled="isDisabled"
