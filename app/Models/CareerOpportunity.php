@@ -34,7 +34,7 @@ class CareerOpportunity extends Model
     }
     public function workFlow()
     {
-        return $this->belongsTo(JobWorkFlow::class, 'hiring_manager', 'client_id');
+        return $this->hasMany(JobWorkFlow::class,'job_id','id');
     }
 
     public function hiringManager()

@@ -38,6 +38,9 @@ Route::middleware(['user_role:client'])->group(function () {
          Route::post('interview/store', [CareerOpportunitiesInterviewController::class, 'store'])->name('interview.store');
          Route::get('interview/{id}/edit', [CareerOpportunitiesInterviewController::class, 'edit'])->name('interview.edit');
          Route::put('interview/{id}/update', [CareerOpportunitiesInterviewController::class, 'update'])->name('interview.update');
+        Route::POST('jobWorkFlowApprove', [\App\Http\Controllers\Client\CareerOpportunitiesController::class, 'jobWorkFlowApprove'])->name('jobWorkFlowApprove');
+        Route::POST('jobWorkFlowReject', [\App\Http\Controllers\Client\CareerOpportunitiesController::class, 'jobWorkFlowReject'])->name('jobWorkFlowReject');
+
 
     });
 });
