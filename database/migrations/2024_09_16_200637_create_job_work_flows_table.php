@@ -21,6 +21,7 @@ return new class extends Migration
             $table->integer('approval_role_id')->nullable();
             $table->integer('bulk_approval')->nullable();
             $table->integer('approval_number')->nullable();
+            $table->integer('email_sent')->nullable();
             $table->Enum('status', ['Pending' , 'Approved' , 'Rejected'])->nullable();
             $table->dateTime('status_time')->nullable();
             $table->string('approval_required')->nullable();

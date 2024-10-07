@@ -14,6 +14,7 @@ use App\Models\JobWorkFlow;
 use Illuminate\Support\Carbon;
 use Yajra\DataTables\Facades\DataTables;
 use App\Models\DivisionBranchZoneConfig;
+use App\Models\Setting;
 use App\JobWorkflowUpdate;
 
 class CareerOpportunitiesController extends BaseController
@@ -29,7 +30,10 @@ class CareerOpportunitiesController extends BaseController
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('hiring_manager', function ($row) {
-                    return $row->hiringManager->full_name ? $row->hiringManager->full_name : 'N/A';
+                    return (isset($row->hiringManager->full_name)) ? $row->hiringManager->full_name : 'N/A';
+                })
+                ->addColumn('jobStatus', function ($row) {
+                    return (isset($row->jobStatus)) ? $row->getStatus($row->jobStatus) : 'N/A';
                 })
                 ->addColumn('duration', function ($row) {
                     return $row->date_range ? $row->date_range : 'N/A';
@@ -40,7 +44,6 @@ class CareerOpportunitiesController extends BaseController
                 ->addColumn('worker_type', function ($row) {
                     return $row->workerType ? $row->workerType->title : 'N/A';
                 })
-
                 ->addColumn('action', function ($row) {
                     $btn = ' <a href="' . route('admin.career-opportunities.show', $row->id) . '"
                        class="text-blue-500 hover:text-blue-700 mr-2 bg-transparent hover:bg-transparent"
@@ -148,11 +151,13 @@ class CareerOpportunitiesController extends BaseController
             'createdBy',
             'glCode',
             'category')->findOrFail($id);
+        $jobWorkFlow = JobWorkFlow::where('job_id', $id)->orderby('approval_number', 'ASC')->get();
+        $rejectReasons =  Setting::where('category_id', 9)->get();
         // Optionally, you can dump the data for debugging purposes
         // dd($job); // Uncomment to check the data structure
 
         // Return the view and pass the job data to it
-        return view('admin.career_opportunities.view', compact('job'));
+        return view('admin.career_opportunities.view', compact('job','jobWorkFlow','rejectReasons'));
     }
 
     /**
@@ -434,46 +439,15 @@ class CareerOpportunitiesController extends BaseController
             })
             ->addColumn('action', function($row){
                  $btn = ' <div x-data="{ open: false }" @keydown.window.escape="open = false">
-                        <button @click="open = true" class="inline-flex items-center px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-red-600">
-                            Approve
+                        <button @click="openModal = true; currentRowId = 1" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                            Accept
                         </button>
-                         <form @submit.prevent="submitForm" enctype="multipart/form-data" class="space-y-6">
-                         ' . csrf_field() . '
-                         <div x-show="open" class="fixed inset-0 flex items-center justify-center bg-gray-500 bg-opacity-50 z-50" style="display: none;">
-                            <div class="bg-white rounded-lg shadow-lg max-w-lg mx-4 p-6">
-                                <h2 class="text-lg font-bold mb-4">Approve Workflow</h2>
-                                <p class="mb-4">
-                                <input type="hidden" name="id" value="'.$row->id.'">
-                                <input type="hidden" name="action" value="approve">
-                                <textarea placeholder="Enter your message" rows="4" class="border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 w-full"></textarea>
-                                <input type="file" class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500">
-
-                                </p>
-                                <button type="submit"
-                                    class="inline-flex justify-center px-4 py-2 bg-blue-500 text-white font-semibold text-sm rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
-                                    Submit
-                                </button>
-                                <button @click="open = false" class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">
-                                    Close
-                                </button>
-                            </div>
                         </div>
-                    </div>
-                </form>
-                    <div x-data="{ open: false }" @keydown.window.escape="open = false">
-                        <button @click="open = true" class="inline-flex items-center px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600">
+                        
+                        <div x-data="{ open: false }" @keydown.window.escape="open = false">
+                            <button @click="open = true" class="inline-flex items-center px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600">
                             Reject
                         </button>
-
-                         <div x-show="open" class="fixed inset-0 flex items-center justify-center bg-gray-500 bg-opacity-50 z-50" style="display: none;">
-                            <div class="bg-white rounded-lg shadow-lg w-full max-w-lg mx-4 p-6">
-                                <h2 class="text-lg font-bold mb-4">Modal Title</h2>
-                                <p class="mb-4">This is a modal description.</p>
-                                <button @click="open = false" class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">
-                                    Close
-                                </button>
-                            </div>
-                        </div>
                     </div>';
                 return $btn;
             })
@@ -481,9 +455,16 @@ class CareerOpportunitiesController extends BaseController
 
     }
 
-    public function jobWorkFlowUpdate(Request $request){
-        dd($request->all());
+    public function jobWorkFlowApprove(Request $request){
+        $jobWorkflow = new JobWorkflowUpdate();
+        $jobWorkflow->approveJobWorkFlow($request);
     }
+
+    public function jobWorkFlowReject(Request $request){
+        $jobWorkflow = new JobWorkflowUpdate();
+        $jobWorkflow->rejectJobWorkFlow($request);
+    }
+
 
 
 }

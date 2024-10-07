@@ -10,6 +10,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Yajra\DataTables\Facades\DataTables;
+use App\JobWorkflowUpdate;
+use App\Models\Setting;
+use App\Models\JobWorkFlow;
 
 class CareerOpportunitiesController extends Controller
 {
@@ -19,14 +22,18 @@ class CareerOpportunitiesController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $clientid = Auth::id();
-            $data = CareerOpportunity::with('hiringManager','workerType')
-            ->withCount('submissions')
-            ->where('user_id', $clientid);
+            $data = CareerOpportunity::with(['hiringManager', 'workerType'])
+                ->withCount([
+                    'submissions',
+                    'workFlow' => function ($query) use ($clientid) {
+                        $query->where('client_id', $clientid);
+                    }
+                ])
+                ->where('user_id', $clientid)->toSql();
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('hiring_manager', function($row) {
-                    return $row->hiringManager->full_name ? $row->hiringManager->full_name : 'N/A';
+                    return (isset($row->hiringManager->full_name)) ? $row->hiringManager->full_name : 'N/A';
                 })
                 ->addColumn('duration', function($row) {
                     return $row->date_range ? $row->date_range : 'N/A';
@@ -126,12 +133,14 @@ class CareerOpportunitiesController extends Controller
     public function show(string $id)
     {
         $job = CareerOpportunity::with('hiringManager')->findOrFail($id);
+        $jobWorkFlow = JobWorkFlow::where('job_id', $id)->orderby('approval_number', 'ASC')->get();
+        $rejectReasons =  Setting::where('category_id', 9)->get();
 
         // Optionally, you can dump the data for debugging purposes
         // dd($job); // Uncomment to check the data structure
 
         // Return the view and pass the job data to it
-        return view('client.career-opportunities.view', compact('job'));
+        return view('client.career-opportunities.view', compact('job', 'jobWorkFlow', 'rejectReasons'));
         //
     }
 

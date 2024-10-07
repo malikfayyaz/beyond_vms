@@ -361,8 +361,7 @@ class GenericDataController extends BaseController
         
         $roles = Role::where('id',2)->get();
 
-        $table_data = Workflow::with(['client', 'approvalRole', 'hiringManager'])->get();
-
+        $table_data = Workflow::with(['client', 'approvalRole', 'hiringManager'])->where('client_id', $id)->get();
         // Fetch the item to edit
         $item = GenericData::findOrFail($id);
         // Return the edit view with the item data
@@ -371,7 +370,7 @@ class GenericDataController extends BaseController
 
     public function workflowStore(Request $request)
     {
-        // dd($request->all())
+        //dd($request->all());
         // Validate the incoming request data
         $validatedData = $request->validate([
             'client_id' => 'required|exists:clients,id',

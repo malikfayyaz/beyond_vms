@@ -14,6 +14,29 @@ class CareerOpportunity extends Model
         // List attributes you want to guard from mass assignment
         // e.g., 'id', 'created_at', 'updated_at'
     ];
+
+    public static function getStatus($statusId)
+    {
+        switch ($statusId) {
+            case 0:
+                return 'Draft';
+            case 1:
+                return 'Pending';
+            case 2:
+                return 'Rejected';
+            case 3:
+                return 'Approve';
+            case 4:
+                return 'Supplier Pending';
+            default:
+                return 'danger'; 
+        }
+    }
+    public function workFlow()
+    {
+        return $this->belongsTo(JobWorkFlow::class, 'hiring_manager', 'client_id');
+    }
+
     public function hiringManager()
     {
         return $this->belongsTo(Client::class, 'hiring_manager', 'user_id');
