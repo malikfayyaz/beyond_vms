@@ -396,16 +396,9 @@ class GenericDataController extends BaseController
             'approval_number' => 'required'
         ]);
 
-<<<<<<< HEAD
         $existingWorkflow = Workflow::where('client_id', $validatedData['client_id'])
         ->where('hiring_manager_id', $validatedData['hiring_manager_id'])
         ->first();
-=======
-        $workflow = new Workflow($validatedData);
-        $workflow->save();
-        //dd($workflow);
-
->>>>>>> jobworkflow
 
         if ($existingWorkflow) {
             $failMessage = 'A workflow with the same client and hiring manager already exists.';
