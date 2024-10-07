@@ -207,7 +207,7 @@
                     this.approval_reqError = "";
                 }
                 //alert(this.approval_number);
-                if (this.approval_number.trim() === "") {
+                if (this.formData.approval_number.trim() === "") {
                     this.approval_numberError = `Please select an Approval Number`;
                     this.error += 1;
                 } else {
