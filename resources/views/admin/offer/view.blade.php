@@ -49,7 +49,9 @@
     errors: {},
     validateForm() {
         this.errors = {};
-<!--        if (!this.reason) this.errors.reason = 'Please select a reason';-->
+       if (this.actionType === 'Reject' && !this.reason) {
+            this.errors.reason = 'Please select a reason';
+        }
         if (!this.note.trim()) this.errors.note = 'Please enter a note';
         return Object.keys(this.errors).length === 0;
     },
@@ -62,7 +64,9 @@
         const formData = new FormData();
         formData.append('rowId', this.currentRowId); // Use currentRowId for identification
         formData.append('actionType', this.actionType); //for button
-<!--        formData.append('reason', this.reason);-->
+        if (this.actionType === 'Reject') {
+                formData.append('reason', this.reason);
+            }
         formData.append('note', this.note);
 
         // Get the file input element and append the file if it exists
@@ -195,19 +199,20 @@
                                                 <span x-text="currentRowId"></span>
                                             </p>
                                         </div>
-                                        {{--                                        <label for="reason" class="block text-sm font-medium text-gray-700 mb-1">
-                                                                                    Reason for Rejection
-                                                                                    <span class="text-red-500">*</span>
-                                                                                </label>
-                                                                                <select id="reason" x-model="reason" @input="clearError('reason')" class="w-full">
-                                                                                    <option value="">Select</option>
-                                                                                    <option value="1">Not qualified</option>
-                                                                                    <option value="2">Lack of experience</option>
-                                                                                    <option value="3">Poor communication skills</option>
-                                                                                    <option value="4">Overqualified</option>
-                                                                                </select>
-                                                                                <p x-show="errors.reason" class="text-red-500 text-sm mt-1" x-text="errors.reason"></p>
-                                                                            </div>--}}
+                                        <div x-show="actionType === 'Reject'" class="mt-4">
+                                            <label for="reason" class="block text-sm font-medium text-gray-700 mb-1">
+                                                Reason for Rejection
+                                                <span class="text-red-500">*</span>
+                                            </label>
+                                            <select id="reason" x-model="reason" @input="clearError('reason')" class="w-full">
+                                                <option value="">Select</option>
+                                                @foreach ($rejectionreason as $key => $reason)
+                                                    <option value="{{ $key }}">{{ $reason }}</option>
+                                                @endforeach
+                                            </select>
+                                            <p x-show="errors.reason" class="text-red-500 text-sm mt-1" x-text="errors.reason"></p>
+                                        </div>
+                                        </div>
                                     <div class="mb-4">
                                         <label for="note" class="block text-sm font-medium text-gray-700 mb-1">
                                             Note <span class="text-red-500">*</span>
