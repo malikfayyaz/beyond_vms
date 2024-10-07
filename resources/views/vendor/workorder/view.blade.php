@@ -457,10 +457,10 @@
                                                 <td class="border p-2">Document</td>
                                                 <td class="border p-2"><a href="#">{{$workorder->workorderbackground->file }}</a></td>
                                                 <td class="border p-2">
-                                                    <!-- <a href="#" class="text-blue-500 hover:text-blue-700"><i class="fas fa-download"></i></a></td> -->
                                                     <a href="{{ asset('storage/background_verify/' . $workorder->workorderbackground->file) }}" class="text-blue-500 hover:text-blue-700" download>
-    <i class="fas fa-download"></i>
-</a>
+                                                    <i class="fas fa-download"></i>
+                                                    </a>
+                                                </td>
                                             </tr>
                                         </tbody>
                                     </table>
