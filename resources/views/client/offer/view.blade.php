@@ -148,7 +148,7 @@
                         <p class="font-light">
                           <span
                             class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full text-white bg-purple-400"
-                            >{{$offer->status}}</span
+                            >{{$offer->getStatus($offer->status)}}</span
                           >
                         </p>
                       </div>

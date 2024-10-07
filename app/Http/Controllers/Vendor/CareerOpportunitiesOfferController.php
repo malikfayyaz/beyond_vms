@@ -176,7 +176,7 @@ class CareerOpportunitiesOfferController extends Controller
                 $offer->modified_by_id = Vendor::getVendorIdByUserId(\Auth::id());
 
                 $offer->modified_by_type = 3;
-                $offer->status = 1;
+                $offer->status = 3;
                 $offer->save();
 
                 // submission status update
@@ -185,7 +185,7 @@ class CareerOpportunitiesOfferController extends Controller
 
                 $this->updateOtherRecords($offer);
 
-                if($offer->status == 1){
+                if($offer->status == 3){
                     $this->createAutoWorkorder($offer, $offer->careerOpportunity, $submission);
                 }
                 session()->flash('success', 'Offer accepted successfully!');
