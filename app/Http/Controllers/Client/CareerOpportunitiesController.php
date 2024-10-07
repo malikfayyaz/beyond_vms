@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Client;
 use App\Http\Controllers\Controller;
 use App\Models\CareerOpportunitiesBu;
 use App\Models\CareerOpportunity;
+use App\Models\Client;
 use App\Models\JobTemplates;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -25,17 +26,14 @@ class CareerOpportunitiesController extends Controller
         if ($request->ajax()) {
 
             $clientid = Client::getClientIdByUserId(Auth::id());
-            //dd($clientid);
-
-            $data = CareerOpportunity::with(['hiringManager', 'workerType','workFlow'])
-                ->where('hiring_manager', $clientid)
-                ->orWhereHas('workFlow', function ($query) use ($clientid) {
-                    $query->where('client_id', $clientid);
-                });
-                // ->withCount([
-                //     'submissions',
-                // ])
-               // dd($data);
+            $data = CareerOpportunity::with(['hiringManager', 'workerType'])
+                ->withCount([
+                    'submissions',
+                    'workFlow' => function ($query) use ($clientid) {
+                        $query->where('client_id', $clientid);
+                    }
+                ])
+                ->where('user_id', $clientid)->get();
 
             return DataTables::of($data)
                 ->addIndexColumn()

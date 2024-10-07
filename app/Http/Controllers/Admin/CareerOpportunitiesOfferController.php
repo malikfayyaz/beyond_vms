@@ -155,9 +155,10 @@ class CareerOpportunitiesOfferController extends BaseController
     // Show a specific career opportunity offer
     public function show($id)
     {
+        $rejectionreason = checksetting(17);
         $workflows = OfferWorkFlow::where('offer_id', $id)->get();
         $offer = CareerOpportunitiesOffer::findOrFail($id);
-        return view('admin.offer.view', compact('offer','workflows'));
+        return view('admin.offer.view', compact('offer','workflows', 'rejectionreason'));
     }
 
     // Show the form for editing an existing career opportunity offer
@@ -253,6 +254,7 @@ class CareerOpportunitiesOfferController extends BaseController
         $actionType = $request->input('actionType');
         $validated = $request->validate([
             'rowId' => 'required|integer',
+            'reason' => 'required_if:actionType,Reject|integer',
         ]);
         $workflow = OfferWorkFlow::findOrFail($request->rowId);
         if ($actionType == 'Accept') {

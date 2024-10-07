@@ -458,8 +458,17 @@
                                                 <td class="border p-2"><a href="#">{{$workorder->workorderbackground->file }}</a></td>
                                                 <td class="border p-2">
                                                     <a href="{{ asset('storage/background_verify/' . $workorder->workorderbackground->file) }}" class="text-blue-500 hover:text-blue-700" download>
-                                                    <i class="fas fa-download"></i>
+                                                        <i class="fas fa-download"></i>
                                                     </a>
+
+                                                    <button 
+                                                        type="button" 
+                                                        class="text-red-500 hover:text-red-700 ml-3 bg-transparent" 
+                                                        @click="deleteBackgroundFile({{ $workorder->workorderbackground->id }})" 
+                                                        onclick="return confirm('Are you sure you want to delete this file?')"
+                                                    >
+                                                        <i class="fas fa-trash"></i>
+                                                    </button>
                                                 </td>
                                             </tr>
                                         </tbody>

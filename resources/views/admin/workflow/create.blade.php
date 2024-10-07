@@ -114,7 +114,6 @@
                         />
                     </div>
 
-<<<<<<< HEAD:resources/views/admin/workflow/create.blade.php
                     <table class="w-full border-collapse border" x-show="!editMode">
                         <thead>
                             <tr>
@@ -123,6 +122,7 @@
                                 <th class="border p-2">Approval Role</th>
                                 <th class="border p-2">Hiring Manager</th>
                                 <th class="border p-2">Approval Required</th>
+                                <th class="border p-2">Approval Number</th>
                                 <th class="border p-2">Action</th>
                             </tr>
                         </thead>
@@ -134,6 +134,7 @@
                                 <td class="border p-2">{{ $data->approvalRole->title ?? 'N/A' }}</td>
                                 <td class="border p-2">{{ $data->hiringManager->full_name ?? 'N/A' }}</td>
                                 <td class="border p-2">{{ $data->approval_required == "yes" ? "Yes" : "No" ?? 'N/A' }}</td>
+                                <td class="border p-2">{{ $data->approval_number ?? 'N/A' }}</td>
                                 <td class="border p-2">
                                     <span @click="editItem({{ json_encode($data) }})" class="text-gray-600 cursor-pointer">
                                         <a href="{{route('admin.workflow.edit', $data->id)}}"
@@ -142,42 +143,6 @@
                                             <i class="fas fa-edit"></i>
                                         </a>
                                     </span>
-=======
-                <div class="mb-4">
-                    <input
-                        type="text"
-                        placeholder="Search Client"
-                        class="w-full p-2 border rounded"
-                        x-model="searchTerm"
-                    />
-                </div>
-
-                <table class="w-full border-collapse border">
-                    <thead>
-                        <tr>
-                            <th class="border p-2">Sr #</th>
-                            <th class="border p-2">Client</th>
-                            <th class="border p-2">Approval Role</th>
-                            <th class="border p-2">Hiring Manager</th>
-                            <th class="border p-2">Approval Required</th>
-                            <th class="border p-2">Approval Number</th>
-                            <th class="border p-2">Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <template x-for="(item, index) in filteredItems" :key="index">
-                            <tr>
-                                <td class="border p-2 text-center" x-text="index + 1"></td>
-                                <td class="border p-2 text-center" x-text="item.client.first_name ?? 'N/A'"></td>
-                                <td class="border p-2 text-center" x-text="item.approval_role.name ?? 'N/A'"></td>
-                                <td class="border p-2 text-center" x-text="item.hiring_manager.first_name ?? 'N/A'"></td>
-                                <td class="border p-2 text-center" x-text="item.approval_required ?? 'N/A'"></td>
-                                <td class="border p-2 text-center" x-text="item.approval_number ?? 'N/A'"></td>
-                                <td class="border p-2 text-center">
-                                    <!-- <span @click="editItem(item)" class="text-gray-600 cursor-pointer">
-                                        <i class="fa-regular fa-pen-to-square"></i>
-                                    </span> -->
->>>>>>> jobworkflow:resources/views/admin/workflow/edit.blade.php
                                 </td>
                             </tr>
                         @endforeach
@@ -191,7 +156,6 @@
     <script>
     function accountManager(editIndex) {
         return {
-<<<<<<< HEAD:resources/views/admin/workflow/create.blade.php
             formData: {
                 clientId: "{{ $client_data->id }}", // Store client ID
                 clientName: "{{ $client_data->full_name }}", 
@@ -199,6 +163,7 @@
                 arroval_role: '{{ old('arroval_role', $workflow->approval_role_id ?? '') }}',
                 hiring_manager: '{{ old('hiring_manager', $workflow->hiring_manager_id ?? '') }}',
                 approval_req: '{{ old('approval_req', $workflow->approval_required ?? '') }}',
+                approval_number: '{{ old('approval_number', $workflow->approval_number ?? '') }}',
             },
             // clientId: "{{ $client_data->id }}", // Store client ID
             // clientName: "{{ $client_data->full_name }}", 
@@ -206,27 +171,14 @@
             // arroval_role: "",
             // hiring_manager: "",
             // approval_req: "",
-=======
-            clientId: "{{ $client_data->id }}", // Store client ID
-            clientName: "{{ $client_data->first_name }}", 
-            client: "",
-            arroval_role: "",
-            hiring_manager: "",
-            approval_req: "",
-            approval_number: "",
->>>>>>> jobworkflow:resources/views/admin/workflow/edit.blade.php
 
+            approval_numberError:"",
             arroval_roleError: "",
             hiring_managerError: "",
             approval_reqError: "",
-<<<<<<< HEAD:resources/views/admin/workflow/create.blade.php
             // items: @json($table_data), // Initialize items with tableData
             editIndex: editIndex,
-=======
-            approval_numberError:"",
-            items: @json($table_data), // Initialize items with tableData
-            
->>>>>>> jobworkflow:resources/views/admin/workflow/edit.blade.php
+
             searchTerm: "",
             // editIndex: null,
             error: 0,
@@ -255,7 +207,7 @@
                     this.approval_reqError = "";
                 }
                 //alert(this.approval_number);
-                if (this.approval_number.trim() === "") {
+                if (this.formData.approval_number.trim() === "") {
                     this.approval_numberError = `Please select an Approval Number`;
                     this.error += 1;
                 } else {
@@ -267,12 +219,12 @@
                 this.validateFields();
                 if (this.error === 0) {
                     let formData = new FormData();  // Prepare the form data
-<<<<<<< HEAD:resources/views/admin/workflow/create.blade.php
                     // Add your form data (you can add more if needed)
                     formData.append('client_id', this.formData.clientId);
                     formData.append('approval_role_id', this.formData.arroval_role);
                     formData.append('hiring_manager_id', this.formData.hiring_manager);
                     formData.append('approval_required', this.formData.approval_req);
+                    formData.append('approval_number', this.approval_number);
                     console.log(this.formData.approval_req);
                     let url = '{{ route('admin.workflow.store') }}';
                     if (this.editIndex !== null) {
@@ -282,17 +234,6 @@
                         formData.append('_method', 'PUT'); // Laravel expects PUT method for updates
                     };
                     // console.log(url);
-
-=======
-                    let url = '{{ route('admin.workflow.store') }}';
-                    //alert(this.approval_number);
-                    // Add your form data (you can add more if needed)
-                    formData.append('client_id', this.clientId);
-                    formData.append('approval_role_id', this.arroval_role);
-                    formData.append('hiring_manager_id', this.hiring_manager);
-                    formData.append('approval_required', this.approval_req);
-                    formData.append('approval_number', this.approval_number);
->>>>>>> jobworkflow:resources/views/admin/workflow/edit.blade.php
                     ajaxCall(url, 'POST', [[this.onSuccess, ['response']]], formData);
                     // this.cancelEdit();
                 }
