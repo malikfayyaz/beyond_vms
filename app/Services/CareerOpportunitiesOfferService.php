@@ -54,7 +54,7 @@ class CareerOpportunitiesOfferService
     public static function approveofferWorkFlow($request){
         $user = \Auth::user();
         $userid = \Auth::id();
-        
+
         $sessionrole = session('selected_role');
         if($sessionrole == "Admin") {
             $userid =  Admin::getAdminIdByUserId($userid);
@@ -67,7 +67,7 @@ class CareerOpportunitiesOfferService
         }
         $portal = 'Portal';
         $workflow = OfferWorkFlow::findOrFail($request->rowId);
-      
+
         self::acceptOfferWorkFlow($request->rowId, $userid, $sessionrole, $portal,$request);
         $nextWorkflow = OfferWorkFlow::where([
             ['offer_id', '=', $workflow->offer_id],
@@ -76,11 +76,11 @@ class CareerOpportunitiesOfferService
         ])
             ->orderBy('id')
             ->get();
-        // write query to get all the pending records 
-        
+        // write query to get all the pending records
+
         $count = 0;
-        if(count($nextWorkFlow)){
-            foreach($nextWorkFlow as $workflow){
+        if(count($nextWorkflow)>0){
+            foreach($nextWorkflow as $workflow){
                 if($count == 0){
                     if($workflow->approval_required == 0 ){ // Just Approve this Record as no Approval Required
                         self::acceptOfferWorkFlow($workflow->id, $userid, $sessionrole, $portal,$request);
@@ -100,19 +100,19 @@ class CareerOpportunitiesOfferService
     }
 
     protected static function acceptOfferWorkFlow($workflowid, $userid, $role, $portal, $request){
-       
+
         $filename = handleFileUpload($request, 'jobAttachment', 'offer_workflow_attachments');
         $workflow = OfferWorkFlow::findOrFail($workflowid);
         $workflow->status = 'Approved'; // Update the status to approved
         $workflow->approval_notes = $request->note;
-        $jobWorkFlow->approve_reject_by = $userid;
-        $jobWorkFlow->approve_reject_type = $role;
+        $workflow->approve_reject_by = $userid;
+        $workflow->approve_reject_type = $role;
         $workflow->approval_doc = $filename;
         $workflow->approved_datetime = now();
-        $jobWorkFlow->approve_reject_from = $portal;
-        $jobWorkFlow->ip_address = $request->ip();
-        $jobWorkFlow->machine_user_name = gethostname();
+        $workflow->approve_reject_from = $portal;
+        $workflow->ip_address = $request->ip();
+        $workflow->machine_user_name = gethostname();
         $workflow->save();
-       
+
     }
 }
