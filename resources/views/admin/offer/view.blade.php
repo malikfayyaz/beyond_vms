@@ -43,6 +43,7 @@
                 <div x-data="{
     openModal: false,
     currentRowId: null,
+        actionType: '',
     reason: '',
     note: '',
     errors: {},
@@ -60,6 +61,7 @@
         // Create FormData object
         const formData = new FormData();
         formData.append('rowId', this.currentRowId); // Use currentRowId for identification
+        formData.append('actionType', this.actionType); //for button
 <!--        formData.append('reason', this.reason);-->
         formData.append('note', this.note);
 
@@ -135,10 +137,16 @@
                                             <td class="py-4 px-4 text-center text-sm">
                                                 @if($workflow->hiringManager->user_id == auth()->user()->id && $workflow->status == 'Pending' && $workflow->email_sent == '1')
                                                     <button
-                                                        @click="openModal = true; currentRowId = {{ $workflow->id }}"
+                                                        @click="actionType = 'Accept'; openModal = true; currentRowId = {{ $workflow->id }}; submitForm(currentRowId, actionType);"
                                                         class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
                                                     >
                                                         Accept
+                                                    </button>
+                                                    <button
+                                                        @click="actionType = 'Reject'; openModal = true; currentRowId = {{ $workflow->id }}; submitForm(currentRowId, actionType);"
+                                                        class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+                                                    >
+                                                        Reject
                                                     </button>
                                                 @endif
                                             </td>
@@ -183,7 +191,7 @@
                                     <div class="mb-4">
                                         <div class="mt-2 px-7 py-3">
                                             <p class="text-sm text-gray-500">
-                                                You are about to accept the offer for Offer WorkFlow ID:
+                                                You are about to perform action for Offer WorkFlow ID:
                                                 <span x-text="currentRowId"></span>
                                             </p>
                                         </div>
