@@ -17,6 +17,10 @@ class CareerOpportunitiesWorkorder extends Model
     {
         return $this->belongsTo(Client::class, 'hiring_manager_id', 'id');
     }
+    public function approvalManager()
+    {
+        return $this->belongsTo(Client::class, 'approval_manager', 'id');
+    }
     public function careerOpportunity()
     {
         return $this->belongsTo(CareerOpportunity::class, 'career_opportunity_id' , 'id');
@@ -24,6 +28,10 @@ class CareerOpportunitiesWorkorder extends Model
     public function submission()
     {
         return $this->belongsTo(CareerOpportunitySubmission::class, 'submission_id' , 'id');
+    }
+    public function offer()
+    {
+        return $this->belongsTo(CareerOpportunitiesOffer::class, 'offer_id' , 'id');
     }
     public function vendor()
     {
@@ -36,6 +44,10 @@ class CareerOpportunitiesWorkorder extends Model
     public function workorderbackground()
     {
         return $this->belongsTo(WorkorderBackground::class, 'id', 'workorder_id');
+    }
+    public function jobType()
+    {
+        return $this->belongsTo(Setting::class, 'job_type', 'id');
     }
     public function getDateRangeAttribute()
     {

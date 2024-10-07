@@ -6,532 +6,1314 @@
 
     <div class="ml-16">
         @include('admin.layouts.partials.header')
-    <div class="ml-16">
+
         <div class="bg-white mx-4 my-8 rounded p-8">
-            <div class="flex w-full gap-4">
-                <!-- Left Column -->
-                <div
-                    class="w-1/3 p-[30px] rounded border"
-                    :style="{'border-color': 'var(--primary-color)'}"
-                >
-                    <h3 class="flex items-center gap-2 mb-4 bg-">
-                        <i
-                            class="fa-solid fa-circle-info"
-                            :style="{'color': 'var(--primary-color)'}"
-                        ></i>
-                        <span :style="{'color': 'var(--primary-color)'}"
-                        >WorkOrder information</span
-                        >
-                    </h3>
-                    <div class="flex flex-col">
-                        <div class="flex items-center justify-between py-4 border-t">
-                            <div class="w-2/4">
-                                <h4 class="font-medium">Contractor Name:</h4>
-                            </div>
-                            <div class="w-2/4">
-                                <p class="font-light">{{$workorder->consultant->full_name}}</p>
-                            </div>
-                        </div>
-                        <div class="flex items-center justify-between py-4 border-t">
-                            <div class="w-2/4">
-                                <h4 class="font-medium">WorkOrder Status:</h4>
-                            </div>
-                            <div class="w-2/4">
-                                <p class="font-light">
-                      <span
-                          class="px-2 inline-flex text-xs leading-5 text-white font-semibold rounded-full bg-green-500"
-                      >{{$workorder->status}}</span
-                      >
-                                </p>
-                            </div>
-                        </div>
-                        <div class="flex items-center justify-between py-4 border-t">
-                            <div class="w-2/4">
-                                <h4 class="font-medium">Job ID:</h4>
-                            </div>
-                            <div class="w-2/4">
-                                <p class="font-light">{{$workorder->careeropportunity->id}}</p>
-                            </div>
-                        </div>
-                        <div class="flex items-center justify-between py-4 border-t">
-                            <div class="w-2/4">
-                                <h4 class="font-medium">Job Profile:</h4>
-                            </div>
-                            <div class="w-2/4">
-                                <p class="font-light">{{$workorder->careeropportunity->title}}</p>
-                            </div>
-                        </div>
-                        <div class="flex items-center justify-between py-4 border-t">
-                            <div class="w-2/4">
-                                <h4 class="font-medium">Location of Work:</h4>
-                            </div>
-                            <div class="w-2/4">
-                                <p class="font-light">
-                                    {{$workorder->location->name}}
-                                </p>
-                            </div>
-                        </div>
-                        <div class="flex items-center justify-between py-4 border-t">
-                            <div class="w-2/4">
-                                <h4 class="font-medium">Start Date:</h4>
-                            </div>
-                            <div class="w-2/4">
-                                <p class="font-light">{{$workorder->start_date}}</p>
-                            </div>
-                        </div>
-                        <div class="flex items-center justify-between py-4 border-t">
-                            <div class="w-2/4">
-                                <h4 class="font-medium">End Date:</h4>
-                            </div>
-                            <div class="w-2/4">
-                                <p class="font-light">{{$workorder->end_date}}</p>
-                            </div>
-                        </div>
-                        <div class="flex items-center justify-between py-4 border-t">
-                            <div class="w-2/4">
-                                <h4 class="font-medium">Location Tax:</h4>
-                            </div>
-                            <div class="w-2/4">
-                                <p class="font-light">N/A</p>
-                            </div>
-                        </div>
-                        {{--<div class="flex items-center justify-between py-4 border-t">
-                            <div class="w-2/4">
-                                <h4 class="font-medium">Original Start Date:</h4>
-                            </div>
-                            <div class="w-2/4">
-                                <p class="font-light">11/01/2024</p>
-                            </div>
-                        </div>--}}
-                    </div>
-                </div>
-                <!-- Right Column -->
-                <div
-                    class="w-4/6 p-[30px] rounded border"
-                    :style="{'border-color': 'var(--primary-color)'}"
-                >
-                    <h3 class="flex items-center gap-2 mb-4">
-                        <i
-                            class="fa-regular fa-clock"
-                            :style="{'color': 'var(--primary-color)'}"
-                        ></i
-                        ><span
-                            class="capitalize"
-                            :style="{'color': 'var(--primary-color)'}"
-                        >Onboarding document background screening</span
-                        >
-                    </h3>
-                    <div class="flex items-center justify-between py-4 border-t">
-                        <div class="">
-                            <h4 class="font-medium capitalize mb-4">
-                                Gallagher - Contingent Worker acknowledgements
-                                (<span>isrvr.com</span>)
-                            </h4>
-                            <a
-                                href="#"
-                                class="capitalize text-blue-400 hover:text-blue-500"
-                            >click here for the contingent worker compliance
-                                acknowledgement!</a
-                            >
-                        </div>
-                    </div>
-                    <div x-data="workOrderForm">
-                        <form
-                            action="#"
-                            class="mt-4"
-                            id="generalformwizard"
-                            @submit.prevent="validateForm"
-                        >
-                            <div class="flex space-x-4 mb-4">
-                                <div class="flex-1">
-                                    <label class="block mb-2">First Name</label>
-                                    <input
-                                        x-model="formData.first_name"
-                                        type="text"
-                                        class="w-full h-12 px-4 text-gray-500 border border-gray-300 rounded-md shadow-sm focus:outline-none"
-                                        placeholder="{{$workorder->consultant->first_name}}"
-                                        disabled
-                                        id="candidateFirstName"
-                                    />
-                                </div>
-                                <div class="flex-1">
-                                    <label class="block mb-2">Middle Name</label>
-                                    <input
-                                        x-model="formData.middle_name"
-                                        type="text"
-                                        class="w-full h-12 px-4 text-gray-500 border border-gray-300 rounded-md shadow-sm focus:outline-none"
-                                        placeholder="{{$workorder->consultant->middle_name}}"
-                                        disabled
-                                    />
-                                </div>
-                                <div class="flex-1">
-                                    <label class="block mb-2">Last Name</label>
-                                    <input
-                                        x-model="formData.last_name"
-                                        type="text"
-                                        class="w-full h-12 px-4 text-gray-500 border border-gray-300 rounded-md shadow-sm focus:outline-none"
-                                        placeholder="{{$workorder->consultant->last_name}}"
-                                        id="candidateLastName"
-                                        disabled
-                                    />
-                                </div>
-                            </div>
-                            <div class="flex space-x-4 mb-4">
-                                <div class="flex-1">
-                                    <label class="block mb-2 capitalize"
-                                    >personal email address
-                                        <span class="text-red-500">*</span></label
-                                    >
-                                    <input
-                                        type="text"
-                                        x-model="formData.personalEmailAddress"
-                                        class="w-full h-12 px-4 text-gray-500 border border-gray-300 rounded-md shadow-sm focus:outline-none"
-                                        placeholder="Enter personal email address N/A"
-                                        id="personalEmailAddress"
-                                    />
-                                    <p
-                                        x-show="errors.personalEmailAddress"
-                                        class="text-red-500 text-sm mt-1"
-                                        x-text="errors.personalEmailAddress"
-                                    ></p>
-                                </div>
-                            </div>
-                            <div class="flex space-x-4 mb-4">
-                                <div class="flex-1">
-                                    <label class="block mb-2"
-                                    >Account Manager
-                                        <span class="text-red-500">*</span></label
-                                    >
-                                    <select
-                                        x-model="formData.accountManager"
-                                        class="w-full select2-single custom-style"
-                                        data-field="accountManager"
-                                        id="accountManager"
-                                    >
-                                        <option value="">Select a category</option>
-                                        <option value="javascript">JavaScript</option>
-                                        <option value="python">Python</option>
-                                        <option value="java">Java</option>
-                                        <option value="csharp">C#</option>
-                                        <option value="ruby">Ruby</option>
-                                    </select>
-                                    <p
-                                        x-show="errors.accountManager"
-                                        class="text-red-500 text-sm mt-1"
-                                        x-text="errors.accountManager"
-                                    ></p>
-                                </div>
-                                <div class="flex-1">
-                                    <label class="block mb-2"
-                                    >Recruitment Manager
-                                        <span class="text-red-500">*</span></label
-                                    >
-                                    <select
-                                        x-model="formData.recruitmentManager"
-                                        class="w-full select2-single custom-style"
-                                        data-field="recruitmentManager"
-                                        id="recruitmentManager"
-                                    >
-                                        <option value="">Select a category</option>
-                                        <option value="javascript">JavaScript</option>
-                                        <option value="python">Python</option>
-                                        <option value="java">Java</option>
-                                        <option value="csharp">C#</option>
-                                        <option value="ruby">Ruby</option>
-                                    </select>
-                                    <p
-                                        x-show="errors.recruitmentManager"
-                                        class="text-red-500 text-sm mt-1"
-                                        x-text="errors.recruitmentManager"
-                                    ></p>
-                                </div>
-                            </div>
-                            <div class="flex space-x-4 mb-4">
-                                <div class="flex-1">
-                                    <label class="block mb-2 capitalize">location tax</label>
-                                    <input
-                                        type="number"
-                                        x-model="formData.candidateFirstName"
-                                        class="w-full h-12 px-4 text-gray-500 border border-gray-300 rounded-md shadow-sm focus:outline-none"
-                                        placeholder="0.00%"
-                                        id="candidateFirstName"
-                                    />
-                                </div>
-                                <div class="flex-1"></div>
-                            </div>
-                            <div class="flex items-center justify-between py-4 border-t">
-                                <div class="">
-                                    <h4 class="font-medium capitalize mb-2">
-                                        background screening
-                                    </h4>
-                                    <p>
-                                        By clicking the boxes below i certify that the worker
-                                        has met all compliance related items and is eligible to
-                                        begin assignment at Gallagher
-                                    </p>
-                                </div>
-                            </div>
-                            <div class="flex items-center justify-between py-4 border-t">
-                                <ul class="space-y-3">
-                                    <li>
-                                        <label
-                                            class="flex items-center space-x-3 cursor-pointer"
-                                        >
-                                            <input
-                                                type="checkbox"
-                                                x-model="formData.codeOfConduct"
-                                                class="form-checkbox h-5 w-5 text-blue-600 rounded focus:ring-blue-500 border-gray-300 cursor-pointer"
-                                            />
-                                            <span class="text-gray-700"
-                                            >Code of Conduct
-                            <span class="text-red-500">*</span></span
-                                            >
-                                            <p
-                                                x-show="errors.codeOfConduct"
-                                                class="text-red-500 text-sm mt-1"
-                                                x-text="errors.codeOfConduct"
-                                            ></p>
-                                        </label>
-                                    </li>
-                                    <li>
-                                        <label
-                                            class="flex items-center space-x-3 cursor-pointer"
-                                        >
-                                            <input
-                                                type="checkbox"
-                                                x-model="formData.dataPrivacy"
-                                                class="form-checkbox h-5 w-5 text-blue-600 rounded focus:ring-blue-500 border-gray-300 cursor-pointer"
-                                            />
-                                            <span class="text-gray-700"
-                                            >Data Privacy / Data Handling<span
-                                                    class="text-red-500"
-                                                >*</span
-                                                ></span
-                                            >
-                                            <p
-                                                x-show="errors.dataPrivacy"
-                                                class="text-red-500 text-sm mt-1"
-                                                x-text="errors.dataPrivacy"
-                                            ></p>
-                                        </label>
-                                    </li>
-                                    <li>
-                                        <label
-                                            class="flex items-center space-x-3 cursor-pointer"
-                                        >
-                                            <input
-                                                type="checkbox"
-                                                x-model="formData.nonDisclosure"
-                                                class="form-checkbox h-5 w-5 text-blue-600 rounded focus:ring-blue-500 border-gray-300 cursor-pointer"
-                                            />
-                                            <span class="text-gray-700"
-                                            >Non-Disclosure<span class="text-red-500"
-                                                >*</span
-                                                ></span
-                                            >
-                                            <p
-                                                x-show="errors.nonDisclosure"
-                                                class="text-red-500 text-sm mt-1"
-                                                x-text="errors.nonDisclosure"
-                                            ></p>
-                                        </label>
-                                    </li>
-                                    <li>
-                                        <label
-                                            class="flex items-center space-x-3 cursor-pointer"
-                                        >
-                                            <input
-                                                type="checkbox"
-                                                x-model="formData.criminalBackground"
-                                                class="form-checkbox h-5 w-5 text-blue-600 rounded focus:ring-blue-500 border-gray-300 cursor-pointer"
-                                            />
-                                            <span class="text-gray-700"
-                                            >Criminal Background<span class="text-red-500"
-                                                >*</span
-                                                ></span
-                                            >
-                                            <p
-                                                x-show="errors.criminalBackground"
-                                                class="text-red-500 text-sm mt-1"
-                                                x-text="errors.criminalBackground"
-                                            ></p>
-                                        </label>
-                                    </li>
-                                </ul>
-                            </div>
-                            <div class="flex items-center justify-between py-4 border-t">
-                                <div class="mt-4">
-                                    <label
-                                        for="document"
-                                        class="block text-sm font-medium text-gray-700 mb-2"
-                                    >Document</label
-                                    >
-                                    <input
-                                        type="file"
-                                        id="document"
-                                        name="document"
-                                        class="block w-full px-2 py-3 text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none"
-                                    />
-                                </div>
-                            </div>
-                            <div class="flex-1 flex items-end gap-2">
-                                <button
-                                    @click="submitForm('save')"
-                                    type="submit"
-                                    class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-                                >
-                                    Save
-                                </button>
-                                <button
-                                    @click="submitForm('saveAndSubmit')"
-                                    type="button"
-                                    class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-                                >
-                                    Save & Submit
-                                </button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
+          <div class="py-2 flex justify-between items-center gap-2">
+            <div>
+              <h3 class="text-xl" :style="{'color': 'var(--primary-color)'}">
+                My Web Application - Workorder ID: 5854
+              </h3>
             </div>
+            <div class="flex items-center gap-2">
+              <button
+                type="submit"
+                class="px-4 py-2 text-white capitalize rounded"
+                :style="{'background-color': 'var(--primary-color)', 'background-color:hover': 'var(--primary-hover)'}"
+              >
+                Withdraw Workorder / Submission
+              </button>
+              <button
+                type="submit"
+                class="px-4 py-2 text-white capitalize rounded"
+                :style="{'background-color': 'var(--primary-color)', 'background-color:hover': 'var(--primary-hover)'}"
+              >
+                Back to List of Workorders
+              </button>
+            </div>
+          </div>
+          <div class="flex w-full gap-4">
+            <!-- Left Column -->
+            <div
+              class="w-1/3 p-[30px] rounded border"
+              :style="{'border-color': 'var(--primary-color)'}"
+            >
+              <h3 class="flex items-center gap-2 mb-4 bg-">
+                <i
+                  class="fa-solid fa-circle-info"
+                  :style="{'color': 'var(--primary-color)'}"
+                ></i>
+                <span :style="{'color': 'var(--primary-color)'}"
+                  >Work order information</span
+                >
+              </h3>
+              <div class="flex flex-col">
+                <div class="flex items-center justify-between py-4 border-t">
+                  <div class="w-2/4">
+                    <h4 class="font-medium capitalize">contractor name:</h4>
+                  </div>
+                  <div class="w-2/4">
+                    <a
+                      href="#"
+                      class="font-light"
+                      :style="{'color': 'var(--primary-color)'}"
+                      >{{$workorder->consultant->full_name}}</a
+                    >
+                  </div>
+                </div>
+                <div class="flex items-center justify-between py-4 border-t">
+                  <div class="w-2/4">
+                    <h4 class="font-medium capitalize">offer ID:</h4>
+                  </div>
+                  <div class="w-2/4">
+                    <a
+                      href="#"
+                      class="font-light"
+                      :style="{'color': 'var(--primary-color)'}"
+                      >{{$workorder->offer_id}}</a
+                    >
+                  </div>
+                </div>
+                <div class="flex items-center justify-between py-4 border-t">
+                  <div class="w-2/4">
+                    <h4 class="font-medium capitalize">Unique ID:</h4>
+                  </div>
+                  <div class="w-2/4">
+                    <p class="font-light">{{$workorder->consultant->unique_id}}</p>
+                  </div>
+                </div>
+                <div class="flex items-center justify-between py-4 border-t">
+                  <div class="w-2/4">
+                    <h4 class="font-medium">Workorder Status:</h4>
+                  </div>
+                  <div class="w-2/4">
+                    <p class="font-light">
+                      <span
+                        class="px-2 inline-flex text-xs leading-5 text-white font-semibold rounded-full bg-green-500"
+                        >{{$workorder->status}}</span
+                      >
+                    </p>
+                  </div>
+                </div>
+                <div class="flex items-center justify-between py-4 border-t">
+                  <div class="w-2/4">
+                    <h4 class="font-medium capitalize">offer accepted date:</h4>
+                  </div>
+                  <div class="w-2/4">
+                    <p class="font-light">{{formatDate($workorder->offer->offer_accept_date)}}</p>
+                  </div>
+                </div>
+                <div class="flex items-center justify-between py-4 border-t">
+                  <div class="w-2/4">
+                    <h4 class="font-medium capitalize">offer accepted by:</h4>
+                  </div>
+                  <div class="w-2/4">
+                    <p class="font-light"><?php 
+                             if($workorder->offer->modified_by_type =="1" ){
+                      $admin = App\Models\Admin::find($workorder->offer->modified_by_id);
+                      echo $admin->full_name;
+                    }else if($workorder->offer->modified_by_type =="3"){
+                      $vendor = App\Models\Vendor::find($workorder->offer->modified_by_id);
+                      echo $vendor->full_name;
+                  } else if($workorder->offer->modified_by_type =="2"){
+                      $client = App\Models\Client::find($workorder->offer->modified_by_id);
+                      echo $client->full_name;
+                  }  ?></p>
+                  </div>
+                </div>
+                <h3 class="flex items-center gap-2 my-4 bg-">
+                  <i
+                    class="fa-regular fa-message"
+                    :style="{'color': 'var(--primary-color)'}"
+                  ></i>
+                  <span :style="{'color': 'var(--primary-color)'}"
+                    >Pay Rate (For Candidate)</span
+                  >
+                </h3>
+                <div class="flex items-center justify-between py-4 border-t">
+                  <div class="w-2/4">
+                    <h4 class="font-medium capitalize">pay rate:</h4>
+                  </div>
+                  <div class="w-2/4">
+                    <p class="font-light">${{$workorder->wo_pay_rate}}</p>
+                  </div>
+                </div>
+                <div class="flex items-center justify-between py-4 border-t">
+                  <div class="w-2/4">
+                    <h4 class="font-medium capitalize">over time rate:</h4>
+                  </div>
+                  <div class="w-2/4">
+                    <p class="font-light">${{$workorder->wo_over_time}}</p>
+                  </div>
+                </div>
+                <h3 class="flex items-center gap-2 my-4 bg-">
+                  <i
+                    class="fa-solid fa-cash-register"
+                    :style="{'color': 'var(--primary-color)'}"
+                  ></i>
+
+                  <span
+                    class="capitalize"
+                    :style="{'color': 'var(--primary-color)'}"
+                  >
+                    Bill Rate (For Vendor)</span
+                  >
+                </h3>
+                <div class="flex items-center justify-between py-4 border-t">
+                  <div class="w-2/4">
+                    <h4 class="font-medium capitalize">bill rate:</h4>
+                  </div>
+                  <div class="w-2/4">
+                    <p class="font-light">${{$workorder->vendor_bill_rate}}</p>
+                  </div>
+                </div>
+                <div class="flex items-center justify-between py-4 border-t">
+                  <div class="w-2/4">
+                    <h4 class="font-medium capitalize">over time rate:</h4>
+                  </div>
+                  <div class="w-2/4">
+                    <p class="font-light">${{$workorder->vendor_overtime_rate}}</p>
+                  </div>
+                </div>
+                <h3 class="flex items-center gap-2 my-4 bg-">
+                  <i
+                    class="fa-solid fa-cash-register"
+                    :style="{'color': 'var(--primary-color)'}"
+                  ></i>
+
+                  <span
+                    class="capitalize"
+                    :style="{'color': 'var(--primary-color)'}"
+                  >
+                    Bill Rate (For Client)</span
+                  >
+                </h3>
+                <div class="flex items-center justify-between py-4 border-t">
+                  <div class="w-2/4">
+                    <h4 class="font-medium capitalize">Bill Rate:</h4>
+                  </div>
+                  <div class="w-2/4">
+                    <p class="font-light">${{$workorder->wo_bill_rate}}</p>
+                  </div>
+                </div>
+                <div class="flex items-center justify-between py-4 border-t">
+                  <div class="w-2/4">
+                    <h4 class="font-medium capitalize">over time rate:</h4>
+                  </div>
+                  <div class="w-2/4">
+                    <p class="font-light">${{$workorder->wo_client_over_time}}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- Right Column -->
+            <div
+              class="w-4/6 p-[30px] rounded border"
+              :style="{'border-color': 'var(--primary-color)'}"
+            >
+              <!-- Tabs -->
+              <div
+                x-data="{
+                          selectedId: null,
+                          init() {
+                            // Set the first available tab on the page on page load.
+                            this.$nextTick(() => this.select(this.$id('tab', 1)))
+                          },
+                          select(id) {
+                            this.selectedId = id
+                          },
+                          isSelected(id) {
+                            return this.selectedId === id
+                          },
+                          whichChild(el, parent) {
+                            return Array.from(parent.children).indexOf(el) + 1
+                          }
+                          }"
+                x-id="['tab']"
+                class="w-full"
+              >
+                <!-- Tab List -->
+                <ul
+                  x-ref="tablist"
+                  @keydown.right.prevent.stop="$focus.wrap().next()"
+                  @keydown.home.prevent.stop="$focus.first()"
+                  @keydown.page-up.prevent.stop="$focus.first()"
+                  @keydown.left.prevent.stop="$focus.wrap().prev()"
+                  @keydown.end.prevent.stop="$focus.last()"
+                  @keydown.page-down.prevent.stop="$focus.last()"
+                  role="tablist"
+                  class="-mb-px flex items-center text-gray-500 bg-gray-100 py-1 px-1 rounded-t-lg gap-4"
+                >
+                  <!-- Tab -->
+                  <li>
+                    <button
+                      :id="$id('tab', whichChild($el.parentElement, $refs.tablist))"
+                      @click="select($el.id)"
+                      @mousedown.prevent
+                      @focus="select($el.id)"
+                      type="button"
+                      :tabindex="isSelected($el.id) ? 0 : -1"
+                      :aria-selected="isSelected($el.id)"
+                      :class="isSelected($el.id) ? 'w-full  bg-white rounded-lg shadow' : 'border-transparent'"
+                      class="flex justify-center items-center gap-3 px-5 py-2.5 hover:rounded-lg bg-transparent capitalize"
+                      role="tab"
+                    >
+                      <i class="fa-solid fa-circle-info"></i>
+                      <span class="capitalize">workorder info</span>
+                    </button>
+                  </li>
+
+                  <li>
+                    <button
+                      :id="$id('tab', whichChild($el.parentElement, $refs.tablist))"
+                      @click="select($el.id)"
+                      @mousedown.prevent
+                      @focus="select($el.id)"
+                      type="button"
+                      :tabindex="isSelected($el.id) ? 0 : -1"
+                      :aria-selected="isSelected($el.id)"
+                      :class="isSelected($el.id) ? 'w-full bg-white rounded-lg shadow' : 'border-transparent'"
+                      class="flex justify-center items-center px-5 py-2.5 bg-transparent hover:rounded-lg gap-3"
+                      role="tab"
+                    >
+                      <i class="fa-solid fa-money-bill"></i>
+                      <span class="capitalize">Onboarding Info</span>
+                    </button>
+                  </li>
+
+                  <li>
+                    <button
+                      :id="$id('tab', whichChild($el.parentElement, $refs.tablist))"
+                      @click="select($el.id)"
+                      @mousedown.prevent
+                      @focus="select($el.id)"
+                      type="button"
+                      :tabindex="isSelected($el.id) ? 0 : -1"
+                      :aria-selected="isSelected($el.id)"
+                      :class="isSelected($el.id) ? 'w-full bg-white rounded-lg shadow' : 'border-transparent'"
+                      class="flex justify-center items-center px-5 py-2.5 bg-transparent hover:rounded-lg gap-3"
+                      role="tab"
+                    >
+                      <i class="fa-regular fa-file"></i>
+                      <span class="capitalize"
+                        >Onboarding Document Background Screening</span
+                      >
+                    </button>
+                  </li>
+                </ul>
+
+                <!-- Panels -->
+                <div
+                  role="tabpanels"
+                  class="rounded-b-md border border-gray-200 bg-white"
+                >
+                  <!-- First Tab -->
+                  <section
+                    x-show="isSelected($id('tab', whichChild($el, $el.parentElement)))"
+                    :aria-labelledby="$id('tab', whichChild($el, $el.parentElement))"
+                    role="tabpanel"
+                    class=""
+                  >
+                  $php  
+            $total_cost = $workorder->job_other_amount + $workorder->single_resource_job_approved_budget;
+        
+      @endphp
+                    <div
+                      x-data="{
+                 workOrderInfo: {
+                    startDate: '{{ old('startDate', formatDate($workorder->start_date) ?? '') }}',
+                    endDate: '{{ old('endDate', formatDate($workorder->end_date) ?? '') }}',
+                    timesheetApprovingManager: '{{ old('timesheetApprovingManager', $workorder->approvalManager->full_name ?? '') }}',
+                    locationOfWork: '{{ old('locationOfWork', $workorder->location->name ?? '') }}',
+                    vendorName: '{{ old('vendorName',  $workorder->vendor->full_name  ?? '') }}',
+                    jobType: '{{ old('jobType', $workorder->jobType->title  ?? '') }}',
+                    secondaryJobTitle: '{{ old('secondaryJobTitle', $workorder->careerOpportunity->alternative_job_title ?? '') }}',
+                    hiringManager: '{{ old('hiringManager', $workorder->hiringManager->full_name ?? '') }}',
+                    GLAccount: '{{ old('GLAccount', $workorder->careerOpportunity->glCode->title ?? '') }}',
+                    locationTax: '{{ old('locationTax', $workorder->location_tax ?? '') }}',
+                    totalEstimatedCost: '{{ old('totalEstimatedCost', $total_cost ?? '') }}',
+                    regularHoursEstimatedCost: '{{ old('regularHoursEstimatedCost', $workorder->consultant->user->email ?? '') }}',
+                }
+            }"
+                      class="bg-white shadow rounded-lg"
+                    >
+                      <div class="divide-y divide-gray-200">
+                        <div class="flex justify-between py-3 px-4">
+                          <span class="text-gray-600 capitalize"
+                            >start date:</span
+                          >
+                          <span
+                            class="font-semibold"
+                            x-text="{{formatDate($workorder->start_date)}}"
+                          ></span>
+                        </div>
+                        <div class="flex justify-between py-3 px-4">
+                          <span class="text-gray-600 capitalize"
+                            >End Date:</span
+                          >
+                          <span
+                            class="font-semibold"
+                            x-text="{{formatDate($workorder->end_date)}}"
+                          ></span>
+                        </div>
+                        <div class="flex justify-between py-3 px-4">
+                          <span class="text-gray-600 capitalize"
+                            >Timesheet Approving Manager:</span
+                          >
+                          <span
+                            class="font-semibold"
+                            x-text="{{$workorder->approvalManager->full_name}}"
+                          ></span>
+                        </div>
+                        <div class="flex justify-between py-3 px-4">
+                          <span class="text-gray-600 capitalize"
+                            >Location of Work:</span
+                          >
+                          <span
+                            class="font-semibold"
+                            x-text="{{$workorder->location->name}}"
+                          ></span>
+                        </div>
+                        <div class="flex justify-between py-3 px-4">
+                          <span class="text-gray-600 capitalize"
+                            >Vendor Name:</span
+                          >
+                          <span
+                            class="font-semibold"
+                            x-text=" {{ $workorder->vendor->full_name }} "
+                          ></span>
+                        </div>
+                        <div class="flex justify-between py-3 px-4">
+                          <span class="text-gray-600 capitalize"
+                            >Job Type:</span
+                          >
+                          <span
+                            class="font-semibold"
+                            x-text="{{ $workorder->jobType->title }}"
+                          ></span>
+                        </div>
+                        <div class="flex justify-between py-3 px-4">
+                          <span class="text-gray-600 capitalize"
+                            >Secondary Job Title:</span
+                          >
+                          <span
+                            class="font-semibold"
+                            x-text="workOrderInfo.secondaryJobTitle"
+                          ></span>
+                        </div>
+                        <div class="flex justify-between py-3 px-4">
+                          <span class="text-gray-600 capitalize"
+                            >Hiring Manager:</span
+                          >
+                          <span
+                            class="font-semibold"
+                            x-text="workOrderInfo.hiringManager"
+                          ></span>
+                        </div>
+                        <div class="flex justify-between py-3 px-4">
+                          <span class="text-gray-600 capitalize"
+                            >GL Account:</span
+                          >
+                          <span
+                            class="font-semibold"
+                            x-text="workOrderInfo.GLAccount"
+                          ></span>
+                        </div>
+                        <div class="flex justify-between py-3 px-4">
+                          <span class="text-gray-600 capitalize"
+                            >Location Tax (%):</span
+                          >
+                          <span
+                            class="font-semibold"
+                            x-text="workOrderInfo.locationTax"
+                          ></span>
+                        </div>
+                        <div class="flex justify-between py-3 px-4">
+                          <span class="text-gray-600 capitalize"
+                            >Total Estimated Cost:</span
+                          >
+                          <span
+                            class="font-semibold"
+                            x-text="workOrderInfo.totalEstimatedCost"
+                          ></span>
+                        </div>
+                        <div class="flex justify-between py-3 px-4">
+                          <span class="text-gray-600 capitalize"
+                            >Regular Hours Estimated cost:</span
+                          >
+                          <span
+                            class="font-semibold"
+                            x-text="workOrderInfo.regularHoursEstimatedCost"
+                          ></span>
+                        </div>
+                      </div>
+                    </div>
+                  </section>
+                  <!-- Second Tab-->
+                  <section
+                    x-show="isSelected($id('tab', whichChild($el, $el.parentElement)))"
+                    :aria-labelledby="$id('tab', whichChild($el, $el.parentElement))"
+                    role="tabpanel"
+                    class=""
+                  >
+                    <div
+                      x-data="onBoardingData"
+                      id="generalformwizard"
+                      class="bg-white shadow-md rounded-lg overflow-hidden w-full"
+                    >
+                      <form @submit.prevent="submitForm">
+                        <h3 class="mx-4 mt-4">
+                          <span
+                            class="text-lg capitalize"
+                            :style="{'color': 'var(--primary-color)'}"
+                            >Contractor Information</span
+                          >
+                        </h3>
+                        <div class="px-6 py-3">
+                          <div class="flex space-x-4">
+                            <div class="flex-1">
+                              <label class="block mb-2 capitalize"
+                                >Contractor Name</label
+                              >
+                              <input
+                                type="text"
+                                disabled
+                                x-model="contractorName"
+                                class="w-full h-12 px-4 text-gray-500 border border-gray-300 rounded-md shadow-sm focus:outline-none"
+                              />
+                            </div>
+                            <div class="flex-1">
+                              <label class="block mb-2 capitalize"
+                                >Personal Email Address</label
+                              >
+                              <input
+                                type="text"
+                                disabled
+                                x-model="contractorEmail"
+                                class="w-full h-12 px-4 text-gray-500 border border-gray-300 rounded-md shadow-sm focus:outline-none"
+                              />
+                            </div>
+                          </div>
+                        </div>
+                        <div class="px-6 py-3">
+                          <div class="flex space-x-4">
+                            <div class="flex-1">
+                              <label class="block mb-2 capitalize"
+                                >Account Manager</label
+                              >
+                              <select
+                                class="w-full select2-single custom-style"
+                                data-field="accountManager"
+                                id="accountManager"
+                              >
+                                <option value="">Select location</option>
+                                <option value="python">Python</option>
+                                <option value="java">Java</option>
+                                <option value="csharp">C#</option>
+                                <option value="ruby">Ruby</option>
+                              </select>
+                            </div>
+                            <div class="flex-1">
+                              <label class="block mb-2 capitalize"
+                                >Work Location</label
+                              >
+                              <input
+                                type="text"
+                                disabled
+                                x-model="workLocation"
+                                class="w-full h-12 px-4 text-gray-500 border border-gray-300 rounded-md shadow-sm focus:outline-none"
+                              />
+                            </div>
+                          </div>
+                        </div>
+                        <h3 class="mx-4 mt-4">
+                          <span
+                            class="text-lg capitalize"
+                            :style="{'color': 'var(--primary-color)'}"
+                            >Onboarding Details</span
+                          >
+                        </h3>
+                        <div class="px-6 py-3">
+                          <div class="flex space-x-4">
+                            <div class="flex-1">
+                              <label class="block mb-2 capitalize"
+                                >Job Profile</label
+                              >
+                              <input
+                                type="text"
+                                disabled
+                                x-model="jobProfile"
+                                class="w-full h-12 px-4 text-gray-500 border border-gray-300 rounded-md shadow-sm focus:outline-none"
+                              />
+                            </div>
+                            <div class="flex-1">
+                              <label class="block mb-2 capitalize"
+                                >Official Email Address</label
+                              >
+                              <input
+                                type="text"
+                                disabled
+                                x-model="officialEmail"
+                                class="w-full h-12 px-4 text-gray-500 border border-gray-300 rounded-md shadow-sm focus:outline-none"
+                              />
+                            </div>
+                          </div>
+                        </div>
+                        <div class="px-6 py-3">
+                          <div class="flex space-x-4">
+                            <div class="flex-1">
+                              <label class="block mb-2 capitalize"
+                                >Division</label
+                              >
+                              <input
+                                type="text"
+                                disabled
+                                x-model="division"
+                                class="w-full h-12 px-4 text-gray-500 border border-gray-300 rounded-md shadow-sm focus:outline-none"
+                              />
+                            </div>
+                            <div class="flex-1">
+                              <label class="block mb-2 capitalize"
+                                >Region</label
+                              >
+                              <input
+                                type="text"
+                                disabled
+                                x-model="region"
+                                class="w-full h-12 px-4 text-gray-500 border border-gray-300 rounded-md shadow-sm focus:outline-none"
+                              />
+                            </div>
+                          </div>
+                        </div>
+                        <div class="px-6 py-3">
+                          <div class="flex space-x-4">
+                            <div class="flex-1">
+                              <label class="block mb-2 capitalize"
+                                >Start Date
+                                <span class="text-red-500">*</span></label
+                              >
+                              <input
+                                type="text"
+                                disabled
+                                x-model="startDate"
+                                class="w-full h-12 px-4 text-gray-500 border border-gray-300 rounded-md shadow-sm focus:outline-none"
+                              />
+                            </div>
+                            <div class="flex-1">
+                              <label class="block mb-2 capitalize"
+                                >End Date
+                                <span class="text-red-500">*</span></label
+                              >
+                              <input
+                                type="text"
+                                disabled
+                                x-model="endDate"
+                                class="w-full h-12 px-4 text-gray-500 border border-gray-300 rounded-md shadow-sm focus:outline-none"
+                              />
+                            </div>
+                          </div>
+                        </div>
+                        <div class="px-6 py-3">
+                          <div class="flex space-x-4">
+                            <div class="flex-1">
+                              <label class="block mb-2 capitalize"
+                                >Candidate Sourcing Type & Worker Type<span
+                                  class="text-red-500"
+                                  >*</span
+                                >
+                              </label>
+                              <select
+                                class="w-full select2-single custom-style"
+                                id="candidateSourcing"
+                              >
+                                <option value="">Select location</option>
+                                <option value="python">Python</option>
+                                <option value="java">Java</option>
+                                <option value="csharp">C#</option>
+                                <option value="ruby">Ruby</option>
+                              </select>
+                              <p
+                                class="text-red-500 text-sm mt-1"
+                                x-text="errors.candidateSourcing"
+                              ></p>
+                            </div>
+                            <div class="flex-1">
+                              <label class="block mb-2 capitalize"
+                                >Original Start Date
+                                <span class="text-red-500">*</span></label
+                              >
+                              <input
+                                id="startDate"
+                                x-model="originalStartDate"
+                                class="w-full h-12 px-4 text-gray-500 border rounded-md shadow-sm focus:outline-none pl-7"
+                                type="text"
+                                required
+                                placeholder="Select start date"
+                              />
+                              <p
+                                class="text-red-500 text-sm mt-1"
+                                x-text="errors.originalStartDate"
+                              ></p>
+                            </div>
+                          </div>
+                        </div>
+                        <h3 class="mx-4 mt-4">
+                          <span
+                            class="text-lg capitalize"
+                            :style="{'color': 'var(--primary-color)'}"
+                            >Contractor Portal Details</span
+                          >
+                        </h3>
+                        <div class="px-6 py-3">
+                          <div class="flex space-x-4">
+                            <div class="flex-1">
+                              <label class="block mb-2 capitalize"
+                                >Contractor Portal ID
+                                <span class="text-red-500">*</span></label
+                              >
+                              <input
+                                type="text"
+                                disabled
+                                x-model="contractorPortal"
+                                class="w-full h-12 px-4 text-gray-500 border border-gray-300 rounded-md shadow-sm focus:outline-none"
+                              />
+                            </div>
+                            <div class="flex-1">
+                              <label class="block mb-2 capitalize"
+                                >Contractor Password
+                                <span class="text-red-500">*</span></label
+                              >
+                              <input
+                                type="password"
+                                disabled
+                                x-model="contractorPassword"
+                                class="w-full h-12 px-4 text-gray-500 border border-gray-300 rounded-md shadow-sm focus:outline-none"
+                              />
+                            </div>
+                          </div>
+                        </div>
+                        <h3 class="mx-4 mt-4">
+                          <span
+                            class="text-lg capitalize"
+                            :style="{'color': 'var(--primary-color)'}"
+                            >Timesheet Information</span
+                          >
+                        </h3>
+                        <div class="px-6 py-3">
+                          <div class="flex space-x-4">
+                            <div class="flex-1">
+                              <label class="block mb-2 capitalize"
+                                >Timesheet Type
+                                <span class="text-red-500">*</span>
+                              </label>
+                              <select
+                                class="w-full select2-single custom-style"
+                                x-model="timesheetType"
+                                id="timesheetType"
+                              >
+                                <option value="">Select location</option>
+                                <option value="python">Python</option>
+                                <option value="java">Java</option>
+                                <option value="csharp">C#</option>
+                                <option value="ruby">Ruby</option>
+                              </select>
+                              <p
+                                class="text-red-500 text-sm mt-1"
+                                x-text="errors.timesheetType"
+                              ></p>
+                            </div>
+                            <div class="flex-1"></div>
+                          </div>
+                        </div>
+                        <div class="px-6 py-3">
+                          <button
+                            type="submit"
+                            class="px-4 py-2 text-white capitalize rounded"
+                            :style="{'background-color': 'var(--primary-color)', 'background-color:hover': 'var(--primary-hover)'}"
+                          >
+                            Onboard
+                          </button>
+                        </div>
+                      </form>
+                    </div>
+                  </section>
+                  <!-- Third Tab-->
+                  <section
+                    x-show="isSelected($id('tab', whichChild($el, $el.parentElement)))"
+                    :aria-labelledby="$id('tab', whichChild($el, $el.parentElement))"
+                    role="tabpanel"
+                    class=""
+                  >
+                    <div
+                      class="overflow-x-auto"
+                      x-data="{ 
+                        openModal: false, 
+                        currentRowId: null,
+                        rows: [
+                          { id: 1, documentCheckList: 'Code of Conduct', dateTime: '10/03/2024 06:18 PM' },
+                          { id: 2, documentCheckList: 'Data Privacy/Data Handling', dateTime: '10/03/2024 06:18 PM' },
+                          { id: 3, documentCheckList: 'Non-Disclosure', dateTime: '10/03/2024 06:18 PM' },
+                          { id: 4, documentCheckList: 'Criminal Background', dateTime: '10/03/2024 06:18 PM' },
+                        ]
+                      }"
+                    >
+                      <table class="w-full">
+                        <thead>
+                          <tr class="bg-gray-50 text-left">
+                            <th
+                              class="py-4 px-4 text-center font-semibold text-sm text-gray-600 capitalize"
+                            >
+                              Document Check List
+                            </th>
+                            <th
+                              class="py-4 px-4 text-center font-semibold text-sm text-gray-600 capitalize"
+                            >
+                              Date & Time
+                            </th>
+                          </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-200">
+                          <template x-for="row in rows" :key="row.id">
+                            <tr>
+                              <td
+                                class="py-4 px-4 text-center text-sm"
+                                x-text="row.documentCheckList"
+                              ></td>
+                              <td
+                                class="py-4 px-4 text-center text-sm"
+                                x-text="row.dateTime"
+                              ></td>
+                            </tr>
+                          </template>
+                        </tbody>
+                      </table>
+                    </div>
+                    <div class="px-6 py-3">
+                      <p><b>Reviewed By:</b> System Admin</p>
+                      <p><b>Reviewed Date:</b> 10/03/2024</p>
+                    </div>
+                  </section>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!--  Business Unit -->
+          <div class="mt-4">
+            <div
+              class="flex py-4 px-2 rounded rounded-b-none"
+              :style="{'background-color': 'var(--primary-color)'}"
+            >
+              <div class="w-3/5">
+                <span class="text-white">Business Unit</span>
+              </div>
+              <div class="w-2/5 text-center">
+                <span class="text-white">Budget Percentage</span>
+              </div>
+            </div>
+            <div class="flex justify-between gap-2 py-4 px-2 border-x border-b">
+              <div class="w-3/5 flex-wrap">
+                <span>708212 - 166 - St. Peters, MO - LPG</span>
+              </div>
+              <div class="w-2/5 text-center">
+                <span>100%</span>
+              </div>
+            </div>
+          </div>
+          <!-- Workorder History -->
+          <div
+            class="p-[30px] rounded border mt-4"
+            :style="{'border-color': 'var(--primary-color)'}"
+            >
+            <div class="mb-4 flex items-center gap-2">
+              <i
+                class="fa-solid fa-clock-rotate-left"
+                :style="{'color': 'var(--primary-color)'}"
+              ></i>
+              <h2
+                class="text-xl font-bold"
+                :style="{'color': 'var(--primary-color)'}"
+              >
+                Workorder History
+              </h2>
+            </div>
+            <div x-data="workOrderHistory()">
+              <table
+                class="min-w-full bg-white shadow-md rounded-lg overflow-hidden"
+              >
+                <thead class="bg-gray-200 text-gray-700">
+                  <tr>
+                    <th class="py-3 px-4 text-left">Status</th>
+                    <th
+                      @click="sort('catalogName')"
+                      class="py-3 px-4 text-left cursor-pointer"
+                    >
+                      Offer ID
+                      <span class="ml-1">
+                        <i
+                          class="fas fa-sort-up"
+                          :class="{'text-blue-500': sortColumn === 'catalogName' && sortDirection === 'asc'}"
+                        ></i>
+                        <i
+                          class="fas fa-sort-down"
+                          :class="{'text-blue-500': sortColumn === 'catalogName' && sortDirection === 'desc'}"
+                        ></i>
+                      </span>
+                    </th>
+                    <th
+                      @click="sort('category')"
+                      class="py-3 px-4 text-left cursor-pointer"
+                    >
+                      Contractor Name
+                      <span class="ml-1">
+                        <i
+                          class="fas fa-sort-up"
+                          :class="{'text-blue-500': sortColumn === 'category' && sortDirection === 'asc'}"
+                        ></i>
+                        <i
+                          class="fas fa-sort-down"
+                          :class="{'text-blue-500': sortColumn === 'category' && sortDirection === 'desc'}"
+                        ></i>
+                      </span>
+                    </th>
+                    <th
+                      @click="sort('profileWorkerType')"
+                      class="py-3 px-4 text-left cursor-pointer"
+                    >
+                      Job ID
+                      <span class="ml-1">
+                        <i
+                          class="fas fa-sort-up"
+                          :class="{'text-blue-500': sortColumn === 'profileWorkerType' && sortDirection === 'asc'}"
+                        ></i>
+                        <i
+                          class="fas fa-sort-down"
+                          :class="{'text-blue-500': sortColumn === 'profileWorkerType' && sortDirection === 'desc'}"
+                        ></i>
+                      </span>
+                    </th>
+                    <th
+                      @click="sort('status')"
+                      class="py-3 px-4 text-left cursor-pointer"
+                    >
+                      Hiring Manager
+                      <span class="ml-1">
+                        <i
+                          class="fas fa-sort-up"
+                          :class="{'text-blue-500': sortColumn === 'status' && sortDirection === 'asc'}"
+                        ></i>
+                        <i
+                          class="fas fa-sort-down"
+                          :class="{'text-blue-500': sortColumn === 'status' && sortDirection === 'desc'}"
+                        ></i>
+                      </span>
+                    </th>
+                    <th
+                      @click="sort('status')"
+                      class="py-3 px-4 text-left cursor-pointer"
+                    >
+                      Vendor
+                      <span class="ml-1">
+                        <i
+                          class="fas fa-sort-up"
+                          :class="{'text-blue-500': sortColumn === 'status' && sortDirection === 'asc'}"
+                        ></i>
+                        <i
+                          class="fas fa-sort-down"
+                          :class="{'text-blue-500': sortColumn === 'status' && sortDirection === 'desc'}"
+                        ></i>
+                      </span>
+                    </th>
+                    <th
+                      @click="sort('status')"
+                      class="py-3 px-4 text-left cursor-pointer"
+                    >
+                      Offer Date
+                      <span class="ml-1">
+                        <i
+                          class="fas fa-sort-up"
+                          :class="{'text-blue-500': sortColumn === 'status' && sortDirection === 'asc'}"
+                        ></i>
+                        <i
+                          class="fas fa-sort-down"
+                          :class="{'text-blue-500': sortColumn === 'status' && sortDirection === 'desc'}"
+                        ></i>
+                      </span>
+                    </th>
+                    <th
+                      @click="sort('status')"
+                      class="py-3 px-4 text-left cursor-pointer"
+                    >
+                      Bill Rate
+                      <span class="ml-1">
+                        <i
+                          class="fas fa-sort-up"
+                          :class="{'text-blue-500': sortColumn === 'status' && sortDirection === 'asc'}"
+                        ></i>
+                        <i
+                          class="fas fa-sort-down"
+                          :class="{'text-blue-500': sortColumn === 'status' && sortDirection === 'desc'}"
+                        ></i>
+                      </span>
+                    </th>
+                    <th
+                      @click="sort('status')"
+                      class="py-3 px-4 text-left cursor-pointer"
+                    >
+                      Workorder Status
+                      <span class="ml-1">
+                        <i
+                          class="fas fa-sort-up"
+                          :class="{'text-blue-500': sortColumn === 'status' && sortDirection === 'asc'}"
+                        ></i>
+                        <i
+                          class="fas fa-sort-down"
+                          :class="{'text-blue-500': sortColumn === 'status' && sortDirection === 'desc'}"
+                        ></i>
+                      </span>
+                    </th>
+                    <th
+                      @click="sort('status')"
+                      class="py-3 px-4 text-left cursor-pointer"
+                    >
+                      Worker Type
+                      <span class="ml-1">
+                        <i
+                          class="fas fa-sort-up"
+                          :class="{'text-blue-500': sortColumn === 'status' && sortDirection === 'asc'}"
+                        ></i>
+                        <i
+                          class="fas fa-sort-down"
+                          :class="{'text-blue-500': sortColumn === 'status' && sortDirection === 'desc'}"
+                        ></i>
+                      </span>
+                    </th>
+                    <th class="py-3 px-4 text-left">Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <template x-for="item in paginatedItems" :key="item.id">
+                    <tr class="border-b border-gray-200 hover:bg-gray-100">
+                      <td class="py-3 px-4" x-text="item.id"></td>
+                      <td class="py-3 px-4" x-text="item.catalogName"></td>
+                      <td class="py-3 px-4" x-text="item.category"></td>
+                      <td class="py-3 px-4" x-text="item.category"></td>
+                      <td class="py-3 px-4" x-text="item.category"></td>
+                      <td class="py-3 px-4" x-text="item.category"></td>
+                      <td class="py-3 px-4" x-text="item.category"></td>
+                      <td class="py-3 px-4" x-text="item.category"></td>
+                      <td
+                        class="py-3 px-4"
+                        x-text="item.profileWorkerType"
+                      ></td>
+                      <td class="py-3 px-4" x-text="item.status"></td>
+                      <td class="py-3 px-4">
+                        <button
+                          class="text-blue-500 hover:text-blue-700 mr-2 bg-transparent hover:bg-transparent"
+                        >
+                          <i class="fas fa-eye"></i>
+                        </button>
+                        <button
+                          class="text-green-500 hover:text-green-700 mr-2 bg-transparent hover:bg-transparent"
+                        >
+                          <i class="fas fa-edit"></i>
+                        </button>
+                        <button
+                          @click="deleteItem(item.id)"
+                          class="text-red-500 hover:text-red-700 bg-transparent hover:bg-transparent"
+                        >
+                          <i class="fas fa-trash"></i>
+                        </button>
+                      </td>
+                    </tr>
+                  </template>
+                </tbody>
+              </table>
+            </div>
+          </div>
         </div>
-    </div>
-</div>
+        </div>
+
 @endsection
 <script>
-    document.addEventListener("alpine:init", () => {
-        Alpine.data("workOrderForm", () => ({
-            formData: {
-                personalEmailAddress: '{{ old('personalEmailAddress', $workorder->consultant->user->email ?? '') }}',
-                first_name:'{{ old('first_name', $workorder->consultant->first_name ?? '') }}' ,
-                middle_name:'{{ old('middle_name', $workorder->consultant->middle_name ?? '') }}' ,
-                last_name:'{{ old('last_name', $workorder->consultant->last_name ?? '') }}' ,
-                accountManager: "",
-                recruitmentManager: "",
-                codeOfConduct: false,
-                dataPrivacy: false,
-                nonDisclosure: false,
-                criminalBackground: false,
-            },
-            errors: {},
+      document.addEventListener("alpine:init", () => {
+        Alpine.data("onBoardingData", () => ({
+          contractorName: "Aisya Carroll",
+          contractorEmail: "aisyacarroll@yahoo.com",
+          accountManagerValue: "java",
+          workLocation: "US Saint Peters 300 St. Peters Centre Blvd.",
+          jobProfile: "Senior Resolution Manager",
+          officialEmail: "simplifyalert+261459@gmail.com",
+          division: "Gallagher Bassett Services",
+          region: "North America Operations",
+          startDate: "09/24/2024",
+          endDate: "01/31/2025",
+          contractorPortal: "WK00002468",
+          contractorPassword: "**********",
 
-            init() {
-                this.initSelect2();
-            },
+          // New fields for user input
+          candidateSourcing: "",
+          originalStartDate: "",
+          timesheetType: "",
 
-            initSelect2() {
-                this.$nextTick(() => {
-                    $("#accountManager")
-                        .select2({
-                            width: "100%",
-                        })
-                        .on("select2:select", (e) => {
-                            this.formData.accountManager = e.params.data.id;
-                            this.errors.accountManager = "";
-                        })
-                        .on("select2:unselect", () => {
-                            this.formData.accountManager = "";
-                        });
+          // Error messages
+          errors: {
+            candidateSourcing: "",
+            originalStartDate: "",
+            timesheetType: "",
+          },
 
-                    $("#recruitmentManager")
-                        .select2({
-                            width: "100%",
-                        })
-                        .on("select2:select", (e) => {
-                            this.formData.recruitmentManager = e.params.data.id;
-                            this.errors.recruitmentManager = "";
-                        })
-                        .on("select2:unselect", () => {
-                            this.formData.recruitmentManager = "";
-                        });
-                });
-            },
+          init() {
+            this.initSelect2();
+            this.initDatePickers();
+          },
 
-            validateEmail(email) {
-                const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-                return re.test(email);
-            },
+          initSelect2() {
+            this.$nextTick(() => {
+              $(".select2-single").each((index, element) => {
+                const fieldName = $(element).data("field");
+                const $select = $(element);
 
-            validateForm() {
-                this.errors = {};
-                let isValid = true;
+                if (fieldName === "accountManager") {
+                  $select.select2({
+                    width: "100%",
+                    disabled: this.accountManagerValue !== "",
+                  });
 
-                console.log("Current form data:", this.formData);
-
-                if (!this.formData.personalEmailAddress) {
-                    this.errors.personalEmailAddress =
-                        "Personal Email Address is required.";
-                    isValid = false;
-                    console.log("Personal Email validation failed");
-                } else if (
-                    !this.validateEmail(this.formData.personalEmailAddress)
-                ) {
-                    this.errors.personalEmailAddress =
-                        "Please enter a valid email address.";
-                    isValid = false;
-                    console.log("Personal Email format validation failed");
-                }
-
-                if (!this.formData.accountManager) {
-                    this.errors.accountManager = "Please select an Account Manager.";
-                    isValid = false;
-                    console.log("Account Manager validation failed");
-                }
-
-                if (!this.formData.recruitmentManager) {
-                    this.errors.recruitmentManager =
-                        "Please select a Recruitment Manager.";
-                    isValid = false;
-                    console.log("Recruitment Manager validation failed");
-                }
-
-                if (!this.formData.codeOfConduct) {
-                    this.errors.codeOfConduct = "Please confirm Code of Conduct.";
-                    isValid = false;
-                    console.log("Code of Conduct validation failed");
-                }
-
-                if (!this.formData.dataPrivacy) {
-                    this.errors.dataPrivacy =
-                        "Please confirm Data Privacy / Data Handling.";
-                    isValid = false;
-                    console.log("Data Privacy validation failed");
-                }
-
-                if (!this.formData.nonDisclosure) {
-                    this.errors.nonDisclosure = "Please confirm Non-Disclosure.";
-                    isValid = false;
-                    console.log("Non-Disclosure validation failed");
-                }
-
-                if (!this.formData.criminalBackground) {
-                    this.errors.criminalBackground =
-                        "Please confirm Criminal Background.";
-                    isValid = false;
-                    console.log("Criminal Background validation failed");
-                }
-
-                console.log("Validation result:", isValid ? "Passed" : "Failed");
-                console.log("Errors:", this.errors);
-
-                return isValid;
-            },
-
-            submitForm(action) {
-                console.log("Submitting form...");
-                const isValid = this.validateForm();
-                if (isValid) {
-                    if (action === "save") {
-                        console.log("Form is valid. Saving...");
-                        // Add your save logic here
-                    } else if (action === "saveAndSubmit") {
-                        console.log("Form is valid. Saving and submitting...");
-                        // Add your save and submit logic here
-                    }
+                  if (this.accountManagerValue) {
+                    $select.val(this.accountManagerValue).trigger("change");
+                  }
                 } else {
-                    console.log("Form validation failed");
+                  $select.select2({
+                    width: "100%",
+                  });
                 }
-            },
+              });
+
+              // Initialize Select2 for new dropdowns
+              $("#candidateSourcing, #timesheetType")
+                .select2({
+                  width: "100%",
+                })
+                .on("select2:select", (e) => {
+                  this[e.target.id] = e.target.value;
+                  // Clear error message when a value is selected
+                  this.errors[e.target.id] = "";
+                });
+            });
+          },
+
+          initDatePickers() {
+            this.$nextTick(() => {
+              flatpickr("#startDate", {
+                dateFormat: "Y/m/d",
+                onChange: (selectedDates, dateStr) => {
+                  this.originalStartDate = dateStr;
+                  this.errors.originalStartDate = "";
+                },
+              });
+            });
+          },
+
+          validateForm() {
+            let isValid = true;
+            this.errors = {
+              candidateSourcing: "",
+              originalStartDate: "",
+              timesheetType: "",
+            };
+
+            if (!this.candidateSourcing) {
+              this.errors.candidateSourcing =
+                "Please select a candidate sourcing type";
+              isValid = false;
+            }
+
+            if (!this.originalStartDate) {
+              this.errors.originalStartDate =
+                "Please select an original start date";
+              isValid = false;
+            }
+
+            if (!this.timesheetType) {
+              this.errors.timesheetType = "Please select a timesheet type";
+              isValid = false;
+            }
+
+            return isValid;
+          },
+
+          submitForm() {
+            if (this.validateForm()) {
+              // Collect all form data, including disabled fields
+              const formData = {
+                contractorName: this.contractorName,
+                contractorEmail: this.contractorEmail,
+                accountManagerValue: this.accountManagerValue,
+                workLocation: this.workLocation,
+                jobProfile: this.jobProfile,
+                officialEmail: this.officialEmail,
+                division: this.division,
+                region: this.region,
+                startDate: this.startDate,
+                endDate: this.endDate,
+                contractorPortal: this.contractorPortal,
+                contractorPassword: this.contractorPassword,
+                candidateSourcing: this.candidateSourcing,
+                originalStartDate: this.originalStartDate,
+                timesheetType: this.timesheetType,
+              };
+
+              console.log("Form submitted with data:", formData);
+
+              // Add your API call here to submit the data
+              // For example:
+              // fetch('/api/onboard', {
+              //   method: 'POST',
+              //   headers: {
+              //     'Content-Type': 'application/json',
+              //   },
+              //   body: JSON.stringify(formData),
+              // })
+              // .then(response => response.json())
+              // .then(data => {
+              //   console.log('Success:', data);
+              // })
+              // .catch((error) => {
+              //   console.error('Error:', error);
+              // });
+            } else {
+              console.log("Form validation failed");
+            }
+          },
         }));
-    });
-</script>
+      });
+
+      function workOrderHistory() {
+        return {
+          items: Array.from({ length: 200 }, (_, i) => ({
+            id: i + 1,
+            catalogName: `Catalog ${String.fromCharCode(65 + (i % 26))}`,
+            category: ["Electronics", "Books", "Clothing", "Home", "Sports"][
+              i % 5
+            ],
+            profileWorkerType: ["Full-time", "Part-time", "Contract"][i % 3],
+            status: i % 2 === 0 ? "Active" : "Inactive",
+          })),
+          sortColumn: "id",
+          sortDirection: "asc",
+          itemsPerPage: 10,
+          customItemsPerPage: 10,
+          currentPage: 1,
+          itemsPerPageControl() {
+            return `
+                          <div class="flex items-center gap-4">
+                              <label for="itemsPerPage" class="mr-2">Items per page:</label>
+                              <select id="itemsPerPage" x-model="itemsPerPage" @change="updatePagination()" class="border rounded px-2 py-1 mr-2">
+                                  <option>10</option>
+                                  <option>20</option>
+                                  <option>30</option>
+                                  <option>40</option>
+                                  <option>50</option>
+                                  <option>100</option>
+                                  <option value="custom">Custom</option>
+                              </select>
+                              <div x-show="itemsPerPage === 'custom'" class="flex items-center">
+                                  <input 
+                                      type="number" 
+                                      x-model.number="customItemsPerPage" 
+                                      @input="updateCustomPagination()"
+                                      min="1"
+                                      class="border rounded px-2 py-1 w-20"
+                                      placeholder="Enter"
+                                  >
+                              </div>
+                          <div>
+                      `;
+          },
+          sort(column) {
+            if (this.sortColumn === column) {
+              this.sortDirection =
+                this.sortDirection === "asc" ? "desc" : "asc";
+            } else {
+              this.sortColumn = column;
+              this.sortDirection = "asc";
+            }
+          },
+          getItemsPerPage() {
+            return this.itemsPerPage === "custom"
+              ? this.customItemsPerPage
+              : parseInt(this.itemsPerPage);
+          },
+          get sortedItems() {
+            return [...this.items].sort((a, b) => {
+              let modifier = this.sortDirection === "asc" ? 1 : -1;
+              if (a[this.sortColumn] < b[this.sortColumn]) return -1 * modifier;
+              if (a[this.sortColumn] > b[this.sortColumn]) return 1 * modifier;
+              return 0;
+            });
+          },
+          get paginatedItems() {
+            const startIndex = (this.currentPage - 1) * this.getItemsPerPage();
+            return this.sortedItems.slice(
+              startIndex,
+              startIndex + this.getItemsPerPage()
+            );
+          },
+          get totalPages() {
+            return Math.ceil(this.items.length / this.getItemsPerPage());
+          },
+          get visiblePageNumbers() {
+            const totalPageCount = this.totalPages;
+            const current = this.currentPage;
+            let start = Math.max(1, current - 3);
+            let end = Math.min(totalPageCount, start + 7);
+
+            if (end - start < 7) {
+              start = Math.max(1, end - 7);
+            }
+
+            return Array.from({ length: end - start + 1 }, (_, i) => start + i);
+          },
+          get showBackwardIcon() {
+            return this.currentPage > 4;
+          },
+
+          get showForwardIcon() {
+            return this.currentPage < this.totalPages - 3;
+          },
+
+          movePages(direction) {
+            const newPage = this.currentPage + direction * 1;
+            this.goToPage(Math.max(1, Math.min(newPage, this.totalPages)));
+          },
+          prevPage() {
+            if (this.currentPage > 1) {
+              this.currentPage--;
+            }
+          },
+          nextPage() {
+            if (this.currentPage < this.totalPages) {
+              this.currentPage++;
+            }
+          },
+          goToPage(page) {
+            this.currentPage = page;
+          },
+          deleteItem(id) {
+            this.items = this.items.filter((item) => item.id !== id);
+            this.updatePagination();
+          },
+          updatePagination() {
+            this.currentPage = 1;
+          },
+          updateCustomPagination() {
+            if (this.customItemsPerPage < 1) {
+              this.customItemsPerPage = 1;
+            }
+          },
+          applyCustomPagination() {
+            this.itemsPerPage = "custom";
+            this.updatePagination();
+          },
+        };
+      }
+    </script>
