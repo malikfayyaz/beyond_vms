@@ -14,7 +14,7 @@ use Yajra\DataTables\Facades\DataTables;
 use App\JobWorkflowUpdate;
 use App\Models\Setting;
 use App\Models\JobWorkFlow;
-use App\Models\Client;
+
 
 class CareerOpportunitiesController extends Controller
 {
