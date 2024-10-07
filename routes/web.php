@@ -67,6 +67,13 @@ Route::middleware(['ensure_role_is_selected'])->group(function () {
     Route::post('users/{user}/assign-role', [UserController::class, 'assignRole'])->name('users.assignRole');
     Route::post('consultant-id', [VendorController::class, 'consultantDetail'])->name('consultant_detail');
     Route::post('show-vendor-markup', [VendorController::class, 'showVendorMarkup'])->name('show_vendor_markup');
+
+    Route::match(['get', 'post'], 'workflow', [GenericDataController::class, 'workflow'])->name('admin.workflow');
+    Route::match(['get', 'post'], 'workflow/edit/{id}', [GenericDataController::class, 'workflowEdit'])->name('admin.workflow.edit');
+    Route::match(['get', 'post'], 'workflow/store', [GenericDataController::class, 'workflowStore'])->name('admin.workflow.store');
+
+    Route::match(['post'], 'workflow/jobWorkFlowUpdate', [GenericDataController::class, 'workflowStore'])->name('admin.workflow.jobWorkFlowUpdate');
+
     Route::post('calculate-rate', [CareerOpportunitiesOfferController::class, 'calculateRate'])->name('calculate_rate');
 
     // Role-specific dashboards

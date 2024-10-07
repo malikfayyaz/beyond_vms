@@ -8,7 +8,7 @@ use App\Models\SettingCategory;
 use App\Models\Consultant;
 
 
- function userType(){
+function userType(){
     $array = array(
         '1' => 'Admin',
         '2' => 'Client',
@@ -17,6 +17,32 @@ use App\Models\Consultant;
     );
     return $array;
 }
+
+
+
+
+function userRoles(){
+    $array = array(
+        '1' => 'Branch Manager',
+        '2' => 'Regional HR',
+        '3' => 'Regional CFO',
+        '4' => 'Regional President',
+        '5' => 'Divisional CFO'
+    );
+    return $array;
+}
+
+
+
+function currency(){
+    $curr = array(
+        '1' => '$',
+        '2' => '€',
+        '3' => '£',
+    );
+    return $curr;
+}
+
 
 if (!function_exists('getActiveRoles')) {
     function getActiveRoles(User $user): array

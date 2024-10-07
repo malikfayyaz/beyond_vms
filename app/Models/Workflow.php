@@ -16,6 +16,7 @@ class Workflow extends Model
         'approval_role_id',
         'hiring_manager_id',
         'approval_required',
+        'approval_number'
     ];
 
     // Define relationships

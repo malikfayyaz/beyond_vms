@@ -10,9 +10,12 @@ use Illuminate\Support\Facades\Validator;
 use App\Models\JobTemplates;
 use App\Models\CareerOpportunity;
 use App\Models\CareerOpportunitiesBu;
+use App\Models\JobWorkFlow;
 use Illuminate\Support\Carbon;
 use Yajra\DataTables\Facades\DataTables;
 use App\Models\DivisionBranchZoneConfig;
+use App\Models\Setting;
+use App\JobWorkflowUpdate;
 
 class CareerOpportunitiesController extends BaseController
 {
@@ -28,7 +31,10 @@ class CareerOpportunitiesController extends BaseController
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('hiring_manager', function ($row) {
-                    return $row->hiringManager->full_name ? $row->hiringManager->full_name : 'N/A';
+                    return (isset($row->hiringManager->full_name)) ? $row->hiringManager->full_name : 'N/A';
+                })
+                ->addColumn('jobStatus', function ($row) {
+                    return (isset($row->jobStatus)) ? $row->getStatus($row->jobStatus) : 'N/A';
                 })
                 ->addColumn('duration', function ($row) {
                     return $row->date_range ? $row->date_range : 'N/A';
@@ -105,6 +111,14 @@ class CareerOpportunitiesController extends BaseController
                 $this->syncBusinessUnits($request->input('businessUnits'), $job->id);
 
                 calculateJobEstimates($job);
+                $jobWorkflow = new JobWorkflowUpdate();
+                $jobWorkflow->createJobWorkflow($job);
+                // get hiring manager id
+                // get all the workflow from workflows table
+                // update in new table with the job id
+                // add sort order in new table
+                //  
+                //dd('workflow should be trigger here');
                 session()->flash('success', 'Job saved successfully!');
                 return response()->json([
                     'success' => true,
@@ -139,11 +153,13 @@ class CareerOpportunitiesController extends BaseController
             'createdBy',
             'glCode',
             'category')->findOrFail($id);
+        $jobWorkFlow = JobWorkFlow::where('job_id', $id)->orderby('approval_number', 'ASC')->get();
+        $rejectReasons =  Setting::where('category_id', 9)->get();
         // Optionally, you can dump the data for debugging purposes
         // dd($job); // Uncomment to check the data structure
 
         // Return the view and pass the job data to it
-        return view('admin.career_opportunities.view', compact('job'));
+        return view('admin.career_opportunities.view', compact('job','jobWorkFlow','rejectReasons'));
     }
 
     /**
@@ -393,7 +409,65 @@ class CareerOpportunitiesController extends BaseController
         return true;
     }
 
-    /**
-     * Display the specified resource.
-     */
+    public function jobWorkFlowData(Request $request){
+        $data = JobWorkFlow::where('job_id', $request->id)->orderby('approval_number', 'ASC');
+        return DataTables::of($data)
+             ->addColumn('counter', function($row) {
+                static $counter = 0;  
+                return ++$counter;    
+            })
+            ->addColumn('hiring_manager', function($row) {
+                return $row->hiringManager->full_name ? $row->hiringManager->full_name : 'N/A';
+            })
+            ->addColumn('approval_role_id', function($row) {
+                return $row->approval_role_id ? userRoles()[$row->approval_role_id] : 'N/A';
+            })
+            ->addColumn('approval_required', function($row) {
+                return $row->approval_required ? $row->approval_required : 'N/A';
+            })
+            ->addColumn('approve_reject_by', function($row) {
+                return $row->approve_reject_by ? $row->approve_reject_by : 'N/A';
+            })
+            ->addColumn('created_at', function($row) {
+                return $row->created_at ? date('Y-m-d H:i:s',strtotime($row->created_at)) : 'N/A';
+            })
+            ->addColumn('approved_datetime', function($row) {
+                return $row->approved_datetime ? $row->approved_datetime : 'N/A';
+            })
+            ->addColumn('approval_notes', function($row) {
+                return $row->approval_notes ? $row->approval_notes : 'N/A';
+            })
+            ->addColumn('approval_doc', function($row) {
+                return $row->approval_doc ? $row->approval_doc : 'N/A';
+            })
+            ->addColumn('action', function($row){
+                 $btn = ' <div x-data="{ open: false }" @keydown.window.escape="open = false">
+                        <button @click="openModal = true; currentRowId = 1" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                            Accept
+                        </button>
+                        </div>
+                        
+                        <div x-data="{ open: false }" @keydown.window.escape="open = false">
+                            <button @click="open = true" class="inline-flex items-center px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600">
+                            Reject
+                        </button>
+                    </div>';
+                return $btn;
+            })
+            ->rawColumns(['action'])->make(true);
+
+    }
+
+    public function jobWorkFlowApprove(Request $request){
+        $jobWorkflow = new JobWorkflowUpdate();
+        $jobWorkflow->approveJobWorkFlow($request);
+    }
+
+    public function jobWorkFlowReject(Request $request){
+        $jobWorkflow = new JobWorkflowUpdate();
+        $jobWorkflow->rejectJobWorkFlow($request);
+    }
+
+
+
 }

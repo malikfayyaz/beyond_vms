@@ -456,7 +456,11 @@
                                             <tr>
                                                 <td class="border p-2">Document</td>
                                                 <td class="border p-2"><a href="#">{{$workorder->workorderbackground->file }}</a></td>
-                                                <td class="border p-2"><a href="#" class="text-blue-500 hover:text-blue-700"><i class="fas fa-download"></i></a></td>
+                                                <td class="border p-2">
+                                                    <a href="{{ asset('storage/background_verify/' . $workorder->workorderbackground->file) }}" class="text-blue-500 hover:text-blue-700" download>
+                                                    <i class="fas fa-download"></i>
+                                                    </a>
+                                                </td>
                                             </tr>
                                         </tbody>
                                     </table>
@@ -505,10 +509,10 @@
             workorder_id:'{{ old('workorder_id', $workorder->id ?? '') }}' ,
             locationTax:'{{ old('locationTax', $workorder->location_tax ?? '') }}',
             fileUpload:'',
-            codeOfConduct: {{ old('codeOfConduct', $workorder->workorderbackground->code_of_conduct ? 'true' : 'false') }},
-            dataPrivacy: {{ old('dataPrivacy', $workorder->workorderbackground->data_privacy ? 'true' : 'false') }},
-            nonDisclosure: {{ old('nonDisclosure', $workorder->workorderbackground->non_disclosure ? 'true' : 'false') }},
-            criminalBackground: {{ old('criminalBackground', $workorder->workorderbackground->criminal_background ? 'true' : 'false') }},
+            codeOfConduct: {{ old('codeOfConduct', optional($workorder->workorderbackground)->code_of_conduct ? 'true' : 'false') }},
+            dataPrivacy: {{ old('dataPrivacy', optional($workorder->workorderbackground)->data_privacy ? 'true' : 'false') }},
+            nonDisclosure: {{ old('nonDisclosure', optional($workorder->workorderbackground)->non_disclosure ? 'true' : 'false') }},
+            criminalBackground: {{ old('criminalBackground', optional($workorder->workorderbackground)->criminal_background ? 'true' : 'false') }},
           },
           errors: {},
 
