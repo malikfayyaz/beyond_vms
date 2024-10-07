@@ -33,7 +33,7 @@ return new class extends Migration
             $table->string('machine_user_name')->nullable();
             $table->string('approval_doc')->nullable();
             $table->text('approval_notes')->nullable();
-            $table->boolean('email_sent')->default(0);
+            
             $table->timestamps();  // Automatically adds created_at and updated_at
         });
     }
