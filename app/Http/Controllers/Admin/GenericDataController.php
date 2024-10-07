@@ -416,7 +416,7 @@ class GenericDataController extends BaseController
                 'message' => $failMessage,
                 // 'redirect_url' => route('admin.workflow.create', $validatedData['client_id']), // Redirect back URL for AJAX
             ], 409);
-        } 
+        }
         $workflow = Workflow::create($validatedData);
         $successMessage = 'Workflow created successfully!';
         $redirectUrl = route('admin.workflow.create', $workflow->client_id);
@@ -475,7 +475,7 @@ class GenericDataController extends BaseController
         }
 
         $workflow = Workflow::findOrFail($id);
-        
+
         $workflow->update([
             'client_id' => $validatedData['client_id'],
             'approval_role_id' => $validatedData['approval_role_id'],

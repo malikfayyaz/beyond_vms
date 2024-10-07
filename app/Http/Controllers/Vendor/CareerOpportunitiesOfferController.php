@@ -173,13 +173,14 @@ class CareerOpportunitiesOfferController extends Controller
         if($request->accept_reject == "accept") {
             // if($offer->status != 1 && $offer->status !=13) {
                 $offer->offer_accept_date = date("Y-m-d H:i:s");
-                $offer->modified_by_id = \Auth::id();
+                $offer->modified_by_id = Vendor::getVendorIdByUserId(\Auth::id());
+
                 $offer->modified_by_type = 3;
                 $offer->status = 1;
                 $offer->save();
 
                 // submission status update
-                $submission->resume_status = 9;
+                $submission->resume_status = 11; //submission status withdrawn
                 $submission->save();
 
                 $this->updateOtherRecords($offer);
@@ -199,13 +200,14 @@ class CareerOpportunitiesOfferController extends Controller
         elseif ($request->accept_reject == "reject") {
             // if($offer->status != 1 && $offer->status !=13) {
             $offer->offer_accept_date = date("Y-m-d H:i:s");
-            $offer->modified_by_id = \Auth::id();
+
+            $offer->modified_by_id = Vendor::getVendorIdByUserId(\Auth::id());
             $offer->modified_by_type = 3;
             $offer->status = 2;
             $offer->save();
 
             // submission status update
-            $submission->resume_status = 9;
+            $submission->resume_status = 6;  ////submission reject
             $submission->save();
 
 //            $this->updateOtherRecords($offer);
