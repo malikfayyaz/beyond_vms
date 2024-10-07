@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('client_id')->constrained('clients')->onDelete('cascade');
             $table->integer('approval_role_id');
             $table->foreignId('hiring_manager_id')->constrained('clients')->onDelete('cascade');
-    
+            $table->integer('approval_number')->default('no');
             // Approval required field
             $table->enum('approval_required', ['yes', 'no'])->default('no');
             $table->timestamps();

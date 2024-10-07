@@ -102,6 +102,11 @@ Route::middleware(['user_role:admin'])->group(function () {
         Route::post('job-rates', [RatesController::class, 'jobRates'])->name('job_rates');
 
 
+
+        Route::match(['get', 'post'], 'job-workflow-data', [CareerOpportunitiesController::class, 'jobWorkFlowData'])->name('jobWorkFlowData');
+
+        
+
         // offer
         Route::get('offer/{id}/create', [CareerOpportunitiesOfferController::class, 'create'])->name('offer.create');
         Route::post('offer/store', [CareerOpportunitiesOfferController::class, 'store'])->name('offer.store');
@@ -116,6 +121,7 @@ Route::middleware(['user_role:admin'])->group(function () {
         Route::get('workorder/view/{id}', [\App\Http\Controllers\Admin\CareerOpportunitiesWorkOrderController::class, 'show'])->name('workorder.show');
       
         //workflow
+
        Route::match(['get', 'post'], 'workflow', [GenericDataController::class, 'workflow'])->name('workflow');
        Route::match(['get', 'post'], 'workflow/create/{id}', [GenericDataController::class, 'workflowCreate'])->name('workflow.create');
        Route::match(['get', 'post'], 'workflow/store', [GenericDataController::class, 'workflowStore'])->name('workflow.store');
@@ -123,6 +129,9 @@ Route::middleware(['user_role:admin'])->group(function () {
        Route::put('workflow/{id}/update', [GenericDataController::class, 'workflowUpdate'])->name('workflow.update');
       
        //submission
+
+        
+        
         Route::match(['get', 'post'], 'submission/index', [CareerOpportunitiesSubmissionController::class, 'index'])->name('submission.index');
         Route::get('submission/{id}', [CareerOpportunitiesSubmissionController::class, 'show'])->name('submission.show');
 
@@ -132,6 +141,8 @@ Route::middleware(['user_role:admin'])->group(function () {
         Route::post('interview/store', [CareerOpportunitiesInterviewController::class, 'store'])->name('interview.store');
         Route::get('interview/{id}/edit', [CareerOpportunitiesInterviewController::class, 'edit'])->name('interview.edit');
         Route::put('interview/{id}/update', [CareerOpportunitiesInterviewController::class, 'update'])->name('interview.update');
+       Route::POST('jobWorkFlowApprove', [CareerOpportunitiesController::class, 'jobWorkFlowApprove'])->name('jobWorkFlowApprove');
+       Route::POST('jobWorkFlowReject', [CareerOpportunitiesController::class, 'jobWorkFlowReject'])->name('jobWorkFlowReject');
 
     });
 });

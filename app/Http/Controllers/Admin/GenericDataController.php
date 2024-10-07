@@ -361,6 +361,7 @@ class GenericDataController extends BaseController
     {
         $client_data = Client::find($id);
 
+
         $clients = Client::where('profile_status', 1)->where('id', '!=', $id)->get();
 
         $roles = checksetting(16);
@@ -371,6 +372,7 @@ class GenericDataController extends BaseController
         // dd($table_data);
         // Fetch the item to edit
         $item = GenericData::findOrFail($id);
+
 
         // Return the edit view with the item data
         return view('admin.workflow.create', [
@@ -384,17 +386,26 @@ class GenericDataController extends BaseController
 
     public function workflowStore(Request $request)
     {
+        //dd($request->all());
         // Validate the incoming request data
         $validatedData = $request->validate([
             'client_id' => 'required|exists:clients,id',
             'approval_role_id' => 'required|exists:settings,id',
             'hiring_manager_id' => 'required|exists:clients,id',
             'approval_required' => 'required|in:yes,no',
+            'approval_number' => 'required'
         ]);
 
+<<<<<<< HEAD
         $existingWorkflow = Workflow::where('client_id', $validatedData['client_id'])
         ->where('hiring_manager_id', $validatedData['hiring_manager_id'])
         ->first();
+=======
+        $workflow = new Workflow($validatedData);
+        $workflow->save();
+        //dd($workflow);
+
+>>>>>>> jobworkflow
 
         if ($existingWorkflow) {
             $failMessage = 'A workflow with the same client and hiring manager already exists.';

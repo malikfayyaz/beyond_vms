@@ -203,6 +203,7 @@
       document.addEventListener('DOMContentLoaded', function() {
                  console.log(window.$); // Verify jQuery is available
                 if (window.$) {
+
                     initializeDataTable('#example', '/admin/career-opportunities', [
                         { data: 'jobStatus', name: 'jobStatus' },
                         { data: 'id', name: 'id' },
@@ -216,6 +217,7 @@
                         {data: 'action', name: 'action', orderable: false, searchable: false}
                     ]);
                 }
+
 
       });
    </script>
