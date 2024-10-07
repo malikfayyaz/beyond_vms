@@ -160,12 +160,19 @@ class CareerOpportunitiesOfferController extends Controller
     }
     public function offerworkflowAccept(Request $request)
     {
+        $actionType = $request->input('actionType');
         $validated = $request->validate([
             'rowId' => 'required|integer',
         ]);
-        $workflow = OfferWorkFlow::findOrFail($request->rowId);
-        offerHelper::approveofferWorkFlow($request);
-        
+        if ($actionType == 'Accept'){
+            $workflow = OfferWorkFlow::findOrFail($request->rowId);
+            offerHelper::approveofferWorkFlow($request);
+        }
+        elseif ($actionType == 'Reject'){
+            $workflow = OfferWorkFlow::findOrFail($request->rowId);
+            offerHelper::rejectoffersWorkFlow($request);
+        }
+
         return response()->json([
             'success' => true,
             'message' => 'Offer Workflow accepted successfully!',

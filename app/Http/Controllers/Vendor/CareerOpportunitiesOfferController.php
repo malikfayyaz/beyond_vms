@@ -196,6 +196,29 @@ class CareerOpportunitiesOfferController extends Controller
 
             // }
         }
+        elseif ($request->accept_reject == "reject") {
+            // if($offer->status != 1 && $offer->status !=13) {
+            $offer->offer_accept_date = date("Y-m-d H:i:s");
+            $offer->modified_by_id = \Auth::id();
+            $offer->modified_by_type = 3;
+            $offer->status = 2;
+            $offer->save();
+
+            // submission status update
+            $submission->resume_status = 9;
+            $submission->save();
+
+//            $this->updateOtherRecords($offer);
+
+            session()->flash('success', 'Offer Rejected successfully!');
+            return response()->json([
+                'success' => true,
+                'message' => 'Offer Rejected successfully!',
+                'redirect_url' => route('vendor.offer.index') // Redirect back URL for AJAX
+            ]);
+
+            // }
+        }
 
     }
 

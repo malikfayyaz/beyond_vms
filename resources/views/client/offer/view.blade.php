@@ -99,10 +99,16 @@
                                         <td class="py-4 px-4 text-center text-sm">
                                             @if($workflow->hiringManager->user_id == auth()->user()->id && $workflow->status == 'Pending' && $workflow->email_sent == '1')
                                                 <button
-                                                    @click="openModal = true; submitForm({{ $workflow->id }})"
+                                                    @click="actionType = 'Accept'; openModal = true; currentRowId = {{ $workflow->id }}; submitForm(currentRowId, actionType);"
                                                     class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
                                                 >
                                                     Accept
+                                                </button>
+                                                <button
+                                                    @click="actionType = 'Reject'; openModal = true; currentRowId = {{ $workflow->id }}; submitForm(currentRowId, actionType);"
+                                                    class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+                                                >
+                                                    Reject
                                                 </button>
                                             @endif
                                         </td>
@@ -610,10 +616,11 @@
         </div>
     </div>
         <script>
-            function submitForm(currentRowId){
+            function submitForm(currentRowId, actionType){
                 console.log('Form submitted successfully');
                     const formData = new FormData();
                      formData.append('rowId', currentRowId);
+                     formData.append('actionType', actionType);
                     const url = '/client/offer/offerworkflowAccept';
                     ajaxCall(url,'POST', [[onSuccess, ['response']]], formData);
             }

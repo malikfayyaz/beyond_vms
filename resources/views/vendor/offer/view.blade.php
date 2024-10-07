@@ -584,14 +584,26 @@
                 </div>
               </div>
             </div>
-            <button
-                    type="button"
-                    @click="acceptOffer({{ $offer->id }},'accept')"
-                    aria-label="Accept Offer"
-                    class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 capitalize"
-                >
-                Accept Offer
-                </button>
+                @if($offer->status == '4')
+                    <button
+                        type="button"
+                        @click="acceptOffer({{ $offer->id }},'accept')"
+                        aria-label="Accept Offer"
+                        class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 capitalize"
+                    >
+                        Accept Offer
+                    </button>
+                    <button
+                        type="button"
+                        @click="acceptOffer({{ $offer->id }},'reject')"
+                        aria-label="Reject Offer"
+                        class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 capitalize"
+                    >
+                        Reject Offer
+                    </button>
+                @endif
+
+
           </div>
         </div>
     </div>
