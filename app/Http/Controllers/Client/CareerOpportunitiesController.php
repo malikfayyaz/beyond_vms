@@ -13,6 +13,7 @@ use Yajra\DataTables\Facades\DataTables;
 use App\JobWorkflowUpdate;
 use App\Models\Setting;
 use App\Models\JobWorkFlow;
+use App\Models\Client;
 
 class CareerOpportunitiesController extends Controller
 {
@@ -22,14 +23,20 @@ class CareerOpportunitiesController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $data = CareerOpportunity::with(['hiringManager', 'workerType'])
-                ->withCount([
-                    'submissions',
-                    'workFlow' => function ($query) use ($clientid) {
-                        $query->where('client_id', $clientid);
-                    }
-                ])
-                ->where('user_id', $clientid)->toSql();
+
+            $clientid = Client::getClientIdByUserId(Auth::id());
+            //dd($clientid);
+
+            $data = CareerOpportunity::with(['hiringManager', 'workerType','workFlow'])
+                ->where('hiring_manager', $clientid)
+                ->orWhereHas('workFlow', function ($query) use ($clientid) {
+                    $query->where('client_id', $clientid);
+                });
+                // ->withCount([
+                //     'submissions',
+                // ])
+               // dd($data);
+
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('hiring_manager', function($row) {
@@ -135,12 +142,13 @@ class CareerOpportunitiesController extends Controller
         $job = CareerOpportunity::with('hiringManager')->findOrFail($id);
         $jobWorkFlow = JobWorkFlow::where('job_id', $id)->orderby('approval_number', 'ASC')->get();
         $rejectReasons =  Setting::where('category_id', 9)->get();
+        $loginClientid = Client::getClientIdByUserId(Auth::id());
 
         // Optionally, you can dump the data for debugging purposes
         // dd($job); // Uncomment to check the data structure
 
         // Return the view and pass the job data to it
-        return view('client.career-opportunities.view', compact('job', 'jobWorkFlow', 'rejectReasons'));
+        return view('client.career-opportunities.view', compact('job', 'jobWorkFlow', 'rejectReasons','loginClientid'));
         //
     }
 
@@ -378,5 +386,16 @@ class CareerOpportunitiesController extends Controller
 
         return true;
     }
+
+    public function jobWorkFlowApprove(Request $request){
+        $jobWorkflow = new JobWorkflowUpdate();
+        $jobWorkflow->approveJobWorkFlow($request);
+    }
+
+    public function jobWorkFlowReject(Request $request){
+        $jobWorkflow = new JobWorkflowUpdate();
+        $jobWorkflow->rejectJobWorkFlow($request);
+    }
+
 
 }

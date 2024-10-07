@@ -18,6 +18,8 @@ use App\Models\Markup;
 use App\Models\Client;
 use App\Models\Workflow;
 use Spatie\Permission\Models\Role;
+use App\Models\JobWorkFlow;
+use Illuminate\Support\Facades\Storage;
 
 class GenericDataController extends BaseController
 {
@@ -631,6 +633,17 @@ class GenericDataController extends BaseController
             'success' => true,
             'message' => 'Setting saved successfully!',
             'setting' => $setting, // Send back the created setting for any frontend updates
+        ]);
+    }
+
+    public function getDownloadUrl($id)
+    {
+        $file = JobWorkFlow::findOrFail($id);
+        $downloadUrl = Storage::url($file->approval_doc);
+        
+        return response()->json([
+            'success' => true,
+            'downloadUrl' => $downloadUrl,
         ]);
     }
 

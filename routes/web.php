@@ -84,6 +84,8 @@ Route::middleware(['ensure_role_is_selected'])->group(function () {
     Route::middleware(['user_role:vendor'])->group(function () {
     Route::get('/vendor/dashboard', [VendorController::class, 'index'])->name('vendor.dashboard');
     });
+    Route::get('/jobWorkflow/download/{id}', [GenericDataController::class, 'getDownloadUrl'])->name('file.download');
+
     Route::middleware(['user_role:client'])->group(function () {
         Route::get('/client/dashboard', [ClientController::class, 'index'])->name('client.dashboard');
         Route::resource('/client/career-opportunities', \App\Http\Controllers\Client\CareerOpportunitiesController::class)
