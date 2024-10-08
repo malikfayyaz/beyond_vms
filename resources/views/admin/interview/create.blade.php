@@ -594,7 +594,7 @@
             if(this.formData.interviewDuration == 52){
                 duration = 45;
             }
-            if(this.formData.interviewDuration == 30){
+            if(this.formData.interviewDuration == 53){
                 duration = 60;
             }
 
