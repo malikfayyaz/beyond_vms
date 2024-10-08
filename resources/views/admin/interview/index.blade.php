@@ -69,14 +69,14 @@
                         <th
                             class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                         >
-                            End Time
+                            End Time 
                         </th>
                         <th
-                            class="px-8 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                         >
                             Woker Type
                         </th>
-                        <th style="width: 80px"
+                        <th 
                             class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                         >
                             Action
