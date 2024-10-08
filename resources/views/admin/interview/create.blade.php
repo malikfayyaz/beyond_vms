@@ -144,6 +144,21 @@
                     x-text="errors.interviewType"
                 ></p>
                 </div>
+
+                <div x-show="formData.interviewType" class="mt-4">
+                    <label for="interview_detail" class="block mb-2">
+                        <span x-text="getInterviewLabel()"></span> <span class="text-red-500">*</span>
+                    </label>
+                    <textarea
+                        class="w-full border rounded p-3"
+                        rows="5"
+                        id="interview_detail"
+                        x-model="formData.interview_detail"
+                        placeholder="Enter interview detail"
+                    />
+                    </textarea>
+                    <p class="text-red-500 text-sm mt-1" x-text="errors.interview_detail"></p>
+                </div>
             </div>
             <div class="bg-white my-8 rounded p-8">
                 <div class="mb-4 flex items-center gap-4">
@@ -440,22 +455,36 @@
             step: 1,
             formData: {
                 eventName: "Interview Schedule for {{$submission->consultant->full_name}}",
-                interviewDuration: "",
-                timeZone: "",
-                interviewType: "",
-                recommendedDate: "",
-                otherDate1: "",
-                otherDate2: "",
-                otherDate3: "",
-                where: "",
-                jobAttachment: null,
-                interviewInstructions: "",
-                interviewMembers: [],
-                selectedDate: null,
+                interviewDuration: "{{ old('interviewDuration', $interview->interview_duration ?? '') }}",
+                timeZone: "{{ old('timeZone', $interview->time_zone ?? '') }}",
+                interviewType: "{{ old('interviewType', $interview->interview_type ?? '') }}",
+                interview_detail: "{{ old('interview_detail', $interview->interview_detail ?? '') }}",
+                recommendedDate: "{{ old('recommendedDate', $interview->recommended_date ?? '') }}",
+                otherDate1: '{{ old('otherDate1', $interview->other_date_1 ?? '') }}',
+                otherDate2: '{{ old('otherDate2', $interview->other_date_2 ?? '') }}',
+                otherDate3: '{{ old('otherDate3', $interview->other_date_3 ?? '') }}',
+                where: "{{ old('where', $interview->location_id ?? '') }}",
+                jobAttachment: "{{ old('jobAttachment', $interview->job_attachment ?? '') }}",
+                interviewInstructions: "{{ old('interviewInstructions', $interview->interview_instructions ?? '') }}",
+                interviewMembers: @json($interview->interview_members ?? []),
                 selectedTimeSlots: {},
+                selectedDate: null,
             },
           errors: {},
           timeSlots: [],
+
+            getInterviewLabel() {
+                switch (this.formData.interviewType) {
+                    case '58':
+                        return 'In Person Interview Detail';
+                    case '59':
+                        return 'Phone Interview Detail';
+                    case '60':
+                        return 'Virtual Interview Detail';
+                    default:
+                        return 'Interview Detail';
+                }
+            },
 
           init() {
             this.initDatePickers();
@@ -635,6 +664,11 @@
               this.errors.where = "Where field is required";
               isValid = false;
             }
+            
+            if (!this.formData.interview_detail) {
+              this.errors.interview_detail = "Interview detail field is required";
+              isValid = false;
+            }
 
             if (
               !this.formData.interviewMembers ||
@@ -670,6 +704,7 @@
                 formData.append("otherDate2", this.formData.otherDate2);
                 formData.append("otherDate3", this.formData.otherDate3);
                 formData.append("where", this.formData.where);
+                formData.append("interview_detail", this.formData.interview_detail);
                 formData.append("submissionid", {{$submission->id}});
                 formData.append("selectedTimeSlots", JSON.stringify(this.formData.selectedTimeSlots));
                 
@@ -678,7 +713,7 @@
 
                 @if(isset($editMode) && $editMode)
                     url = '{{ route("admin.interview.update", $editIndex) }}';
-                    this.formData.append('_method', 'PUT'); // For PUT requests
+                    formData.append('_method', 'PUT'); // For PUT requests
                 @else
                     url = '{{ route("admin.interview.store") }}';
                 @endif
