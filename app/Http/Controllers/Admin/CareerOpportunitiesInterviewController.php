@@ -61,16 +61,27 @@ class CareerOpportunitiesInterviewController extends Controller
             'eventName' => 'required|string|max:255',
             'interviewDuration' => 'required|integer',
             'timeZone' => 'required|integer',
-            'startDate' => 'required|date',
-            'location' => 'nullable|integer',
-            'remote' => 'required|integer',
+            'recommendedDate' => 'required|date',
+            'where' => 'nullable|integer',
+            'interviewType' => 'required|integer',
             'interviewInstructions' => 'nullable|string',
-            'interview_detail' => 'required|string',
-            'members' => 'nullable',
+            // 'interview_detail' => 'required|string',
+            'interviewMembers' => 'nullable',
             'otherDate1' => 'nullable|date',
             'otherDate2' => 'nullable|date',
             'otherDate3' => 'nullable|date',
+            'selectedTimeSlots' => 'required|string',
         ]);
+
+        $timeSlotsArray = json_decode($validatedData['selectedTimeSlots'], true);
+        $timeRange = $timeSlotsArray[$validatedData['recommendedDate']];
+        $times = explode(' - ', $timeRange);
+        $startTime = $times[0]; 
+        $endTime = $times[1]; 
+
+        $startTimeIn24HourFormat = date("H:i:s", strtotime($startTime)); 
+        $endTimeIn24HourFormat = date("H:i:s", strtotime($endTime)); 
+
 
         $submission = CareerOpportunitySubmission::findOrFail($request->submissionid);
         
@@ -81,15 +92,17 @@ class CareerOpportunitiesInterviewController extends Controller
             "event_name" =>$validatedData['eventName'],
             "interview_duration" =>$validatedData['interviewDuration'],
             "time_zone" =>$validatedData['timeZone'],
-            "interview_type" =>$validatedData['remote'],
-            "recommended_date" =>$validatedData['startDate'],
+            "interview_type" =>$validatedData['interviewType'],
+            "recommended_date" =>$validatedData['recommendedDate'],
             "other_date_1" =>$validatedData['otherDate1'],
             "other_date_2" =>$validatedData['otherDate2'],
             "other_date_3" =>$validatedData['otherDate3'],
-            "location_id" =>$validatedData['location'],
+            "location_id" =>$validatedData['where'],
             "interview_instructions" =>$validatedData['interviewInstructions'],
-            "interview_members" =>$validatedData['members'],
-            "interview_detail" =>$validatedData['interview_detail'],
+            "interview_members" =>$validatedData['interviewMembers'],
+            "start_time" =>$startTimeIn24HourFormat,
+            "end_time" =>$endTimeIn24HourFormat,
+            // "interview_detail" =>$validatedData['interview_detail'],
             "status" => 1,
             "created_by_user" => 1,
         ];
