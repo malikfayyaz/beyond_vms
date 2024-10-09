@@ -18,6 +18,8 @@ use App\Models\Markup;
 use App\Models\Client;
 use App\Models\Workflow;
 use Spatie\Permission\Models\Role;
+use App\Models\JobWorkFlow;
+use Illuminate\Support\Facades\Storage;
 
 class GenericDataController extends BaseController
 {
@@ -409,7 +411,7 @@ class GenericDataController extends BaseController
                 'message' => $failMessage,
                 // 'redirect_url' => route('admin.workflow.create', $validatedData['client_id']), // Redirect back URL for AJAX
             ], 409);
-        } 
+        }
         $workflow = Workflow::create($validatedData);
         $successMessage = 'Workflow created successfully!';
         $redirectUrl = route('admin.workflow.create', $workflow->client_id);
@@ -468,7 +470,7 @@ class GenericDataController extends BaseController
         }
 
         $workflow = Workflow::findOrFail($id);
-        
+
         $workflow->update([
             'client_id' => $validatedData['client_id'],
             'approval_role_id' => $validatedData['approval_role_id'],
@@ -631,6 +633,17 @@ class GenericDataController extends BaseController
             'success' => true,
             'message' => 'Setting saved successfully!',
             'setting' => $setting, // Send back the created setting for any frontend updates
+        ]);
+    }
+
+    public function getDownloadUrl($id)
+    {
+        $file = JobWorkFlow::findOrFail($id);
+        $downloadUrl = Storage::url($file->approval_doc);
+        
+        return response()->json([
+            'success' => true,
+            'downloadUrl' => $downloadUrl,
         ]);
     }
 

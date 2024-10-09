@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Admin;
 use Illuminate\Http\Request;
 use App\Models\CareerOpportunitySubmission;
 use Illuminate\Support\Facades\Auth;
@@ -65,7 +66,7 @@ class CareerOpportunitiesSubmissionController extends Controller
             'submissionId' => 'required|exists:submissions,id', // Adjust table name if necessary
             'rejectedBy' => 'required|exists:users,id', // Assuming you have a users table
         ]);*/
-        $user = Auth::user();
+        $user = Admin::getAdminIdByUserId(Auth::id());
         $careersubmission = CareerOpportunitySubmission::find($request->submissionId);
         $oldStatus = $careersubmission->resume_status;
         $careersubmission->rejected_type = '1';

@@ -9,6 +9,7 @@ use App\Models\Vendor;
 use App\Models\WorkorderBackground;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
+use Illuminate\Support\Facades\Storage;
 
 class CareerOpportunitiesWorkOrderController extends Controller
 {
@@ -163,5 +164,21 @@ class CareerOpportunitiesWorkOrderController extends Controller
     {
         $workorder = CareerOpportunitiesWorkorder::findOrFail($id);
         return view('vendor.workorder.view', compact('workorder'));
+    }
+
+    public function destroy($id)
+    {
+        $background = WorkOrderBackground::findOrFail($id);
+
+        if ($background->file && Storage::exists('public/background_verify/' . $background->file)) {
+            // Delete file from storage
+            Storage::delete('public/background_verify/' . $background->file);
+        }
+        
+        // Delete record from database
+        // $background->delete();
+        $background->file = null;
+        $background->save();
+        return response()->json(['message' => 'File deleted successfully','redirect_url' => route('vendor.workorder.show', ['id' => $background->workorder_id])]);
     }
 }

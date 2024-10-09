@@ -3,12 +3,14 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller as BaseController;
+use App\Models\Admin;
 use App\Models\CareerOpportunity;
 use Illuminate\Http\Request;
 use App\Models\JobTemplates;
 use App\Models\GenericData;
 use App\Models\TemplateRatecard;
 use App\Models\DivisionBranchZoneConfig;
+use Illuminate\Support\Facades\Auth;
 use Yajra\DataTables\Facades\DataTables;
 
 class CatalogController extends BaseController
@@ -97,7 +99,7 @@ class CatalogController extends BaseController
 
         // Add additional data
         $additionalData = [
-            'created_by_id' => auth()->id(), // or $request->user()->id
+            'created_by_id' => Admin::getAdminIdByUserId(Auth::id()), // or $request->user()->id
             'created_from' => 'Program', // Static value
             'job_description'=>$request->job_description,
         ];

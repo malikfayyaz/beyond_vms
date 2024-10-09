@@ -35,7 +35,7 @@
             if (!this.emailError && !this.passwordError) {
               console.log('Login submitted:', this.email, this.password);
              document.getElementById('loginForm').submit();
-              
+
             }
           }
         }"
@@ -45,9 +45,9 @@
         <form @submit.prevent="submitForm" action="{{ route('login.post') }}" method="POST" id="loginForm">
           @csrf
 
-          
 
-          
+
+
           <div class="mb-4">
             <label
               for="email"
@@ -70,7 +70,7 @@
               x-text="emailError"
               class="text-red-500 text-xs mt-1"
             ></p>
-           
+
           </div>
           <div class="mb-6">
             <label
@@ -121,7 +121,7 @@
               x-text="passwordError"
               class="text-red-500 text-xs mt-1"
             ></p>
-           
+
           </div>
           <div class="flex items-center justify-between mb-6">
             <button

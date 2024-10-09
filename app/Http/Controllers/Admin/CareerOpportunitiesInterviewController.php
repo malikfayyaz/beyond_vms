@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\CareerOpportunitySubmission;
 use App\Models\CareerOpportunitiesInterview;
+use App\Models\CareerOpportunitiesInterviewDate;
 use Yajra\DataTables\Facades\DataTables;
 
 
@@ -61,16 +62,28 @@ class CareerOpportunitiesInterviewController extends Controller
             'eventName' => 'required|string|max:255',
             'interviewDuration' => 'required|integer',
             'timeZone' => 'required|integer',
-            'startDate' => 'required|date',
-            'location' => 'nullable|integer',
-            'remote' => 'required|integer',
+            'recommendedDate' => 'required|date',
+            'where' => 'nullable|integer',
+            'interviewType' => 'required|integer',
             'interviewInstructions' => 'nullable|string',
             'interview_detail' => 'required|string',
-            'members' => 'nullable',
+            'interviewMembers' => 'nullable',
             'otherDate1' => 'nullable|date',
             'otherDate2' => 'nullable|date',
             'otherDate3' => 'nullable|date',
+            'selectedTimeSlots' => 'required|string',
         ]);
+
+        $timeSlotsArray = json_decode($validatedData['selectedTimeSlots'], true);
+
+        $timeRange = $timeSlotsArray[$validatedData['recommendedDate']];
+        $times = explode(' - ', $timeRange);
+        $startTime = $times[0]; 
+        $endTime = $times[1]; 
+
+        $startTimeIn24HourFormat = date("H:i:s", strtotime($startTime)); 
+        $endTimeIn24HourFormat = date("H:i:s", strtotime($endTime)); 
+
 
         $submission = CareerOpportunitySubmission::findOrFail($request->submissionid);
         
@@ -81,20 +94,39 @@ class CareerOpportunitiesInterviewController extends Controller
             "event_name" =>$validatedData['eventName'],
             "interview_duration" =>$validatedData['interviewDuration'],
             "time_zone" =>$validatedData['timeZone'],
-            "interview_type" =>$validatedData['remote'],
-            "recommended_date" =>$validatedData['startDate'],
+            "interview_type" =>$validatedData['interviewType'],
+            "recommended_date" =>$validatedData['recommendedDate'],
             "other_date_1" =>$validatedData['otherDate1'],
             "other_date_2" =>$validatedData['otherDate2'],
             "other_date_3" =>$validatedData['otherDate3'],
-            "location_id" =>$validatedData['location'],
+            "location_id" =>$validatedData['where'],
             "interview_instructions" =>$validatedData['interviewInstructions'],
-            "interview_members" =>$validatedData['members'],
+            "interview_members" =>$validatedData['interviewMembers'],
+            "start_time" =>$startTimeIn24HourFormat,
+            "end_time" =>$endTimeIn24HourFormat,
             "interview_detail" =>$validatedData['interview_detail'],
             "status" => 1,
             "created_by_user" => 1,
         ];
 
         $InterviewCreate = CareerOpportunitiesInterview::create( $mapedData );
+        $i=1;
+        foreach ($timeSlotsArray as $date => $timeSlot) {
+            // Split the time slot string into start and end times
+            list($startTime, $endTime) = explode(' - ', $timeSlot);
+           
+            $startTimeIn24HourFormat = date("H:i:s", strtotime($startTime)); 
+            $endTimeIn24HourFormat = date("H:i:s", strtotime($endTime)); 
+            // Optionally, you can calculate the schedule_date_order based on your logic
+            $scheduleDateOrder = $i++;
+            CareerOpportunitiesInterviewDate::create([
+                'interview_id' => $InterviewCreate->id,        
+                'schedule_date' => $date,               
+                'start_time' => $startTimeIn24HourFormat,             
+                'end_time' => $endTimeIn24HourFormat,                 
+                'schedule_date_order' => $scheduleDateOrder, 
+            ]);
+        }
 
         session()->flash('success', 'Interview saved successfully!');
         return response()->json([
@@ -115,7 +147,6 @@ class CareerOpportunitiesInterviewController extends Controller
 
     public function update(Request $request, $id)
     {
-        
         // Validate and update the interview
         $interview = CareerOpportunitiesInterview::findOrFail($id);
         $submission =  CareerOpportunitySubmission::findOrFail($interview->submission_id);
@@ -124,16 +155,26 @@ class CareerOpportunitiesInterviewController extends Controller
             'eventName' => 'required|string|max:255',
             'interviewDuration' => 'required|integer',
             'timeZone' => 'required|integer',
-            'startDate' => 'required|date',
-            'location' => 'nullable|integer',
-            'remote' => 'required|integer',
+            'recommendedDate' => 'required|date',
+            'where' => 'nullable|integer',
+            'interviewType' => 'required|integer',
             'interview_detail' => 'required|string',
             'interviewInstructions' => 'nullable|string',
-            'members' => 'nullable',
+            'interviewMembers' => 'nullable',
             'otherDate1' => 'nullable|date',
             'otherDate2' => 'nullable|date',
             'otherDate3' => 'nullable|date',
+            'selectedTimeSlots' => 'required|string',
         ]);
+
+        $timeSlotsArray = json_decode($validatedData['selectedTimeSlots'], true);
+        $timeRange = $timeSlotsArray[$validatedData['recommendedDate']];
+        $times = explode(' - ', $timeRange);
+        $startTime = $times[0]; 
+        $endTime = $times[1]; 
+
+        $startTimeIn24HourFormat = date("H:i:s", strtotime($startTime)); 
+        $endTimeIn24HourFormat = date("H:i:s", strtotime($endTime)); 
 
         $mapedData = [
             "submission_id" =>$submission->id,
@@ -142,16 +183,17 @@ class CareerOpportunitiesInterviewController extends Controller
             "event_name" =>$validatedData['eventName'],
             "interview_duration" =>$validatedData['interviewDuration'],
             "time_zone" =>$validatedData['timeZone'],
-            "interview_type" =>$validatedData['remote'],
+            "interview_type" =>$validatedData['interviewType'],
             "interview_detail" =>$validatedData['interview_detail'],
-            "recommended_date" =>$validatedData['startDate'],
+            "recommended_date" =>$validatedData['recommendedDate'],
             "other_date_1" =>$validatedData['otherDate1'],
             "other_date_2" =>$validatedData['otherDate2'],
             "other_date_3" =>$validatedData['otherDate3'],
-            "location_id" =>$validatedData['location'],
+            "location_id" =>$validatedData['where'],
             "interview_instructions" =>$validatedData['interviewInstructions'],
-            "interview_members" =>$validatedData['members'],
-            
+            "interview_members" =>$validatedData['interviewMembers'],
+            "start_time" =>$startTimeIn24HourFormat,
+            "end_time" =>$endTimeIn24HourFormat,
         ];
 
         $interview->update($mapedData);

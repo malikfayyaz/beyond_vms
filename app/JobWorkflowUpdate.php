@@ -76,7 +76,16 @@ class JobWorkflowUpdate
         $jobWorkFlow->approve_reject_from = $portal;
         $jobWorkFlow->ip_address = $request->ip();
         $jobWorkFlow->machine_user_name = gethostname();
-        $jobWorkFlow->approval_doc = (isset($request->attachment)) ? $request->attachment : '';
+        // dd($request->all());
+
+        if(isset($request->jobAttachment)){
+            $file = $request->file('jobAttachment');
+            $fileName = time() . '_' . $file->getClientOriginalName();
+            $filePath = $file->storeAs('jobWorkFlow', $fileName, 'public'); 
+        }else{
+            $fileName = '';
+        }
+        $jobWorkFlow->approval_doc = $fileName;
         $jobWorkFlow->approval_notes = $request->note;
         $jobWorkFlow->save();
     }

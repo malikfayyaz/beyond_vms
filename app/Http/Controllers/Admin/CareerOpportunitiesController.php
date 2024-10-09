@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Models\Admin;
 use App\Models\GenericData;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Http\Request;
@@ -25,7 +26,7 @@ class CareerOpportunitiesController extends BaseController
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $adminId = Auth::id();
+            $adminId = Admin::getAdminIdByUserId(Auth::id());
             $data = CareerOpportunity::with('hiringManager', 'workerType')
             ->withCount('submissions');
             return DataTables::of($data)
@@ -117,7 +118,7 @@ class CareerOpportunitiesController extends BaseController
                 // get all the workflow from workflows table
                 // update in new table with the job id
                 // add sort order in new table
-                //  
+                //
                 //dd('workflow should be trigger here');
                 session()->flash('success', 'Job saved successfully!');
                 return response()->json([
@@ -167,7 +168,7 @@ class CareerOpportunitiesController extends BaseController
      */
     public function edit(string $id)
     {
-        $user = Auth::user();
+        $user = Admin::getAdminIdByUserId(Auth::id());
         $sessionrole = session('selected_role');
         $careerOpportunity = CareerOpportunity::with('careerOpportunitiesBu')->findOrFail($id);
 
@@ -195,7 +196,7 @@ class CareerOpportunitiesController extends BaseController
             $newOpportunity = $originalOpportunity->replicate();
             $newOpportunity->jobstep2_complete = '0';
             $newOpportunity->title = $originalOpportunity->title;
-            $newOpportunity->user_id = Auth::id();
+            $newOpportunity->user_id = Admin::getAdminIdByUserId(Auth::id());
             $newOpportunity->created_at = Carbon::now();
             $newOpportunity->updated_at = Carbon::now();
             $newOpportunity->save();
@@ -358,9 +359,10 @@ class CareerOpportunitiesController extends BaseController
             'location_id' => $validatedData['workLocation'],
             'currency_id' => $validatedData['currency'],
             'min_bill_rate' => $validatedData['billRate'],
-            'user_subclient_id' => isset($job) ? $job->user_subclient_id  : \Auth::id(),
+            'user_subclient_id' => isset($job) ? $job->user_subclient_id  // If $job exists, use this
+                : Admin::getAdminIdByUserId(Auth::id()),
             'attachment' => $filename,
-            'user_id' => isset($job) ? $job->user_id  : \Auth::id(),
+            'user_id' => isset($job) ? $job->user_id  : Admin::getAdminIdByUserId(Auth::id()),
             'user_type' => isset($job) ? $job->user_type  : 1,
             'interview_process' => 'Yes',
             'job_type' => 10,
@@ -413,8 +415,8 @@ class CareerOpportunitiesController extends BaseController
         $data = JobWorkFlow::where('job_id', $request->id)->orderby('approval_number', 'ASC');
         return DataTables::of($data)
              ->addColumn('counter', function($row) {
-                static $counter = 0;  
-                return ++$counter;    
+                static $counter = 0;
+                return ++$counter;
             })
             ->addColumn('hiring_manager', function($row) {
                 return $row->hiringManager->full_name ? $row->hiringManager->full_name : 'N/A';
@@ -446,7 +448,7 @@ class CareerOpportunitiesController extends BaseController
                             Accept
                         </button>
                         </div>
-                        
+
                         <div x-data="{ open: false }" @keydown.window.escape="open = false">
                             <button @click="open = true" class="inline-flex items-center px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600">
                             Reject

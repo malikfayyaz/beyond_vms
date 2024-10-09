@@ -647,31 +647,55 @@
                 <td class="py-4 px-4 text-center text-sm">{{ isset($workflow->created_at) ? date('Y-m-d H:i:s',strtotime($workflow->created_at)) : 'N/A' }}</td>
                 <td class="py-4 px-4 text-center text-sm">{{ $workflow->approved_datetime ?? 'N/A' }}</td>
                 <td class="py-4 px-4 text-center text-sm">{{ $workflow->approval_notes ?? 'N/A' }}</td>
-                <td class="py-4 px-4 text-center text-sm">{{ $workflow->approval_doc ?? 'N/A' }}</td>
                 <td class="py-4 px-4 text-center text-sm">
-                  <div x-data="{ emailSent: {{ $workflow->email_sent }}, status: '{{ $workflow->status }}' }">
-                     <template x-if="(status == 'Pending' && emailSent == 1)">
-                        <button
-                            @click="$dispatch('open-modal', { rowId: {{ $workflow->id }} })"
-                            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                        >
-                            Accept
-                        </button>
-                      </template>
+                    <div x-data="{
+                        downloadUrl: '',
+                        id: '{{ $workflow->id }}',
+                        fetchDownloadUrl() {
+                            fetch(`/jobWorkflow/download/${this.id}`)
+                                .then(response => response.json())
+                                .then(data => {
+                                    if (data.success) {
+                                        this.downloadUrl = data.downloadUrl; 
+                                    } else {
+                                        console.error('Failed to fetch download URL');
+                                    }
+                                })
+                                .catch(error => console.error('Error fetching download URL:', error));
+                            }
+                        }" 
+                        x-init="fetchDownloadUrl()" 
+                    >
+                    <template x-if="downloadUrl">
+                        <a :href="downloadUrl" class="underline" download> {{ $workflow->approval_doc }} </a>
+                    </template>
+                    <span x-show="!downloadUrl" class="text-gray-500">N/A</span>
+                </div>
 
-                    <template x-if="(status == 'Pending' && emailSent == 1)">
-                        <button
-                            @click="$dispatch('open-rejectmodal', { rowId: {{ $workflow->id }} })"
-                            class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
-                        >
-                            Reject
-                        </button>
-                    </template>
-                   
-                    <template x-if="!(status == 'Pending')">
-                        <span class="text-gray-500">{{ $workflow->status }}</span>
-                    </template>
-                  </div>
+                </td>
+                <td class="py-4 px-4 text-center text-sm">
+                    <div x-data="{ status: '{{ $workflow->status }}', emailSent: {{ $workflow->email_sent }}, clientId: {{ $workflow->client_id }}, loginClientId: {{ $loginClientid }}  }">
+                        <template x-if="(status == 'Pending' && emailSent == 1 && loginClientId == clientId)">
+                            <button
+                                @click="$dispatch('open-modal', { rowId: {{ $workflow->id }} })"
+                                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                            >
+                                Accept
+                            </button>
+                        </template>
+
+                        <template x-if="(status == 'Pending' && emailSent == 1 && loginClientId == clientId)">
+                            <button
+                                @click="$dispatch('open-rejectmodal', { rowId: {{ $workflow->id }} })"
+                                class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+                            >
+                                Reject
+                            </button>
+                        </template>
+                       <template x-if="!(status == 'Pending' && emailSent == 1 && loginClientId == clientId )">
+                            <span class="text-gray-500">{{ $workflow->status }}</span>
+                        </template>
+                    </div>
                 </td>
             </tr>
 
@@ -691,6 +715,10 @@
               reason: '',
               note: '',
               errors: {},
+              handleFileUpload(event) {
+                this.file = event.target.files[0];  
+              },
+
               validateForm() {
                 this.errors = {};
                 if (!this.note.trim()) this.errors.note = 'Please enter a note';
@@ -705,7 +733,7 @@
                   if (this.file) {
                       formData.append('jobAttachment', this.file);
                   }
-                  const url = '/admin/jobWorkFlowApprove';
+                  const url = '/client/jobWorkFlowApprove';
                   ajaxCall(url,'POST', [[onSuccess, ['response']]], formData);
                   this.openModal = false;
                 }
@@ -729,8 +757,6 @@
                 class="relative top-20 mx-auto p-5 border w-[600px] shadow-lg rounded-md bg-white"
                 @click.stop
               >
-                <!-- Header -->
-                <!-- Header -->
                 <div class="flex items-center justify-between border-b p-4">
                   <h2
                     class="text-xl font-semibold"
@@ -816,7 +842,7 @@
                   formData.append('note', this.note);
                   formData.append('workflow_id', this.currentRowId);
                   formData.append('reason', this.reason);
-                  const url = '/admin/jobWorkFlowReject';
+                  const url = '/client/jobWorkFlowReject';
                   ajaxCall(url,'POST', [[onSuccess, ['response']]], formData);
                   this.openModal = false;
                 }

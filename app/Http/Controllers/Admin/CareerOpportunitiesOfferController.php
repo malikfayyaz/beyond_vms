@@ -1,9 +1,11 @@
 <?php
 namespace App\Http\Controllers\Admin;
 
+use App\Models\Admin;
 use App\Models\CareerOpportunitiesWorkflow;
 use App\Models\OfferWorkFlow;
 use Illuminate\Routing\Controller as BaseController;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use App\Models\CareerOpportunitiesOffer;
 use App\Models\CareerOpportunitySubmission;
@@ -122,7 +124,7 @@ class CareerOpportunitiesOfferController extends BaseController
             "career_opportunity_id" =>$submission->career_opportunity_id,
             "location_id" =>$validatedData['location'],
             "markup" =>$validatedData['markup'],
-            "created_by_id" =>\Auth::id(),
+            "created_by_id" =>Admin::getAdminIdByUserId(Auth::id()),
             "created_by_type" =>1,
             "status" =>1,
             "offer_pay_rate" =>removeComma($validatedData['payRate']),
@@ -155,9 +157,10 @@ class CareerOpportunitiesOfferController extends BaseController
     // Show a specific career opportunity offer
     public function show($id)
     {
+        $rejectionreason = checksetting(17);
         $workflows = OfferWorkFlow::where('offer_id', $id)->get();
         $offer = CareerOpportunitiesOffer::findOrFail($id);
-        return view('admin.offer.view', compact('offer','workflows'));
+        return view('admin.offer.view', compact('offer','workflows', 'rejectionreason'));
     }
 
     // Show the form for editing an existing career opportunity offer
@@ -253,6 +256,7 @@ class CareerOpportunitiesOfferController extends BaseController
         $actionType = $request->input('actionType');
         $validated = $request->validate([
             'rowId' => 'required|integer',
+            'reason' => 'required_if:actionType,Reject|integer',
         ]);
         $workflow = OfferWorkFlow::findOrFail($request->rowId);
         if ($actionType == 'Accept') {

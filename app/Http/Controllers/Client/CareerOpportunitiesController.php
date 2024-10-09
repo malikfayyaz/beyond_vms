@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Client;
 use App\Http\Controllers\Controller;
 use App\Models\CareerOpportunitiesBu;
 use App\Models\CareerOpportunity;
+use App\Models\Client;
 use App\Models\JobTemplates;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -14,6 +15,7 @@ use App\JobWorkflowUpdate;
 use App\Models\Setting;
 use App\Models\JobWorkFlow;
 
+
 class CareerOpportunitiesController extends Controller
 {
     /**
@@ -22,6 +24,8 @@ class CareerOpportunitiesController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
+
+            $clientid = Client::getClientIdByUserId(Auth::id());
             $data = CareerOpportunity::with(['hiringManager', 'workerType'])
                 ->withCount([
                     'submissions',
@@ -29,7 +33,8 @@ class CareerOpportunitiesController extends Controller
                         $query->where('client_id', $clientid);
                     }
                 ])
-                ->where('user_id', $clientid)->toSql();
+                ->where('user_id', $clientid)->get();
+
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('hiring_manager', function($row) {
@@ -135,12 +140,13 @@ class CareerOpportunitiesController extends Controller
         $job = CareerOpportunity::with('hiringManager')->findOrFail($id);
         $jobWorkFlow = JobWorkFlow::where('job_id', $id)->orderby('approval_number', 'ASC')->get();
         $rejectReasons =  Setting::where('category_id', 9)->get();
+        $loginClientid = Client::getClientIdByUserId(Auth::id());
 
         // Optionally, you can dump the data for debugging purposes
         // dd($job); // Uncomment to check the data structure
 
         // Return the view and pass the job data to it
-        return view('client.career-opportunities.view', compact('job', 'jobWorkFlow', 'rejectReasons'));
+        return view('client.career-opportunities.view', compact('job', 'jobWorkFlow', 'rejectReasons','loginClientid'));
         //
     }
 
@@ -149,7 +155,7 @@ class CareerOpportunitiesController extends Controller
      */
     public function edit(string $id)
     {
-        $user = Auth::user();
+        $user = Client::getClientIdByUserId(Auth::id());
         $sessionrole = session('selected_role');
         $careerOpportunity = CareerOpportunity::with('careerOpportunitiesBu')->findOrFail($id);
 
@@ -175,7 +181,7 @@ class CareerOpportunitiesController extends Controller
             $newOpportunity = $originalOpportunity->replicate();
             $newOpportunity->jobstep2_complete = '0';
             $newOpportunity->title = $originalOpportunity->title;
-            $newOpportunity->user_id = Auth::id();
+            $newOpportunity->user_id = Client::getClientIdByUserId(Auth::id());
             $newOpportunity->created_at = Carbon::now();
             $newOpportunity->updated_at = Carbon::now();
             $newOpportunity->save();
@@ -328,9 +334,9 @@ class CareerOpportunitiesController extends Controller
             'location_id' => $validatedData['workLocation'],
             'currency_id' => $validatedData['currency'],
             'min_bill_rate' => $validatedData['billRate'],
-            'user_subclient_id' => isset($job) ? $job->user_subclient_id  : \Auth::id(),
+            'user_subclient_id' => isset($job) ? $job->user_subclient_id  : Client::getClientIdByUserId(Auth::id()),
             'attachment' => $filename,
-            'user_id' => isset($job) ? $job->user_id  : \Auth::id(),
+            'user_id' => isset($job) ? $job->user_id  : Client::getClientIdByUserId(Auth::id()),
             'user_type' => isset($job) ? $job->user_type  : 2,
             'interview_process' => 'Yes',
             'job_type' => 10,
@@ -378,5 +384,16 @@ class CareerOpportunitiesController extends Controller
 
         return true;
     }
+
+    public function jobWorkFlowApprove(Request $request){
+        $jobWorkflow = new JobWorkflowUpdate();
+        $jobWorkflow->approveJobWorkFlow($request);
+    }
+
+    public function jobWorkFlowReject(Request $request){
+        $jobWorkflow = new JobWorkflowUpdate();
+        $jobWorkflow->rejectJobWorkFlow($request);
+    }
+
 
 }

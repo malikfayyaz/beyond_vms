@@ -74,7 +74,7 @@
                         <th
                             class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                         >
-                            Woker Type
+                            Worker Type
                         </th>
                         <th style="width: 80px"
                             class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
@@ -98,11 +98,9 @@
         if (window.$) {
             initializeDataTable('#listing', '/admin/interview/index', [
                 { 
-                data: null, 
+                    data: null, 
                     name: 'serial', 
-                    render: function (data, type, full, meta) {
-                        return meta.row + 1;  // Display the row index (1-based)
-                    }
+                    render: (data, type, full, meta) => meta.row + 1 // Display the row index (1-based)
                 },
                 { data: 'status', name: 'status' },
                 { data: 'type', name: 'type' },
@@ -112,13 +110,26 @@
                 { data: 'hiring_manger', name: 'hiring_manger' },
                 { data: 'vendor_name', name: 'vendor_name' },
                 { data: 'recommended_date', name: 'recommended_date' },
-                { data: 'start_time', name: 'start_time' },
-                { data: 'end_time', name: 'end_time' },
+                { data: 'start_time', name: 'start_time', render: formatTime }, // Use formatTime for start time
+                { data: 'end_time', name: 'end_time', render: formatTime }, // Use formatTime for end time
                 { data: 'worker_type', name: 'worker_type' },
                 { data: 'action', name: 'action', orderable: false, searchable: false }
-               
             ]);
         }
     });
+
+    // Function to format time from 24-hour to AM/PM
+    const formatTime = (timeString) => {
+        if (!timeString) return ''; // Handle empty time
+        
+        const [hours, minutes] = timeString.split(':'); // Split hours and minutes
+
+        // Convert hours to 12-hour format
+        const hourIn12Format = hours % 12 || 12; // Convert to 12-hour format, 0 becomes 12
+        const ampm = hours >= 12 ? 'PM' : 'AM'; // Determine AM/PM
+
+        return `${hourIn12Format}:${minutes} ${ampm}`; // Return formatted time
+    };
+
 </script>
 @endsection

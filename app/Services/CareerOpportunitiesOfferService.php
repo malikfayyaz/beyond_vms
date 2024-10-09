@@ -169,6 +169,7 @@ class CareerOpportunitiesOfferService
     protected static function rejectOfferWorkFlow($workflowid, $userid, $role, $portal, $request) {
         $workflow = OfferWorkFlow::findOrFail($workflowid);
         $workflow->status = 'Rejected'; // Update the status to Rejected
+        $workflow->rejection_reason = $request->reason;
         $workflow->approval_notes = $request->note;
         $workflow->approve_reject_by = $userid;
         $workflow->approve_reject_type = $role;

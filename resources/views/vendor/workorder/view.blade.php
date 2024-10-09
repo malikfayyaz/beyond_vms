@@ -453,15 +453,25 @@
                                             </tr>
                                         </thead>
                                         <tbody>
+                                            @if ($workorder->workorderbackground->file)
                                             <tr>
                                                 <td class="border p-2">Document</td>
                                                 <td class="border p-2"><a href="#">{{$workorder->workorderbackground->file }}</a></td>
                                                 <td class="border p-2">
                                                     <a href="{{ asset('storage/background_verify/' . $workorder->workorderbackground->file) }}" class="text-blue-500 hover:text-blue-700" download>
-                                                    <i class="fas fa-download"></i>
+                                                        <i class="fas fa-download"></i>
                                                     </a>
+
+                                                    <button 
+                                                        type="button" 
+                                                        class="text-red-500 hover:text-red-700 ml-3 bg-transparent" 
+                                                        @click="deleteBackgroundFile({{ $workorder->workorderbackground->id }})" 
+                                                    >
+                                                        <i class="fas fa-trash"></i>
+                                                    </button>
                                                 </td>
                                             </tr>
+                                            @endif
                                         </tbody>
                                     </table>
                                 </div>
@@ -552,6 +562,33 @@
                 });
             });
           },
+
+            deleteBackgroundFile(id) {
+                if (confirm("Are you sure you want to delete this file?")) {
+                    const url = `{{ route('vendor.workorderbackground.destroy', ':id') }}`.replace(':id', id);
+                    console.log(url);
+                    fetch(url, {
+                        method: 'DELETE',
+                        headers: {
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}',  // Include CSRF token
+                            'Content-Type': 'application/json'
+                        },
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.redirect_url) {
+                            // Redirect to the URL returned by the server
+                            window.location.href = data.redirect_url;
+                        } else {
+                            alert('Failed to delete the file');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('Something went wrong.');
+                    });
+                }
+            },
 
           validateEmail(email) {
             const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
