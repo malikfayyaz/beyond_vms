@@ -1117,7 +1117,7 @@
           initDatePickers() {
             this.$nextTick(() => {
               flatpickr("#startDate", {
-                dateFormat: "Y/m/d",
+                dateFormat: "m/d/Y",
                 onChange: (selectedDates, dateStr) => {
                   this.originalStartDate = dateStr;
                   this.errors.originalStartDate = "";
