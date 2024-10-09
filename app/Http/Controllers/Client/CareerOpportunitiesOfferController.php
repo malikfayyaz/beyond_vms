@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Client;
 
 use App\Http\Controllers\Controller;
+use App\Models\Client;
 use App\Models\OfferWorkFlow;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use App\Models\CareerOpportunitiesOffer;
 use App\Models\CareerOpportunitySubmission;
@@ -121,7 +123,7 @@ class CareerOpportunitiesOfferController extends Controller
             "career_opportunity_id" =>$submission->career_opportunity_id,
             "location_id" =>$validatedData['location'],
             "markup" =>$validatedData['markup'],
-            "created_by_id" =>\Auth::id(),
+            "created_by_id" =>Client::getClientIdByUserId(Auth::id()),
             "created_by_type" =>2,
             "status" =>1,
             "offer_pay_rate" =>removeComma($validatedData['payRate']),

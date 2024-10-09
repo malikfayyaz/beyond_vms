@@ -155,7 +155,7 @@ class CareerOpportunitiesController extends Controller
      */
     public function edit(string $id)
     {
-        $user = Auth::user();
+        $user = Client::getClientIdByUserId(Auth::id());
         $sessionrole = session('selected_role');
         $careerOpportunity = CareerOpportunity::with('careerOpportunitiesBu')->findOrFail($id);
 
@@ -181,7 +181,7 @@ class CareerOpportunitiesController extends Controller
             $newOpportunity = $originalOpportunity->replicate();
             $newOpportunity->jobstep2_complete = '0';
             $newOpportunity->title = $originalOpportunity->title;
-            $newOpportunity->user_id = Auth::id();
+            $newOpportunity->user_id = Client::getClientIdByUserId(Auth::id());
             $newOpportunity->created_at = Carbon::now();
             $newOpportunity->updated_at = Carbon::now();
             $newOpportunity->save();
@@ -334,9 +334,9 @@ class CareerOpportunitiesController extends Controller
             'location_id' => $validatedData['workLocation'],
             'currency_id' => $validatedData['currency'],
             'min_bill_rate' => $validatedData['billRate'],
-            'user_subclient_id' => isset($job) ? $job->user_subclient_id  : \Auth::id(),
+            'user_subclient_id' => isset($job) ? $job->user_subclient_id  : Client::getClientIdByUserId(Auth::id()),
             'attachment' => $filename,
-            'user_id' => isset($job) ? $job->user_id  : \Auth::id(),
+            'user_id' => isset($job) ? $job->user_id  : Client::getClientIdByUserId(Auth::id()),
             'user_type' => isset($job) ? $job->user_type  : 2,
             'interview_process' => 'Yes',
             'job_type' => 10,
