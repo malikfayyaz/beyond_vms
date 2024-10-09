@@ -14,6 +14,7 @@ use App\Http\Controllers\{
     Admin\CareerOpportunitiesOfferController,
     Admin\CareerOpportunitiesSubmissionController,
     Admin\CareerOpportunitiesInterviewController,
+    Admin\CareerOpportunitiesContractController,
 };
 Route::middleware(['user_role:admin'])->group(function () {
     Route::resource('/admin/career-opportunities', CareerOpportunitiesController::class);
@@ -141,8 +142,10 @@ Route::middleware(['user_role:admin'])->group(function () {
         Route::post('interview/store', [CareerOpportunitiesInterviewController::class, 'store'])->name('interview.store');
         Route::get('interview/{id}/edit', [CareerOpportunitiesInterviewController::class, 'edit'])->name('interview.edit');
         Route::put('interview/{id}/update', [CareerOpportunitiesInterviewController::class, 'update'])->name('interview.update');
-       Route::POST('jobWorkFlowApprove', [CareerOpportunitiesController::class, 'jobWorkFlowApprove'])->name('jobWorkFlowApprove');
-       Route::POST('jobWorkFlowReject', [CareerOpportunitiesController::class, 'jobWorkFlowReject'])->name('jobWorkFlowReject');
+        Route::POST('jobWorkFlowApprove', [CareerOpportunitiesController::class, 'jobWorkFlowApprove'])->name('jobWorkFlowApprove');
+        Route::POST('jobWorkFlowReject', [CareerOpportunitiesController::class, 'jobWorkFlowReject'])->name('jobWorkFlowReject');
 
+        // contract 
+        Route::resource('contracts', CareerOpportunitiesContractController::class);
     });
 });
