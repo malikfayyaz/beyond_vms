@@ -73,7 +73,7 @@ class AdminManagementController extends Controller
     public function create()
     {
         $roles = Role::where('user_type_id', 1)->get();
-        $user = Auth::user();
+        $user = Admin::getAdminIdByUserId(Auth::id());
         $countries = Country::all();
         // dd($roles);
 
@@ -85,7 +85,7 @@ class AdminManagementController extends Controller
      */
     public function store(Request $request)
     {
-        $login_user = Auth::user();
+        $login_user = Admin::getAdminIdByUserId(Auth::id());
         $countries = Country::all();
         // Validation
         $validatedData = $request->validate([
