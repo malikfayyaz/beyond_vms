@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\CareerOpportunitySubmission;
 use App\Models\CareerOpportunitiesInterview;
+use App\Models\CareerOpportunitiesInterviewDate;
 use Yajra\DataTables\Facades\DataTables;
 
 
@@ -74,6 +75,7 @@ class CareerOpportunitiesInterviewController extends Controller
         ]);
 
         $timeSlotsArray = json_decode($validatedData['selectedTimeSlots'], true);
+
         $timeRange = $timeSlotsArray[$validatedData['recommendedDate']];
         $times = explode(' - ', $timeRange);
         $startTime = $times[0]; 
@@ -108,6 +110,23 @@ class CareerOpportunitiesInterviewController extends Controller
         ];
 
         $InterviewCreate = CareerOpportunitiesInterview::create( $mapedData );
+        $i=1;
+        foreach ($timeSlotsArray as $date => $timeSlot) {
+            // Split the time slot string into start and end times
+            list($startTime, $endTime) = explode(' - ', $timeSlot);
+           
+            $startTimeIn24HourFormat = date("H:i:s", strtotime($startTime)); 
+            $endTimeIn24HourFormat = date("H:i:s", strtotime($endTime)); 
+            // Optionally, you can calculate the schedule_date_order based on your logic
+            $scheduleDateOrder = $i++;
+            CareerOpportunitiesInterviewDate::create([
+                'interview_id' => $InterviewCreate->id,        
+                'schedule_date' => $date,               
+                'start_time' => $startTimeIn24HourFormat,             
+                'end_time' => $endTimeIn24HourFormat,                 
+                'schedule_date_order' => $scheduleDateOrder, 
+            ]);
+        }
 
         session()->flash('success', 'Interview saved successfully!');
         return response()->json([
