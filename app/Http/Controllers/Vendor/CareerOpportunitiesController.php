@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Vendor;
 
 use App\Http\Controllers\Controller;
 use App\Models\CareerOpportunity;
+use App\Models\Vendor;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Yajra\DataTables\Facades\DataTables;
@@ -16,7 +17,7 @@ class CareerOpportunitiesController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $vendorid = Auth::id();
+            $vendorid = Vendor::getVendorIdByUserId(\Auth::id());
             $data = CareerOpportunity::with('hiringManager','workerType')
                 ->withCount('submissions')
                 ->where('user_id', $vendorid);

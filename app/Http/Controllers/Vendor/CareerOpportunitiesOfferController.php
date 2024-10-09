@@ -125,7 +125,7 @@ class CareerOpportunitiesOfferController extends Controller
             "career_opportunity_id" =>$submission->career_opportunity_id,
             "location_id" =>$validatedData['location'],
             "markup" =>$validatedData['markup'],
-            "created_by_id" =>\Auth::id(),
+            "created_by_id" =>Vendor::getVendorIdByUserId(\Auth::id()),
             "created_by_type" =>3,
             "status" =>1,
             "offer_pay_rate" =>removeComma($validatedData['payRate']),
@@ -236,7 +236,7 @@ class CareerOpportunitiesOfferController extends Controller
         foreach ($submissionModels as $submission) {
             $submission->update([
                 'rejected_type' => 3,
-                'rejected_by' => \Auth::id(),
+                'rejected_by' => Vendor::getVendorIdByUserId(\Auth::id()),
                 'resume_status' => 11,
                 'note_for_rejection' => 'Other Offer Accepted',
                 'reason_for_rejection' => 2266,
@@ -256,7 +256,7 @@ class CareerOpportunitiesOfferController extends Controller
                 'status' => 13,
                 'withdraw_reason' => 2266,
                 'notes' => 'Other Offer Accepted',
-                'modified_by_id' => \Auth::id(),
+                'modified_by_id' => Vendor::getVendorIdByUserId(\Auth::id()),
                 'date_modified' => now(),
                 'offer_rejection_date' => now(),
                 'modified_by_type' => 3,
