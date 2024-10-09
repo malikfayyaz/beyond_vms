@@ -1052,6 +1052,7 @@
           contractorEmail: '{{ old('contractorEmail',$workorder->consultant->user->email ?? '') }}',
           accountManagerValue: '{{ old('accountManagerValue', $workorder->submission->emp_msp_account_mngr ?? '') }}',
           workLocation: '{{ old('workLocation',$workorder->location->name ?? '') }}',
+          workLocationid: '{{ old('workLocationid',$workorder->location_id ?? '') }}',
           jobProfile: '{{ old('jobProfile',$workorder->careerOpportunity->title ?? '') }}',
           officialEmail: '{{ old('officialEmail',$workorder->consultant->user->email ?? '') }}',
           division: '{{ old('division',$workorder->careerOpportunity->division->name ?? '') }}',
@@ -1173,6 +1174,7 @@
                 originalStartDate: this.originalStartDate,
                 timesheetType: this.timesheetType,
                 workorder_id:this.workorder_id,
+                workLocationid:this.workLocationid,
               };
 
               console.log("Form submitted with data:", formRecord);

@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use App\Models\CareerOpportunitiesContract;
+use App\Models\CareerOpportunitiesWorkorder;
+use App\Models\Admin;
 
 class CareerOpportunitiesContractController extends BaseController
 {
@@ -31,7 +33,7 @@ class CareerOpportunitiesContractController extends BaseController
      */
     public function store(Request $request)
     {
-        dd($request);
+       dd($request);
         $rules = [
             
             'timesheetType' => 'required|integer',
@@ -51,7 +53,21 @@ class CareerOpportunitiesContractController extends BaseController
             ], 422); // 422 Unprocessable Entity status
         }
         $validatedData = $validator->validated();
-
+        $workOrderModel = CareerOpportunitiesWorkorder::model()->findByPk($request->workorder_id);
+        $contractModel = new CareerOpportunitiesContract;
+                $contractModel->workorder_id = $workOrderModel->id;
+                $contractModel->offer_id = $workOrderModel->offer_id;
+                $contractModel->created_by_id = Admin::getAdminIdByUserId(Auth::id());
+                $contractModel->submission_id = $workOrderModel->submission_id;
+                $contractModel->career_opportunity_id = $workOrderModel->career_opportunity_id;
+                $contractModel->hiring_manager_id = $workOrderModel->hiring_manager_id;
+                $contractModel->vendor_id = $workOrderModel->vendor_id;
+                $contractModel->candidate_id = $workOrderModel->candidate_id;
+                $contractModel->status = 1;
+                $contractModel->start_date = Carbon::createFromFormat('m/d/Y', $request->startDate)->format('Y-m-d');
+                $contractModel->end_date = Carbon::createFromFormat('m/d/Y', $request->endDate)->format('Y-m-d');
+                // $contractModel->start_date = $request->;
+                // $contractModel->end_date = $request->;
     }
 
     /**
