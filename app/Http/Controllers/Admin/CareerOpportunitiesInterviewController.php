@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\CareerOpportunitySubmission;
 use App\Models\CareerOpportunitiesInterview;
 use App\Models\CareerOpportunitiesInterviewDate;
+use App\Models\Admin;
 use Yajra\DataTables\Facades\DataTables;
 
 
@@ -74,6 +75,10 @@ class CareerOpportunitiesInterviewController extends Controller
             'selectedTimeSlots' => 'required|string',
         ]);
 
+        $user = \Auth::user();  
+        $userid = \Auth::id();  
+        $adminid =  Admin::getAdminIdByUserId($userid); 
+        
         $timeSlotsArray = json_decode($validatedData['selectedTimeSlots'], true);
 
         $timeRange = $timeSlotsArray[$validatedData['recommendedDate']];
@@ -106,10 +111,12 @@ class CareerOpportunitiesInterviewController extends Controller
             "end_time" =>$endTimeIn24HourFormat,
             "interview_detail" =>$validatedData['interview_detail'],
             "status" => 1,
-            "created_by_user" => 1,
+            "created_by_portal" => 1,
+            "created_by" => $adminid,
         ];
 
         $InterviewCreate = CareerOpportunitiesInterview::create( $mapedData );
+        
         $i=1;
         foreach ($timeSlotsArray as $date => $timeSlot) {
             // Split the time slot string into start and end times
@@ -168,6 +175,7 @@ class CareerOpportunitiesInterviewController extends Controller
         ]);
 
         $timeSlotsArray = json_decode($validatedData['selectedTimeSlots'], true);
+
         $timeRange = $timeSlotsArray[$validatedData['recommendedDate']];
         $times = explode(' - ', $timeRange);
         $startTime = $times[0]; 
@@ -197,6 +205,39 @@ class CareerOpportunitiesInterviewController extends Controller
         ];
 
         $interview->update($mapedData);
+
+        $incomingDates = array_keys($timeSlotsArray);
+
+        // Delete interview dates that are no longer in the new set of dates
+        CareerOpportunitiesInterviewDate::where('interview_id', $interview->id)
+            ->whereNotIn('schedule_date', $incomingDates)
+            ->delete();
+
+        $i = 1;
+        foreach ($timeSlotsArray as $date => $timeSlot) {
+            // Split the time slot string into start and end times
+            list($startTime, $endTime) = explode(' - ', $timeSlot);
+           
+            $startTimeIn24HourFormat = date("H:i:s", strtotime($startTime)); 
+            $endTimeIn24HourFormat = date("H:i:s", strtotime($endTime)); 
+            
+            // Optionally, calculate the schedule_date_order based on your logic
+            $scheduleDateOrder = $i++;
+        
+            // Check if the record exists for this interview_id and date
+            $interviewDate = CareerOpportunitiesInterviewDate::firstOrNew([
+                'interview_id' => $interview->id,
+                'schedule_date' => $date,
+            ]);
+        
+            // Update the fields for the existing or new record
+            $interviewDate->start_time = $startTimeIn24HourFormat;
+            $interviewDate->end_time = $endTimeIn24HourFormat;
+            $interviewDate->schedule_date_order = $scheduleDateOrder;
+            
+            // Save the record (either it updates or creates a new entry)
+            $interviewDate->save();
+        }
 
         $successMessage = 'Interview updated successfully!';
         session()->flash('success', $successMessage);
