@@ -29,6 +29,7 @@ Route::middleware(['user_role:vendor'])->group(function () {
         Route::get('workorder/index', [CareerOpportunitiesWorkOrderController::class, 'index'])->name('workorder.index');
         Route::get('workorder/{id}', [CareerOpportunitiesWorkOrderController::class, 'show'])->name('workorder.show');
         Route::post('workorder/store', [CareerOpportunitiesWorkOrderController::class, 'store'])->name('workorder.store');
+        Route::delete('workorderbackground/{id}', [CareerOpportunitiesWorkOrderController::class, 'destroy'])->name('workorderbackground.destroy');
 
          //interview
          Route::match(['get', 'post'], 'interview/index', [CareerOpportunitiesInterviewController::class, 'index'])->name('interview.index');
