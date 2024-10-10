@@ -315,6 +315,6 @@ class CareerOpportunitiesInterviewController extends Controller
     {
         $interview = CareerOpportunitiesInterview::findOrFail($id);
         // dd($interview);
-        return view('admin.interview.view');
+        return view('admin.interview.view', compact('interview'));
     }
 }
