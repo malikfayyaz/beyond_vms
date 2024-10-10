@@ -12,11 +12,9 @@ use Illuminate\Support\Carbon;
 use App\Models\CareerOpportunitiesContract;
 use Yajra\DataTables\Facades\DataTables;
 use App\Models\CareerOpportunitiesWorkorder;
-use App\Models\Admin;
 use App\Models\ContractRate;
 use App\Models\TimesheetProject;
 use App\Models\CareerOpportunitiesBu;
-
 class CareerOpportunitiesContractController extends BaseController
 {
     /**
