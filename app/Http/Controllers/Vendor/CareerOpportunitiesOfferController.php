@@ -239,7 +239,7 @@ class CareerOpportunitiesOfferController extends Controller
                 'rejected_by' => Vendor::getVendorIdByUserId(\Auth::id()),
                 'resume_status' => 11,
                 'note_for_rejection' => 'Other Offer Accepted',
-                'reason_for_rejection' => 2266,
+                'reason_for_rejection' => 66,
                 'date_rejected' => now(),
             ]);
         }
@@ -254,7 +254,7 @@ class CareerOpportunitiesOfferController extends Controller
         foreach ($offerModels as $offer) {
             $offer->update([
                 'status' => 13,
-                'withdraw_reason' => 2266,
+                'withdraw_reason' => 66,
                 'notes' => 'Other Offer Accepted',
                 'modified_by_id' => Vendor::getVendorIdByUserId(\Auth::id()),
                 'date_modified' => now(),

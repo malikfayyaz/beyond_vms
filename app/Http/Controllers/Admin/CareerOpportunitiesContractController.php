@@ -186,12 +186,26 @@ class CareerOpportunitiesContractController extends BaseController
 
                     $timesheetModel->save();
                 }
+                $contractCount = CareerOpportunitiesContract::where('career_opportunity_id', $workOrderModel->career_opportunity_id)->count();
+
+
+                    // if all job openigs are filled then the status should be filled and they cannot do more offer etc.
+                    if($contractCount == $jobData->num_openings || $contractCount > $jobData->num_openings){
+                        $jobData->rejected_type = 1;
+                        $jobData->reason_for_rejection = 2297;
+                        $jobData->rejected_by = Admin::getAdminIdByUserId(Auth::id());
+                        $jobData->date_rejected = now();
+                        $jobData->jobStatus = 4;
+                        $jobData->save();
+                        $type = 'Filled';
+                       updateSubmission($jobData,$type);
+                    }
 
                 session()->flash('success', 'Contractor Login information has been emailed!');
                 return response()->json([
                     'success' => true,
                     'message' => 'Contractor Login information has been emailed!',
-                    // 'redirect_url' => route('admin.career-opportunities.index') // Redirect back URL for AJAX
+                    'redirect_url' => route('admin.contracts') // Redirect back URL for AJAX
                 ]);
 
 
