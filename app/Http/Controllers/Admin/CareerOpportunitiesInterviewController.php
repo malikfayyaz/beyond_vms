@@ -47,6 +47,10 @@ class CareerOpportunitiesInterviewController extends Controller
                 return '<a href="' . route('admin.interview.edit', $row->id) . '"
                             class="text-green-500 hover:text-green-700 mr-2 bg-transparent hover:bg-transparent">
                                 <i class="fas fa-edit"></i>
+                        </a>
+                        <a href="' . route('admin.interview.show', $row->id) . '" 
+                            class="text-blue-500 hover:text-blue-700 mr-2 bg-transparent hover:bg-transparent">
+                                <i class="fas fa-eye"></i>
                         </a>';
             })
             ->make(true);
@@ -305,5 +309,12 @@ class CareerOpportunitiesInterviewController extends Controller
             'message' => $successMessage,
             'redirect_url' => route('admin.interview.index')  // Redirect URL for AJAX
         ]);
+    }
+
+    public function show($id)
+    {
+        $interview = CareerOpportunitiesInterview::findOrFail($id);
+        // dd($interview);
+        return view('admin.interview.view');
     }
 }
