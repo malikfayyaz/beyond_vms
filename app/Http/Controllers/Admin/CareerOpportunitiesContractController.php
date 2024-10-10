@@ -24,7 +24,7 @@ class CareerOpportunitiesContractController extends BaseController
     {
         if ($request->ajax()) {
             $adminId = Admin::getAdminIdByUserId(Auth::id());
-            $data = CareerOpportunitiesContract::with('hiringManager','careerOpportunity','workOrder.vendor');
+            $data = CareerOpportunitiesContract::with('hiringManager','careerOpportunity','workOrder.vendor','location');
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('status', function ($row) {
@@ -32,6 +32,9 @@ class CareerOpportunitiesContractController extends BaseController
                 })
                 ->addColumn('hiring_manager', function ($row) {
                     return (isset($row->hiringManager->full_name)) ? $row->hiringManager->full_name : 'N/A';
+                })
+                ->addColumn('consultant_name', function($row) {
+                    return $row->consultant ? $row->consultant->full_name : 'N/A';
                 })
                 ->addColumn('career_opportunity', function($row) {
                     return $row->careerOpportunity ? $row->careerOpportunity->title . '('.$row->careerOpportunity->id.')' : 'N/A';
@@ -49,6 +52,9 @@ class CareerOpportunitiesContractController extends BaseController
                     return $row->careerOpportunity && $row->careerOpportunity->workerType
                         ? $row->careerOpportunity->workerType->title
                         : 'N/A';
+                })
+                ->addColumn('location', function($row) {
+                    return $row->location ? $row->location->name : 'N/A';
                 })
                 ->addColumn('action', function ($row) {
                     $btn = ' <a href="' . route('admin.contracts.show', $row->id) . '"

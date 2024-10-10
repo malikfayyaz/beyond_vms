@@ -15,6 +15,7 @@
                     <tr>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Contract Status</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Contract ID</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Consultant</th>
                         <th
                             class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                         >
@@ -34,8 +35,9 @@
                         <th
                             class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                         >
-                            Woker Type
+                            Worker Type
                         </th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Location</th>
                         <th style="width: 80px" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Action</th>
                     </tr>
                     </thead>
@@ -51,11 +53,13 @@
                 initializeDataTable('#listing', '{{ route("admin.contracts.index") }}', [
                     { data: 'status', name: 'status' },
                     { data: 'id', name: 'id' },
+                    { data: 'consultant_name', name: 'consultant_name' },
                     { data: 'career_opportunity', name: 'career_opportunity' },
                     { data: 'hiring_manager', name: 'hiring_manager' },  // Ensure correct spelling
                     { data: 'vendor_name', name: 'vendor_name' },
                     { data: 'duration', name: 'duration' },
                     { data: 'worker_type', name: 'worker_type' },
+                    { data: 'location', name: 'location' },
                     { data: 'action', name: 'action', orderable: false, searchable: false }
                 ]);
             }

@@ -32,15 +32,23 @@ class CareerOpportunitiesContract extends Model
 
         return $start && $end ? "$start - $end" : '';
     }
+    public function consultant()
+    {
+        return $this->belongsTo(Consultant::class, 'candidate_id', 'id');
+    }
+    public function location()
+    {
+        return $this->belongsTo(Location::class, 'location_id', 'id');
+    }
     public static function getContractStatus($statusId)
     {
         switch ($statusId) {
             case 0:
-                return 'Draft 0';
+                return 'Draft';
             case 1:
-                return 'Pending 1';
+                return 'Active';
             case 2:
-                return 'Rejected 2';
+                return 'Cancelled';
             case 3:
                 return 'Approved 3';
             case 4:
