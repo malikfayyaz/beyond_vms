@@ -500,7 +500,7 @@
             ];
             dateFields.forEach((field) => {
               flatpickr(`#${field}`, {
-                dateFormat: "Y/m/d",
+                dateFormat: "Y-m-d",
                 onChange: (selectedDates, dateStr) => {
                   this.formData[field] = dateStr;
                   if (field === "recommendedDate") {

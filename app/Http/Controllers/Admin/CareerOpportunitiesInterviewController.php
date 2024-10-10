@@ -16,7 +16,9 @@ class CareerOpportunitiesInterviewController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $interview = CareerOpportunitiesInterview::with(['consultant','careerOpportunity','duration','timezone','interviewtype','submission'])->get();
+            $interview = CareerOpportunitiesInterview::with(['consultant', 'careerOpportunity', 'duration', 'timezone', 'interviewtype', 'submission'])
+            ->orderBy('id', 'desc') 
+            ->get();
             return DataTables::of($interview)
             ->addColumn('type', function($row) {
                 return $row->interviewtype ? $row->interviewtype->title : 'N/A';
