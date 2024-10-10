@@ -10,6 +10,7 @@ use App\Models\CareerOpportunitiesInterviewDate;
 use App\Models\CareerOpportunitiesInterviewMember;
 use App\Models\Admin;
 use Yajra\DataTables\Facades\DataTables;
+use Illuminate\Support\Facades\Storage;
 
 
 class CareerOpportunitiesInterviewController extends Controller
@@ -67,7 +68,8 @@ class CareerOpportunitiesInterviewController extends Controller
             'interviewDuration' => 'required|integer',
             'timeZone' => 'required|integer',
             'recommendedDate' => 'required|date',
-            'where' => 'nullable|integer',
+            'jobAttachment' => 'nullable|file|mimes:doc,docx,pdf|max:5120',
+            'where' => 'required|integer',
             'interviewType' => 'required|integer',
             'interviewInstructions' => 'nullable|string',
             'interview_detail' => 'required|string',
@@ -77,6 +79,7 @@ class CareerOpportunitiesInterviewController extends Controller
             'otherDate3' => 'nullable|date',
             'selectedTimeSlots' => 'required|string',
         ]);
+        
 
         $interviewMembersArray = explode(',', $validatedData['interviewMembers']);
         
@@ -122,6 +125,12 @@ class CareerOpportunitiesInterviewController extends Controller
 
         $InterviewCreate = CareerOpportunitiesInterview::create( $mapedData );
         
+        if ($request->hasFile('jobAttachment')) {
+            $imagePath = handleFileUpload($request, 'jobAttachment', 'interview_resume');
+            $InterviewCreate->job_attachment = $imagePath;
+            $InterviewCreate->save(); // Save after updating the profile image
+        }
+
         $i=1;
         foreach ($timeSlotsArray as $date => $timeSlot) {
             // Split the time slot string into start and end times
@@ -177,6 +186,7 @@ class CareerOpportunitiesInterviewController extends Controller
             'timeZone' => 'required|integer',
             'recommendedDate' => 'required|date',
             'where' => 'nullable|integer',
+            'jobAttachment' => 'nullable|file|mimes:doc,docx,pdf|max:5120',
             'interviewType' => 'required|integer',
             'interview_detail' => 'required|string',
             'interviewInstructions' => 'nullable|string',
@@ -219,6 +229,20 @@ class CareerOpportunitiesInterviewController extends Controller
             "start_time" =>$startTimeIn24HourFormat,
             "end_time" =>$endTimeIn24HourFormat,
         ];
+        
+        if ($request->hasFile('jobAttachment')) {
+            // Delete old image if exists
+            $filePath = "interview_resume/". $interview->job_attachment;
+            if (Storage::disk('public')->exists($filePath)) {
+                Storage::disk('public')->delete($filePath);
+            }
+
+            // Upload new profile image
+            $imagePath = handleFileUpload($request, 'jobAttachment', 'interview_resume');
+            if ($imagePath) {
+                $interview->update(['job_attachment' => $imagePath]); // Mass assign the image path
+            }
+        }
 
         $interview->update($mapedData);
 

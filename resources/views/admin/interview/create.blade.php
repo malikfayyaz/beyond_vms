@@ -467,7 +467,7 @@
                 where: "{{ old('where', $interview->location_id ?? '') }}",
                 jobAttachment: "{{ old('jobAttachment', $interview->job_attachment ?? '') }}",
                 interviewInstructions: "{{ old('interviewInstructions', $interview->interview_instructions ?? '') }}",
-                interviewMembers: @json($interview->interviewMembers->pluck('member_id') ?? []),
+                interviewMembers:  @json(isset($interview) ? $interview->interviewMembers->pluck('member_id') : []),
                 selectedTimeSlots: {},
                 selectedDate: null,
             },
