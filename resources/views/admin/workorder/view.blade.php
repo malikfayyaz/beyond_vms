@@ -616,6 +616,12 @@
                             </div>
                           </div>
                         </div>
+                        @php
+                        $disabled = true;
+                         if($workorder->on_board_status == 0){
+                          $disabled = false;
+                        }
+                        @endphp
                         <div class="px-6 py-3">
                           <div class="flex space-x-4">
                             <div class="flex-1">
@@ -628,7 +634,7 @@
                               <select
                                 class="w-full select2-single custom-style"
                                 id="candidateSourcing"
-                                x-model="candidateSourcing"
+                                x-model="candidateSourcing" :disabled="isDisabled"
                               >
                               <option value="" disabled>Select</option>
                               @foreach (checksetting(18) as $key => $value)
@@ -651,7 +657,7 @@
                                 class="w-full h-12 px-4 text-gray-500 border rounded-md shadow-sm focus:outline-none pl-7"
                                 type="text"
                                 required
-                                placeholder="Select start date"
+                                placeholder="Select start date" :disabled="isDisabled"
                               />
                               <p
                                 class="text-red-500 text-sm mt-1"
@@ -712,7 +718,7 @@
                               <select
                                 class="w-full select2-single custom-style"
                                 x-model="timesheetType"
-                                id="timesheetType"
+                                id="timesheetType" :disabled="isDisabled"
                               >
                                 <option value="" disabled>Select Timesheet Type</option>
                                 @foreach (checksetting(19) as $key => $value)
@@ -727,6 +733,7 @@
                             <div class="flex-1"></div>
                           </div>
                         </div>
+                        @if(!$disabled)
                         <div class="px-6 py-3">
                           <button
                             type="submit"
@@ -736,6 +743,7 @@
                             Onboard
                           </button>
                         </div>
+                        @endif
                       </form>
                     </div>
                   </section>
@@ -1048,6 +1056,7 @@
 <script>
       document.addEventListener("alpine:init", () => {
         Alpine.data("onBoardingData", () => ({
+          isDisabled: @json($disabled),
           contractorName: '{{ old('contractorName',$workorder->consultant->full_name ?? '') }}',
           contractorEmail: '{{ old('contractorEmail',$workorder->consultant->user->email ?? '') }}',
           accountManagerValue: '{{ old('accountManagerValue', $workorder->submission->emp_msp_account_mngr ?? '') }}',
@@ -1063,9 +1072,9 @@
           contractorPassword: '{{ old('contractorPassword',$workorder->consultant->user->password ?? '') }}',
           workorder_id: '{{ old('workorder_id',$workorder->id ?? '') }}',
           // New fields for user input
-          candidateSourcing: "",
+          candidateSourcing:'{{ old('candidateSourcing',$workorder->sourcing_type ?? '') }}',
           originalStartDate: '{{ old('originalStartDate',formatDate($onboardOriginalStartDate) ?? '') }}',
-          timesheetType: "",
+          timesheetType: '{{ old('timesheetType',$workorder->contract->type_of_timesheet ?? '') }}',
 
           // Error messages
           errors: {
