@@ -20,7 +20,7 @@ class CareerOpportunitiesController extends Controller
             $vendorid = Vendor::getVendorIdByUserId(\Auth::id());
             $data = CareerOpportunity::with('hiringManager','workerType')
                 ->withCount('submissions')
-                ->where('user_id', $vendorid);
+                ->where('id', $vendorid);
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('hiring_manager', function($row) {
