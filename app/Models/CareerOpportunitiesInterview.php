@@ -49,4 +49,9 @@ class CareerOpportunitiesInterview extends Model
     {
         return $this->hasMany(CareerOpportunitiesInterviewDate::class, 'interview_id');
     }
+
+    public function interviewMembers()
+    {
+        return $this->hasMany(CareerOpportunitiesInterviewMember::class, 'interview_id');
+    }
 }

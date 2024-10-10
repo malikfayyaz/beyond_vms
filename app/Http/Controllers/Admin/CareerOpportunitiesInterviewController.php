@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\CareerOpportunitySubmission;
 use App\Models\CareerOpportunitiesInterview;
 use App\Models\CareerOpportunitiesInterviewDate;
+use App\Models\CareerOpportunitiesInterviewMember;
 use App\Models\Admin;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -70,13 +71,15 @@ class CareerOpportunitiesInterviewController extends Controller
             'interviewType' => 'required|integer',
             'interviewInstructions' => 'nullable|string',
             'interview_detail' => 'required|string',
-            'interviewMembers' => 'nullable',
+            'interviewMembers' => 'required|string', // Ensure it's an array
             'otherDate1' => 'nullable|date',
             'otherDate2' => 'nullable|date',
             'otherDate3' => 'nullable|date',
             'selectedTimeSlots' => 'required|string',
         ]);
 
+        $interviewMembersArray = explode(',', $validatedData['interviewMembers']);
+        
         $user = \Auth::user();  
         $userid = \Auth::id();  
         $adminid =  Admin::getAdminIdByUserId($userid); 
@@ -137,6 +140,14 @@ class CareerOpportunitiesInterviewController extends Controller
             ]);
         }
 
+        foreach ($interviewMembersArray as $memberId) {
+            // You can use your model to create entries or attach members
+            CareerOpportunitiesInterviewMember::create([
+                'interview_id' => $InterviewCreate->id, // Replace with your actual interview ID
+                'member_id' => $memberId, // Member ID from the array
+            ]);
+        }
+
         session()->flash('success', 'Interview saved successfully!');
         return response()->json([
             'success' => true,
@@ -175,6 +186,9 @@ class CareerOpportunitiesInterviewController extends Controller
             'otherDate3' => 'nullable|date',
             'selectedTimeSlots' => 'required|string',
         ]);
+
+        $interviewMembersArray = explode(',', $validatedData['interviewMembers']);
+
 
         $timeSlotsArray = json_decode($validatedData['selectedTimeSlots'], true);
 
@@ -239,6 +253,24 @@ class CareerOpportunitiesInterviewController extends Controller
             
             // Save the record (either it updates or creates a new entry)
             $interviewDate->save();
+        }
+
+
+        // Delete members that are no longer associated
+        CareerOpportunitiesInterviewMember::where('interview_id', $interview->id)
+            ->whereNotIn('member_id', $interviewMembersArray)
+            ->delete();
+
+        // Add or update members
+        foreach ($interviewMembersArray as $memberId) {
+            // Use firstOrNew to find existing member or create a new one
+            $interviewMember = CareerOpportunitiesInterviewMember::firstOrNew([
+                'interview_id' => $interview->id,
+                'member_id' => $memberId,
+            ]);
+
+            // Save the member (this updates if it exists or creates a new entry)
+            $interviewMember->save();
         }
 
         $successMessage = 'Interview updated successfully!';

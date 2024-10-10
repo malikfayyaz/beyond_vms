@@ -344,7 +344,8 @@
                 >
                     @php $clients = \App\Models\Client::byStatus();@endphp
                     @foreach ($clients as $key => $value)
-                        <option value="{{ $value->id }}">
+                        <option value="{{ $value->id }}"
+                        x-bind:selected="formData.interviewMembers.includes({{ $value->id }})">
                         {{ $value->full_name }}</option>
                     @endforeach
                 </select>
@@ -466,7 +467,7 @@
                 where: "{{ old('where', $interview->location_id ?? '') }}",
                 jobAttachment: "{{ old('jobAttachment', $interview->job_attachment ?? '') }}",
                 interviewInstructions: "{{ old('interviewInstructions', $interview->interview_instructions ?? '') }}",
-                interviewMembers: @json($interview->interview_members ?? []),
+                interviewMembers: @json($interview->interviewMembers->pluck('member_id') ?? []),
                 selectedTimeSlots: {},
                 selectedDate: null,
             },
