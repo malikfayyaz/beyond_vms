@@ -10,34 +10,13 @@
         <div>
           <div class="mx-4 rounded p-8">
             <div class="w-full flex justify-end items-center gap-4">
-              <a href="{{ route('admin.interview.create',  ['id' => $submission->id]) }}"
-                type="button"
-                class="px-4 py-2 capitalize bg-blue-500 text-white rounded hover:bg-blue-600 capitalize"
-              >
-                schedule interview
-              </a>
-              <a href="{{ route('admin.offer.create',  ['id' => $submission->id]) }}"
-                type="button"
-                class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 capitalize"
-              >
-                create offer
-              </a>
-                <div x-data="addSubWizarForm()" x-init="mounted()">
-                <button
-                    type="button"
-                    @click="rejectCandidate({{ $submission->id }})"
-                    aria-label="Reject candidate {{ $submission->consultant->full_name }}"
-                    class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 capitalize"
-                >
-                    Reject Candidate
-                </button>
-                </div>
-              <a href="{{ route('admin.submission.index') }}">
+             
+              <a href="{{ route('admin.interview.index') }}">
                   <button
                       type="button"
                       class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 capitalize"
                   >
-                      Back to Submissions
+                      Back to Interview
                   </button>
               </a>
 
@@ -93,7 +72,7 @@
                       role="tab"
                     >
                       <i class="fa-regular fa-thumbs-up"></i>
-                      <span class="capitalize">submission</span>
+                      <span class="capitalize">Summary</span>
                     </button>
                   </li>
 
@@ -133,21 +112,27 @@
                   >
                       <div class="divide-y divide-gray-200">
                           <!-- Update each field accordingly -->
-                          <div class="flex justify-between py-3 px-4">
-                              <span class="text-gray-600">Candidate Name:</span>
-                              <span class="font-semibold">{{$submission->consultant->full_name}}</span>
-                          </div>
                         <div class="flex justify-between py-3 px-4">
-                          <span class="text-gray-600">Status:</span>
-                          <span
+                        <span class="text-gray-600">Status:</span>
+                        <span
                             class="bg-green-500 text-white px-2 py-1 rounded-full text-sm"
-                          >{{$submission->resume_status}}</span>
+                            >{{$interview->status}}</span>
+                        </div>
+                        <div class="flex justify-between py-3 px-4">
+                            <span class="text-gray-600">Candidate Name:</span>
+                            <span class="font-semibold">{{$interview->consultant->full_name}}</span>
+                        </div>
+                        <div class="flex justify-between py-3 px-4">
+                            <span class="text-gray-600">Vendor Name:</span>
+                            <span
+                            class="font-semibold"
+                            >{{$interview->submission->vendor->full_name}}</span>
                         </div>
                         <div class="flex justify-between py-3 px-4">
                           <span class="text-gray-600">Unique ID:</span>
                           <span
                             class="font-semibold"
-                          >{{$submission->consultant->unique_id}}</span>
+                          ></span>
                         </div>
                         <div class="flex justify-between py-3 px-4">
                           <span class="text-gray-600"
@@ -155,7 +140,7 @@
                           >
                           <span
                             class="font-semibold"
-                          >{{$submission->consultant->national_id}}</span>
+                          ></span>
                         </div>
                         <div class="flex justify-between py-3 px-4">
                           <span class="text-gray-600"
@@ -163,43 +148,37 @@
                           >
                           <span
                             class="font-semibold"
-                          >{{$submission->consultant->language}}</span>
+                          ></span>
                         </div>
                         <div class="flex justify-between py-3 px-4">
                           <span class="text-gray-600">Availability Date:</span>
                           <span
                             class="font-semibold"
-                          >{{$submission->estimate_start_date}}</span>
+                          ></span>
                         </div>
                         <div class="flex justify-between py-3 px-4">
                           <span class="text-gray-600">Job Profile:</span>
                           <span
                             class="font-semibold"
-                          >{{$submission->careerOpportunity->title}}</span>
+                          ></span>
                         </div>
                         <div class="flex justify-between py-3 px-4">
                           <span class="text-gray-600">Hiring Manager:</span>
                           <span
                             class="font-semibold"
-                          >{{$submission->careerOpportunity->hiringManager->full_name}}</span>
+                          ></span>
                         </div>
                         <div class="flex justify-between py-3 px-4">
                           <span class="text-gray-600">Resume:</span>
                           <span
                             class="font-semibold"
-                            >{{$submission->resume}}</span>
-                        </div>
-                        <div class="flex justify-between py-3 px-4">
-                          <span class="text-gray-600">Vendor Name:</span>
-                          <span
-                            class="font-semibold"
-                          >{{$submission->vendor->full_name}}</span>
+                            ></span>
                         </div>
                         <div class="flex justify-between py-3 px-4">
                           <span class="text-gray-600">OT Eligible?</span>
                           <span
                             class="font-semibold"
-                          >{{ucfirst($submission->ot_exempt_position == 'yes' ? 'Yes' : 'No')}}</span>
+                          ></span>
                         </div>
                         <div class="flex justify-between py-3 px-4">
                           <span class="text-gray-600"
@@ -208,7 +187,7 @@
                           >
                           <span
                             class="font-semibold"
-                          >{{ucfirst($submission->require_employment_visa_sponsorship == 'yes' ? 'Yes' : 'No')}}</span>
+                          ></span>
                         </div>
                         <div class="flex justify-between py-3 px-4">
                           <span class="text-gray-600"
@@ -217,7 +196,7 @@
                           >
                           <span
                             class="font-semibold"
-                          >{{ ucfirst($submission->willing_relocate == 'yes' ? 'Yes' : 'No') }}</span>
+                          ></span>
                         </div>
                         <!-- <div class="flex justify-between py-3 px-4">
                           <span class="text-gray-600"
@@ -238,13 +217,13 @@
                           <span class="text-gray-600">Gender</span>
                           <span
                             class="font-semibold"
-                          >{{$submission->consultant->genDer->title}}</span>
+                          ></span>
                         </div>
                         <div class="flex justify-between py-3 px-4">
                           <span class="text-gray-600">Race</span>
                           <span
                             class="font-semibold"
-                          >{{$submission->consultant->race->title}}</span>
+                          ></span>
                         </div>
                         <div class="flex justify-between py-3 px-4">
                           <span class="text-gray-600"
@@ -253,13 +232,13 @@
                           >
                           <span
                             class="font-semibold"
-                          >{{ucfirst($submission->retiree == 'yes' ? 'Yes' : 'No')}}</span>
+                          ></span>
                         </div>
                         <div class="flex justify-between py-3 px-4">
                           <span class="text-gray-600">Country:</span>
                           <span
                             class="font-semibold"
-                          >{{$submission->location->country->name}}</span>
+                          ></span>
                         </div>
                         <div class="flex justify-between py-3 px-4">
                           <span class="text-gray-600"
@@ -267,13 +246,13 @@
                           >
                           <span
                             class="font-semibold"
-                          >{{ucfirst($submission->remote_contractor == 'yes' ? 'Yes' : 'No')}}</span>
+                          ></span>
                         </div>
                         <div class="flex justify-between py-3 px-4">
                           <span class="text-gray-600">Submission Date:</span>
                           <span
                             class="font-semibold"
-                          >{{$submission->formatted_created_at}}</span>
+                          ></span>
                         </div>
                       </div>
                     </div>
@@ -306,13 +285,13 @@
                             <span
                               class="font-semibold"
 
-                            >${{$submission->vendor_bill_rate}}</span>
+                            >$10..</span>
                           </div>
                           <div class="flex justify-between items-center mt-1">
                             <span class="text-gray-600">Over Time Rate:</span>
                             <span
                               class="font-semibold"
-                            >${{$submission->client_over_time_rate}}</span>
+                            >$10..</span>
                           </div>
                         </div>
 
@@ -327,13 +306,13 @@
                             <span class="text-gray-600">Bill Rate:</span>
                             <span
                               class="font-semibold"
-                            >${{$submission->bill_rate}}</span>
+                            >$10..</span>
                           </div>
                           <div class="flex justify-between items-center mt-1">
                             <span class="text-gray-600">Over Time Rate:</span>
                             <span
                               class="font-semibold"
-                            >${{$submission->client_over_time_rate}}</span>
+                            >$10..</span>
                           </div>
                         </div>
 
@@ -348,7 +327,7 @@
                             <span class="text-gray-600">Location Name:</span>
                             <span
                               class="font-semibold text-right"
-                            >{{$submission->location->LocationDetails}}</span>
+                            >location</span>
                           </div>
                         </div>
                       </div>
@@ -358,7 +337,7 @@
               </div>
             </div>
             <div class="w-2/4 bg-white h-[1024px] mx-4 rounded p-8">
-            @if ($submission->resume)
+            @if ($interview->job_attachments)
            @php $fileExtension = pathinfo($submission->resume, PATHINFO_EXTENSION); @endphp
               <object
                 data="{{ asset('storage/submission_resume/' . $submission->resume) }}"
