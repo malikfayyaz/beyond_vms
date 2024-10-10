@@ -2,26 +2,85 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Models\Admin;
+use App\Models\CareerOpportunity;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use App\Models\CareerOpportunitiesContract;
+use Yajra\DataTables\Facades\DataTables;
 use App\Models\CareerOpportunitiesWorkorder;
-use App\Models\Admin;
 use App\Models\ContractRate;
 use App\Models\TimesheetProject;
 use App\Models\CareerOpportunitiesBu;
-
 class CareerOpportunitiesContractController extends BaseController
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        if ($request->ajax()) {
+            $adminId = Admin::getAdminIdByUserId(Auth::id());
+            $data = CareerOpportunitiesContract::with('hiringManager','careerOpportunity','workOrder.vendor','location');
+            return DataTables::of($data)
+                ->addIndexColumn()
+                ->addColumn('status', function ($row) {
+                    return (isset($row->status)) ? $row->getContractStatus($row->status) : 'N/A';
+                })
+                ->addColumn('hiring_manager', function ($row) {
+                    return (isset($row->hiringManager->full_name)) ? $row->hiringManager->full_name : 'N/A';
+                })
+                ->addColumn('consultant_name', function($row) {
+                    return $row->consultant ? $row->consultant->full_name : 'N/A';
+                })
+                ->addColumn('career_opportunity', function($row) {
+                    return $row->careerOpportunity ? $row->careerOpportunity->title . '('.$row->careerOpportunity->id.')' : 'N/A';
+                })
+                ->addColumn('vendor_name', function ($row) {
+                    // Access vendor name via the workOrder relationship
+                    return $row->workOrder && $row->workOrder->vendor
+                        ? $row->workOrder->vendor->full_name
+                        : 'N/A';
+                })
+                ->addColumn('duration', function ($row) {
+                    return $row->date_range ? $row->date_range : 'N/A';
+                })
+                ->addColumn('worker_type', function($row) {
+                    return $row->careerOpportunity && $row->careerOpportunity->workerType
+                        ? $row->careerOpportunity->workerType->title
+                        : 'N/A';
+                })
+                ->addColumn('location', function($row) {
+                    return $row->location ? $row->location->name : 'N/A';
+                })
+                ->addColumn('action', function ($row) {
+                    $btn = ' <a href="' . route('admin.contracts.show', $row->id) . '"
+                       class="text-blue-500 hover:text-blue-700 mr-2 bg-transparent hover:bg-transparent"
+                     >
+                       <i class="fas fa-eye"></i>
+                     </a>
+                     <a href="' . route('admin.contracts.edit', $row->id) . '"
+                       class="text-green-500 hover:text-green-700 mr-2 bg-transparent hover:bg-transparent"
+                     >
+                       <i class="fas fa-edit"></i>
+                     </a>';
+                    $deleteBtn = '<form action="' . route('admin.contracts.destroy', $row->id) . '" method="POST" style="display: inline-block;" onsubmit="return confirm(\'Are you sure?\');">
+                     ' . csrf_field() . method_field('DELETE') . '
+                     <button type="submit" class="text-red-500 hover:text-red-700 bg-transparent hover:bg-transparent">
+                         <i class="fas fa-trash"></i>
+                     </button>
+                   </form>';
+
+                    return $btn . $deleteBtn;
+                })
+                ->rawColumns(['action'])
+                ->make(true);
+        }
+        // Logic to get and display catalog items
+        return view('admin.contract.index'); // Assumes you have a corresponding Blade view
     }
 
     /**
@@ -39,7 +98,7 @@ class CareerOpportunitiesContractController extends BaseController
     {
     //    dd($request);
         $rules = [
-            
+
             'timesheetType' => 'required|integer',
             'candidateSourcing' => 'required|integer',
             'workorder_id' =>'required|integer',
@@ -103,7 +162,7 @@ class CareerOpportunitiesContractController extends BaseController
                 $contractRate->vendor_overtime_rate = $workOrderModel->vendor_overtime_rate;
                 $contractRate->vendor_doubletime_rate = $workOrderModel->vendor_doubletime_rate;
                 $contractRate->effective_date = $workOrderModel->onboard_change_start_date;
-             
+
                 $contractRate->save();
                 $costCenters = CareerOpportunitiesBu::where('career_opportunity_id',$contractModel->career_opportunity_id)->get();
                 foreach($costCenters as $costCenter){
@@ -135,7 +194,7 @@ class CareerOpportunitiesContractController extends BaseController
                     // 'redirect_url' => route('admin.career-opportunities.index') // Redirect back URL for AJAX
                 ]);
 
-               
+
     }
 
     /**

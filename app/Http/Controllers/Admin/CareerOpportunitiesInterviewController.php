@@ -7,8 +7,10 @@ use Illuminate\Http\Request;
 use App\Models\CareerOpportunitySubmission;
 use App\Models\CareerOpportunitiesInterview;
 use App\Models\CareerOpportunitiesInterviewDate;
+use App\Models\CareerOpportunitiesInterviewMember;
 use App\Models\Admin;
 use Yajra\DataTables\Facades\DataTables;
+use Illuminate\Support\Facades\Storage;
 
 
 class CareerOpportunitiesInterviewController extends Controller
@@ -66,17 +68,21 @@ class CareerOpportunitiesInterviewController extends Controller
             'interviewDuration' => 'required|integer',
             'timeZone' => 'required|integer',
             'recommendedDate' => 'required|date',
-            'where' => 'nullable|integer',
+            'jobAttachment' => 'nullable|file|mimes:doc,docx,pdf|max:5120',
+            'where' => 'required|integer',
             'interviewType' => 'required|integer',
             'interviewInstructions' => 'nullable|string',
             'interview_detail' => 'required|string',
-            'interviewMembers' => 'nullable',
+            'interviewMembers' => 'required|string', // Ensure it's an array
             'otherDate1' => 'nullable|date',
             'otherDate2' => 'nullable|date',
             'otherDate3' => 'nullable|date',
             'selectedTimeSlots' => 'required|string',
         ]);
+        
 
+        $interviewMembersArray = explode(',', $validatedData['interviewMembers']);
+        
         $user = \Auth::user();  
         $userid = \Auth::id();  
         $adminid =  Admin::getAdminIdByUserId($userid); 
@@ -119,6 +125,12 @@ class CareerOpportunitiesInterviewController extends Controller
 
         $InterviewCreate = CareerOpportunitiesInterview::create( $mapedData );
         
+        if ($request->hasFile('jobAttachment')) {
+            $imagePath = handleFileUpload($request, 'jobAttachment', 'interview_resume');
+            $InterviewCreate->job_attachment = $imagePath;
+            $InterviewCreate->save(); // Save after updating the profile image
+        }
+
         $i=1;
         foreach ($timeSlotsArray as $date => $timeSlot) {
             // Split the time slot string into start and end times
@@ -134,6 +146,14 @@ class CareerOpportunitiesInterviewController extends Controller
                 'start_time' => $startTimeIn24HourFormat,             
                 'end_time' => $endTimeIn24HourFormat,                 
                 'schedule_date_order' => $scheduleDateOrder, 
+            ]);
+        }
+
+        foreach ($interviewMembersArray as $memberId) {
+            // You can use your model to create entries or attach members
+            CareerOpportunitiesInterviewMember::create([
+                'interview_id' => $InterviewCreate->id, // Replace with your actual interview ID
+                'member_id' => $memberId, // Member ID from the array
             ]);
         }
 
@@ -166,6 +186,7 @@ class CareerOpportunitiesInterviewController extends Controller
             'timeZone' => 'required|integer',
             'recommendedDate' => 'required|date',
             'where' => 'nullable|integer',
+            'jobAttachment' => 'nullable|file|mimes:doc,docx,pdf|max:5120',
             'interviewType' => 'required|integer',
             'interview_detail' => 'required|string',
             'interviewInstructions' => 'nullable|string',
@@ -175,6 +196,9 @@ class CareerOpportunitiesInterviewController extends Controller
             'otherDate3' => 'nullable|date',
             'selectedTimeSlots' => 'required|string',
         ]);
+
+        $interviewMembersArray = explode(',', $validatedData['interviewMembers']);
+
 
         $timeSlotsArray = json_decode($validatedData['selectedTimeSlots'], true);
 
@@ -205,6 +229,20 @@ class CareerOpportunitiesInterviewController extends Controller
             "start_time" =>$startTimeIn24HourFormat,
             "end_time" =>$endTimeIn24HourFormat,
         ];
+        
+        if ($request->hasFile('jobAttachment')) {
+            // Delete old image if exists
+            $filePath = "interview_resume/". $interview->job_attachment;
+            if (Storage::disk('public')->exists($filePath)) {
+                Storage::disk('public')->delete($filePath);
+            }
+
+            // Upload new profile image
+            $imagePath = handleFileUpload($request, 'jobAttachment', 'interview_resume');
+            if ($imagePath) {
+                $interview->update(['job_attachment' => $imagePath]); // Mass assign the image path
+            }
+        }
 
         $interview->update($mapedData);
 
@@ -239,6 +277,24 @@ class CareerOpportunitiesInterviewController extends Controller
             
             // Save the record (either it updates or creates a new entry)
             $interviewDate->save();
+        }
+
+
+        // Delete members that are no longer associated
+        CareerOpportunitiesInterviewMember::where('interview_id', $interview->id)
+            ->whereNotIn('member_id', $interviewMembersArray)
+            ->delete();
+
+        // Add or update members
+        foreach ($interviewMembersArray as $memberId) {
+            // Use firstOrNew to find existing member or create a new one
+            $interviewMember = CareerOpportunitiesInterviewMember::firstOrNew([
+                'interview_id' => $interview->id,
+                'member_id' => $memberId,
+            ]);
+
+            // Save the member (this updates if it exists or creates a new entry)
+            $interviewMember->save();
         }
 
         $successMessage = 'Interview updated successfully!';
