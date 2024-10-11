@@ -5,7 +5,8 @@ function initializeDataTable(tableId, ajaxUrl, columns) {
       processing: true,
       serverSide: true,
       ajax: ajaxUrl,
-      columns: columns
+      columns: columns,
+      order: [[1, 'desc']]
     });
   }
 
@@ -95,7 +96,7 @@ function initializeDataTable(tableId, ajaxUrl, columns) {
         } else {
             document.getElementById('success-message').innerText = response.message;
         }
-    } 
+    }
 };
 
 
@@ -103,7 +104,7 @@ function initializeDataTable(tableId, ajaxUrl, columns) {
   const updateStatesDropdown = (response, stateDropdownId) => {
     var statesDropdown = $('#' + stateDropdownId);
     // Save the "Select State" option
- 
+
     // Clear only the dynamically added options
     statesDropdown.find('option:not([value=""])').remove();
 
@@ -136,7 +137,7 @@ function initializeDataTable(tableId, ajaxUrl, columns) {
                   break;
               case 'select2':
                 element.val(data[updateType.field]).trigger("change.select2");
-               
+
                   // element.select2('val', data[updateType.field]);
                   break;
               case 'select2append':
@@ -153,7 +154,7 @@ function initializeDataTable(tableId, ajaxUrl, columns) {
 
                   case 'quill':
                     const editorId = element.attr('id'); // Get the editor ID from the element
-                    
+
                     if (window.Quill && window.Quill[editorId]) {
                       console.log(data[updateType.field]);
                       window.Quill[editorId].root.innerHTML = data[updateType.field];

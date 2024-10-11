@@ -89,8 +89,8 @@
                       class="flex justify-center items-center px-5 py-2.5 bg-transparent hover:rounded-lg hover:bg-white gap-3"
                       role="tab"
                     >
-                      <i class="fa-solid fa-money-bill"></i>
-                      <span class="capitalize">rates</span>
+                      <i class="fa fa-calendar"></i>
+                      <span class="capitalize"> Date & Time</span>
                     </button>
                   </li>
                 </ul>
@@ -119,6 +119,11 @@
                             >{{$interview->status}}</span>
                         </div>
                         <div class="flex justify-between py-3 px-4">
+                          <p class="font-bold text-blue-400">
+                              <i class="fas fa-user"></i> Candidate Info
+                          </p>
+                        </div>
+                        <div class="flex justify-between py-3 px-4">
                             <span class="text-gray-600">Candidate Name:</span>
                             <span class="font-semibold">{{$interview->consultant->full_name}}</span>
                         </div>
@@ -126,134 +131,111 @@
                             <span class="text-gray-600">Vendor Name:</span>
                             <span
                             class="font-semibold"
-                            >{{$interview->submission->vendor->full_name}}</span>
+                            >{{$interview->consultant->vendor->full_name}}</span>
                         </div>
                         <div class="flex justify-between py-3 px-4">
-                          <span class="text-gray-600">Unique ID:</span>
+                          <span class="text-gray-600">Division</span>
                           <span
                             class="font-semibold"
-                          ></span>
+                          >{{$interview->careerOpportunity->division->name}}</span>
                         </div>
                         <div class="flex justify-between py-3 px-4">
                           <span class="text-gray-600"
-                            >Last 4 Numbers of National ID:</span
+                            >Offer ID:</span
                           >
                           <span
                             class="font-semibold"
                           ></span>
                         </div>
                         <div class="flex justify-between py-3 px-4">
+                          <p class="font-bold text-blue-400">
+                              <i class="fas fa-comments"></i> Interview Details
+                          </p>
+                        </div>
+                        <div class="flex justify-between py-3 px-4">
                           <span class="text-gray-600"
-                            >Worker Preferred Language:</span
+                            >Type of Interview:</span
                           >
                           <span
                             class="font-semibold"
-                          ></span>
+                          >{{$interview->interviewtype->title}}</span>
                         </div>
+                        @if (!empty($interview->interview_instructions))
+                            <div class="flex justify-between py-3 px-4">
+                                <span class="text-gray-600">Interview Instruction:</span>
+                                <span class="font-semibold">{{ $interview->interview_instructions }}</span>
+                            </div>
+                        @endif
+                            
+                        @if (!empty($interview->interview_detail))
+                            <div class="flex justify-between py-3 px-4">
+                                <span class="text-gray-600">Interview Detail:</span>
+                                <span class="font-semibold">{{ $interview->interview_detail }}</span>
+                            </div>
+                        @endif
                         <div class="flex justify-between py-3 px-4">
-                          <span class="text-gray-600">Availability Date:</span>
+                          <span class="text-gray-600">Location:</span>
                           <span
                             class="font-semibold"
-                          ></span>
+                          >{{ $interview->location->LocationDetails }}</span>
                         </div>
                         <div class="flex justify-between py-3 px-4">
                           <span class="text-gray-600">Job Profile:</span>
                           <span
                             class="font-semibold"
-                          ></span>
+                          >{{ $interview->careerOpportunity->title }} ({{ $interview->careerOpportunity->id }})</span>
                         </div>
                         <div class="flex justify-between py-3 px-4">
-                          <span class="text-gray-600">Hiring Manager:</span>
+                          <span class="text-gray-600">Timezone:</span>
                           <span
                             class="font-semibold"
-                          ></span>
+                          >{{ $interview->timezone->title }}</span>
+                        </div>
+                        
+                        <div class="flex justify-between py-3 px-4">
+                          <p class="font-bold text-blue-400">
+                              <i class="fa fa-calendar"></i> Interview Date
+                          </p>
                         </div>
                         <div class="flex justify-between py-3 px-4">
-                          <span class="text-gray-600">Resume:</span>
+                          <span class="text-gray-600">Date of Interview:</span>
                           <span
                             class="font-semibold"
-                            ></span>
-                        </div>
-                        <div class="flex justify-between py-3 px-4">
-                          <span class="text-gray-600">OT Eligible?</span>
-                          <span
-                            class="font-semibold"
-                          ></span>
-                        </div>
-                        <div class="flex justify-between py-3 px-4">
-                          <span class="text-gray-600"
-                            >Is This Worker or Will This Worker Need Sponsorship
-                            Now or In The Future?:</span
                           >
-                          <span
-                            class="font-semibold"
-                          ></span>
+                          {{ $interview->interviewDates()->primaryDate()->schedule_date }}</span>
                         </div>
+                        @if (!empty($interview->job_attachment))
+                          <div class="flex justify-between py-3 px-4">
+                            <p class="font-bold text-blue-400">
+                            <i class="fa fa-plus-square"></i> Additional Details
+                            </p>
+                          </div>
+                       
+                          <div class="flex justify-between py-3 px-4">
+                            <span class="text-gray-600">Resume:</span>
+                            <span
+                              class="font-semibold"
+                              >{{ $interview->job_attachment }} <a href="{{ asset('storage/interview_resume/' . $interview->job_attachment) }}" class="text-blue-500 hover:text-blue-700" download>
+                                  <i class="fas fa-download"></i>
+                              </a>
+                            </span>
+                          </div>
+                        @endif
                         <div class="flex justify-between py-3 px-4">
-                          <span class="text-gray-600"
-                            >Is this Candidate willing to Commute to
-                            Office?:</span
-                          >
-                          <span
-                            class="font-semibold"
-                          ></span>
+                          <p class="font-bold text-blue-400">
+                          <i class="fa fa-user-plus"></i> Interviewer(s)
+                          </p>
                         </div>
-                        <!-- <div class="flex justify-between py-3 px-4">
-                          <span class="text-gray-600"
-                            >Do you have the right to represent?:</span
-                          >
-                          <span
-                            class="font-semibold"
-                            x-text="jobDetails.rightRepresent"
-                          ></span>
-                        </div> -->
+                        @if($interview->interviewMembers)
+                        @foreach($interview->interviewMembers as $member)
                         <div class="flex justify-between py-3 px-4">
-                          <span class="text-gray-600">Preferred Name</span>
+                          <span class="text-gray-600">Interviewer:</span>
                           <span
                             class="font-semibold"
-                          ></span>
+                          >{{$member->member->full_name}}</span>
                         </div>
-                        <div class="flex justify-between py-3 px-4">
-                          <span class="text-gray-600">Gender</span>
-                          <span
-                            class="font-semibold"
-                          ></span>
-                        </div>
-                        <div class="flex justify-between py-3 px-4">
-                          <span class="text-gray-600">Race</span>
-                          <span
-                            class="font-semibold"
-                          ></span>
-                        </div>
-                        <div class="flex justify-between py-3 px-4">
-                          <span class="text-gray-600"
-                            >Has this candidate ever worked for any Gallagher
-                            company in any capacity?:</span
-                          >
-                          <span
-                            class="font-semibold"
-                          ></span>
-                        </div>
-                        <div class="flex justify-between py-3 px-4">
-                          <span class="text-gray-600">Country:</span>
-                          <span
-                            class="font-semibold"
-                          ></span>
-                        </div>
-                        <div class="flex justify-between py-3 px-4">
-                          <span class="text-gray-600"
-                            >Virtual/Remote Candidate?</span
-                          >
-                          <span
-                            class="font-semibold"
-                          ></span>
-                        </div>
-                        <div class="flex justify-between py-3 px-4">
-                          <span class="text-gray-600">Submission Date:</span>
-                          <span
-                            class="font-semibold"
-                          ></span>
-                        </div>
+                        @endforeach
+                        @endif
                       </div>
                     </div>
                   </section>
@@ -269,66 +251,17 @@
                     >
                       <div class="p-6 space-y-4">
                         <div class="flex justify-between items-center">
-                          <span class="text-gray-600">Rate Type:</span>
-                          <span class="font-semibold"></span>
+                          <span class="text-gray-600">Date & Time:</span>
                         </div>
 
                         <div class="bg-blue-50 p-3 rounded-md">
-                          <div
-                            class="flex items-center text-blue-600 font-semibold mb-2"
-                          >
-                            <i class="fas fa-file-invoice-dollar mr-2"></i>
-                            <span>Bill Rate (For Vendor)</span>
-                          </div>
+                          
                           <div class="flex justify-between items-center">
-                            <span class="text-gray-600">Bill Rate:</span>
-                            <span
-                              class="font-semibold"
-
-                            >$10..</span>
+                            <span class="text-gray-600">  {{$interview->interviewDates()->primaryDate()->schedule_date}} <br> <small>{{$interview->interviewDates()->primaryDate()->formatted_start_time}} - {{$interview->interviewDates()->primaryDate()->formatted_end_time}}</small></span>
+                            <span class="bg-green-500 text-white px-2 py-1 rounded-full text-sm">{{$interview->status}}</span>
+                            <span class="text-gray-600">{{ $interview->timezone->title }}</span>
                           </div>
-                          <div class="flex justify-between items-center mt-1">
-                            <span class="text-gray-600">Over Time Rate:</span>
-                            <span
-                              class="font-semibold"
-                            >$10..</span>
-                          </div>
-                        </div>
-
-                        <div class="bg-blue-50 p-3 rounded-md">
-                          <div
-                            class="flex items-center text-blue-600 font-semibold mb-2"
-                          >
-                            <i class="fas fa-file-invoice-dollar mr-2"></i>
-                            <span>Bill Rate (For Client)</span>
-                          </div>
-                          <div class="flex justify-between items-center">
-                            <span class="text-gray-600">Bill Rate:</span>
-                            <span
-                              class="font-semibold"
-                            >$10..</span>
-                          </div>
-                          <div class="flex justify-between items-center mt-1">
-                            <span class="text-gray-600">Over Time Rate:</span>
-                            <span
-                              class="font-semibold"
-                            >$10..</span>
-                          </div>
-                        </div>
-
-                        <div>
-                          <div
-                            class="flex items-center text-blue-600 font-semibold mb-2"
-                          >
-                            <i class="fas fa-map-marker-alt mr-2"></i>
-                            <span>Location</span>
-                          </div>
-                          <div class="flex justify-between items-start">
-                            <span class="text-gray-600">Location Name:</span>
-                            <span
-                              class="font-semibold text-right"
-                            >location</span>
-                          </div>
+                          
                         </div>
                       </div>
                     </div>
@@ -337,17 +270,17 @@
               </div>
             </div>
             <div class="w-2/4 bg-white h-[1024px] mx-4 rounded p-8">
-            @if ($interview->job_attachments)
-           @php $fileExtension = pathinfo($submission->resume, PATHINFO_EXTENSION); @endphp
+            @if ($interview->job_attachment)
+           @php $fileExtension = pathinfo($interview->job_attachment, PATHINFO_EXTENSION); @endphp
               <object
-                data="{{ asset('storage/submission_resume/' . $submission->resume) }}"
+                data="{{ asset('storage/interview_resume/' . $interview->job_attachment) }}"
                 type="application/{{$fileExtension}}"
                 width="100%"
                 height="100%"
               >
                 <p>
                   Alternative text - include a link
-                  <a href="{{ asset('storage/submission_resume/' . $submission->resume) }}">to the PDF!</a>
+                  <a href="{{ asset('storage/interview_resume/' . $interview->job_attachment) }}">to the PDF!</a>
                 </p>
               </object>
             @else

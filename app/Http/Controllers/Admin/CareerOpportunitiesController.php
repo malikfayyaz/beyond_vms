@@ -517,6 +517,34 @@ class CareerOpportunitiesController extends BaseController
         $job->save();
     }
 
+    public function rejectAdminJob(Request $request){
+        
+        $user = \Auth::user();
+        $userid = \Auth::id();
+        $sessionrole = session('selected_role');
+
+        if ($sessionrole == "Admin") {
+            $userid = Admin::getAdminIdByUserId($userid);
+        } elseif ($sessionrole == "Client") {
+            $userid = Client::getClientIdByUserId($userid);
+        } elseif ($sessionrole == "Vendor") {
+            $userid = Vendor::getVendorIdByUserId($userid);
+        } elseif ($sessionrole == "Consultant") {
+            $userid = Consultant::getConsultantIdByUserId($userid);
+        }
+        $portal = 'Portal';
+
+
+        $job = CareerOpportunity::find($request->job_id);
+        $job->jobstatus = 2;
+        $job->rejected_by = $userid;
+        $job->rejected_type = $sessionrole;
+        $job->reason_for_rejection = $request->reason;
+        $job->note_for_rejection = $request->note;
+        $job->date_rejected = date('Y-m-d h:i:s');
+        $job->save();
+    }
+
 
 
 }

@@ -19,15 +19,15 @@ class CareerOpportunitiesInterviewController extends Controller
     {
         if ($request->ajax()) {
             $interview = CareerOpportunitiesInterview::with(['consultant', 'careerOpportunity', 'duration', 'timezone', 'interviewtype', 'submission'])
-            ->orderBy('id', 'desc') 
+            ->orderBy('id', 'desc')
             ->get();
             return DataTables::of($interview)
             ->addColumn('type', function($row) {
                 return $row->interviewtype ? $row->interviewtype->title : 'N/A';
-            }) 
+            })
             ->addColumn('consultant_name', function($row) {
                 return $row->consultant ? $row->consultant->full_name : 'N/A';
-            }) 
+            })
             ->addColumn('career_opportunity', function($row) {
                 return $row->careerOpportunity ? $row->careerOpportunity->title . '('.$row->careerOpportunity->id.')' : 'N/A';
             })
@@ -38,17 +38,17 @@ class CareerOpportunitiesInterviewController extends Controller
                 return $row->submission ? $row->submission->vendor->full_name : 'N/A';
             })
             ->addColumn('worker_type', function($row) {
-                return $row->careerOpportunity && $row->careerOpportunity->workerType 
+                return $row->careerOpportunity && $row->careerOpportunity->workerType
                     ? $row->careerOpportunity->workerType->title
                     : 'N/A';
             })
-            
+
             ->addColumn('action', function($row) {
                 return '<a href="' . route('admin.interview.edit', $row->id) . '"
                             class="text-green-500 hover:text-green-700 mr-2 bg-transparent hover:bg-transparent">
                                 <i class="fas fa-edit"></i>
                         </a>
-                        <a href="' . route('admin.interview.show', $row->id) . '" 
+                        <a href="' . route('admin.interview.show', $row->id) . '"
                             class="text-blue-500 hover:text-blue-700 mr-2 bg-transparent hover:bg-transparent">
                                 <i class="fas fa-eye"></i>
                         </a>';
@@ -66,7 +66,7 @@ class CareerOpportunitiesInterviewController extends Controller
     }
 
     public function store(Request $request)
-    {   
+    {
         $validatedData = $request->validate([
             'eventName' => 'required|string|max:255',
             'interviewDuration' => 'required|integer',
@@ -83,27 +83,27 @@ class CareerOpportunitiesInterviewController extends Controller
             'otherDate3' => 'nullable|date',
             'selectedTimeSlots' => 'required|string',
         ]);
-        
+
 
         $interviewMembersArray = explode(',', $validatedData['interviewMembers']);
-        
-        $user = \Auth::user();  
-        $userid = \Auth::id();  
-        $adminid =  Admin::getAdminIdByUserId($userid); 
-        
+
+        $user = \Auth::user();
+        $userid = \Auth::id();
+        $adminid =  Admin::getAdminIdByUserId($userid);
+
         $timeSlotsArray = json_decode($validatedData['selectedTimeSlots'], true);
 
         $timeRange = $timeSlotsArray[$validatedData['recommendedDate']];
         $times = explode(' - ', $timeRange);
-        $startTime = $times[0]; 
-        $endTime = $times[1]; 
+        $startTime = $times[0];
+        $endTime = $times[1];
 
-        $startTimeIn24HourFormat = date("H:i:s", strtotime($startTime)); 
-        $endTimeIn24HourFormat = date("H:i:s", strtotime($endTime)); 
+        $startTimeIn24HourFormat = date("H:i:s", strtotime($startTime));
+        $endTimeIn24HourFormat = date("H:i:s", strtotime($endTime));
 
 
         $submission = CareerOpportunitySubmission::findOrFail($request->submissionid);
-        
+
         $mapedData = [
             "submission_id" =>$submission->id,
             "candidate_id" =>$submission->candidate_id,
@@ -128,7 +128,7 @@ class CareerOpportunitiesInterviewController extends Controller
         ];
 
         $InterviewCreate = CareerOpportunitiesInterview::create( $mapedData );
-        
+
         if ($request->hasFile('jobAttachment')) {
             $imagePath = handleFileUpload($request, 'jobAttachment', 'interview_resume');
             $InterviewCreate->job_attachment = $imagePath;
@@ -139,17 +139,17 @@ class CareerOpportunitiesInterviewController extends Controller
         foreach ($timeSlotsArray as $date => $timeSlot) {
             // Split the time slot string into start and end times
             list($startTime, $endTime) = explode(' - ', $timeSlot);
-           
-            $startTimeIn24HourFormat = date("H:i:s", strtotime($startTime)); 
-            $endTimeIn24HourFormat = date("H:i:s", strtotime($endTime)); 
+
+            $startTimeIn24HourFormat = date("H:i:s", strtotime($startTime));
+            $endTimeIn24HourFormat = date("H:i:s", strtotime($endTime));
             // Optionally, you can calculate the schedule_date_order based on your logic
             $scheduleDateOrder = $i++;
             CareerOpportunitiesInterviewDate::create([
-                'interview_id' => $InterviewCreate->id,        
-                'schedule_date' => $date,               
-                'start_time' => $startTimeIn24HourFormat,             
-                'end_time' => $endTimeIn24HourFormat,                 
-                'schedule_date_order' => $scheduleDateOrder, 
+                'interview_id' => $InterviewCreate->id,
+                'schedule_date' => $date,
+                'start_time' => $startTimeIn24HourFormat,
+                'end_time' => $endTimeIn24HourFormat,
+                'schedule_date_order' => $scheduleDateOrder,
             ]);
         }
 
@@ -183,7 +183,7 @@ class CareerOpportunitiesInterviewController extends Controller
         // Validate and update the interview
         $interview = CareerOpportunitiesInterview::findOrFail($id);
         $submission =  CareerOpportunitySubmission::findOrFail($interview->submission_id);
-        
+
         $validatedData = $request->validate([
             'eventName' => 'required|string|max:255',
             'interviewDuration' => 'required|integer',
@@ -208,11 +208,11 @@ class CareerOpportunitiesInterviewController extends Controller
 
         $timeRange = $timeSlotsArray[$validatedData['recommendedDate']];
         $times = explode(' - ', $timeRange);
-        $startTime = $times[0]; 
-        $endTime = $times[1]; 
+        $startTime = $times[0];
+        $endTime = $times[1];
 
-        $startTimeIn24HourFormat = date("H:i:s", strtotime($startTime)); 
-        $endTimeIn24HourFormat = date("H:i:s", strtotime($endTime)); 
+        $startTimeIn24HourFormat = date("H:i:s", strtotime($startTime));
+        $endTimeIn24HourFormat = date("H:i:s", strtotime($endTime));
 
         $mapedData = [
             "submission_id" =>$submission->id,
@@ -233,7 +233,7 @@ class CareerOpportunitiesInterviewController extends Controller
             "start_time" =>$startTimeIn24HourFormat,
             "end_time" =>$endTimeIn24HourFormat,
         ];
-        
+
         if ($request->hasFile('jobAttachment')) {
             // Delete old image if exists
             $filePath = "interview_resume/". $interview->job_attachment;
@@ -261,24 +261,24 @@ class CareerOpportunitiesInterviewController extends Controller
         foreach ($timeSlotsArray as $date => $timeSlot) {
             // Split the time slot string into start and end times
             list($startTime, $endTime) = explode(' - ', $timeSlot);
-           
-            $startTimeIn24HourFormat = date("H:i:s", strtotime($startTime)); 
-            $endTimeIn24HourFormat = date("H:i:s", strtotime($endTime)); 
-            
+
+            $startTimeIn24HourFormat = date("H:i:s", strtotime($startTime));
+            $endTimeIn24HourFormat = date("H:i:s", strtotime($endTime));
+
             // Optionally, calculate the schedule_date_order based on your logic
             $scheduleDateOrder = $i++;
-        
+
             // Check if the record exists for this interview_id and date
             $interviewDate = CareerOpportunitiesInterviewDate::firstOrNew([
                 'interview_id' => $interview->id,
                 'schedule_date' => $date,
             ]);
-        
+
             // Update the fields for the existing or new record
             $interviewDate->start_time = $startTimeIn24HourFormat;
             $interviewDate->end_time = $endTimeIn24HourFormat;
             $interviewDate->schedule_date_order = $scheduleDateOrder;
-            
+
             // Save the record (either it updates or creates a new entry)
             $interviewDate->save();
         }

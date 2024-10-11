@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('career_opportunities_offer', function (Blueprint $table) {
-            $table->text('reason_rejection')->nullable()->default(''); // $reason_for_rejection
+            $table->text('reason_rejection')->nullable(); // $reason_for_rejection
             $table->unsignedBigInteger('rejected_by')->nullable(); // $userid
             $table->tinyInteger('rejected_type')->default(1); // Default to 1
         });

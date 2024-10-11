@@ -111,7 +111,7 @@ class CareerOpportunitiesOfferController extends BaseController
             return response()->json([
                 'success' => true,
                 'message' => 'Offer already exist!',
-                // 'redirect_url' => route('admin.offer.show',  ['id' => $request->submissionid]) // Redirect back URL for AJAX
+                'redirect_url' => route('admin.offer.create',  ['id' => $request->submissionid]) // Redirect back URL for AJAX
             ]);
          }
          $submission = CareerOpportunitySubmission::findOrFail($request->submissionid);
@@ -145,7 +145,7 @@ class CareerOpportunitiesOfferController extends BaseController
          calculateVendorRates($offerCreate,$offerCreate->offer_bill_rate,$offerCreate->client_overtime,$offerCreate->client_doubletime);
          calculateOfferEstimates($offerCreate,$jobData);
          offerHelper::createOfferWorkflow($offerCreate);
-         session()->flash('success', 'Offer saved successfully!');
+        session()->flash('success', 'Offer saved successfully!');
          return response()->json([
              'success' => true,
              'message' => 'Offer saved successfully!',

@@ -6,6 +6,11 @@
     <div class="ml-16">
         @include('admin.layouts.partials.header')
         <div class="bg-white mx-4 my-8 rounded p-8">
+            @if (session('success'))
+                <div class="alert alert-success">
+                    {{ session('success') }}
+                </div>
+            @endif
             <div >
                 <div class="flex justify-between items-center mb-6">
                     <h2 class="text-2xl font-bold">Interviews</h2>
@@ -44,7 +49,7 @@
                         <th
                             class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                         >
-                            Job Profile 
+                            Job Profile
                         </th>
                         <th
                             class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
@@ -81,7 +86,7 @@
                         >
                             Action
                         </th>
-                        
+
                     </tr>
                     </thead>
                     <tbody>
@@ -97,15 +102,15 @@
     document.addEventListener('DOMContentLoaded', function() {
         if (window.$) {
             initializeDataTable('#listing', '/admin/interview/index', [
-                { 
-                    data: null, 
-                    name: 'serial', 
+                {
+                    data: null,
+                    name: 'serial',
                     render: (data, type, full, meta) => meta.row + 1 // Display the row index (1-based)
                 },
                 { data: 'status', name: 'status' },
                 { data: 'type', name: 'type' },
                 { data: 'id', name: 'id' },
-                { data: 'consultant_name', name: 'consultant_name' }, 
+                { data: 'consultant_name', name: 'consultant_name' },
                 { data: 'career_opportunity', name: 'career_opportunity' },
                 { data: 'hiring_manger', name: 'hiring_manger' },
                 { data: 'vendor_name', name: 'vendor_name' },
@@ -121,7 +126,7 @@
     // Function to format time from 24-hour to AM/PM
     const formatTime = (timeString) => {
         if (!timeString) return ''; // Handle empty time
-        
+
         const [hours, minutes] = timeString.split(':'); // Split hours and minutes
 
         // Convert hours to 12-hour format
