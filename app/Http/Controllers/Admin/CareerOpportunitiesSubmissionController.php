@@ -14,14 +14,17 @@ class CareerOpportunitiesSubmissionController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $submissions = CareerOpportunitySubmission::with(['consultant','vendor','careerOpportunity.hiringManager','location'])->get();
-
+            $submissions = CareerOpportunitySubmission::with(['consultant','vendor','careerOpportunity.hiringManager','location'])
+                ->get();
             return DataTables::of($submissions)
                 ->addColumn('consultant_name', function($row) {
                     return $row->consultant ? $row->consultant->full_name : 'N/A';
                 })
                 ->addColumn('unique_id', function($row) {
                     return $row->consultant ? $row->consultant->unique_id : 'N/A';
+                })
+                ->addColumn('resume_status', function($row) {
+                    return CareerOpportunitySubmission::getSubmissionStatus($row->resume_status);
                 })
                 ->addColumn('hiring_manager_name', function($row) {
                     // Access the hiring manager through the careerOpportunity relationship

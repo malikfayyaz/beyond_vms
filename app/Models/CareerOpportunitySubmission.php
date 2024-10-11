@@ -44,5 +44,42 @@ class CareerOpportunitySubmission extends Model
     {
         return $this->attributes['created_at'] ? Carbon::parse($this->attributes['created_at'])->format('m/d/Y') : '';
     }
+    public static function getSubmissionStatus($statusId)
+    {
+        switch ($statusId) {
+            case "1":
+                return 'Submitted';
+            case "2":
+                return 'MSP Review';
+            case "3":
+                return 'Shortlisted';
+            case "4":
+                return 'Client Review';
+            case "5":
+                return 'Interview Process';
+            case "6":
+                return 'Rejected';
+            case "7":
+                return 'Offer';
+            case "8":
+                return 'Approved';
+            case "9":
+                return 'Hired';
+            case "10":
+                return 'Review';
+            case "11":
+                return 'WorkOrder Release';
+            case "12":
+                return 'Withdraw';
+            case "13":
+                return 'No NDA';
+            case "14":
+                return 'NDA Pending';
+            case "15":
+                return 'Rehire Check';
+            default:
+                return 'Danger';
+        }
+    }
 
 }
