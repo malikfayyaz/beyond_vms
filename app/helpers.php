@@ -6,7 +6,15 @@ use App\Models\GenericData;
 use App\Models\Location;
 use App\Models\SettingCategory;
 use App\Models\Consultant;
-
+use App\Models\Admin;
+use App\Models\Vendor;
+use App\Models\Client;
+use App\Models\CareerOpportunitySubmission;
+use App\Models\CareerOpportunitiesContract;
+use App\Models\CareerOpportunitiesInterview;
+use App\Models\CareerOpportunitiesOffer;
+use App\Models\OfferWorkflowApproval;
+use App\Models\CareerOpportunitiesWorkorder;
 
 function userType(){
     $array = array(
@@ -168,6 +176,22 @@ if (!function_exists('removeComma')) {
     }
 }
 
+if (!function_exists('checkUserId')) {
+    function checkUserId($userid,$sessionrole)
+    {
+        if ($sessionrole == "Admin") {
+            $userid = Admin::getAdminIdByUserId($userid);
+        } elseif ($sessionrole == "Client") {
+            $userid = Client::getClientIdByUserId($userid);
+        } elseif ($sessionrole == "Vendor") {
+            $userid = Vendor::getVendorIdByUserId($userid);
+        } elseif ($sessionrole == "Consultant") {
+            $userid = Consultant::getConsultantIdByUserId($userid);
+        }
+        return $userid;
+    }
+}
+
 if (!function_exists('numberOfWorkingDays')) {
     // Helper method to calculate the number of working days between two dates
     function numberOfWorkingDays($startDate, $endDate)
@@ -233,6 +257,94 @@ if (!function_exists('numberOfWorkingDays')) {
         {
             return Carbon::parse($date)->format('m/d/Y');
         }
+    }
+}
+if (!function_exists('updateSubmission')) {
+    function updateSubmission($model,$type){
+        
+
+       $userid =  checkUserId(\Auth::id(),session('selected_role'));
+        $submission = CareerOpportunitySubmission::whereNotIn('resume_status', [6, 11])
+            ->where('career_opportunity_id', $model->id)
+            ->get();
+
+        foreach($submission as $sValue){
+            $contract = CareerOpportunitiesContract::where('submission_id', $sValue->id)->first();
+            if($type == 'Filled'){
+                $reason_for_rejection = 66;
+            }elseif($type == 'Closed'){
+                $reason_for_rejection = 66;
+            }else{
+                $reason_for_rejection = 66;
+            }
+            if($contract===null){
+                $submissionUpdate = CareerOpportunitySubmission::findOrFail($sValue->id);
+                $submissionUpdate->resume_status = 6;
+                $submissionUpdate->reason_for_rejection = $reason_for_rejection;
+                $submissionUpdate->date_rejected = now();
+                $submissionUpdate->rejected_by = $userid;
+                $submissionUpdate->rejected_type = 1;
+                $submissionUpdate->save();
+
+                // Update Interview
+                $allInterviews = CareerOpportunitiesInterview::where('submission_id', $sValue->id)->get();
+                foreach($allInterviews as $interview){
+                    $reason_for_rejection = 66;
+                    $interviewModel = CareerOpportunitiesInterview::findOrFail($interview->id);
+                    $interviewModel->reason_rejection = $reason_for_rejection;
+                    $interviewModel->notes = '';
+                    $interviewModel->status = 3;
+                    $interviewModel->rejected_by = $userid;
+                    $interviewModel->rejected_type = 1;
+                    $interviewModel->interview_cancellation_date = now(); //Interview cancellation date.
+                    $interviewModel->save();
+                }
+
+                //Update Offer
+                $allOffers = CareerOpportunitiesOffer::where('submission_id', $sValue->id)->get();
+                $reason_for_rejection = 66;
+                foreach($allOffers as $offerModel){
+                    $offerModel->status = 2;
+                    $offerModel->reason_for_rejection = $reason_for_rejection;
+                    $offerModel->notes = '';
+                    $offerModel->modified_by_id = $userid;
+                    $offerModel->date_modified = now();
+                    $offerModel->offer_rejection_date = now();
+                    $offerModel->modified_by_type = 1;
+                    $offerModel->save();
+
+                    //update offer workflow
+
+                    $allapprovals = OfferWorkflowApproval::where('offer_id', $offerModel->id)->get();
+                   
+                    if($allapprovals){
+                        $reason_for_rejection = 66;
+                        foreach ($allapprovals as $approval){
+                            $approval->status = 'Rejected';
+                            $approval->rejection_reason = $reason_for_rejection;
+                            $approval->status_time = now();
+                            $approval->approve_reject_by = $userid;
+                            $approval->approve_reject_type = 'admin';
+                            $approval->ip_address = request()->ip();
+                            $approval->save();
+                        }
+                    }
+
+                }
+                $allWorkorder = CareerOpportunitiesWorkorder::where('submission_id', $sValue->id)->get();
+                foreach($allWorkorder as $workOrderModel){
+                    $reason_for_rejection =  66;
+                    $workOrderModel->status = 2;
+                    $workOrderModel->rejection_date =  now();
+                    $workOrderModel->modified_by_id=  $userid;
+                    $workOrderModel->modified_by_type = 1;
+                    $workOrderModel->rejection_reason= $reason_for_rejection;
+                    $workOrderModel->save();
+                }
+
+            }
+        }
+        return true;
     }
 }
 

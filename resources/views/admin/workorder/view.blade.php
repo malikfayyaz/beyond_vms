@@ -261,7 +261,7 @@
                       <span class="capitalize">workorder info</span>
                     </button>
                   </li>
-
+                  @if($workorder->workorder_status==1)
                   <li>
                     <button
                       :id="$id('tab', whichChild($el.parentElement, $refs.tablist))"
@@ -279,7 +279,7 @@
                       <span class="capitalize">Onboarding Info</span>
                     </button>
                   </li>
-
+                  @endif
                   <li>
                     <button
                       :id="$id('tab', whichChild($el.parentElement, $refs.tablist))"
@@ -446,6 +446,13 @@
                     </div>
                   </section>
                   <!-- Second Tab-->
+                  @php
+                        $disabled = true;
+                         if($workorder->on_board_status == 0){
+                          $disabled = false;
+                        }
+                        @endphp
+                  @if($workorder->workorder_status==1)
                   <section
                     x-show="isSelected($id('tab', whichChild($el, $el.parentElement)))"
                     :aria-labelledby="$id('tab', whichChild($el, $el.parentElement))"
@@ -616,12 +623,7 @@
                             </div>
                           </div>
                         </div>
-                        @php
-                        $disabled = true;
-                         if($workorder->on_board_status == 0){
-                          $disabled = false;
-                        }
-                        @endphp
+                        
                         <div class="px-6 py-3">
                           <div class="flex space-x-4">
                             <div class="flex-1">
@@ -747,13 +749,15 @@
                       </form>
                     </div>
                   </section>
+                  @endif
                   <!-- Third Tab-->
                   <section
                     x-show="isSelected($id('tab', whichChild($el, $el.parentElement)))"
                     :aria-labelledby="$id('tab', whichChild($el, $el.parentElement))"
                     role="tabpanel"
                     class=""
-                  >
+                    >
+                    @if($workorder->verification_status==1) 
                     <div
                       class="overflow-x-auto"
                       x-data="{ 
@@ -802,6 +806,9 @@
                       <p><b>Reviewed By:</b> System Admin</p>
                       <p><b>Reviewed Date:</b> 10/03/2024</p>
                     </div>
+                    @else 
+                    <p>Background verification still not submitted for review.</p>
+                    @endif
                   </section>
                 </div>
               </div>

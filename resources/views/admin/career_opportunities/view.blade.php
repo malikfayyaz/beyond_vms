@@ -27,6 +27,7 @@
                   </div>
                 </a>
               </li>
+
               <li class="flex justify-center items-center">
                 <a
                   href="#page2"
@@ -50,6 +51,21 @@
                 >
                   <i class="fa-solid fa-fill"></i>
                   <span class="capitalize">Workflow</span>
+                  <div
+                    class="px-1 py-1 flex items-center justify-center bg-gray-500 text-white rounded-lg"
+                  >
+                    <span class="text-[10px]">20</span>
+                  </div>
+                </a>
+              </li>
+              <li class="flex justify-center" x-data="{ jobstatus: @json($job->jobstatus) }" x-show="jobstatus == 3">
+                <a
+                @click="tab = 'vendorrelease'" 
+                :class="{ 'border-blue-500 text-blue-500': tab === 'vendorrelease' }" 
+                class="flex justify-center items-center gap-3 py-4 w-full hover:bg-white hover:rounded-lg hover:shadow"
+                >
+                  <i class="fa-solid fa-fill"></i>
+                  <span class="capitalize">Vendor Release</span>
                   <div
                     class="px-1 py-1 flex items-center justify-center bg-gray-500 text-white rounded-lg"
                   >
@@ -121,7 +137,22 @@
           <div class="bg-white mx-4 my-8 rounded p-8">
               <div class="flex justify-between items-center mb-6">
                   <h2 class="text-2xl font-bold"></h2>
+                 
                   <div class="flex space-x-2">
+                    <form action="{{ route('admin.jobReject', $job->id) }}" method="POST" style="display: inline-block;">
+                          @csrf
+                          <button type="submit" class="px-4 py-2 bg-red-500 text-white rounded hover:bg-blue-600 capitalize">
+                              Reject
+                          </button>
+                      </form>
+
+                    <form action="{{ route('admin.jobApprove', $job->id) }}" method="POST" style="display: inline-block;">
+                          @csrf
+                          <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 capitalize">
+                              Approve
+                          </button>
+                      </form>
+
                       <form action="{{ route('admin.career-opportunities.copy', $job->id) }}" method="POST" style="display: inline-block;">
                           @csrf
                           <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 capitalize">
@@ -643,7 +674,29 @@
                 <td class="py-4 px-4 text-center text-sm">{{ isset($workflow->created_at) ? date('Y-m-d H:i:s',strtotime($workflow->created_at)) : 'N/A' }}</td>
                 <td class="py-4 px-4 text-center text-sm">{{ $workflow->approved_datetime ?? 'N/A' }}</td>
                 <td class="py-4 px-4 text-center text-sm">{{ $workflow->approval_notes ?? 'N/A' }}</td>
-                <td class="py-4 px-4 text-center text-sm">{{ $workflow->approval_doc ?? 'N/A' }}</td>
+                <td class="py-4 px-4 text-center text-sm"><div x-data="{
+                        downloadUrl: '',
+                        id: '{{ $workflow->id }}',
+                        fetchDownloadUrl() {
+                            fetch(`/jobWorkflow/download/${this.id}`)
+                                .then(response => response.json())
+                                .then(data => {
+                                    if (data.success) {
+                                        this.downloadUrl = data.downloadUrl; 
+                                    } else {
+                                        console.error('Failed to fetch download URL');
+                                    }
+                                })
+                                .catch(error => console.error('Error fetching download URL:', error));
+                            }
+                        }" 
+                        x-init="fetchDownloadUrl()" 
+                    >
+                    <template x-if="downloadUrl">
+                        <a :href="downloadUrl" class="underline" download> {{ $workflow->approval_doc }} </a>
+                    </template>
+                    <span x-show="!downloadUrl" class="text-gray-500">N/A</span>
+                </div></td>
                 <td class="py-4 px-4 text-center text-sm">
                   <div x-data="{ emailSent: {{ $workflow->email_sent }}, status: '{{ $workflow->status }}' }">
                      <template x-if="(status == 'Pending' && emailSent == 1)">
@@ -675,7 +728,73 @@
             </tbody>
           </table>
       </div>
+       </div>
+       <div x-show="tab === 'vendorrelease'"   class="flex w-full gap-4">
+          <div x-data="{
+            selectedVendor: '',
+            showErrors: false,
+            jobID : '{{ $job->id }}',
+            errors: {},
+            isFieldValid(field) {
+                return !this.errors[field];
+            },
+            getErrorMessageById(field) {
+                return this.errors[field] || '';
+            },
+            validate() {
+                this.errors = {}; 
+                if (!this.selectedVendor) {
+                    this.errors.vendor = 'Please select a vendor.';
+                    this.showErrors = true;
+                }
+            },
+            submitForm(event) {
+                event.preventDefault(); 
+                this.validate(); 
+                if (Object.keys(this.errors).length === 0) {
+                    const formData = new FormData();
+                    formData.append('vendor_id', this.selectedVendor);
+                    formData.append('job_id', this.jobID);
+
+                   const url = '/admin/releaseJobVendor';
+                   ajaxCall(url,'POST', [[onSuccess, ['response']]], formData);
+
+                }    
+            }
+        }">
+
+        <form @submit="submitForm">
+            <label class="block mb-2">Vendors <span class="text-red-500">*</span></label>
+            <select 
+                x-ref="vendor" 
+                name="vendor_id" 
+                x-model="selectedVendor" 
+                @change="validate()" 
+                class="w-50 select2-single custom-style" 
+                id="vendor"
+            >
+                <option value="">Select Vendor</option>
+                @foreach ($vendors as $vendor)
+                    <option value="{{ $vendor->id }}">{{ $vendor->first_name.' '.$vendor->last_name }}</option>
+                @endforeach
+            </select>
+            <p x-show="showErrors && !isFieldValid('vendor')" class="text-red-500 text-sm mt-1" 
+               x-text="getErrorMessageById('vendor')"></p>
+
+            <button type="submit" class="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                Submit
+            </button>
+        </form>
     </div>
+
+
+
+      </div>
+
+   
+
+     
+
          <div
               x-data="{
               openModal: false,
@@ -683,6 +802,9 @@
               reason: '',
               note: '',
               errors: {},
+              handleFileUpload(event) {
+                this.file = event.target.files[0];  
+              },
               validateForm() {
                 this.errors = {};
                 if (!this.note.trim()) this.errors.note = 'Please enter a note';

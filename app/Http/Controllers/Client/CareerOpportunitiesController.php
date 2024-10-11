@@ -29,14 +29,16 @@ class CareerOpportunitiesController extends Controller
             $data = CareerOpportunity::with(['hiringManager', 'workerType'])
                 ->withCount([
                     'submissions',
-                    'workFlow' => function ($query) use ($clientid) {
-                        $query->where('client_id', $clientid);
-                    }
                 ])
-                ->where('user_id', $clientid)->get();
+                ->where('user_id', $clientid) 
+                ->orWhereHas('workFlow', function ($query) use ($clientid) {
+                    $query->where('client_id', $clientid); 
+                })->orderby('id', 'desc'); 
 
             return DataTables::of($data)
-                ->addIndexColumn()
+                ->addColumn('jobStatus', function ($row) {
+                    return (isset($row->jobStatus)) ? $row->getStatus($row->jobStatus) : 'N/A';
+                })
                 ->addColumn('hiring_manager', function($row) {
                     return (isset($row->hiringManager->full_name)) ? $row->hiringManager->full_name : 'N/A';
                 })

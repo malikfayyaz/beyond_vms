@@ -58,15 +58,7 @@ class CareerOpportunitiesOfferService
         $userid = \Auth::id();
 
         $sessionrole = session('selected_role');
-        if($sessionrole == "Admin") {
-            $userid =  Admin::getAdminIdByUserId($userid);
-        }elseif($sessionrole == "Client"){
-            $userid =  Client::getClientIdByUserId($userid);
-        }elseif($sessionrole == "Vendor"){
-            $userid =  Vendor::getVendorIdByUserId($userid);
-        }elseif($sessionrole == "Consultant"){
-            $userid =  Consultant::getConsultantIdByUserId($userid);
-        }
+        $userid =  checkUserId($userid,$sessionrole);
         $portal = 'Portal';
         $workflow = OfferWorkFlow::findOrFail($request->rowId);
 
@@ -123,15 +115,7 @@ class CareerOpportunitiesOfferService
         $userid = \Auth::id();
         $sessionrole = session('selected_role');
 
-        if ($sessionrole == "Admin") {
-            $userid = Admin::getAdminIdByUserId($userid);
-        } elseif ($sessionrole == "Client") {
-            $userid = Client::getClientIdByUserId($userid);
-        } elseif ($sessionrole == "Vendor") {
-            $userid = Vendor::getVendorIdByUserId($userid);
-        } elseif ($sessionrole == "Consultant") {
-            $userid = Consultant::getConsultantIdByUserId($userid);
-        }
+        $userid =  checkUserId($userid,$sessionrole);
 
         $portal = 'Portal';
         $workflow = OfferWorkFlow::findOrFail($request->rowId);

@@ -16,7 +16,9 @@ use Illuminate\Support\Carbon;
 use Yajra\DataTables\Facades\DataTables;
 use App\Models\DivisionBranchZoneConfig;
 use App\Models\Setting;
+use App\Models\Vendor;
 use App\JobWorkflowUpdate;
+use App\Models\VendorJobRelease;
 
 class CareerOpportunitiesController extends BaseController
 {
@@ -28,7 +30,7 @@ class CareerOpportunitiesController extends BaseController
         if ($request->ajax()) {
             $adminId = Admin::getAdminIdByUserId(Auth::id());
             $data = CareerOpportunity::with('hiringManager', 'workerType')
-            ->withCount('submissions');
+            ->withCount('submissions')->orderby('id', 'desc');
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('hiring_manager', function ($row) {
@@ -156,11 +158,12 @@ class CareerOpportunitiesController extends BaseController
             'category')->findOrFail($id);
         $jobWorkFlow = JobWorkFlow::where('job_id', $id)->orderby('approval_number', 'ASC')->get();
         $rejectReasons =  Setting::where('category_id', 9)->get();
+        $vendors = Vendor::all();
         // Optionally, you can dump the data for debugging purposes
         // dd($job); // Uncomment to check the data structure
 
         // Return the view and pass the job data to it
-        return view('admin.career_opportunities.view', compact('job','jobWorkFlow','rejectReasons'));
+        return view('admin.career_opportunities.view', compact('job','jobWorkFlow','rejectReasons','vendors'));
     }
 
     /**
@@ -468,6 +471,50 @@ class CareerOpportunitiesController extends BaseController
     public function jobWorkFlowReject(Request $request){
         $jobWorkflow = new JobWorkflowUpdate();
         $jobWorkflow->rejectJobWorkFlow($request);
+    }
+
+    public function jobApprove(String $id){
+
+        $job = CareerOpportunity::find($id);
+        $job->jobstatus = 3; 
+        $job->save();
+       
+        return redirect()->route('admin.career-opportunities.show', $id);
+    }
+    public function jobReject(String $id){
+        $job = CareerOpportunity::find($id);
+        $job->jobstatus = 2; 
+        $job->save();
+        return redirect()->route('admin.career-opportunities.show', $id);   
+    }
+
+    public function releaseJobVendor(Request $request){
+        
+        $user = \Auth::user();
+        $userid = \Auth::id();
+        $sessionrole = session('selected_role');
+        if ($sessionrole == "Admin") {
+            $userid = Admin::getAdminIdByUserId($userid);
+        } elseif ($sessionrole == "Client") {
+            $userid = Client::getClientIdByUserId($userid);
+        } elseif ($sessionrole == "Vendor") {
+            $userid = Vendor::getVendorIdByUserId($userid);
+        } elseif ($sessionrole == "Consultant") {
+            $userid = Consultant::getConsultantIdByUserId($userid);
+        }
+       
+        $release =   new VendorJobRelease;
+        $release->vendor_id  = $request->vendor_id;
+        $release->created_by = $userid;
+        $release->created_by_type = $sessionrole;
+        $release->job_id  = $request->job_id;
+        $release->status = 1;
+        $release->job_released_time = date('Y-m-d h:i:s');
+        $release->save();
+
+        $job = CareerOpportunity::find($request->job_id);
+        $job->jobstatus = 5;
+        $job->save();
     }
 
 

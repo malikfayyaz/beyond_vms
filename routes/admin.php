@@ -139,13 +139,22 @@ Route::middleware(['user_role:admin'])->group(function () {
         //interview
         Route::match(['get', 'post'], 'interview/index', [CareerOpportunitiesInterviewController::class, 'index'])->name('interview.index');
         Route::get('interview/{id}/create', [CareerOpportunitiesInterviewController::class, 'create'])->name('interview.create');
+        Route::get('interview/{id}', [CareerOpportunitiesInterviewController::class, 'show'])->name('interview.show');
         Route::post('interview/store', [CareerOpportunitiesInterviewController::class, 'store'])->name('interview.store');
         Route::get('interview/{id}/edit', [CareerOpportunitiesInterviewController::class, 'edit'])->name('interview.edit');
         Route::put('interview/{id}/update', [CareerOpportunitiesInterviewController::class, 'update'])->name('interview.update');
+
+
+       Route::POST('career-opportunities/{id}/jobApprove', [CareerOpportunitiesController::class, 'jobApprove'])->name('jobApprove');
+       Route::POST('career-opportunities/{id}/jobReject', [CareerOpportunitiesController::class, 'jobReject'])->name('jobReject');
+       Route::POST('/releaseJobVendor', [CareerOpportunitiesController::class, 'releaseJobVendor'])->name('releaseJobVendor');
+
+
         Route::POST('jobWorkFlowApprove', [CareerOpportunitiesController::class, 'jobWorkFlowApprove'])->name('jobWorkFlowApprove');
         Route::POST('jobWorkFlowReject', [CareerOpportunitiesController::class, 'jobWorkFlowReject'])->name('jobWorkFlowReject');
 
         // contract 
         Route::resource('contracts', CareerOpportunitiesContractController::class);
+
     });
 });
