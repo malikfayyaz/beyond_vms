@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Models\Admin;
+use App\Models\CareerOpportunitiesOffer;
 use App\Models\CareerOpportunity;
+use App\Models\OfferWorkFlow;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -214,9 +216,11 @@ class CareerOpportunitiesContractController extends BaseController
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show($id)
     {
-        //
+        $contract = CareerOpportunitiesContract::with('careerOpportunity')->findOrFail($id);
+        $job = CareerOpportunitiesContract::with('careerOpportunity')->findOrFail($id);
+        return view('admin.contract.view', compact('contract','job'));
     }
 
     /**
