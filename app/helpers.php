@@ -43,7 +43,26 @@ function currency(){
     return $curr;
 }
 
+if (!function_exists('getSettingTitleById')) {
+    function getSettingTitleById($id)
+    {
+        $setting = \App\Models\Setting::where('id', $id)
+            ->where('status', 'active') // Check for active status
+            ->first(); // Use first() to get a single record
 
+        return $setting ? $setting->title : 'N/A';
+    }
+}
+if (!function_exists('getGenericTitleById')) {
+    function getGenericTitleById($id)
+    {
+        $setting = \App\Models\GenericData::where('id', $id)
+            ->where('status', 'active') // Check for active status
+            ->first(); // Use first() to get a single record
+
+        return $setting ? $setting->name : 'N/A';
+    }
+}
 if (!function_exists('getActiveRoles')) {
     function getActiveRoles(User $user): array
     {

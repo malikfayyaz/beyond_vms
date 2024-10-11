@@ -25,6 +25,10 @@ class CareerOpportunitiesContract extends Model
     {
         return$this->belongsTo(CareerOpportunitiesWorkorder::class,'workorder_id','id');
     }
+    public function workorderBackground()
+    {
+        return $this->hasOne(WorkorderBackground::class, 'workorder_id', 'workorder_id');
+    }
     public function getDateRangeAttribute()
     {
         $start = $this->start_date ? Carbon::parse($this->start_date)->format('m/d/Y') : '';
@@ -39,6 +43,14 @@ class CareerOpportunitiesContract extends Model
     public function location()
     {
         return $this->belongsTo(Location::class, 'location_id', 'id');
+    }
+    public function vendor()
+    {
+        return $this->belongsTo(Vendor::class, 'vendor_id', 'id');
+    }
+    public function contractRates()
+    {
+        return $this->hasOne(ContractRate::class, 'contract_id', 'id');
     }
     public static function getContractStatus($statusId)
     {
