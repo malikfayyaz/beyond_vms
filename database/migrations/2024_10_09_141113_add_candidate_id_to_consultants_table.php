@@ -11,10 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('setting_categories', function (Blueprint $table) {
-            $table->id();
-            $table->string('name', 255)->nullable();
-            $table->timestamps();
+        Schema::table('consultants', function (Blueprint $table) {
+            $table->string('candidate_id', 10)->default('WK0000')->after('id'); // Default value WK0000
         });
     }
 
@@ -23,6 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('setting_categories');
+        Schema::table('consultants', function (Blueprint $table) {
+            $table->dropColumn('candidate_id');
+        });
     }
 };

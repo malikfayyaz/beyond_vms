@@ -261,7 +261,7 @@
                       <span class="capitalize">workorder info</span>
                     </button>
                   </li>
-
+                  @if($workorder->workorder_status==1)
                   <li>
                     <button
                       :id="$id('tab', whichChild($el.parentElement, $refs.tablist))"
@@ -279,7 +279,7 @@
                       <span class="capitalize">Onboarding Info</span>
                     </button>
                   </li>
-
+                  @endif
                   <li>
                     <button
                       :id="$id('tab', whichChild($el.parentElement, $refs.tablist))"
@@ -313,27 +313,24 @@
                     role="tabpanel"
                     class=""
                   >
-                  $php  
-            $total_cost = $workorder->job_other_amount + $workorder->single_resource_job_approved_budget;
-        
-      @endphp
+                  @php $total_cost = $workorder->job_other_amount + $workorder->single_resource_job_approved_budget; @endphp
                     <div
                       x-data="{
-                 workOrderInfo: {
-                    startDate: '{{ old('startDate', formatDate($workorder->start_date) ?? '') }}',
-                    endDate: '{{ old('endDate', formatDate($workorder->end_date) ?? '') }}',
-                    timesheetApprovingManager: '{{ old('timesheetApprovingManager', $workorder->approvalManager->full_name ?? '') }}',
-                    locationOfWork: '{{ old('locationOfWork', $workorder->location->name ?? '') }}',
-                    vendorName: '{{ old('vendorName',  $workorder->vendor->full_name  ?? '') }}',
-                    jobType: '{{ old('jobType', $workorder->jobType->title  ?? '') }}',
-                    secondaryJobTitle: '{{ old('secondaryJobTitle', $workorder->careerOpportunity->alternative_job_title ?? '') }}',
-                    hiringManager: '{{ old('hiringManager', $workorder->hiringManager->full_name ?? '') }}',
-                    GLAccount: '{{ old('GLAccount', $workorder->careerOpportunity->glCode->title ?? '') }}',
-                    locationTax: '{{ old('locationTax', $workorder->location_tax ?? '') }}',
-                    totalEstimatedCost: '{{ old('totalEstimatedCost', $total_cost ?? '') }}',
-                    regularHoursEstimatedCost: '{{ old('regularHoursEstimatedCost', $workorder->consultant->user->email ?? '') }}',
-                }
-            }"
+                            workOrderInfo: {
+                                startDate: '{{ old('startDate', formatDate($workorder->start_date) ?? '') }}',
+                                endDate: '{{ old('endDate', formatDate($workorder->end_date) ?? '') }}',
+                                timesheetApprovingManager: '{{ old('timesheetApprovingManager', $workorder->approvalManager->full_name ?? '') }}',
+                                locationOfWork: '{{ old('locationOfWork', $workorder->location->name ?? '') }}',
+                                vendorName: '{{ old('vendorName',  $workorder->vendor->full_name  ?? '') }}',
+                                jobType: '{{ old('jobType', $workorder->jobType->title  ?? '') }}',
+                                secondaryJobTitle: '{{ old('secondaryJobTitle', $workorder->careerOpportunity->alternative_job_title ?? '') }}',
+                                hiringManager: '{{ old('hiringManager', $workorder->hiringManager->full_name ?? '') }}',
+                                GLAccount: '{{ old('GLAccount', $workorder->careerOpportunity->glCode->title ?? '') }}',
+                                locationTax: '{{ old('locationTax', $workorder->location_tax ?? '') }}',
+                                totalEstimatedCost: '{{ old('totalEstimatedCost', $total_cost ?? '') }}',
+                                regularHoursEstimatedCost: '{{ old('regularHoursEstimatedCost', $workorder->single_resource_job_approved_budget ?? '') }}',
+                            }
+                        }"
                       class="bg-white shadow rounded-lg"
                     >
                       <div class="divide-y divide-gray-200">
@@ -343,7 +340,7 @@
                           >
                           <span
                             class="font-semibold"
-                            x-text="{{formatDate($workorder->start_date)}}"
+                            x-text="workOrderInfo.startDate"
                           ></span>
                         </div>
                         <div class="flex justify-between py-3 px-4">
@@ -352,7 +349,7 @@
                           >
                           <span
                             class="font-semibold"
-                            x-text="{{formatDate($workorder->end_date)}}"
+                            x-text="workOrderInfo.endDate"
                           ></span>
                         </div>
                         <div class="flex justify-between py-3 px-4">
@@ -361,7 +358,7 @@
                           >
                           <span
                             class="font-semibold"
-                            x-text="{{$workorder->approvalManager->full_name}}"
+                            x-text="workOrderInfo.timesheetApprovingManager"
                           ></span>
                         </div>
                         <div class="flex justify-between py-3 px-4">
@@ -370,7 +367,7 @@
                           >
                           <span
                             class="font-semibold"
-                            x-text="{{$workorder->location->name}}"
+                            x-text="workOrderInfo.locationOfWork"
                           ></span>
                         </div>
                         <div class="flex justify-between py-3 px-4">
@@ -379,7 +376,7 @@
                           >
                           <span
                             class="font-semibold"
-                            x-text=" {{ $workorder->vendor->full_name }} "
+                            x-text="workOrderInfo.vendorName"
                           ></span>
                         </div>
                         <div class="flex justify-between py-3 px-4">
@@ -388,7 +385,7 @@
                           >
                           <span
                             class="font-semibold"
-                            x-text="{{ $workorder->jobType->title }}"
+                            x-text="workOrderInfo.jobType"
                           ></span>
                         </div>
                         <div class="flex justify-between py-3 px-4">
@@ -449,6 +446,13 @@
                     </div>
                   </section>
                   <!-- Second Tab-->
+                  @php
+                        $disabled = true;
+                         if($workorder->on_board_status == 0){
+                          $disabled = false;
+                        }
+                        @endphp
+                  @if($workorder->workorder_status==1)
                   <section
                     x-show="isSelected($id('tab', whichChild($el, $el.parentElement)))"
                     :aria-labelledby="$id('tab', whichChild($el, $el.parentElement))"
@@ -502,14 +506,21 @@
                               >
                               <select
                                 class="w-full select2-single custom-style"
-                                data-field="accountManager"
-                                id="accountManager"
+                                data-field="accountManagerValue"
+                                id="accountManagerValue" disabled
                               >
-                                <option value="">Select location</option>
-                                <option value="python">Python</option>
-                                <option value="java">Java</option>
-                                <option value="csharp">C#</option>
-                                <option value="ruby">Ruby</option>
+                              @isset($workorder->vendor)
+                                            <option value="{{ $workorder->vendor->id }}" 
+                                               >
+                                                {{ $workorder->vendor->full_name }} 
+                                            </option>
+                                            {{-- Team Members --}}
+                                                @foreach($workorder->vendor->teamMembers as $team)
+                                                <option value="{{$team->teammember_id}}" 
+                                               
+                                                >{{$team->teammember->full_name}}</option>
+                                                @endforeach
+                                            @endisset
                               </select>
                             </div>
                             <div class="flex-1">
@@ -612,6 +623,7 @@
                             </div>
                           </div>
                         </div>
+                        
                         <div class="px-6 py-3">
                           <div class="flex space-x-4">
                             <div class="flex-1">
@@ -624,12 +636,12 @@
                               <select
                                 class="w-full select2-single custom-style"
                                 id="candidateSourcing"
+                                x-model="candidateSourcing" :disabled="isDisabled"
                               >
-                                <option value="">Select location</option>
-                                <option value="python">Python</option>
-                                <option value="java">Java</option>
-                                <option value="csharp">C#</option>
-                                <option value="ruby">Ruby</option>
+                              <option value="" disabled>Select</option>
+                              @foreach (checksetting(18) as $key => $value)
+                            <option value="{{ $key }}">{{ $value }}</option>
+                            @endforeach
                               </select>
                               <p
                                 class="text-red-500 text-sm mt-1"
@@ -647,7 +659,7 @@
                                 class="w-full h-12 px-4 text-gray-500 border rounded-md shadow-sm focus:outline-none pl-7"
                                 type="text"
                                 required
-                                placeholder="Select start date"
+                                placeholder="Select start date" :disabled="isDisabled"
                               />
                               <p
                                 class="text-red-500 text-sm mt-1"
@@ -708,13 +720,12 @@
                               <select
                                 class="w-full select2-single custom-style"
                                 x-model="timesheetType"
-                                id="timesheetType"
+                                id="timesheetType" :disabled="isDisabled"
                               >
-                                <option value="">Select location</option>
-                                <option value="python">Python</option>
-                                <option value="java">Java</option>
-                                <option value="csharp">C#</option>
-                                <option value="ruby">Ruby</option>
+                                <option value="" disabled>Select Timesheet Type</option>
+                                @foreach (checksetting(19) as $key => $value)
+                            <option value="{{ $key }}">{{ $value }}</option>
+                            @endforeach
                               </select>
                               <p
                                 class="text-red-500 text-sm mt-1"
@@ -724,6 +735,7 @@
                             <div class="flex-1"></div>
                           </div>
                         </div>
+                        @if(!$disabled)
                         <div class="px-6 py-3">
                           <button
                             type="submit"
@@ -733,16 +745,19 @@
                             Onboard
                           </button>
                         </div>
+                        @endif
                       </form>
                     </div>
                   </section>
+                  @endif
                   <!-- Third Tab-->
                   <section
                     x-show="isSelected($id('tab', whichChild($el, $el.parentElement)))"
                     :aria-labelledby="$id('tab', whichChild($el, $el.parentElement))"
                     role="tabpanel"
                     class=""
-                  >
+                    >
+                    @if($workorder->verification_status==1) 
                     <div
                       class="overflow-x-auto"
                       x-data="{ 
@@ -791,6 +806,9 @@
                       <p><b>Reviewed By:</b> System Admin</p>
                       <p><b>Reviewed Date:</b> 10/03/2024</p>
                     </div>
+                    @else 
+                    <p>Background verification still not submitted for review.</p>
+                    @endif
                   </section>
                 </div>
               </div>
@@ -809,6 +827,7 @@
                 <span class="text-white">Budget Percentage</span>
               </div>
             </div>
+            @foreach($workorder->careerOpportunity->careerOpportunitiesBu as $bu)
             <div class="flex justify-between gap-2 py-4 px-2 border-x border-b">
               <div class="w-3/5 flex-wrap">
                 <span>708212 - 166 - St. Peters, MO - LPG</span>
@@ -817,6 +836,7 @@
                 <span>100%</span>
               </div>
             </div>
+            @endforeach
           </div>
           <!-- Workorder History -->
           <div
@@ -1033,26 +1053,35 @@
         </div>
 
 @endsection
+@php  
+  if($workorder->original_start_date=='0000-00-00' || $workorder->original_start_date == '' || strtotime($workorder->original_start_date) < 0){
+                $onboardOriginalStartDate = $workorder->start_date;
+            }else{
+                $onboardOriginalStartDate = $workorder->original_start_date;
+            } 
+@endphp
 <script>
       document.addEventListener("alpine:init", () => {
         Alpine.data("onBoardingData", () => ({
-          contractorName: "Aisya Carroll",
-          contractorEmail: "aisyacarroll@yahoo.com",
-          accountManagerValue: "java",
-          workLocation: "US Saint Peters 300 St. Peters Centre Blvd.",
-          jobProfile: "Senior Resolution Manager",
-          officialEmail: "simplifyalert+261459@gmail.com",
-          division: "Gallagher Bassett Services",
-          region: "North America Operations",
-          startDate: "09/24/2024",
-          endDate: "01/31/2025",
-          contractorPortal: "WK00002468",
-          contractorPassword: "**********",
-
+          isDisabled: @json($disabled),
+          contractorName: '{{ old('contractorName',$workorder->consultant->full_name ?? '') }}',
+          contractorEmail: '{{ old('contractorEmail',$workorder->consultant->user->email ?? '') }}',
+          accountManagerValue: '{{ old('accountManagerValue', $workorder->submission->emp_msp_account_mngr ?? '') }}',
+          workLocation: '{{ old('workLocation',$workorder->location->name ?? '') }}',
+          workLocationid: '{{ old('workLocationid',$workorder->location_id ?? '') }}',
+          jobProfile: '{{ old('jobProfile',$workorder->careerOpportunity->title ?? '') }}',
+          officialEmail: '{{ old('officialEmail',$workorder->consultant->user->email ?? '') }}',
+          division: '{{ old('division',$workorder->careerOpportunity->division->name ?? '') }}',
+          region: '{{ old('region',$workorder->careerOpportunity->regionZone->name ?? '') }}',
+          startDate: '{{ old('startDate',formatDate($workorder->start_date) ?? '') }}',
+          endDate: '{{ old('endDate',formatDate($workorder->end_date) ?? '') }}',
+          contractorPortal: '{{ old('contractorPortal',$workorder->consultant->candidate_id ?? '') }}',
+          contractorPassword: '{{ old('contractorPassword',$workorder->consultant->user->password ?? '') }}',
+          workorder_id: '{{ old('workorder_id',$workorder->id ?? '') }}',
           // New fields for user input
-          candidateSourcing: "",
-          originalStartDate: "",
-          timesheetType: "",
+          candidateSourcing:'{{ old('candidateSourcing',$workorder->sourcing_type ?? '') }}',
+          originalStartDate: '{{ old('originalStartDate',formatDate($onboardOriginalStartDate) ?? '') }}',
+          timesheetType: '{{ old('timesheetType',$workorder->contract->type_of_timesheet ?? '') }}',
 
           // Error messages
           errors: {
@@ -1104,7 +1133,7 @@
           initDatePickers() {
             this.$nextTick(() => {
               flatpickr("#startDate", {
-                dateFormat: "Y/m/d",
+                dateFormat: "m/d/Y",
                 onChange: (selectedDates, dateStr) => {
                   this.originalStartDate = dateStr;
                   this.errors.originalStartDate = "";
@@ -1144,7 +1173,7 @@
           submitForm() {
             if (this.validateForm()) {
               // Collect all form data, including disabled fields
-              const formData = {
+              const formRecord = {
                 contractorName: this.contractorName,
                 contractorEmail: this.contractorEmail,
                 accountManagerValue: this.accountManagerValue,
@@ -1160,9 +1189,24 @@
                 candidateSourcing: this.candidateSourcing,
                 originalStartDate: this.originalStartDate,
                 timesheetType: this.timesheetType,
+                workorder_id:this.workorder_id,
+                workLocationid:this.workLocationid,
               };
 
-              console.log("Form submitted with data:", formData);
+              console.log("Form submitted with data:", formRecord);
+              let formData = new FormData();
+              Object.keys(formRecord).forEach((key) => {
+                  if (Array.isArray(formRecord[key])) {
+                      // If the key is an array (like businessUnits), handle each item
+                      formRecord[key].forEach((item, index) => {
+                          formData.append(`${key}[${index}]`, JSON.stringify(item));
+                      });
+                  } else {
+                      formData.append(key, formRecord[key]);
+                  }
+              });
+                const url = "/admin/contracts";
+              ajaxCall(url,'POST', [[onSuccess, ['response']]], formData);
 
               // Add your API call here to submit the data
               // For example:

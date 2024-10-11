@@ -1,9 +1,11 @@
 <?php
 namespace App\Http\Controllers\Admin;
 
+use App\Models\Admin;
 use App\Models\CareerOpportunitiesWorkflow;
 use App\Models\OfferWorkFlow;
 use Illuminate\Routing\Controller as BaseController;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use App\Models\CareerOpportunitiesOffer;
 use App\Models\CareerOpportunitySubmission;
@@ -122,7 +124,7 @@ class CareerOpportunitiesOfferController extends BaseController
             "career_opportunity_id" =>$submission->career_opportunity_id,
             "location_id" =>$validatedData['location'],
             "markup" =>$validatedData['markup'],
-            "created_by_id" =>\Auth::id(),
+            "created_by_id" =>Admin::getAdminIdByUserId(Auth::id()),
             "created_by_type" =>1,
             "status" =>1,
             "offer_pay_rate" =>removeComma($validatedData['payRate']),

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Vendor;
 
 use App\Http\Controllers\Controller as BaseController;
+use App\Models\Vendor;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Consultant;
@@ -25,7 +26,7 @@ class VendorController extends BaseController
 
         // Fetch the consultant's details using the candidate ID
         $user = User::findOrFail($request->input('candidate_id'));
-      
+
         if (!$user) {
             return response()->json(['message' => 'Consultant not found'], 404);
         }
@@ -41,12 +42,12 @@ class VendorController extends BaseController
             // Add more fields as needed
         ]);
     }
-    // 
-    // vendor markup 
+    //
+    // vendor markup
     public function showVendorMarkup(Request $request)
     {
         // dd("sfdsf");
-        $vendorID = \Auth::id();
+        $vendorID = Vendor::getVendorIdByUserId(\Auth::id());
         $jobID = $request->input('jobid');
         $adjustedMarkup = $request->input('adjustedMarkup', 0);
         $markup = $request->input('markup', 0);
@@ -60,14 +61,14 @@ class VendorController extends BaseController
         // dd($jobModel);
         // Recommended pay rate calculation
         $recommendedPayRate = vendorPayrate($jobModel->min_bill_rate, $adjustedMarkup);
-       
+
         // Initialize data array
         $data = [
             'recommended_pay_rate' => $recommendedPayRate,
             'candidate_pay_rate' => $candidatePayRate,
             'candidate_bill_rate' => number_format($vendorBillRate, 2, '.', '')
         ];
-        
+
         // Main calculation based on rate field change
         switch ($rateField) {
             case 'bill_rate_changed':
@@ -80,7 +81,7 @@ class VendorController extends BaseController
                 $data['candidate_pay_rate'] = vendorPayrate($data['candidate_bill_rate'], $adjustedMarkup);
                 break;
         }
-        
+
 
         // Adjusted markup calculation if candidate pay rate exists
         if (!empty($data['candidate_pay_rate'])) {
@@ -89,7 +90,7 @@ class VendorController extends BaseController
 
         $payrate = getActiveRecordsByType('pay-rate')->first();
         $billrate = getActiveRecordsByType('bill-rate')->first();
-      
+
 
         $data['over_time']  = number_format($data['candidate_pay_rate']+($payrate->name*$data['candidate_pay_rate']),2,'.', '');
 
@@ -99,11 +100,11 @@ class VendorController extends BaseController
 
         $data['client_double_over_time']  =  number_format($data['candidate_bill_rate']+($data['candidate_bill_rate']*$billrate->value),2,'.', '');
         $clientBillRate   = $data['candidate_bill_rate'];
-      
+
         $vendorBillRateNew = $clientBillRate- ($clientBillRate*(0/100));
-       
+
         $data['vendor_bill_rate']  = number_format($vendorBillRateNew,2,'.', '');
-      
+
         // Return JSON response
         return response()->json([
             'over_time' => $data['over_time'],

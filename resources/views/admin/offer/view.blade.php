@@ -290,8 +290,8 @@
                       <div class="w-2/4">
                         <p class="font-light">
                           <span
-                            class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full text-white bg-purple-400"
-                            >{{$offer->status}}</span
+                            class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full text-white bg-purple-400">
+                              {{$offer->getOfferStatus($offer->status)}}</span
                           >
                         </p>
                       </div>

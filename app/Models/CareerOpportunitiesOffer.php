@@ -48,4 +48,21 @@ class CareerOpportunitiesOffer extends Model
     {
         return $this->attributes['end_date'] ? Carbon::parse($this->attributes['end_date'])->format('m/d/Y') : '';
     }
+    public static function getOfferStatus($statusId)
+    {
+        switch ($statusId) {
+            case 0:
+                return 'Draft';
+            case 1:
+                return 'Pending';
+            case 2:
+                return 'Rejected';
+            case 3:
+                return 'Approved';
+            case 4:
+                return 'Waiting For Supplier Approval';
+            default:
+                return 'danger';
+        }
+    }
 }

@@ -30,7 +30,9 @@ class CareerOpportunitiesWorkOrderController extends Controller
                     return $row->vendor ? $row->vendor->full_name : 'N/A';
                 })
                 ->addColumn('duration', function ($row) {
-                    return $row->date_range ? $row->date_range : 'N/A';
+                    return $row->workOrder && $row->workOrder->date_range
+                        ? $row->workOrder->date_range
+                        : 'N/A';
                 })
                 ->addColumn('submissions', function ($row) {
                     return $row->submissions_count;

@@ -37,7 +37,17 @@ class AuthController extends Controller
             'email' => 'required',
             'password' => 'required',
         ]);
-
+        $user = User::where('email', $request->email)->first();
+        if (!$user) {
+            return back()->withErrors([
+                'email' => 'Email does not exist.',
+            ])->onlyInput('email');
+        }
+        if (!Hash::check($request->password, $user->password)) {
+            return back()->withErrors([
+                'password' => 'The password you entered is incorrect.',
+            ])->onlyInput('email');  // Retain the email in the input field
+        }
         $credentials = $request->only('email', 'password');
         if (Auth::attempt($credentials)) {
             $user = Auth::user();

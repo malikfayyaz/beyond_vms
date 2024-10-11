@@ -44,4 +44,14 @@ class CareerOpportunitiesInterview extends Model
     public function location() {
         return $this->belongsTo(Location::class, 'location_id', 'id');
     }
+
+    public function interviewDates()
+    {
+        return $this->hasMany(CareerOpportunitiesInterviewDate::class, 'interview_id');
+    }
+
+    public function interviewMembers()
+    {
+        return $this->hasMany(CareerOpportunitiesInterviewMember::class, 'interview_id');
+    }
 }

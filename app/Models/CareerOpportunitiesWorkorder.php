@@ -17,6 +17,10 @@ class CareerOpportunitiesWorkorder extends Model
     {
         return $this->belongsTo(Client::class, 'hiring_manager_id', 'id');
     }
+    public function contract()
+    {
+        return $this->hasOne(CareerOpportunitiesContract::class, 'workorder_id', 'id');
+    }
     public function approvalManager()
     {
         return $this->belongsTo(Client::class, 'approval_manager', 'id');

@@ -28,4 +28,19 @@ class Consultant extends Model
         return $this->belongsTo(Setting::class, 'gender', 'id');
     }
 
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($consultant) {
+            // Generate the candidate_id using the 'WK' prefix and pad the id with leading zeros
+            // The id is not available until after saving, so we simulate the next id
+            $lastConsultant = Consultant::orderBy('id', 'desc')->first();
+            $nextId = $lastConsultant ? $lastConsultant->id + 1 : 1;
+
+            $consultant->candidate_id = 'WK' . str_pad($nextId, 5, '0', STR_PAD_LEFT);
+        });
+    }
+
+
 }

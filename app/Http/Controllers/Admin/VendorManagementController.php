@@ -105,7 +105,7 @@ class VendorManagementController extends Controller
                 $getParentvendor = Vendor::where('member_type', 0)
                 ->where('organization', $request->organization)
                 ->first();
-            
+
             if (!empty($getParentvendor)) {
                 $organization = '';
                 $memberType = 3;
@@ -118,7 +118,7 @@ class VendorManagementController extends Controller
             $validatedData['member_type'] = $memberType;
             $validatedData['parent_id'] =  $parentVendorID;
             $validatedData['organization'] = $organization;
-            
+
         if ($user) {
             // Check if a vendor record already exists for this user
             $vendorRecord = Vendor::where('user_id', $user->id)->first();
@@ -131,7 +131,7 @@ class VendorManagementController extends Controller
                     'redirect_url' => route('admin.vendor-users.create') // Update redirect URL for vendors
                 ]);
             } else {
-                
+
                 $validatedData['user_id'] = $user->id;
                 $vendor = Vendor::create($validatedData);
 
@@ -140,7 +140,7 @@ class VendorManagementController extends Controller
                     $vendor->profile_image = $imagePath;
                     $vendor->save(); // Save after updating the profile image
                 }
-               
+
 
 
             }
@@ -173,7 +173,7 @@ class VendorManagementController extends Controller
             VendorTeammember::create($vendorteamMember);
         }
 
-        
+
 
 
         $role = $validatedData['role'];

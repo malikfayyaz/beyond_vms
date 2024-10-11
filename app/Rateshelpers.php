@@ -132,5 +132,19 @@ if (!function_exists('calculateJobEstimates')) {
             $model->save();
         }
     }
+
+     //Assignment Rates
+     if (!function_exists('calculateContractEstimates')) {
+        function calculateContractEstimates($contract,$workorder,$jobData){
+            $startDate = date('Y-m-d',strtotime($contract->start_date));
+            $endDate = date('Y-m-d',strtotime($contract->end_date));
+            $noOfDays = numberOfWorkingDays($startDate,$endDate);
+
+            $estimatedBudget = estimateWithPaymentType($noOfDays,$workorder->wo_bill_rate,$jobData);
+            $contract->total_estimated_cost = $estimatedBudget;
+            $contract->job_other_amount = $workorder->job_other_amount;
+            $contract->save();
+        }
+    }
     
 }
