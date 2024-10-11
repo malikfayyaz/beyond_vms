@@ -115,4 +115,9 @@ class CareerOpportunity extends Model
         return $this->belongsTo(User::class, 'rejected_by', 'id');
     }
 
+    public function vendorJobRelease()
+    {
+        return $this->hasMany(VendorJobRelease::class, 'job_id', 'id');
+    }
+
 }
