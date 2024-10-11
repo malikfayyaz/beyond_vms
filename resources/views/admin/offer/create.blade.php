@@ -4,8 +4,9 @@
 @include('admin.layouts.partials.dashboard_side_bar')
 <div class="ml-16">
     @include('admin.layouts.partials.header')
-    
+
     <div class="bg-white mx-4 my-8 rounded p-8">
+        <div id="success-message" style="display: none;" class="alert alert-success"></div>
     @include('admin.layouts.partials.alerts')
           <!-- Cards -->
           <div class="mb-8">
@@ -13,7 +14,7 @@
               <div class="w-full space-y-4">
                 <!-- First Tab-->
                 <div
-                
+
                   x-data="{
                           id: 1,
                           get expanded() {
@@ -23,7 +24,7 @@
                               this.active = value ? this.id : null
                           },
                       }"
-                    
+
                   role="region"
                   class="bg-white"
                 >
@@ -501,7 +502,7 @@
                                 Select timesheet approving manager
                               </option>
                               @foreach ($clients_hiring as $key => $value)
-                            <option value="{{ $value->id }}" 
+                            <option value="{{ $value->id }}"
                             {{ $value->id == $submission->careerOpportunity->hiring_manager ? 'selected' : '' }}>{{  $value->first_name.' '.$value->last_name; }}</option>
                             @endforeach
                             </select>
@@ -545,7 +546,7 @@
                               <option value="">Select work type remote?</option>
                               <option value="Yes">Yes</option>
                               <option value="No">No</option>
-                             
+
                             </select>
                             <p
                               class="text-red-500 text-sm mt-1"
@@ -654,7 +655,7 @@
                                 type="text"
                                 class="w-full h-12 px-4 text-gray-500 border rounded-md shadow-sm focus:outline-none pl-7"
                                 placeholder="00.00"
-                             
+
                                 x-model="formData.overTime"
                                 disabled
                                 id="overTime"
@@ -769,7 +770,7 @@
                       billRateError: "",
                       payRateError: "",
           },
-             
+
               calculateRates(event){
                       var bill_rate = document.getElementById("billRate").value;
                       var payRateElement = document.getElementById("payRate");
@@ -782,10 +783,10 @@
                       }
 
                       pay_rate = parseFloat(pay_rate); // Ensure it's a number
-                    
+
 
                       // console.log(markup);
-                      
+
                       // $('#pay_rate_error_message').html('');
 
                       if (pay_rate == '') {
@@ -797,16 +798,16 @@
                       // Append form data
                       data.append('pay_rate', pay_rate);
                       data.append('bill_rate', bill_rate);
-                    
+
                       data.append('markup', this.formData.markup);
                       data.append('submission_id', this.formData.submissionid);
 
                       // Determine which field was changed
-                    
+
                       data.append('type', event);
-                  
+
                         // console.log(this.formData); return false;
-                        
+
                       // AJAX call to update fields based on pay rate or bill rate change
                       const updates = {
                           '#billRate': { type: 'value', field: 'billRate' },
@@ -835,11 +836,11 @@
                               // Clear the interval
                               clearInterval(intervalId);
                       }, 100);
-                     
-                   
+
+
               },
 
-           
+
 
           init() {
             this.initDatePickers();
@@ -873,7 +874,7 @@
             });
           },
 
-         
+
 
           initSelect2() {
             this.$nextTick(() => {
@@ -917,8 +918,8 @@
 
           formatRate(field, event) {
             const input = event.target;
-            
-            
+
+
             const cursorPosition = input.selectionStart;
             console.log(cursorPosition);
             const lengthBefore = this.formData[field].length;
@@ -977,10 +978,10 @@
               ] = `Please enter a valid rate in the format 00.00`;
             } else {
               this.formData[`${field}Error`] = "";
-              
+
             }
           },
-          
+
 
           validateForm(e) {
             let isValid = true;
@@ -1044,5 +1045,5 @@
         }));
       });
     </script>
-    
+
 @endsection
