@@ -18,7 +18,7 @@ class CareerOpportunitiesInterviewController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $interview = CareerOpportunitiesInterview::with(['consultant', 'careerOpportunity', 'duration', 'timezone', 'interviewtype', 'submission'])
+            $interview = CareerOpportunitiesInterview::with(['consultant', 'careerOpportunity', 'duration', 'timezone', 'interviewtype', 'submission','interviewDates'])
             ->orderBy('id', 'desc')
             ->get();
             return DataTables::of($interview)
@@ -36,6 +36,21 @@ class CareerOpportunitiesInterviewController extends Controller
             })
             ->addColumn('vendor_name', function($row) {
                 return $row->submission ? $row->submission->vendor->full_name : 'N/A';
+            })
+            ->addColumn('primary_date', function($row) {
+                $primaryDate = $row->interviewDates->where('schedule_date_order', 1)->first();
+                
+                return $primaryDate ? $primaryDate->formatted_schedule_date : 'N/A'; 
+            })
+            ->addColumn('primary_start_time', function($row) {
+                $primaryDate = $row->interviewDates->where('schedule_date_order', 1)->first();
+                
+                return $primaryDate ? $primaryDate->formatted_start_time : 'N/A'; 
+            })
+            ->addColumn('primary_end_time', function($row) {
+                $primaryDate = $row->interviewDates->where('schedule_date_order', 1)->first();
+                
+                return $primaryDate ? $primaryDate->formatted_end_time : 'N/A'; 
             })
             ->addColumn('worker_type', function($row) {
                 return $row->careerOpportunity && $row->careerOpportunity->workerType

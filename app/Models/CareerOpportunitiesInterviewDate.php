@@ -23,15 +23,15 @@ class CareerOpportunitiesInterviewDate extends Model
         return $this->belongsTo(CareerOpportunitiesInterview::class, 'interview_id', 'id');
     }
 
-    public function scopePrimaryDate($query)
+    public function scopePrimaryData($query)
     {
-        $primaryDate = $query->where('schedule_date_order', 1)->first();
+        $primaryData = $query->where('schedule_date_order', 1)->first();
         
-        if ($primaryDate) {
-            $primaryDate->schedule_date = Carbon::parse($primaryDate->schedule_date)->format('m/d/Y');
+        if ($primaryData) {
+            $primaryData->schedule_date = Carbon::parse($primaryData->schedule_date)->format('m/d/Y');
         }
 
-        return $primaryDate;
+        return $primaryData;
     }
 
     public function getFormattedStartTimeAttribute()
@@ -42,5 +42,10 @@ class CareerOpportunitiesInterviewDate extends Model
     public function getFormattedEndTimeAttribute()
     {
         return \Carbon\Carbon::createFromFormat('H:i:s', $this->end_time)->format('h:i A');
+    }
+
+    public function getFormattedScheduleDateAttribute()
+    {
+        return Carbon::parse($this->schedule_date)->format('m/d/Y');
     }
 }
