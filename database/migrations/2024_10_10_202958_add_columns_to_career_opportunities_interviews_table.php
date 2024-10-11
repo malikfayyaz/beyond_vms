@@ -12,8 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('career_opportunities_interviews', function (Blueprint $table) {
-            $table->text('reason_rejection')->nullable()->default(''); // $reason_for_rejection
-            $table->text('notes')->nullable()->default(''); // Notes
+            $table->text('reason_rejection')->nullable(); 
+            $table->text('notes')->nullable(); // Notes
             $table->unsignedBigInteger('rejected_by')->nullable(); // $userid
             $table->tinyInteger('rejected_type')->default(1); // Default to 1
             $table->timestamp('interview_cancellation_date')->nullable();
