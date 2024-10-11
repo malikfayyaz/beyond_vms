@@ -13,10 +13,8 @@ return new class extends Migration
     {
         Schema::table('career_opportunities_offer', function (Blueprint $table) {
             $table->text('reason_rejection')->nullable()->default(''); // $reason_for_rejection
-            $table->text('notes')->nullable()->default(''); // Notes
             $table->unsignedBigInteger('rejected_by')->nullable(); // $userid
             $table->tinyInteger('rejected_type')->default(1); // Default to 1
-            $table->timestamp('interview_cancellation_date')->nullable();
         });
     }
 
