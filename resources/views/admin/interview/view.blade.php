@@ -251,51 +251,17 @@
                     >
                       <div class="p-6 space-y-4">
                         <div class="flex justify-between items-center">
-                          <span class="text-gray-600">Rate Type:</span>
-                          <span class="font-semibold"></span>
+                          <span class="text-gray-600">Date & Time:</span>
                         </div>
 
                         <div class="bg-blue-50 p-3 rounded-md">
-                          <div
-                            class="flex items-center text-blue-600 font-semibold mb-2"
-                          >
-                            <i class="fas fa-file-invoice-dollar mr-2"></i>
-                            <span>Bill Rate (For Vendor)</span>
-                          </div>
+                          
                           <div class="flex justify-between items-center">
-                            <span class="text-gray-600">Bill Rate:</span>
-                            <span
-                              class="font-semibold"
-
-                            >$10..</span>
+                            <span class="text-gray-600">  {{$interview->interviewDates()->primaryDate()->schedule_date}} <br> <small>{{$interview->interviewDates()->primaryDate()->formatted_start_time}} - {{$interview->interviewDates()->primaryDate()->formatted_end_time}}</small></span>
+                            <span class="bg-green-500 text-white px-2 py-1 rounded-full text-sm">{{$interview->status}}</span>
+                            <span class="text-gray-600">{{ $interview->timezone->title }}</span>
                           </div>
-                          <div class="flex justify-between items-center mt-1">
-                            <span class="text-gray-600">Over Time Rate:</span>
-                            <span
-                              class="font-semibold"
-                            >$10..</span>
-                          </div>
-                        </div>
-
-                        <div class="bg-blue-50 p-3 rounded-md">
-                          <div
-                            class="flex items-center text-blue-600 font-semibold mb-2"
-                          >
-                            <i class="fas fa-file-invoice-dollar mr-2"></i>
-                            <span>Bill Rate (For Client)</span>
-                          </div>
-                          <div class="flex justify-between items-center">
-                            <span class="text-gray-600">Bill Rate:</span>
-                            <span
-                              class="font-semibold"
-                            >$10..</span>
-                          </div>
-                          <div class="flex justify-between items-center mt-1">
-                            <span class="text-gray-600">Over Time Rate:</span>
-                            <span
-                              class="font-semibold"
-                            >$10..</span>
-                          </div>
+                          
                         </div>
                       </div>
                     </div>

@@ -33,4 +33,14 @@ class CareerOpportunitiesInterviewDate extends Model
 
         return $primaryDate;
     }
+
+    public function getFormattedStartTimeAttribute()
+    {
+        return \Carbon\Carbon::createFromFormat('H:i:s', $this->start_time)->format('h:i A');
+    }
+
+    public function getFormattedEndTimeAttribute()
+    {
+        return \Carbon\Carbon::createFromFormat('H:i:s', $this->end_time)->format('h:i A');
+    }
 }
