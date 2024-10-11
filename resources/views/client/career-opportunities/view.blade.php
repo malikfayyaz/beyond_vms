@@ -6,6 +6,21 @@
     <div class="ml-16">
         @include('client.layouts.partials.header')
         <div  x-data="{ tab: 'activejobs' }"  class="bg-white mx-4 my-8 rounded p-8">
+            @if($job->jobStatus == 2)
+              <div x-data="{
+                    rejectionReason: '{{ $job->rejectionReason->title }}',
+                    notes: '{{ $job->note_for_rejection }}',
+                    rejectedBy: '{{ $job->rejectionUser->name }}',
+                    rejectionDate: '{{ $job->date_rejected }}'
+                }">
+                    <div class="alert alert-danger">
+                        <span class="bold">Rejection Reason:</span> <span x-text="rejectionReason"></span><br>
+                        <span class="bold">Notes:</span> <span x-text="notes"></span><br>
+                        <span class="bold">Rejected By:</span> <span x-text="rejectedBy"></span><br>
+                        <span class="bold">Rejection Date:</span> <span x-text="rejectionDate"></span>
+                    </div>
+                </div>
+              @endif
             <div class="flex justify-between items-center mb-6">
                 <h2 class="text-2xl font-bold"></h2>
                 <div class="flex space-x-2">

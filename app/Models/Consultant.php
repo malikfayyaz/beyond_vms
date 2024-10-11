@@ -42,5 +42,10 @@ class Consultant extends Model
         });
     }
 
+    public function vendor()
+    {
+        return $this->belongsTo(Vendor::class, 'vendor_id', 'id');
+    }
+
 
 }

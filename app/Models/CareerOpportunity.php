@@ -107,4 +107,12 @@ class CareerOpportunity extends Model
         return $this->belongsTo(Location::class, 'location_id', 'id');
     }
 
+    public function rejectionReason(){
+        return $this->belongsTo(Setting::class, 'reason_for_rejection', 'id');
+    }
+
+    public function rejectionUser(){
+        return $this->belongsTo(User::class, 'rejected_by', 'id');
+    }
+
 }
