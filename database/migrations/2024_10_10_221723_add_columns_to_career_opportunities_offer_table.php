@@ -25,10 +25,8 @@ return new class extends Migration
     {
         Schema::table('career_opportunities_offer', function (Blueprint $table) {
             $table->dropColumn('reason_rejection');
-            $table->dropColumn('notes');
             $table->dropColumn('rejected_by');
             $table->dropColumn('rejected_type');
-            $table->dropColumn('interview_cancellation_date');
         });
     }
 };
