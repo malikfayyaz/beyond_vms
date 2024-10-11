@@ -153,6 +153,8 @@ Route::middleware(['user_role:admin'])->group(function () {
         Route::POST('jobWorkFlowApprove', [CareerOpportunitiesController::class, 'jobWorkFlowApprove'])->name('jobWorkFlowApprove');
         Route::POST('jobWorkFlowReject', [CareerOpportunitiesController::class, 'jobWorkFlowReject'])->name('jobWorkFlowReject');
 
+        Route::POST('rejectAdminJob', [CareerOpportunitiesController::class, 'rejectAdminJob'])->name('rejectAdminJob');
+
         // contract 
         Route::resource('contracts', CareerOpportunitiesContractController::class);
 
