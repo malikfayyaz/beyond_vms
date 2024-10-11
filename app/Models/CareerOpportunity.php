@@ -21,13 +21,15 @@ class CareerOpportunity extends Model
             case 0:
                 return 'Draft';
             case 1:
-                return 'Pending';
+                return 'Pending Approval';
             case 2:
                 return 'Rejected';
             case 3:
-                return 'Approve';
+                return 'Open - Pending Release';
             case 4:
-                return 'Supplier Pending';
+                return 'Pending - PMO';
+            case 5:
+                return 'Sourcing';
             default:
                 return 'danger'; 
         }

@@ -144,5 +144,9 @@ Route::middleware(['user_role:admin'])->group(function () {
        Route::POST('jobWorkFlowApprove', [CareerOpportunitiesController::class, 'jobWorkFlowApprove'])->name('jobWorkFlowApprove');
        Route::POST('jobWorkFlowReject', [CareerOpportunitiesController::class, 'jobWorkFlowReject'])->name('jobWorkFlowReject');
 
+       Route::POST('career-opportunities/{id}/jobApprove', [CareerOpportunitiesController::class, 'jobApprove'])->name('jobApprove');
+       Route::POST('career-opportunities/{id}/jobReject', [CareerOpportunitiesController::class, 'jobReject'])->name('jobReject');
+       Route::POST('/releaseJobVendor', [CareerOpportunitiesController::class, 'releaseJobVendor'])->name('releaseJobVendor');
+
     });
 });

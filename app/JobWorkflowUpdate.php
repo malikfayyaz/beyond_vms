@@ -5,6 +5,10 @@ use App\Models\JobWorkFlow;
 use App\Models\Setting;
 use App\Models\CareerOpportunity;
 use Illuminate\Http\Request;
+use App\Models\Admin;
+use App\Models\Vendor;
+use App\Models\Client;
+use App\Models\Consultant;
 
 
 class JobWorkflowUpdate
@@ -39,6 +43,17 @@ class JobWorkflowUpdate
         $user = \Auth::user();
         $userid = \Auth::id();
         $sessionrole = session('selected_role');
+        if ($sessionrole == "Admin") {
+            $userid = Admin::getAdminIdByUserId($userid);
+        } elseif ($sessionrole == "Client") {
+            $userid = Client::getClientIdByUserId($userid);
+        } elseif ($sessionrole == "Vendor") {
+            $userid = Vendor::getVendorIdByUserId($userid);
+        } elseif ($sessionrole == "Consultant") {
+            $userid = Consultant::getConsultantIdByUserId($userid);
+        }
+
+        
         $portal = 'Portal';
 
         $jobWorkFlow = JobWorkFlow::find($request->workflow_id);
@@ -94,6 +109,16 @@ class JobWorkflowUpdate
         $user = \Auth::user();
         $userid = \Auth::id();
         $sessionrole = session('selected_role');
+
+        if ($sessionrole == "Admin") {
+            $userid = Admin::getAdminIdByUserId($userid);
+        } elseif ($sessionrole == "Client") {
+            $userid = Client::getClientIdByUserId($userid);
+        } elseif ($sessionrole == "Vendor") {
+            $userid = Vendor::getVendorIdByUserId($userid);
+        } elseif ($sessionrole == "Consultant") {
+            $userid = Consultant::getConsultantIdByUserId($userid);
+        }
         $portal = 'Portal';
 
         $jobWorkFlow = JobWorkFlow::find($request->workflow_id);
