@@ -243,7 +243,7 @@
                      >
                        <option value="">Select</option>
                        @foreach($allcandidates as $candidate)
-                       <option value="{{$candidate->user_id}}">{{ $candidate->full_name }}</option>
+                       <option value="{{$candidate->id}}">{{ $candidate->full_name }}</option>
                         @endforeach
 
                      </select>
@@ -252,6 +252,7 @@
                        class="text-red-500 text-sm mt-1"
                        x-text="getErrorMessageById('candidateSelection')"
                      ></p>
+                     <p id="globalError" class="text-red-500" style="display:none;"></p>
                    </div>
                  </div>
                  <div class="flex-1"></div>
@@ -349,7 +350,7 @@
                      type="text"
                      x-model="formData.dobDate"
                      placeholder="Select DOB date"
-                     readonly
+                     readonly 
                    />
                    <p
                      x-show="showErrors && !isFieldValid('dobDate')"
@@ -385,7 +386,6 @@
                        <input
                            type="email"
                            x-model="formData.candidateEmail"
-                           {{--                           :readonly="formData.candidateType === '2'"--}}
                            class="w-full h-12 px-4 text-gray-500 border border-gray-300 rounded-md shadow-sm focus:outline-none"
                            placeholder="Enter email address"
                            id="candidateEmail"
@@ -715,7 +715,7 @@
                    >
                      <option value="">Select Supplier Account Manager</option>
 
-                            <option value="{{ $vendor->user_id }}">{{ $vendor->full_name }}</option>
+                            <option value="{{ $vendor->id }}">{{ $vendor->full_name }}</option>
 
                    </select>
                    <p
@@ -1087,7 +1087,7 @@
                x-show="currentStep > 1 && !formSubmitted"
                @click="goToStep(currentStep - 1)"
                type="button"
-               class="px-4 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400"
+               class="px-4 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400 submitbuttonerror"
              >
                Previous
              </button>
@@ -1095,14 +1095,14 @@
                x-show="currentStep < 4 && !formSubmitted"
                @click="nextStep"
                type="button"
-               class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+               class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 submitbuttonerror"
              >
                Next
              </button>
              <button
                x-show="currentStep === 4"
                type="submit"
-               class="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
+               class="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 submitbuttonerror"
              >
                Submit
              </button>

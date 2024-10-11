@@ -9,6 +9,8 @@
             <div class="mb-4">
                 <div class="flex justify-between items-center mb-6">
                     <h2 class="text-2xl font-bold"></h2>
+                    @if(jobVendSubmissionLimit($job->id) < $job->num_openings )
+   
                     <div class="flex space-x-2">
                         <button
                             type="button"
@@ -18,6 +20,7 @@
                             Create Submission
                         </button>
                     </div>
+                    @endif
                 </div>
                 <ul
                     class="grid grid-flow-col text-center text-gray-500 bg-gray-100 rounded-lg p-1"

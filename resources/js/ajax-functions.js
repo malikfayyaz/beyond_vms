@@ -65,8 +65,12 @@ function initializeDataTable(tableId, ajaxUrl, columns) {
                             }
                         });
                     } else {
-                        // If the response.errors is not an object, show a generic error message
-                        $('.error-messages').append('<div>Unknown error format.</div>');
+                        if(response.message) {
+                         // If the response.errors is not an object, show a generic error message
+                        $('.error-messages').append(response.message);
+                        }else {
+                            $('.error-messages').append('<div>Unknown error format.</div>');
+                        }
                     }
                 } catch (e) {
                     // If JSON parsing fails, show a generic error message
@@ -74,6 +78,7 @@ function initializeDataTable(tableId, ajaxUrl, columns) {
                 }
 
                 $('.error-messages').css('display', 'block');
+               
             }
         });
     }
@@ -165,6 +170,15 @@ function initializeDataTable(tableId, ajaxUrl, columns) {
                         }
                     } else {
                         element.val(data[updateType.field]).trigger(['input', 'change', 'blur']);
+                    }
+                    break;
+                    case 'error':
+                    if (data[updateType.field] && data[updateType.field] != "") {
+                        element.text(data[updateType.field]).show(); // Show global error if exists
+                        $(".submitbuttonerror").prop('disabled', true);
+                    }else {
+                        element.text(data[updateType.field]).hide();
+                        $(".submitbuttonerror").prop('disabled', false);
                     }
                     break;
 

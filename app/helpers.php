@@ -15,6 +15,7 @@ use App\Models\CareerOpportunitiesInterview;
 use App\Models\CareerOpportunitiesOffer;
 use App\Models\OfferWorkflowApproval;
 use App\Models\CareerOpportunitiesWorkorder;
+use App\Models\VendorTeammember;
 
 function userType(){
     $array = array(
@@ -129,7 +130,7 @@ if (!function_exists('getActiveRecordsByType')) {
 if (!function_exists('checksetting')) {
     function checksetting($id) {
 
-        $category = SettingCategory::find($id);
+        $category = SettingCategory::findOrFail($id);
         $settings = [];
         // dd($category);
         if(isset($category->settings)) {
@@ -143,7 +144,7 @@ if (!function_exists('checksetting')) {
 if (!function_exists('locationName')) {
     function locationName($id) {
 
-        $location_query = Location::find($id);
+        $location_query = Location::findOrFail($id);
 
 
         return $location_query->name . '-' . $location_query->address1 . '-' . $location_query->city . '-' . $location_query->state->name . '-' . $location_query->zip_code;
@@ -326,6 +327,53 @@ if (!function_exists('updateSubmission')) {
             }
         }
         return true;
+    }
+}
+
+if (!function_exists('jobVendSubmissionLimit')) {
+    function jobVendSubmissionLimit($jobID){
+        
+        $vendorID =  checkUserId(\Auth::id(),session('selected_role'));
+        
+        $vendorID = superVendor($vendorID);
+        $submissionCount = CareerOpportunitySubmission::where('career_opportunity_id', $jobID)
+        ->where('vendor_id', $vendorID)
+        ->whereNotIn('resume_status', [11])
+        ->count();
+    // dd($submissionCount);
+        return $submissionCount;
+    }
+}
+
+if (!function_exists('SuperVendor')) {
+    function superVendor($mainVendor){
+        $vendorID = $mainVendor;
+        
+        
+        $teamMemData = VendorTeammember::where('teammember_id',$vendorID)->first();
+        if($teamMemData !=null){
+        $vendorID = $teamMemData->vendor_id;
+        }
+            
+        return $vendorID;
+    }
+}
+if (!function_exists('getMiscContractEndDate')) {
+    function getMiscContractEndDate($contractID){
+        $contract = CareerOpportunitiesContract::findOrFail($contractID);
+        $workorder = CareerOpportunitiesWorkorder::findOrFail($contract->workorder_id);
+        // $extensionReq = ContractExtensionReq::model()->findByAttributes(array('contract_id' => $contractID,'ext_vendor_approval'=>2),array('order'=>'id desc'));
+
+        if($contract->termination_status == 2 || $contract->status == 3){
+            $contract_end_date = $contract->termination_date;
+        }
+        // elseif ($extensionReq){
+        //     $contract_end_date = $extensionReq->new_contract_end_date;
+        // }
+        else{
+            $contract_end_date = $contract->end_date;
+        }
+        return formatDate($contract_end_date);
     }
 }
 

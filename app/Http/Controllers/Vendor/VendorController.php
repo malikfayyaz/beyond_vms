@@ -8,6 +8,8 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Consultant;
 use App\Models\CareerOpportunity;
+use App\Models\CareerOpportunitiesContract;
+use App\Models\CareerOpportunitiesWorkorder;
 use Carbon\Carbon;
 
 class VendorController extends BaseController
@@ -21,24 +23,51 @@ class VendorController extends BaseController
     {
         // Validate that the candidate_id is present
         $request->validate([
-            'candidate_id' => 'required|exists:consultants,user_id',
+            'candidate_id' => 'required|exists:consultants,id',
+            'job_id' => 'required|exists:career_opportunities,id',
         ]);
+        $vendorID =  checkUserId(\Auth::id(),session('selected_role'));
+        $vendorID = superVendor($vendorID);
+        $jobModel = CareerOpportunity::findOrFail($request->job_id);
+        $jobStartDate = date("Y-m-d",strtotime($jobModel->start_date));
+        $contractModel = CareerOpportunitiesContract::where('candidate_id', $request->candidate_id)
+            ->orderBy('id', 'desc')
+            ->first();
 
+        $workorderModel = CareerOpportunitiesWorkorder::where('candidate_id', $request->candidate_id)
+            ->where('on_board_status', 0)
+            ->where('status', 1)
+            ->orderBy('id', 'desc')
+            ->first();
+            $error = "";
+        if($contractModel !=null){
+        $contractEndDate =getMiscContractEndDate($contractModel->id);
+        $contractEndDate = date("Y-m-d",strtotime($contractEndDate));
+        
+        if($jobStartDate<$contractEndDate){
+            $error = 'This candidate already exists in the system and have active assignment';
+            
+        }}else if($workorderModel !=null){
+            $error = 'This candidate already exists in the system and have active offer';
+            
+
+        }
         // Fetch the consultant's details using the candidate ID
-        $user = User::findOrFail($request->input('candidate_id'));
+        $consultant = Consultant::findOrFail($request->input('candidate_id'));
 
-        if (!$user) {
+        if (!$consultant) {
             return response()->json(['message' => 'Consultant not found'], 404);
         }
 
         // Return a JSON response with the consultant's details
         return response()->json([
-            'candidateFirstName' => $user->consultant->first_name,
-            'candidateMiddleName' => $user->consultant->middle_name,
-            'candidateLastName' => $user->consultant->last_name,
-            'dobDate' => Carbon::parse($user->consultant->dob)->format('d/m/Y'),
-            'lastFourNationalId' => substr($user->consultant->national_id, -4),
-            'candidateEmial' => $user->email,
+            'candidateFirstName' => $consultant->first_name,
+            'candidateMiddleName' => $consultant->middle_name,
+            'candidateLastName' => $consultant->last_name,
+            'dobDate' => Carbon::parse($consultant->dob)->format('d/m/Y'),
+            'lastFourNationalId' => substr($consultant->national_id, -4),
+            'candidateEmial' => $consultant->user->email,
+            'error' => $error,
             // Add more fields as needed
         ]);
     }

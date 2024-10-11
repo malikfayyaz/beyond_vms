@@ -42,6 +42,14 @@ export default function addSubWizarForm() {
         return this.formData[id] && this.formData[id].trim() !== "";
       } else if (id === "candidateEmail") {
         return this.isValidEmail(this.formData.candidateEmail);
+      }else if (id === "candidateFirstName") {
+        return this.formData.candidateFirstName !== "";
+      }else if (id === "lastFourNationalId") {
+        return this.isValidNationalId(this.formData.lastFourNationalId);
+      }else if (id === "dobDate") {
+        return this.formData.dobDate !== "";
+      }else if (id === "candidateLastName") {
+        return this.formData.candidateLastName !== "";
       } else if (id === "phoneNumber") {
         return (
           this.formData.phoneNumber === "" ||
@@ -99,6 +107,8 @@ export default function addSubWizarForm() {
       workLocation: "",
       preferredLanguage: "",
       candidateEmail: "",
+      candidateFirstName:"",
+      candidateLastName:"",
       phoneNumber: "",
       supplierAccountManager: "",
       resumeUpload: null,
@@ -396,7 +406,7 @@ export default function addSubWizarForm() {
               this.formData.candidateFirstName = '';
               this.formData.candidateMiddleName = '';
               this.formData.candidateLastName = '';
-              this.formData.dobDate = '';
+              this.formData.dobDate = this.flatpickrInstance.setDate( new Date(), true);;
               this.formData.lastFourNationalId = '';
               this.formData.candidateEmail = '';
           }
@@ -408,11 +418,18 @@ export default function addSubWizarForm() {
           $('#dobDate').prop('disabled', disable);
           $('#lastFourNationalId').prop('disabled', disable);
           $('#candidateEmail').prop('disabled', disable);
+         if (disable) {
+          this.flatpickrInstance.altInput.setAttribute('disabled', 'disabled');
+         }else {
+            this.flatpickrInstance.altInput.removeAttribute('disabled');
+          }
+         
+          
       }
       };
 
       $('#candidateType').on('change', function() {
-
+        $(".submitbuttonerror").prop('disabled', false);
         if($(this).val() == 1) {
           myObject.disabledFields(false);
         }
@@ -420,13 +437,14 @@ export default function addSubWizarForm() {
 
         this.loadExistingCandidate = () => {
           var candidate_id = $('#candidateSelection').find(':selected').val();
-
+          var jobid = $('#jobid').val();
 
           let url = `/consultant-id`;
 
           if (candidate_id != '') {
             let data = new FormData();
             data.append('candidate_id', candidate_id);
+            data.append('job_id', jobid);
             const updates = {
               '#candidateFirstName': { type: 'value', field: 'candidateFirstName' },
               '#candidateMiddleName': { type: 'value', field: 'candidateMiddleName' },
@@ -434,6 +452,7 @@ export default function addSubWizarForm() {
               '#dobDate': { type: 'date', field: 'dobDate' },
               '#lastFourNationalId': { type: 'value', field: 'lastFourNationalId' },
               '#candidateEmail': { type: 'value', field: 'candidateEmial' },
+              '#globalError': { type: 'error', field: 'error' },
               // Add more mappings as needed
             };
             ajaxCall(url, 'POST', [[updateElements, ['response', updates]]], data);
@@ -670,7 +689,8 @@ export default function addSubWizarForm() {
             (this.formData.candidateType !== "2" ||
               this.formData.candidateSelection !== "") &&
             this.isFieldValid("candidateEmail")  &&
-            this.formData.dobDate.trim() !== "" &&
+            this.formData.dobDate.trim() !== "" && 
+            this.formData.candidateFirstName !== ""  &&
             this.isValidNationalId(this.formData.lastFourNationalId)
           );
         case 2:
@@ -783,7 +803,7 @@ export default function addSubWizarForm() {
         billRate: "0.00",
         preferredName: "",
         // skills: [],
-
+        candidateFirstName:"",
         candidateEmail: "",
         phoneNumber: "",
         supplierAccountManager: "",
