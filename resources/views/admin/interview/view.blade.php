@@ -145,7 +145,7 @@
                           >
                           <span
                             class="font-semibold"
-                          ></span>
+                          >{{$offer->id}}</span>
                         </div>
                         <div class="flex justify-between py-3 px-4">
                           <p class="font-bold text-blue-400">

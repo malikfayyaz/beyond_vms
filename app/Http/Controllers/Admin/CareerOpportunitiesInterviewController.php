@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\CareerOpportunitySubmission;
+use App\Models\CareerOpportunitiesOffer;
 use App\Models\CareerOpportunitiesInterview;
 use App\Models\CareerOpportunitiesInterviewDate;
 use App\Models\CareerOpportunitiesInterviewMember;
@@ -205,7 +206,7 @@ class CareerOpportunitiesInterviewController extends Controller
             'timeZone' => 'required|integer',
             'recommendedDate' => 'required|date',
             'where' => 'nullable|integer',
-            'jobAttachment' => 'nullable|file|mimes:doc,docx,pdf|max:5120',
+            'jobAttachment' => 'nullable|max:5120',
             'interviewType' => 'required|integer',
             'interview_detail' => 'required|string',
             'interviewInstructions' => 'nullable|string',
@@ -329,7 +330,8 @@ class CareerOpportunitiesInterviewController extends Controller
     public function show($id)
     {
         $interview = CareerOpportunitiesInterview::findOrFail($id);
-        // dd($interview);
-        return view('admin.interview.view', compact('interview'));
+        $offer = CareerOpportunitiesOffer::where('submission_id', $interview->submission_id)->first();
+       
+        return view('admin.interview.view', compact('interview','offer'));
     }
 }
