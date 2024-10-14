@@ -498,7 +498,7 @@ export default function addSubWizarForm() {
           // Get values from form fields or fallback to formData
           let payRate = this.formData.payRate || $('#payRate').val();
           let billRate = this.formData.billRate || $('#billRate').val();
-          let adjustedMarkup = this.formData.adjustedMarkup || $('#adjustedMarkup').val();
+          let adjustedMarkup =  $('#adjustedMarkup').val();
           let markup = this.formData.vendorMarkup || $('#vendorMarkup').val();
           let jobid = this.formData.jobId || $('#jobid').val();
           let url = `/show-vendor-markup`;
@@ -537,7 +537,7 @@ export default function addSubWizarForm() {
           ajaxCall(url, 'POST', [[updateElements, ['response', updates]]], data);
 
           // Delay for updated adjusted markup value
-          setTimeout(() => {
+          const intervalId = setInterval(() => {
             this.formData.over_time = $('#over_time').val();
             this.formData.adjustedMarkup = $('#adjustedMarkup').val();
             this.formData.double_time_rate = $('#double_time_rate').val();
@@ -546,8 +546,9 @@ export default function addSubWizarForm() {
             this.formData.vendor_bill_rate = $('#vendor_bill_rate').val();
 
             console.log(this.formData);
-
-          }, 500);
+          // Clear the interval
+          clearInterval(intervalId);
+        }, 100);
       }
       }
     },

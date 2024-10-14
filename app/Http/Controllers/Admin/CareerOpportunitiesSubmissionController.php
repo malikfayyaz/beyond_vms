@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Admin;
 use Illuminate\Http\Request;
 use App\Models\CareerOpportunitySubmission;
+use App\Models\CareerOpportunitiesOffer;
 use Illuminate\Support\Facades\Auth;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -59,9 +60,11 @@ class CareerOpportunitiesSubmissionController extends Controller
     public function show($id)
     {
         $submission = CareerOpportunitySubmission::findOrFail($id);
-
+        $offer = CareerOpportunitiesOffer::where('submission_id', $submission->id)
+        ->orderBy('id', 'DESC')
+        ->first();
         // Return a view or other response with the submission details
-        return view('admin.submission.view', compact('submission'));
+        return view('admin.submission.view', compact('submission','offer'));
     }
     public function rejectCandidate(Request $request)
     {
