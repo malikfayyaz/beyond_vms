@@ -13,7 +13,7 @@ Route::middleware(['user_role:vendor'])->group(function () {
     Route::prefix('vendor')->name('vendor.')->group(function () {
         Route::get('/dashboard', [VendorController::class, 'index'])->name('vendor.dashboard');
         Route::resource('career-opportunities', \App\Http\Controllers\Vendor\CareerOpportunitiesController::class);
-        
+
         //submission
         Route::get('submission/{id}/create', [CareerOpportunitiesSubmissionController::class, 'create'])->name('submission.create');
         Route::post('submission/store', [CareerOpportunitiesSubmissionController::class, 'store'])->name('submission.store');
@@ -37,7 +37,9 @@ Route::middleware(['user_role:vendor'])->group(function () {
          Route::post('interview/store', [CareerOpportunitiesInterviewController::class, 'store'])->name('interview.store');
          Route::get('interview/{id}/edit', [CareerOpportunitiesInterviewController::class, 'edit'])->name('interview.edit');
          Route::put('interview/{id}/update', [CareerOpportunitiesInterviewController::class, 'update'])->name('interview.update');
- 
+        // contract
+        Route::resource('contracts', \App\Http\Controllers\Vendor\CareerOpportunitiesContractController::class);
+
     });
 
 });
