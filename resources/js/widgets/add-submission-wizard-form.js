@@ -484,8 +484,13 @@ export default function addSubWizarForm() {
           this.rejectCandidate = (submissionId) => {
               let formData = new FormData();
               formData.append('submissionId', submissionId);
-              ajaxCall('/reject-candidate', 'POST', [[onSuccess, ['response']]], formData);
+              ajaxCall('/admin/reject-candidate', 'POST', [[onSuccess, ['response']]], formData);
           };
+          this.shortlistCandidate = (submissionId) => {
+            let formData = new FormData();
+            formData.append('submissionId', submissionId);
+            ajaxCall('/admin/shortlist-candidate', 'POST', [[onSuccess, ['response']]], formData);
+        };
         $('#billRate, #payRate').on('change', (event) => {
           this.vendorMarkup(event);
       });

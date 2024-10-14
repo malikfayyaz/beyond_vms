@@ -135,7 +135,8 @@ Route::middleware(['user_role:admin'])->group(function () {
         
         Route::match(['get', 'post'], 'submission/index', [CareerOpportunitiesSubmissionController::class, 'index'])->name('submission.index');
         Route::get('submission/{id}', [CareerOpportunitiesSubmissionController::class, 'show'])->name('submission.show');
-
+        Route::post('reject-candidate', [CareerOpportunitiesSubmissionController::class, 'rejectCandidate'])->name('interview.reject_candidate');
+        Route::post('shortlist-candidate', [CareerOpportunitiesSubmissionController::class, 'shortlistCandidate'])->name('interview.shortlist_candidate');
         //interview
         Route::match(['get', 'post'], 'interview/index', [CareerOpportunitiesInterviewController::class, 'index'])->name('interview.index');
         Route::get('interview/{id}/create', [CareerOpportunitiesInterviewController::class, 'create'])->name('interview.create');

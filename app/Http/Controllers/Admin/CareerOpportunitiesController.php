@@ -210,6 +210,8 @@ class CareerOpportunitiesController extends BaseController
                 ];
             })->toArray();
             $this->syncBusinessUnits($businessUnitsData, $newOpportunity->id);
+            $jobWorkflow = new JobWorkflowUpdate();
+            $jobWorkflow->createJobWorkflow($newOpportunity);
             session()->flash('success', 'Career Opportunity Copied successfully!');
             return redirect()->route('admin.career-opportunities.edit', $newOpportunity->id);
 

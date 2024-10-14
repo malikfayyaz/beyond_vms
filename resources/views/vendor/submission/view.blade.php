@@ -19,6 +19,7 @@
                 schedule interview
               </a>
              @endif
+             
               @if (in_array($submission->resume_status, array(3, 7, 4, 5, 10)) && (empty($offer) || $offer->status == 2 ||  $offer->status == 13 ) && $offer->status != 12 &&(!in_array($submission->careerOpportunity->jobStatus, array(23, 24, 4, 1,5))))
               <a href="{{ route('vendor.offer.create',  ['id' => $submission->id]) }}"
                 class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 capitalize"

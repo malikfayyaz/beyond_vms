@@ -68,22 +68,37 @@ class CareerOpportunitiesSubmissionController extends Controller
     }
     public function rejectCandidate(Request $request)
     {
-/*        $request->validate([
-            'submissionId' => 'required|exists:submissions,id', // Adjust table name if necessary
-            'rejectedBy' => 'required|exists:users,id', // Assuming you have a users table
-        ]);*/
+                  $request->validate([
+            'submissionId' => 'required|exists:career_opportunities_submission,id', // Adjust table name if necessary
+            // 'rejectedBy' => 'required|exists:users,id', // Assuming you have a users table
+        ]);
         $user = Admin::getAdminIdByUserId(Auth::id());
         $careersubmission = CareerOpportunitySubmission::find($request->submissionId);
-        $oldStatus = $careersubmission->resume_status;
         $careersubmission->rejected_type = '1';
-        $careersubmission->rejected_by = $user->id;
+        $careersubmission->rejected_by = $user;
         $careersubmission->resume_status = 6;
         $careersubmission->note_for_rejection = '';
         $careersubmission->reason_for_rejection = '';
-        $careersubmission->date_rejected = date('Y-m-d H:i:s'); //Rejected Date time.
+        $careersubmission->date_rejected =now(); //Rejected Date time.
         $careersubmission->save(); // Save the changes
 
-        return response()->json(['success' => true]);
+        return response()->json(['success' => true,
+        'redirect_url' => route('admin.submission.show',$request->submissionId),
+            'message' => 'Submission Rejected successfully!']);
+    }
+    public function shortlistCandidate(Request $request)
+    {
+        $request->validate([
+            'submissionId' => 'required|exists:career_opportunities_submission,id', // Adjust table name if necessary
+        ]);
+        $careersubmission = CareerOpportunitySubmission::find($request->submissionId);
+        $careersubmission->resume_status = 3;
+        $careersubmission->release_to_client = 1;
+        $careersubmission->shortlisted_date = now();
+        $careersubmission->save(); // Save the changes
+
+        return response()->json(['success' => true,
+            'message' => 'Submission Shortlisted successfully!']);
     }
 
 }
