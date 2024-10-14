@@ -478,20 +478,20 @@ class CareerOpportunitiesController extends BaseController
     public function jobApprove(String $id){
 
         $job = CareerOpportunity::find($id);
-        $job->jobstatus = 3; 
+        $job->jobstatus = 3;
         $job->save();
-       
+
         return redirect()->route('admin.career-opportunities.show', $id);
     }
     public function jobReject(String $id){
         $job = CareerOpportunity::find($id);
-        $job->jobstatus = 2; 
+        $job->jobstatus = 2;
         $job->save();
-        return redirect()->route('admin.career-opportunities.show', $id);   
+        return redirect()->route('admin.career-opportunities.show', $id);
     }
 
     public function releaseJobVendor(Request $request){
-        
+
         $user = \Auth::user();
         $userid = \Auth::id();
         $sessionrole = session('selected_role');
@@ -504,7 +504,7 @@ class CareerOpportunitiesController extends BaseController
         } elseif ($sessionrole == "Consultant") {
             $userid = Consultant::getConsultantIdByUserId($userid);
         }
-       
+
         $release =   new VendorJobRelease;
         $release->vendor_id  = $request->vendor_id;
         $release->created_by = $userid;
@@ -520,7 +520,7 @@ class CareerOpportunitiesController extends BaseController
     }
 
     public function rejectAdminJob(Request $request){
-        
+
         $user = \Auth::user();
         $userid = \Auth::id();
         $sessionrole = session('selected_role');

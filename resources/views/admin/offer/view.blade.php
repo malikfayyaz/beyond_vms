@@ -193,12 +193,6 @@
                             <div class="p-4">
                                 <form @submit.prevent="submitForm" id="generalformwizard">
                                     <div class="mb-4">
-                                        <div class="mt-2 px-7 py-3">
-                                            <p class="text-sm text-gray-500">
-                                                You are about to perform action for Offer WorkFlow ID:
-                                                <span x-text="currentRowId"></span>
-                                            </p>
-                                        </div>
                                         <div x-show="actionType === 'Reject'" class="mt-4">
                                             <label for="reason" class="block text-sm font-medium text-gray-700 mb-1">
                                                 Reason for Rejection

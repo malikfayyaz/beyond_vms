@@ -6,11 +6,8 @@
     <div class="ml-16">
         @include('admin.layouts.partials.header')
         <div class="bg-white mx-4 my-8 rounded p-8">
-            @if (session('success'))
-                <div class="alert alert-success">
-                    {{ session('success') }}
-                </div>
-            @endif
+            @include('admin.layouts.partials.alerts')
+            <div id="success-message" style="display: none;" class="alert alert-success"></div>
             <div >
                 <div class="flex justify-between items-center mb-6">
                     <h2 class="text-2xl font-bold">Interviews</h2>
@@ -116,7 +113,7 @@
                 { data: 'vendor_name', name: 'vendor_name' },
                 { data: 'primary_date', name: 'primary_date' },
                 { data: 'primary_start_time', name: 'primary_start_time'},
-                { data: 'primary_end_time', name: 'primary_end_time'}, 
+                { data: 'primary_end_time', name: 'primary_end_time'},
                 { data: 'worker_type', name: 'worker_type' },
                 { data: 'action', name: 'action', orderable: false, searchable: false }
             ]);
