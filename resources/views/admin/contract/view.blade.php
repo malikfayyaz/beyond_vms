@@ -362,7 +362,7 @@
                                         </div>
                                     </div>
                                     <div class="mt-2 text-center">
-                                        <span>${{ $contract->contractRates->vendor_bill_rate }}</span>
+                                        <span>${{ $contract->contractRates->vendor_bill_rate ?? 'N/A' }}</span>
                                     </div>
                                 </div>
                                 <div
@@ -382,7 +382,7 @@
                                         </div>
                                     </div>
                                     <div class="mt-2 text-center">
-                                        <span>${{ $contract->contractRates->client_bill_rate }}</span>
+                                        <span>${{ $contract->contractRates->client_bill_rate ?? 'N/A' }}</span>
                                     </div>
                                 </div>
                                 <div
