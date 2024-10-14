@@ -106,8 +106,7 @@
                         </div>
 
                         <div x-show="activePage === 'tab2'">
-                            <h2 class="text-xl font-bold">Budget</h2>
-                            <p>Here you can manage budgets.</p>
+                        @include('admin.contract.contract_bu')
                         </div>
 
                         <div x-show="activePage === 'tab3'">
