@@ -7,6 +7,7 @@
         @include('vendor.layouts.partials.header')
         <div class="bg-white mx-4 my-8 rounded p-8">
             <div >
+                @include('vendor.layouts.partials.alerts')
                 <div class="flex justify-between items-center mb-6">
                     <h2 class="text-2xl font-bold">Submission</h2>
                 </div>
@@ -39,14 +40,14 @@
                         <th
                             class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                         >
-                            Job Profile 
+                            Job Profile
                         </th>
                         <th
                             class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                         >
-                            Hiring Manager 
+                            Hiring Manager
                         </th>
-                        
+
                         <th
                             class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                         >
@@ -57,13 +58,13 @@
                         >
                             Pay Rate
                         </th>
-                        
+
                         <th
                             class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                         >
                             Bill Rate
                         </th>
-                        
+
                         <th
                             class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                         >
@@ -98,7 +99,7 @@
                 { data: 'resume_status', name: 'resume_status' },
                 { data: 'id', name: 'id' },
                 { data: 'consultant_name', name: 'consultant_name' }, // Consultant name
-                { data: 'unique_id', name: 'unique_id' }, 
+                { data: 'unique_id', name: 'unique_id' },
                 { data: 'career_opportunity_title', name: 'career_opportunity_title' },
                 { data: 'hiring_manager_name', name: 'hiring_manager_name' },
                 { data: 'vendor_name', name: 'vendor_name' }, // Vendor name

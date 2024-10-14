@@ -5,10 +5,10 @@
     @include('admin.layouts.partials.dashboard_side_bar')
       <div class="ml-16">
           @include('admin.layouts.partials.header')
-
-
           <div  x-data="{ tab: 'activejobs' }" class="bg-white mx-4 my-8 rounded p-8">
-             @if($job->jobStatus == 2)
+              @include('admin.layouts.partials.alerts')
+
+          @if($job->jobStatus == 2)
               <div x-data="{
                     rejectionReason: '{{ $job->rejectionReason ? $job->rejectionReason->title : ' ' }}',
                     notes: '{{ $job->note_for_rejection }}',
@@ -159,7 +159,7 @@
                     <div x-data="{
                       rejectModal1: false,
                       jobId: '{{ $job->id }}',
-                      status: {{ $job->jobStatus }}, 
+                      status: {{ $job->jobStatus }},
                       reason: '',
                       note: '',
                       errors: {},
@@ -279,7 +279,7 @@
                           </div>
                       </div>
                   </div>
-              
+
 
 
 
