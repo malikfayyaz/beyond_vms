@@ -6,12 +6,8 @@
     @include('vendor.layouts.partials.header')
 
     <div class="bg-white mx-4 my-8 rounded p-8">
-        @if (session('success'))
-            <div class="alert alert-success">
-                {{ session('success') }}
-            </div>
-        @endif
-    @include('vendor.layouts.partials.alerts')
+        @include('vendor.layouts.partials.alerts')
+        <div id="success-message" style="display: none;" class="alert alert-success"></div>
           <!-- Cards -->
           <div class="mb-8">
             <div class="flex gap-4 w-full">

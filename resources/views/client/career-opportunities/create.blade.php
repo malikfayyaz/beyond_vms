@@ -6,11 +6,8 @@
     <div class="ml-16">
         @include('client.layouts.partials.header')
         <div class="bg-white mx-4 my-8 rounded p-8">
-            @if (session('success'))
-                <div class="alert alert-success">
-                    {{ session('success') }}
-                </div>
-            @endif
+            @include('client.layouts.partials.alerts')
+            <div id="success-message" style="display: none;" class="alert alert-success"></div>
             <div >
         <div class="bg-white mx-4 my-8 rounded p-8" x-data='wizardForm({!! json_encode($careerOpportunity) !!},{!! json_encode($businessUnitsData) !!})' x-init="mounted()">
 

@@ -10,7 +10,7 @@
         <div>
           <div class="mx-4 rounded p-8">
             <div class="w-full flex justify-end items-center gap-4">
-             
+
               <a href="{{ route('admin.interview.index') }}">
                   <button
                       type="button"
@@ -166,7 +166,7 @@
                                 <span class="font-semibold">{{ $interview->interview_instructions }}</span>
                             </div>
                         @endif
-                            
+
                         @if (!empty($interview->interview_detail))
                             <div class="flex justify-between py-3 px-4">
                                 <span class="text-gray-600">Interview Detail:</span>
@@ -191,7 +191,7 @@
                             class="font-semibold"
                           >{{ $interview->timezone->title }}</span>
                         </div>
-                        
+
                         <div class="flex justify-between py-3 px-4">
                           <p class="font-bold text-blue-400">
                               <i class="fa fa-calendar"></i> Interview Date
@@ -210,7 +210,7 @@
                             <i class="fa fa-plus-square"></i> Additional Details
                             </p>
                           </div>
-                       
+
                           <div class="flex justify-between py-3 px-4">
                             <span class="text-gray-600">Resume:</span>
                             <span
@@ -255,13 +255,13 @@
                         </div>
 
                         <div class="bg-blue-50 p-3 rounded-md">
-                          
+
                           <div class="flex justify-between items-center">
                             <span class="text-gray-600">  {{$interview->interviewDates()->primaryData()->schedule_date}} <br> <small>{{$interview->interviewDates()->primaryData()->formatted_start_time}} - {{$interview->interviewDates()->primaryData()->formatted_end_time}}</small></span>
                             <span class="bg-green-500 text-white px-2 py-1 rounded-full text-sm">{{$interview->status}}</span>
                             <span class="text-gray-600">{{ $interview->timezone->title }}</span>
                           </div>
-                          
+
                         </div>
                       </div>
                     </div>
