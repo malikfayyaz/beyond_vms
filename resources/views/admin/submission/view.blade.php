@@ -30,7 +30,7 @@
               >
                 create offer
               </a>
-{{--              @endif--}}
+             @endif
               @if($submission->careerOpportunity->jobStatus != 5)
                 <div x-data="addSubWizarForm()" x-init="mounted()">
                 <button
