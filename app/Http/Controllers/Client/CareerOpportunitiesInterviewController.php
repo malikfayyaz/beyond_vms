@@ -137,7 +137,7 @@ class CareerOpportunitiesInterviewController extends Controller
             "end_time" =>$endTimeIn24HourFormat,
             "interview_detail" =>$validatedData['interview_detail'],
             "status" => 1,
-            "created_by_portal" => 1,
+            "created_by_portal" => 2,
             "created_by" => $clientid,
         ];
 

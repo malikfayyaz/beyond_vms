@@ -107,16 +107,15 @@
                 { data: 'status', name: 'status' },
                 { data: 'type', name: 'type' },
                 { data: 'id', name: 'id' },
-                { data: 'consultant_name', name: 'consultant_name' }, 
+                { data: 'consultant_name', name: 'consultant_name' },
                 { data: 'career_opportunity', name: 'career_opportunity' },
                 { data: 'hiring_manger', name: 'hiring_manger' },
                 { data: 'vendor_name', name: 'vendor_name' },
-                { data: 'recommended_date', name: 'recommended_date' },
-                { data: 'start_time', name: 'start_time' },
-                { data: 'end_time', name: 'end_time' },
+                { data: 'primary_date', name: 'primary_date' },
+                { data: 'primary_start_time', name: 'primary_start_time'},
+                { data: 'primary_end_time', name: 'primary_end_time'},
                 { data: 'worker_type', name: 'worker_type' },
                 { data: 'action', name: 'action', orderable: false, searchable: false }
-               
             ]);
         }
     });

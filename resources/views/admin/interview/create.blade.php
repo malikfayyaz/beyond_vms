@@ -345,7 +345,7 @@
                     @php $clients = \App\Models\Client::byStatus();@endphp
                     @foreach ($clients as $key => $value)
                         <option value="{{ $value->id }}"
-                        x-bind:selected="formData.interviewMembers.includes({{ $value->id }})">
+                       >
                         {{ $value->full_name }}</option>
                     @endforeach
                 </select>
