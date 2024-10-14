@@ -455,7 +455,7 @@
                        x-model="formData.adjustedMarkup"
                        id="adjustedMarkup"
                        name="adjustedMarkup"
-                        value="<?= $markup ?>"
+                        
                        disabled
                        class="w-full h-12 px-4 text-gray-500 border border-gray-300 rounded-md shadow-sm focus:outline-none"
                      />

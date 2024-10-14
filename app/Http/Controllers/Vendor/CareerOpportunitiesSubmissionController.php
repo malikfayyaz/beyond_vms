@@ -10,6 +10,7 @@ use App\Models\Location;
 use App\Models\Vendor;
 use App\Models\User;
 use App\Models\CareerOpportunitySubmission;
+use App\Models\CareerOpportunitiesOffer;
 use App\Models\Consultant;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Hash;
@@ -223,9 +224,11 @@ class CareerOpportunitiesSubmissionController extends Controller
     public function show($id)
     {
         $submission = CareerOpportunitySubmission::findOrFail($id);
-
+        $offer = CareerOpportunitiesOffer::where('submission_id', $submission->id)
+        ->orderBy('id', 'DESC')
+        ->first();
         // Return a view or other response with the submission details
-        return view('vendor.submission.view', compact('submission'));
+        return view('vendor.submission.view', compact('submission','offer'));
     }
 
     /**

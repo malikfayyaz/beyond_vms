@@ -75,7 +75,7 @@
                   </div>
                 </a>
               </li>
-              <li class="flex justify-center" x-data="{ jobstatus: @json($job->jobstatus) }" x-show="jobstatus == 3">
+              <li class="flex justify-center" x-data="" x-show="">
                 <a
                 @click="tab = 'vendorrelease'"
                 :class="{ 'border-blue-500 text-blue-500': tab === 'vendorrelease' }"
