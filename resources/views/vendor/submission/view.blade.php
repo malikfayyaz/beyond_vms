@@ -27,14 +27,7 @@
                 create offer
               </a>
               @endif
-              @if($submission->careerOpportunity->jobStatus != 5)
-              <button
-                type="button"
-                class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 capitalize"
-              >
-                reject candidate
-              </button>
-              @endif
+             
               <a href="{{ route('vendor.submission.index') }}">
                   <button
                       type="button"
