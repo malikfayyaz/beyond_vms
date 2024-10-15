@@ -77,8 +77,8 @@ class CareerOpportunitiesInterviewController extends Controller
     public function create($id)
     {
         $submission =  CareerOpportunitySubmission::findOrFail($id);
-
-        return view('client.interview.create', compact('submission'));
+        $selectedTimeSlots = [];
+        return view('client.interview.create', compact('submission','selectedTimeSlots'));
     }
 
     public function store(Request $request)
@@ -187,8 +187,23 @@ class CareerOpportunitiesInterviewController extends Controller
     {
         $interview =  CareerOpportunitiesInterview::findOrFail($id);
         $submission =  CareerOpportunitySubmission::findOrFail($interview->submission_id);
+        $schedules = CareerOpportunitiesInterviewDate::
+        where('interview_id', $id)
+        ->orderBy('schedule_date_order', 'asc')
+        ->get();
+        
+            $selectedTimeSlots = [];
 
-        return view('client.interview.create', compact('interview','submission'))
+            foreach ($schedules as $schedule) {
+               
+
+                // Format the time slot (start_time - end_time)
+                $timeSlot = date('h:i A', strtotime($schedule->start_time)) . ' - ' . date('h:i A', strtotime($schedule->end_time));
+
+                // Assign to the selectedTimeSlots array
+                $selectedTimeSlots[$schedule->schedule_date] = $timeSlot;
+            }
+        return view('client.interview.create', compact('interview','submission','selectedTimeSlots'))
         ->with(['editMode' => true, 'editIndex' => $id]);
     }
 
