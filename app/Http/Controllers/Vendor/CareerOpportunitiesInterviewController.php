@@ -8,6 +8,8 @@ use App\Models\CareerOpportunitySubmission;
 use App\Models\CareerOpportunitiesInterview;
 use App\Models\CareerOpportunitiesOffer;
 use Yajra\DataTables\Facades\DataTables;
+use App\Models\Consultant;
+use Carbon\Carbon;
 
 class CareerOpportunitiesInterviewController extends Controller
 {
@@ -71,5 +73,32 @@ class CareerOpportunitiesInterviewController extends Controller
         $offer = CareerOpportunitiesOffer::where('submission_id', $interview->submission_id)->first();
        
         return view('vendor.interview.view', compact('interview','offer'));
+    }
+
+    public function saveInterviewTiming(Request $request, $id)
+    {
+        $validateData = $request->validate([
+            'interviewTiming' => 'required',
+            'can_phone' => 'required|numeric',
+            // 'vendor_note' => 'required',
+        ]);
+        $interview = CareerOpportunitiesInterview::findOrFail($id);
+
+        $consultant = Consultant::findOrFail($interview->candidate_id);
+        // dd($consultant);
+       
+
+        $formattedDate = Carbon::createFromFormat('m/d/Y', $validateData['interviewTiming'])->format('Y-m-d');
+
+        if ($request->has('acceptinterview')) {
+           
+            $interview->interview_acceptance_date = $formattedDate;
+            $interview->save();
+
+            // Redirect or return success response
+            return redirect()->route('vendor.interview.index')->with('success', 'Interview accepted successfully!');
+        }
+
+       
     }
 }

@@ -310,7 +310,8 @@
 
                   <div class="mt-6">
                     <div x-show="activePage === 'tab1'">
-                      <form action="" method="post" class="space-y-6">
+                    <form action="{{ route('vendor.interview.saveTiming', $interview->id) }}" method="POST" class="space-y-6"> 
+                      @csrf
                           <div class="overflow-x-auto">
                               <table class="min-w-full bg-white border rounded-lg shadow-md text-sm">
                                   <thead class="bg-blue-400 text-white">
@@ -338,10 +339,12 @@
                                     @endforeach
                                       <tr class="border-b">
                                           <td class="py-3 px-4">Candidate Phone Number:</td>
-                                          <td class="py-3 px-4" colspan="2">
-                                              <input class="w-full p-2 text-gray-500 border rounded-md shadow-sm focus:outline-none "
-                                              >
-                                              <span class="text-red-600 phone_error"></span>
+                                          <td class="py-3 px-4" colspan="3">
+                                          <input 
+                                          type="tel" 
+                                          name="can_phone" 
+                                          class="w-full p-2 text-gray-500 border rounded-md shadow-sm focus:outline-none"
+                                          placeholder="Enter phone number">
                                           </td>
                                       </tr>
                                       <tr class="border-b">
