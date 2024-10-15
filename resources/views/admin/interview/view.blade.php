@@ -139,14 +139,16 @@
                             class="font-semibold"
                           >{{$interview->careerOpportunity->division->name}}</span>
                         </div>
+                        @isset($interview->offer)
                         <div class="flex justify-between py-3 px-4">
                           <span class="text-gray-600"
                             >Offer ID:</span
                           >
                           <span
                             class="font-semibold"
-                          >{{$offer->id}}</span>
+                          >{{$interview->offer->id}}</span>
                         </div>
+                        @endisset
                         <div class="flex justify-between py-3 px-4">
                           <p class="font-bold text-blue-400">
                               <i class="fas fa-comments"></i> Interview Details
@@ -253,16 +255,17 @@
                         <div class="flex justify-between items-center">
                           <span class="text-gray-600">Date & Time:</span>
                         </div>
-
+                        @foreach($interview->interviewDates as $dates)
                         <div class="bg-blue-50 p-3 rounded-md">
-
+                         
                           <div class="flex justify-between items-center">
-                            <span class="text-gray-600">  {{$interview->interviewDates()->primaryData()->schedule_date}} <br> <small>{{$interview->interviewDates()->primaryData()->formatted_start_time}} - {{$interview->interviewDates()->primaryData()->formatted_end_time}}</small></span>
+                            <span class="text-gray-600">  {{$dates->schedule_date}} <br> <small>{{$dates->formatted_start_time}} - {{$dates->formatted_end_time}}</small></span>
                             <span class="bg-green-500 text-white px-2 py-1 rounded-full text-sm">{{$interview->status}}</span>
                             <span class="text-gray-600">{{ $interview->timezone->title }}</span>
                           </div>
-
+                       
                         </div>
+                        @endforeach
                       </div>
                     </div>
                   </section>

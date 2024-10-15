@@ -34,6 +34,7 @@ class CareerOpportunitySubmission extends Model
     {
         return $this->belongsTo(CareerOpportunity::class, 'career_opportunity_id' , 'id');
     }
+   
 
     public function getEstimateStartDateAttribute()
     {
