@@ -280,6 +280,14 @@ class CareerOpportunitiesInterviewController extends Controller
             }
         }
 
+        if (empty($request->file('jobAttachment'))) {
+            $filePath = "interview_resume/" . $interview->job_attachment;
+            if (Storage::disk('public')->exists($filePath)) {
+                Storage::disk('public')->delete($filePath);
+            }
+            $interview->update(['job_attachment' => null]);
+        }
+
         $interview->update($mapedData);
 
         $incomingDates = array_keys($timeSlotsArray);

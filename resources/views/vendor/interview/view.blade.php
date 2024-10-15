@@ -269,23 +269,127 @@
                 </div>
               </div>
             </div>
-            <div class="w-2/4 bg-white h-[1024px] mx-4 rounded p-8">
-            @if ($interview->job_attachment)
-           @php $fileExtension = pathinfo($interview->job_attachment, PATHINFO_EXTENSION); @endphp
-              <object
-                data="{{ asset('storage/interview_resume/' . $interview->job_attachment) }}"
-                type="application/{{$fileExtension}}"
-                width="100%"
-                height="100%"
-              >
-                <p>
-                  Alternative text - include a link
-                  <a href="{{ asset('storage/interview_resume/' . $interview->job_attachment) }}">to the PDF!</a>
-                </p>
-              </object>
-            @else
-              <p>No resume available.</p>
-            @endif
+            <div class=" w-2/4 bg-white mx-4 rounded p-8">
+              <div x-data="{ activePage: 'tab1' }" class="mb-4">
+                  <ul class="grid grid-flow-col text-center text-gray-500 bg-gray-100 rounded-lg p-1">
+                    <li class="flex justify-center items-center">
+                        <a
+                            href="javascript:void(0)"
+                            @click="activePage = 'tab1'"
+                            class="w-full flex justify-center items-center gap-3 hover:bg-white hover:rounded-lg hover:shadow py-2 mx-1"
+                            :class="activePage === 'tab1' ? 'bg-white rounded-lg shadow' : ''"
+                            :style="{'color': activePage === 'tab1' ? 'var(--primary-color)' : ''}"
+                        >
+                            <i class="fa-regular fa-clock"></i>
+                            <span class="capitalize">Time</span>
+                            <div class="px-1 py-1 flex items-center justify-center text-white rounded-lg"
+                                :style="{'background-color': activePage === 'tab1' ? 'var(--primary-color)' : 'bg-gray-500'}"
+                            >
+                                <!-- <span class="text-[10px]"></span> -->
+                            </div>
+                        </a>
+                    </li>
+                    <li class="flex justify-center items-center">
+                        <a
+                            href="javascript:void(0)"
+                            @click="activePage = 'tab2'"
+                            class="w-full flex justify-center items-center gap-3 hover:bg-white hover:rounded-lg hover:shadow py-2 mx-1"
+                            :class="activePage === 'tab2' ? 'bg-white rounded-lg shadow' : ''"
+                            :style="{'color': activePage === 'tab2' ? 'var(--primary-color)' : ''}"
+                        >
+                            <i class="fa-regular fa-file-lines"></i>
+                            <span class="capitalize">Resume</span>
+                            <div class="px-1 py-1 flex items-center justify-center text-white rounded-lg"
+                                :style="{'background-color': activePage === 'tab2' ? 'var(--primary-color)' : 'bg-gray-500'}"
+                            >
+                                <!-- <span class="text-[10px]"></span> -->
+                            </div>
+                        </a>
+                    </li>
+                  </ul>
+
+                  <div class="mt-6">
+                    <div x-show="activePage === 'tab1'">
+                      <form action="" method="post" class="space-y-6">
+                          <div class="overflow-x-auto">
+                              <table class="min-w-full bg-white border rounded-lg shadow-md text-sm">
+                                  <thead class="bg-blue-400 text-white">
+                                      <tr>
+                                          <th class="py-3 px-4 text-left">Date <i class="fa fa-asterisk text-red-600"></i></th>
+                                          <th class="py-3 px-4 text-left">Start Time</th>
+                                          <th class="py-3 px-4 text-left">End Time</th>
+                                          <th class="py-3 px-4 text-left" colspan="2">Timezone</th>
+                                      </tr>
+                                  </thead>
+                                  <tbody>
+                                    @foreach($interview->interviewDates as $interviewDate)
+                                      <tr class="border-b">
+                                          <td class="py-3 px-4">
+                                              <div class="flex items-center">
+                                                  <input type="radio" name="interviewTiming" value="{{ $interviewDate->formatted_schedule_date }}" class="mr-2">
+                                                  <p class="font-bold">{{ $interviewDate->formatted_schedule_date }} (Recommended)</p>
+                                              </div>
+                                          </td>
+                                          <td class="py-3 px-4 font-bold">{{ $interviewDate->formatted_start_time }}</td>
+                                          <td class="py-3 px-4 font-bold">{{ $interviewDate->formatted_end_time }}</td>
+                                          <td class="py-3 px-4 font-bold"> {{$interview->timezone->title}}
+                                          </td>
+                                      </tr>
+                                    @endforeach
+                                      <tr class="border-b">
+                                          <td class="py-3 px-4">Candidate Phone Number:</td>
+                                          <td class="py-3 px-4" colspan="2">
+                                              <input class="w-full p-2 text-gray-500 border rounded-md shadow-sm focus:outline-none "
+                                              >
+                                              <span class="text-red-600 phone_error"></span>
+                                          </td>
+                                      </tr>
+                                      <tr class="border-b">
+                                          <td class="py-3 px-4">Ext No:</td>
+                                          <td class="py-3 px-2">
+                                              <input type="number" name="phone_ext" max="99" min="0" class="w-full p-2 text-gray-500 border rounded-md shadow-sm focus:outline-none "
+                                              >
+                                          </td>
+                                      </tr>
+                                      <tr class="border-b">
+                                          <td class="py-3 px-4" colspan="5">
+                                              <label for="vendor_note" class="block font-bold">Note <i class="fa fa-asterisk text-red-600"></i>:</label>
+                                              <textarea id="vendor_note" name="vendor_note" placeholder="Enter Note..." class="w-full p-2 mt-2 text-gray-500 border rounded-md shadow-sm focus:outline-none min-h-[150px]"></textarea>
+                                          </td>
+                                      </tr>
+                                  </tbody>
+                              </table>
+                          </div>
+
+                          <div class="flex justify-evenly">
+                            <button type="submit" name="acceptinterview" class="bg-green-600 text-white py-2 px-4 rounded hover:bg-green-500 cursor-pointer">
+                                Accept Interview
+                            </button>
+                              <a href="#" class="btn bg-red-600 text-white py-2 px-4 rounded hover:bg-red-500">Reschedule/Cancel Interview</a>
+                          </div>
+                      </form>
+                    </div>
+
+                    <div class="h-[1024px]" x-show="activePage === 'tab2'">
+                      @if ($interview->job_attachment)
+                      @php $fileExtension = pathinfo($interview->job_attachment, PATHINFO_EXTENSION); @endphp
+                          <object
+                            data="{{ asset('storage/interview_resume/' . $interview->job_attachment) }}"
+                            type="application/{{$fileExtension}}"
+                            width="100%"
+                            height="100%"
+                          >
+                            <p>
+                              Alternative text - include a link
+                              <a href="{{ asset('storage/interview_resume/' . $interview->job_attachment) }}">to the PDF!</a>
+                            </p>
+                          </object>
+                        @else
+                          <p>No resume available.</p>
+                        @endif
+                    </div>
+                  </div>  
+              </div>
             </div>
           </div>
         </div>
