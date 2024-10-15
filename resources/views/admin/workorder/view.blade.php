@@ -261,7 +261,7 @@
                       <span class="capitalize">workorder info</span>
                     </button>
                   </li>
-                  @if($workorder->workorder_status==1)
+                  @if($workorder->status==1)
                   <li>
                     <button
                       :id="$id('tab', whichChild($el.parentElement, $refs.tablist))"
@@ -452,7 +452,7 @@
                           $disabled = false;
                         }
                         @endphp
-                  @if($workorder->workorder_status==1)
+                  @if($workorder->status==1)
                   <section
                     x-show="isSelected($id('tab', whichChild($el, $el.parentElement)))"
                     :aria-labelledby="$id('tab', whichChild($el, $el.parentElement))"

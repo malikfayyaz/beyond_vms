@@ -135,6 +135,9 @@
                                 >
                             </div>
                         </div>
+                        @php
+                            $disabled = true;
+                        @endphp
                         <div x-data="workOrderForm">
                             <form
                                 action="#"
@@ -149,7 +152,7 @@
                                             x-model="formData.first_name"
                                             type="text"
                                             class="w-full h-12 px-4 text-gray-500 border border-gray-300 rounded-md shadow-sm focus:outline-none"
-                                            placeholder="{{$workorder->consultant->first_name}}"
+                                            placeholder="First Name"
                                             disabled
                                             id="candidateFirstName"
                                         />
@@ -160,7 +163,7 @@
                                             x-model="formData.middle_name"
                                             type="text"
                                             class="w-full h-12 px-4 text-gray-500 border border-gray-300 rounded-md shadow-sm focus:outline-none"
-                                            placeholder="{{$workorder->consultant->middle_name}}"
+                                            placeholder="Middle Name"
                                             disabled
                                         />
                                     </div>
@@ -170,7 +173,7 @@
                                             x-model="formData.last_name"
                                             type="text"
                                             class="w-full h-12 px-4 text-gray-500 border border-gray-300 rounded-md shadow-sm focus:outline-none"
-                                            placeholder="{{$workorder->consultant->last_name}}"
+                                            placeholder="Last Name"
                                             id="candidateLastName"
                                             disabled
                                         />
@@ -188,6 +191,7 @@
                                             class="w-full h-12 px-4 text-gray-500 border border-gray-300 rounded-md shadow-sm focus:outline-none"
                                             placeholder="Enter personal email address N/A"
                                             id="personalEmailAddress"
+                                            disabled
                                         />
                                         <p
                                             x-show="errors.personalEmailAddress"
@@ -196,6 +200,9 @@
                                         ></p>
                                     </div>
                                 </div>
+                                @php $vendorrecords = $workorder->vendor->teamMembers;
+
+                                @endphp
                                 <div class="flex space-x-4 mb-4">
                                     <div class="flex-1">
                                         <label class="block mb-2"
@@ -207,13 +214,24 @@
                                             class="w-full select2-single custom-style"
                                             data-field="accountManager"
                                             id="accountManager"
+                                            disabled
                                         >
-                                            <option value="">Select a category</option>
-                                            <option value="javascript">JavaScript</option>
-                                            <option value="python">Python</option>
-                                            <option value="java">Java</option>
-                                            <option value="csharp">C#</option>
-                                            <option value="ruby">Ruby</option>
+
+                                            <option value="">Select Account Manager</option>
+
+                                            @isset($workorder->vendor)
+                                                <option value="{{ $workorder->vendor->id }}"
+                                                >
+                                                    {{ $workorder->vendor->full_name }}
+                                                </option>
+                                                {{-- Team Members --}}
+                                                @foreach($workorder->vendor->teamMembers as $team)
+                                                    <option value="{{$team->teammember_id}}"
+
+                                                    >{{$team->teammember->full_name}}</option>
+                                                @endforeach
+                                            @endisset
+
                                         </select>
                                         <p
                                             x-show="errors.accountManager"
@@ -231,13 +249,21 @@
                                             class="w-full select2-single custom-style"
                                             data-field="recruitmentManager"
                                             id="recruitmentManager"
+                                            disabled
                                         >
-                                            <option value="">Select a category</option>
-                                            <option value="javascript">JavaScript</option>
-                                            <option value="python">Python</option>
-                                            <option value="java">Java</option>
-                                            <option value="csharp">C#</option>
-                                            <option value="ruby">Ruby</option>
+                                            <option value="">Select Recruitment Manager</option>
+                                            @isset($workorder->vendor)
+                                                <option value="{{ $workorder->vendor->id }}"
+                                                >
+                                                    {{ $workorder->vendor->full_name }}
+                                                </option>
+                                                {{-- Team Members --}}
+                                                @foreach($workorder->vendor->teamMembers as $team)
+                                                    <option value="{{$team->teammember_id}}"
+
+                                                    >{{$team->teammember->full_name}}</option>
+                                                @endforeach
+                                            @endisset
                                         </select>
                                         <p
                                             x-show="errors.recruitmentManager"
@@ -251,15 +277,16 @@
                                         <label class="block mb-2 capitalize">location tax</label>
                                         <input
                                             type="number"
-                                            x-model="formData.candidateFirstName"
+                                            x-model="formData.locationTax"
                                             class="w-full h-12 px-4 text-gray-500 border border-gray-300 rounded-md shadow-sm focus:outline-none"
                                             placeholder="0.00%"
-                                            id="candidateFirstName"
+                                            id="locationTax"
+                                            disabled
                                         />
                                     </div>
                                     <div class="flex-1"></div>
                                 </div>
-                                <div class="flex items-center justify-between py-4 border-t">
+{{--                                <div class="flex items-center justify-between py-4 border-t">
                                     <div class="">
                                         <h4 class="font-medium capitalize mb-2">
                                             background screening
@@ -270,14 +297,15 @@
                                             begin assignment at Gallagher
                                         </p>
                                     </div>
-                                </div>
-                                <div class="flex items-center justify-between py-4 border-t">
+                                </div>--}}
+{{--                                <div class="flex items-center justify-between py-4 border-t">
                                     <ul class="space-y-3">
                                         <li>
                                             <label
                                                 class="flex items-center space-x-3 cursor-pointer"
                                             >
                                                 <input
+                                                    disabled
                                                     type="checkbox"
                                                     x-model="formData.codeOfConduct"
                                                     class="form-checkbox h-5 w-5 text-blue-600 rounded focus:ring-blue-500 border-gray-300 cursor-pointer"
@@ -298,6 +326,7 @@
                                                 class="flex items-center space-x-3 cursor-pointer"
                                             >
                                                 <input
+                                                    :disabled="isDisabled"
                                                     type="checkbox"
                                                     x-model="formData.dataPrivacy"
                                                     class="form-checkbox h-5 w-5 text-blue-600 rounded focus:ring-blue-500 border-gray-300 cursor-pointer"
@@ -320,6 +349,7 @@
                                                 class="flex items-center space-x-3 cursor-pointer"
                                             >
                                                 <input
+                                                    :disabled="isDisabled"
                                                     type="checkbox"
                                                     x-model="formData.nonDisclosure"
                                                     class="form-checkbox h-5 w-5 text-blue-600 rounded focus:ring-blue-500 border-gray-300 cursor-pointer"
@@ -341,6 +371,7 @@
                                                 class="flex items-center space-x-3 cursor-pointer"
                                             >
                                                 <input
+                                                    :disabled="isDisabled"
                                                     type="checkbox"
                                                     x-model="formData.criminalBackground"
                                                     class="form-checkbox h-5 w-5 text-blue-600 rounded focus:ring-blue-500 border-gray-300 cursor-pointer"
@@ -358,8 +389,8 @@
                                             </label>
                                         </li>
                                     </ul>
-                                </div>
-                                <div class="flex items-center justify-between py-4 border-t">
+                                </div>--}}
+{{--                                <div class="flex items-center justify-between py-4 border-t">
                                     <div class="mt-4">
                                         <label
                                             for="document"
@@ -367,15 +398,83 @@
                                         >Document</label
                                         >
                                         <input
+                                            :disabled="isDisabled"
                                             type="file"
+                                            @change="handleFileUpload"
                                             id="document"
                                             name="document"
                                             class="block w-full px-2 py-3 text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none"
                                         />
                                     </div>
-                                </div>
-                                <div class="flex-1 flex items-end gap-2">
+                                </div>--}}
+                                @isset($workorder->workorderbackground)
+                                    <div class="flex items-center justify-between py-4 border-t">
+                                        <table class="w-full border-collapse border">
+                                            <thead>
+                                            <tr class="bg-gray-100">
+                                                <th class="border p-2">Document Check List</th>
+                                                <th class="border p-2">Date</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <tr>
+                                                <td class="border p-2">Code of Conduct</td>
+                                                <td class="border p-2">{{formatDate($workorder->workorderbackground->created_at) }}
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="border p-2">Data Privacy / Data Handling</td>
+                                                <td class="border p-2">{{formatDate($workorder->workorderbackground->created_at) }}</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="border p-2">Non-Disclosure</td>
+                                                <td class="border p-2">{{formatDate($workorder->workorderbackground->created_at) }}</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="border p-2">Criminal Background</td>
+                                                <td class="border p-2">{{formatDate($workorder->workorderbackground->created_at) }}</td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                    <div class="flex items-center justify-between py-4 border-t">
+                                        <table class="w-full border-collapse border">
+                                            <thead>
+                                            <tr class="bg-gray-100">
+                                                <th class="border p-2">Document Type</th>
+                                                <th class="border p-2">Document List</th>
+                                                <th class="border p-2">Action</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            @if ($workorder->workorderbackground->file)
+                                                <tr>
+                                                    <td class="border p-2">Document</td>
+                                                    <td class="border p-2"><a href="#">{{$workorder->workorderbackground->file }}</a></td>
+                                                    <td class="border p-2">
+                                                        <a href="{{ asset('storage/background_verify/' . $workorder->workorderbackground->file) }}" class="text-blue-500 hover:text-blue-700" download>
+                                                            <i class="fas fa-download"></i>
+                                                        </a>
+
+                                                        <button
+                                                            type="button"
+                                                            class="text-red-500 hover:text-red-700 ml-3 bg-transparent"
+                                                            @click="deleteBackgroundFile({{ $workorder->workorderbackground->id }})"
+                                                        >
+                                                            <i class="fas fa-trash"></i>
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            @endif
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                @endisset
+
+{{--                                <div class="flex-1 flex items-end gap-2">
                                     <button
+                                        :disabled="isDisabled"
                                         @click="submitForm('save')"
                                         type="submit"
                                         class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
@@ -383,13 +482,14 @@
                                         Save
                                     </button>
                                     <button
+                                        :disabled="isDisabled"
                                         @click="submitForm('saveAndSubmit')"
                                         type="button"
                                         class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
                                     >
                                         Save & Submit
                                     </button>
-                                </div>
+                                </div>--}}
                             </form>
                         </div>
                     </div>

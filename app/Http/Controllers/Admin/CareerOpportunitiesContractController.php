@@ -207,7 +207,7 @@ class CareerOpportunitiesContractController extends BaseController
                 return response()->json([
                     'success' => true,
                     'message' => 'Contractor Login information has been emailed!',
-                    'redirect_url' => route('admin.contracts') // Redirect back URL for AJAX
+                    'redirect_url' => route('admin.contracts.index') // Redirect back URL for AJAX
                 ]);
 
 
