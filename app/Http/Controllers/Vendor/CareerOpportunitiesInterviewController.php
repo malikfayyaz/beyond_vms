@@ -70,6 +70,6 @@ class CareerOpportunitiesInterviewController extends Controller
         $interview = CareerOpportunitiesInterview::findOrFail($id);
         $offer = CareerOpportunitiesOffer::where('submission_id', $interview->submission_id)->first();
        
-        return view('admin.interview.view', compact('interview','offer'));
+        return view('vendor.interview.view', compact('interview','offer'));
     }
 }
