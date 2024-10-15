@@ -34,6 +34,9 @@ class CareerOpportunitiesOfferController extends Controller
                 ->addColumn('vendor_name', function($row) {
                     return $row->vendor ? $row->vendor->full_name : 'N/A';
                 })
+                ->addColumn('status', function($row) {
+                    return CareerOpportunitiesOffer::getOfferStatus($row->status);
+                })
                 ->addColumn('created_at', function($row) {
                     return $row->created_at ? $row->created_at->format('Y-m-d') : 'N/A';
                 })

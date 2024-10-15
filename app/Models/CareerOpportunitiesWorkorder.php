@@ -64,4 +64,29 @@ class CareerOpportunitiesWorkorder extends Model
     {
         return $this->belongsTo(Location::class, 'location_id', 'id');
     }
+    public static function getWorkorderStatus($statusId)
+    {
+        switch ($statusId) {
+            case '0':
+                return 'Pending';
+            case '1':
+                return 'Approved';
+            case '2':
+                return 'Rejected';
+            case '3':
+                return 'Closed';
+            case '4':
+                return 'Expired';
+            case '5':
+                return 'Rehire';
+            case '6':
+                return 'Withdrawn';
+            case '7':
+                return 'Pending Approval';
+            case '14':
+                return 'Cancelled';
+            default:
+                return 'Unknown Status'; // Fallback for unrecognized status IDs
+        }
+    }
 }

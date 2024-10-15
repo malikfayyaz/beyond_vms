@@ -7,6 +7,7 @@
     <div class="ml-16">
         @include('admin.layouts.partials.header')
         <div class="bg-white mx-4 my-8 rounded p-8">
+            @include('admin.layouts.partials.alerts')
           <div class="mb-8">
             <div class="w-full">
               <!-- <div class="w-full space-y-4">

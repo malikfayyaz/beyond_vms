@@ -40,7 +40,7 @@
                                     <p class="font-light">
                       <span
                           class="px-2 inline-flex text-xs leading-5 text-white font-semibold rounded-full bg-green-500"
-                      >{{$workorder->status}}</span
+                      >{{\App\Models\CareerOpportunitiesWorkorder::getWorkorderStatus($workorder->status)}}</span
                       >
                                     </p>
                                 </div>

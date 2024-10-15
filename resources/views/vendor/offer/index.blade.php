@@ -6,6 +6,7 @@
     <div class="ml-16">
         @include('vendor.layouts.partials.header')
         <div class="bg-white mx-4 my-8 rounded p-8">
+            @include('vendor.layouts.partials.alerts')
             <div >
                 <div class="flex justify-between items-center mb-6">
                     <h2 class="text-2xl font-bold">Offers</h2>

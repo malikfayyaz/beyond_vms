@@ -10,7 +10,7 @@
         <div>
           <div class="mx-4 rounded p-8">
             <div class="w-full flex justify-end items-center gap-4">
-            @if (!in_array($submission->resume_status, array(6, 7, 2, 15, 8, 9, 11)) && (!in_array($submission->careerOpportunity->jobStatus, array(4, 12))) && $submission->careerOpportunity->interview_process == 'Yes') 
+            @if (!in_array($submission->resume_status, array(6, 7, 2, 15, 8, 9, 11)) && (!in_array($submission->careerOpportunity->jobStatus, array(4, 12))) && $submission->careerOpportunity->interview_process == 'Yes')
               <a href="{{ route('client.interview.create',  ['id' => $submission->id]) }}"
 
                 type="button"
@@ -27,7 +27,7 @@
                 create offer
               </a>
               @endif
-             
+
               <a href="{{ route('client.submission.index') }}">
                   <button
                       type="button"
@@ -137,7 +137,7 @@
                           <span class="text-gray-600">Status:</span>
                           <span
                             class="bg-green-500 text-white px-2 py-1 rounded-full text-sm"
-                          >{{$submission->resume_status}}</span>
+                          >{{\App\Models\CareerOpportunitySubmission::getSubmissionStatus($submission->resume_status)}}</span>
                         </div>
                         <div class="flex justify-between py-3 px-4">
                           <span class="text-gray-600">Unique ID:</span>
@@ -301,7 +301,7 @@
                             <span class="text-gray-600">Bill Rate:</span>
                             <span
                               class="font-semibold"
-                              
+
                             >${{$submission->vendor_bill_rate}}</span>
                           </div>
                           <div class="flex justify-between items-center mt-1">

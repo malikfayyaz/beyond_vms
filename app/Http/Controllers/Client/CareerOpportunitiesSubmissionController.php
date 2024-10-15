@@ -19,6 +19,10 @@ class CareerOpportunitiesSubmissionController extends Controller
                 ->addColumn('consultant_name', function($row) {
                     return $row->consultant ? $row->consultant->full_name : 'N/A';
                 })
+                ->addColumn('resume_status', function($row) {
+                    return CareerOpportunitySubmission::getSubmissionStatus($row->resume_status);
+                })
+
                 ->addColumn('unique_id', function($row) {
                     return $row->consultant ? $row->consultant->unique_id : 'N/A';
                 })

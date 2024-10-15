@@ -164,7 +164,7 @@
                           <span class="text-gray-600">Status:</span>
                           <span
                             class="bg-green-500 text-white px-2 py-1 rounded-full text-sm"
-                          >{{$submission->resume_status}}</span>
+                          >{{\App\Models\CareerOpportunitySubmission::getSubmissionStatus($submission->resume_status)}}</span>
                         </div>
                         <div class="flex justify-between py-3 px-4">
                           <span class="text-gray-600">Unique ID:</span>

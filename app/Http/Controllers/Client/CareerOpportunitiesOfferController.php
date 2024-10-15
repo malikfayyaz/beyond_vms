@@ -34,6 +34,9 @@ class CareerOpportunitiesOfferController extends Controller
                 ->addColumn('vendor_name', function($row) {
                     return $row->vendor ? $row->vendor->full_name : 'N/A';
                 })
+                ->addColumn('status', function($row) {
+                    return CareerOpportunitiesOffer::getOfferStatus($row->status);
+                })
                 ->addColumn('created_at', function($row) {
                     return $row->created_at ? $row->created_at->format('Y-m-d') : 'N/A';
                 })
@@ -166,20 +169,22 @@ class CareerOpportunitiesOfferController extends Controller
         $validated = $request->validate([
             'rowId' => 'required|integer',
         ]);
-        if ($actionType == 'Accept'){
-            $workflow = OfferWorkFlow::findOrFail($request->rowId);
+        $workflow = OfferWorkFlow::findOrFail($request->rowId);
+        if ($actionType == 'Accept') {
             offerHelper::approveofferWorkFlow($request);
-        }
-        elseif ($actionType == 'Reject'){
-            $workflow = OfferWorkFlow::findOrFail($request->rowId);
+            $message = 'Offer Workflow Accepted successfully!';
+            session()->flash('success', $message);
+        } elseif ($actionType == 'Reject') {
             offerHelper::rejectoffersWorkFlow($request);
+            $message = 'Offer Workflow Rejected successfully!';
+            session()->flash('success', $message);
         }
-
         return response()->json([
             'success' => true,
-            'message' => 'Offer Workflow accepted successfully!',
+            'message' => $message,
             'redirect_url' => route('client.offer.show', ['id' => $workflow->offer_id]),
         ]);
+
 
     }
 }

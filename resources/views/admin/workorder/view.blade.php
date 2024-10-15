@@ -89,7 +89,7 @@
                     <p class="font-light">
                       <span
                         class="px-2 inline-flex text-xs leading-5 text-white font-semibold rounded-full bg-green-500"
-                        >{{$workorder->status}}</span
+                        >{{\App\Models\CareerOpportunitiesWorkorder::getWorkorderStatus($workorder->status)}}</span
                       >
                     </p>
                   </div>
@@ -107,7 +107,7 @@
                     <h4 class="font-medium capitalize">offer accepted by:</h4>
                   </div>
                   <div class="w-2/4">
-                    <p class="font-light"><?php 
+                    <p class="font-light"><?php
                              if($workorder->offer->modified_by_type =="1" ){
                       $admin = App\Models\Admin::find($workorder->offer->modified_by_id);
                       echo $admin->full_name;
@@ -510,14 +510,14 @@
                                 id="accountManagerValue" disabled
                               >
                               @isset($workorder->vendor)
-                                            <option value="{{ $workorder->vendor->id }}" 
+                                            <option value="{{ $workorder->vendor->id }}"
                                                >
-                                                {{ $workorder->vendor->full_name }} 
+                                                {{ $workorder->vendor->full_name }}
                                             </option>
                                             {{-- Team Members --}}
                                                 @foreach($workorder->vendor->teamMembers as $team)
-                                                <option value="{{$team->teammember_id}}" 
-                                               
+                                                <option value="{{$team->teammember_id}}"
+
                                                 >{{$team->teammember->full_name}}</option>
                                                 @endforeach
                                             @endisset
@@ -623,7 +623,7 @@
                             </div>
                           </div>
                         </div>
-                        
+
                         <div class="px-6 py-3">
                           <div class="flex space-x-4">
                             <div class="flex-1">
@@ -757,11 +757,11 @@
                     role="tabpanel"
                     class=""
                     >
-                    @if($workorder->verification_status==1) 
+                    @if($workorder->verification_status==1)
                     <div
                       class="overflow-x-auto"
-                      x-data="{ 
-                        openModal: false, 
+                      x-data="{
+                        openModal: false,
                         currentRowId: null,
                         rows: [
                           { id: 1, documentCheckList: 'Code of Conduct', dateTime: '10/03/2024 06:18 PM' },
@@ -806,7 +806,7 @@
                       <p><b>Reviewed By:</b> System Admin</p>
                       <p><b>Reviewed Date:</b> 10/03/2024</p>
                     </div>
-                    @else 
+                    @else
                     <p>Background verification still not submitted for review.</p>
                     @endif
                   </section>
@@ -1053,12 +1053,12 @@
         </div>
 
 @endsection
-@php  
+@php
   if($workorder->original_start_date=='0000-00-00' || $workorder->original_start_date == '' || strtotime($workorder->original_start_date) < 0){
                 $onboardOriginalStartDate = $workorder->start_date;
             }else{
                 $onboardOriginalStartDate = $workorder->original_start_date;
-            } 
+            }
 @endphp
 <script>
       document.addEventListener("alpine:init", () => {
@@ -1261,9 +1261,9 @@
                                   <option value="custom">Custom</option>
                               </select>
                               <div x-show="itemsPerPage === 'custom'" class="flex items-center">
-                                  <input 
-                                      type="number" 
-                                      x-model.number="customItemsPerPage" 
+                                  <input
+                                      type="number"
+                                      x-model.number="customItemsPerPage"
                                       @input="updateCustomPagination()"
                                       min="1"
                                       class="border rounded px-2 py-1 w-20"

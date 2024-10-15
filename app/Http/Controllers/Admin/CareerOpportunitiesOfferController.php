@@ -31,6 +31,9 @@ class CareerOpportunitiesOfferController extends BaseController
                 ->addColumn('hiring_manger', function($row) {
                     return $row->careerOpportunity->hiringManager ? $row->careerOpportunity->hiringManager->fullname : 'N/A';
                 })
+                ->addColumn('status', function($row) {
+                    return CareerOpportunitiesOffer::getOfferStatus($row->status);
+                })
                 ->addColumn('vendor_name', function($row) {
                     return $row->vendor ? $row->vendor->full_name : 'N/A';
                 })
@@ -261,15 +264,19 @@ class CareerOpportunitiesOfferController extends BaseController
         $workflow = OfferWorkFlow::findOrFail($request->rowId);
         if ($actionType == 'Accept') {
             offerHelper::approveofferWorkFlow($request);
+            $message = 'Offer Workflow Accepted successfully!';
+            session()->flash('success', $message);
         } elseif ($actionType == 'Reject') {
             offerHelper::rejectoffersWorkFlow($request);
+            $message = 'Offer Workflow Rejected successfully!';
+            session()->flash('success', $message);
         }
-
         return response()->json([
             'success' => true,
-            'message' => 'Offer Workflow accepted successfully!',
+            'message' => $message,
             'redirect_url' => route('admin.offer.show', ['id' => $workflow->offer_id]),
         ]);
+
 
     }
 
