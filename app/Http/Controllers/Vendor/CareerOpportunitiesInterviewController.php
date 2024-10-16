@@ -10,6 +10,8 @@ use App\Models\CareerOpportunitiesOffer;
 use Yajra\DataTables\Facades\DataTables;
 use App\Models\Consultant;
 use Carbon\Carbon;
+use App\Models\Vendor;
+
 
 class CareerOpportunitiesInterviewController extends Controller
 {
@@ -110,5 +112,33 @@ class CareerOpportunitiesInterviewController extends Controller
         ]);
     }
 
-    
+    public function rejectInterview(Request $request,$id) 
+    {
+        $user = \Auth::user();
+        $userid = \Auth::id();
+        $vendorid =  Vendor::getVendorIdByUserId($userid);
+       
+        $validateData = $request->validate([
+            'reschedule_reason' => 'required|int',
+            'rejection_note' => 'required|string|max:250',
+        ]);
+        
+        $interview = CareerOpportunitiesInterview::findOrFail($id);
+        $interview->reason_rejection = $validateData['reschedule_reason'];
+        $interview->notes = $validateData['rejection_note'];
+        $interview->status = 3;
+        $interview->rejected_by = $vendorid;       
+        $interview->rejected_type = 3; 
+        $interview->interview_cancellation_date = now(); 
+        $interview->save();
+        
+        $successMessage = 'Interview rejected successfully!';
+        session()->flash('success', $successMessage);
+
+        return response()->json([
+            'success' => true,
+            'message' => $successMessage,
+            'redirect_url' =>  route("vendor.interview.index")  // Redirect URL for AJAX
+        ]);
+    }
 }
