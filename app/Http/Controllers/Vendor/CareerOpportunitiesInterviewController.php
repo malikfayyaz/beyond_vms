@@ -79,26 +79,36 @@ class CareerOpportunitiesInterviewController extends Controller
     {
         $validateData = $request->validate([
             'interviewTiming' => 'required',
-            'can_phone' => 'required|numeric',
-            // 'vendor_note' => 'required',
+            'can_phone' => 'nullable|numeric',
+            'vendor_note' => 'required',
+            'phone_ext' => 'nullable|numeric',
         ]);
+
         $interview = CareerOpportunitiesInterview::findOrFail($id);
 
-        $consultant = Consultant::findOrFail($interview->candidate_id);
-        // dd($consultant);
-       
+        $consultant = Consultant::findOrFail($interview->candidate_id);       
 
         $formattedDate = Carbon::createFromFormat('m/d/Y', $validateData['interviewTiming'])->format('Y-m-d');
 
-        if ($request->has('acceptinterview')) {
-           
-            $interview->interview_acceptance_date = $formattedDate;
-            $interview->save();
+        $interview->interview_acceptance_date = $formattedDate;
+        $interview->acceptance_notes = $validateData['vendor_note'];
+        $interview->status = 2;
+        $interview->save();
 
-            // Redirect or return success response
-            return redirect()->route('vendor.interview.index')->with('success', 'Interview accepted successfully!');
+        if (!empty($validateData['can_phone'])) {
+           $consultant->phone = $validateData['can_phone'];
+           $consultant->save();
         }
 
-       
+        $successMessage = 'Interview approved successfully!';
+        session()->flash('success', $successMessage);
+
+        return response()->json([
+            'success' => true,
+            'message' => $successMessage,
+            'redirect_url' =>  route("vendor.interview.index")  // Redirect URL for AJAX
+        ]);
     }
+
+    
 }

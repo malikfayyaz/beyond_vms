@@ -311,9 +311,9 @@
 
                   <div class="mt-6">
                     <div x-show="activePage === 'tab1'">
-                    <form action="{{ route('vendor.interview.saveTiming', $interview->id) }}" method="POST" class="space-y-6"> 
+                    <form x-data="acceptInterview()" @submit.prevent="submitData()" class="space-y-6">
                       @csrf
-                          <div class="overflow-x-auto">
+                      <div class="overflow-x-auto">
                               <table class="min-w-full bg-white border rounded-lg shadow-md text-sm">
                                   <thead class="bg-blue-400 text-white">
                                       <tr>
@@ -324,52 +324,102 @@
                                       </tr>
                                   </thead>
                                   <tbody>
-                                    @foreach($interview->interviewDates as $interviewDate)
-                                      <tr class="border-b">
+                                      @foreach($interview->interviewDates as $interviewDate)
+                                      <tr class="">
                                           <td class="py-3 px-4">
                                               <div class="flex items-center">
-                                                  <input type="radio" name="interviewTiming" value="{{ $interviewDate->formatted_schedule_date }}" class="mr-2">
-                                                  <p class="font-bold">{{ $interviewDate->formatted_schedule_date }} (Recommended)</p>
+                                                  <input type="radio" x-model="formData.interviewTiming" value="{{ $interviewDate->formatted_schedule_date }}" class="mr-2">
+                                                  <p class="font-bold">{{ $interviewDate->formatted_schedule_date }}</p>
                                               </div>
+                                              
                                           </td>
                                           <td class="py-3 px-4 font-bold">{{ $interviewDate->formatted_start_time }}</td>
                                           <td class="py-3 px-4 font-bold">{{ $interviewDate->formatted_end_time }}</td>
-                                          <td class="py-3 px-4 font-bold"> {{$interview->timezone->title}}
-                                          </td>
+                                          <td class="py-3 px-4 font-bold">{{$interview->timezone->title}}</td>
                                       </tr>
-                                    @endforeach
+                                      @endforeach
+                                      <tr class="border-b">
+                                        <td class="px-4">
+                                          <p x-show="errors.interviewTiming" class="text-red-500 text-xs italic" x-text="errors.interviewTiming"></p>
+                                        </td>
+                                      </tr>
                                       <tr class="border-b">
                                           <td class="py-3 px-4">Candidate Phone Number:</td>
                                           <td class="py-3 px-4" colspan="3">
-                                          <input 
-                                          type="tel" 
-                                          name="can_phone" 
-                                          class="w-full p-2 text-gray-500 border rounded-md shadow-sm focus:outline-none"
-                                          placeholder="Enter phone number">
+                                              <input type="tel" x-model="formData.can_phone" x-on:input="formatPhoneNumber($event.target)" name="can_phone" class="w-full h-12 px-4 text-gray-500 border border-gray-300 rounded-md shadow-sm focus:outline-none"
+                                              placeholder="(XXXX) XXX-XXXX">
+                                
                                           </td>
                                       </tr>
                                       <tr class="border-b">
                                           <td class="py-3 px-4">Ext No:</td>
                                           <td class="py-3 px-2">
-                                              <input type="number" name="phone_ext" max="99" min="0" class="w-full p-2 text-gray-500 border rounded-md shadow-sm focus:outline-none "
-                                              >
+                                              <input type="number" x-model="formData.phone_ext" name="phone_ext" max="99" min="0" class="w-full p-2 text-gray-500 border rounded-md shadow-sm focus:outline-none">
                                           </td>
                                       </tr>
                                       <tr class="border-b">
                                           <td class="py-3 px-4" colspan="5">
                                               <label for="vendor_note" class="block font-bold">Note <i class="fa fa-asterisk text-red-600"></i>:</label>
-                                              <textarea id="vendor_note" name="vendor_note" placeholder="Enter Note..." class="w-full p-2 mt-2 text-gray-500 border rounded-md shadow-sm focus:outline-none min-h-[150px]"></textarea>
+                                              <textarea x-model="formData.vendor_note" id="vendor_note" name="vendor_note" placeholder="Enter Note..." class="w-full p-2 mt-2 text-gray-500 border rounded-md shadow-sm focus:outline-none min-h-[150px]"></textarea>
+                                              <p x-show="errors.vendor_note" class="text-red-500 text-xs italic" x-text="errors.vendor_note"></p>
                                           </td>
                                       </tr>
                                   </tbody>
                               </table>
                           </div>
-
                           <div class="flex justify-evenly">
                             <button type="submit" name="acceptinterview" class="bg-green-600 text-white py-2 px-4 rounded hover:bg-green-500 cursor-pointer">
-                                Accept Interview
+                              Accept Interview
                             </button>
-                              <a href="#" class="btn bg-red-600 text-white py-2 px-4 rounded hover:bg-red-500">Reschedule/Cancel Interview</a>
+                            <div x-data="{ showModal: false }">
+                              <a href="javascript:void(0);" 
+                                class="btn bg-red-600 text-white py-2 px-4 rounded hover:bg-red-500" 
+                                @click="showModal = true">
+                                Reschedule/Cancel Interview
+                              </a>
+                              <!-- The Modal -->
+                              <div x-show="showModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50" 
+                                  @click.away="showModal = false">
+                                  <div class="bg-white w-full max-w-lg rounded-lg shadow-lg">
+                                      <!-- Modal Header -->
+                                      <div class="flex justify-between items-center p-4 border-b">
+                                          <h4 class="text-lg font-semibold">Reschedule/Cancel Interview</h4>
+                                          <button type="button" class="text-gray-500 hover:text-gray-700 bg-transparent" @click="showModal = false">&times;</button>
+                                      </div>
+
+                                      <!-- Modal Body -->
+                                      <div class="p-4">
+                                        <form  method="POST" action="{{ route('vendor.interview.saveTiming', $interview->id) }}" class="reject-form">
+                                              @csrf
+                                              <div class="mb-4">
+                                                  <label class="block text-sm font-medium text-gray-700">Reschedule Reason:</label>
+                                                  <select
+                                                    id="reschedule_reason"
+                                                    name="reschedule_reason"
+                                                    class="w-full px-3 py-2 border rounded-md"
+                                                    :class="{'border-red-500': errors.timeZone}"
+                                                >
+                                                    <option value="">Select</option>
+                                                    @foreach (checksetting(14) as $key => $value)
+                                                        <option value="{{ $key }}">{{ $value }}</option>
+                                                    @endforeach
+                                                </select>
+                                              </div>
+                                              <div>
+                                              <label class="block text-sm font-medium text-gray-700">Note <i class="fa fa-asterisk text-red-600"></i>:</label>
+                                              <textarea name="rejection_note" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"></textarea>
+                                              </div>
+
+                                              <!-- Submit Button -->
+                                              <div class="flex justify-end space-x-4">
+                                                  <button type="submit" name="rejectinterview" class="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-500">Submit</button>
+                                                  <button type="button" class="bg-gray-600 text-white py-2 px-4 rounded hover:bg-gray-500" @click="showModal = false">Cancel</button>
+                                              </div>
+                                          </form>
+                                      </div>
+                                  </div>
+                              </div>
+                            </div>
                           </div>
                       </form>
                     </div>
@@ -397,6 +447,69 @@
             </div>
           </div>
         </div>
-
     </div>
     @endsection
+
+<script>
+function acceptInterview() {
+    return {
+        formData: {
+            interviewTiming: '',
+            can_phone: '',
+            phone_ext: '',
+            vendor_note: '',
+        },
+        errors: {},
+        formatPhoneNumber(input) {
+          let phoneNumber = input.value.replace(/\D/g, "");
+          if (phoneNumber.length > 10) {
+            phoneNumber = phoneNumber.slice(0, 10);
+          }
+          if (phoneNumber.length >= 6) {
+            phoneNumber = `(${phoneNumber.slice(0, 4)}) ${phoneNumber.slice(
+              4,
+              7
+            )}-${phoneNumber.slice(7)}`;
+          } else if (phoneNumber.length >= 4) {
+            phoneNumber = `(${phoneNumber.slice(0, 4)}) ${phoneNumber.slice(4)}`;
+          }
+          input.value = phoneNumber;
+        },
+        validateFields() {
+            this.errors = {}; // Clear previous errors
+            let errorCount = 0;
+
+            if (this.formData.interviewTiming === "") {
+                this.errors.interviewTiming = "Interview date is required";
+                errorCount++;
+            }
+
+            if (this.formData.vendor_note.trim() === "") {
+                this.errors.vendor_note = "Note is required";
+                errorCount++;
+            }
+
+            return errorCount === 0;  // Return true if no errors
+        },
+        submitData() {
+            if (this.validateFields()) {
+                const formData = new FormData();
+                formData.append('interviewTiming', this.formData.interviewTiming);
+                formData.append('can_phone', this.formData.can_phone);
+                formData.append('phone_ext', this.formData.phone_ext);
+                formData.append('vendor_note', this.formData.vendor_note);
+
+                const url = '{{ route("vendor.interview.saveTiming", $interview->id) }}';
+
+                // Send AJAX request
+                ajaxCall(url, 'POST', [[this.onSuccess, ['response']]], formData);
+            }
+        },
+        onSuccess(response) {
+          window.location.href = response.redirect_url;
+        }
+    }
+}
+
+
+</script>

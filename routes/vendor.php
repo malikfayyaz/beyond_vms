@@ -35,6 +35,7 @@ Route::middleware(['user_role:vendor'])->group(function () {
         Route::match(['get', 'post'], 'interview/index', [CareerOpportunitiesInterviewController::class, 'index'])->name('interview.index');
         Route::get('interview/{id}', [CareerOpportunitiesInterviewController::class, 'show'])->name('interview.show');
         Route::post('interview/{id}/saveTiming', [CareerOpportunitiesInterviewController::class, 'saveInterviewTiming'])->name('interview.saveTiming');
+        // Route::post('interview/{id}/reject_interview', [CareerOpportunitiesInterviewController::class, 'rejectInterview'])->name('interview.reject_interview');
 
         // contract
         Route::resource('contracts', \App\Http\Controllers\Vendor\CareerOpportunitiesContractController::class);

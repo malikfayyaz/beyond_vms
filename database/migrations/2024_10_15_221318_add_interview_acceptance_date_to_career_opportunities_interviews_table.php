@@ -12,7 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('career_opportunities_interviews', function (Blueprint $table) {
-            $table->date('interview_acceptance_date')->nullable(); // Adding a nullable date field
+            $table->date('interview_acceptance_date')->nullable(); 
+            $table->text('acceptance_notes')->nullable();
         });
     }
 
@@ -23,6 +24,7 @@ return new class extends Migration
     {
         Schema::table('career_opportunities_interviews', function (Blueprint $table) {
             $table->dropColumn('interview_acceptance_date');
+            $table->dropColumn('acceptance_notes');
         });
     }
 };
