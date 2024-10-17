@@ -151,7 +151,7 @@
         <div x-show="tab === 'activejobs'" class="flex w-full gap-4">
 
 
-          <div class="bg-white mx-4 my-8 rounded p-8">
+          <div class="bg-white mx-4 my-8 rounded p-8 mt-0 pt-0">
               <div class="flex justify-between items-center mb-6">
                   <h2 class="text-2xl font-bold"></h2>
 
@@ -466,6 +466,14 @@
                 >
               </h3>
               <div class="flex flex-col">
+                  <div class="flex items-center justify-between py-4 border-t">
+                      <div class="w-2/4">
+                          <h4 class="font-medium">Job Status:</h4>
+                      </div>
+                      <div class="w-2/4">
+                          <p class="font-light">{{ \App\Models\CareerOpportunity::getStatus($job->jobStatus) }}</p>
+                      </div>
+                  </div>
                 <div class="flex items-center justify-between py-4 border-t">
                   <div class="w-2/4">
                     <h4 class="font-medium">Job Title:</h4>
