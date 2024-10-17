@@ -324,12 +324,35 @@
                                       </tr>
                                   </thead>
                                   <tbody>
+                                    @if($interview->interview_acceptance_date)
+                                      @foreach($interview->interviewDates as $interviewDate)
+                                        @if($interviewDate->schedule_date == $interview->interview_acceptance_date)
+                                        <tr class="bg-green-100">
+                                            <td class="py-3 px-4">
+                                              <div class="flex items-center" x-data="{ check: 'check' }">
+                                                  <input type="radio" x-model="check" value="check" class="mr-2">
+                                                  <p class="font-bold">{{ $interviewDate->formatted_schedule_date }} 
+                                                    
+                                                  </p>
+                                              </div>
+                                            </td>
+                                            <td class="py-3 px-4 font-bold">{{ $interviewDate->formatted_start_time }}</td>
+                                            <td class="py-3 px-4 font-bold">{{ $interviewDate->formatted_end_time }}</td>
+                                            <td class="py-3 px-4 font-bold">{{$interview->timezone->title}}</td>
+                                        </tr>
+                                        @endif
+                                      @endforeach
+                                    @else
                                       @foreach($interview->interviewDates as $interviewDate)
                                       <tr class="">
                                           <td class="py-3 px-4">
                                               <div class="flex items-center">
                                                   <input type="radio" x-model="formData.interviewTiming" value="{{ $interviewDate->formatted_schedule_date }}" class="mr-2">
-                                                  <p class="font-bold">{{ $interviewDate->formatted_schedule_date }}</p>
+                                                  <p class="font-bold">{{ $interviewDate->formatted_schedule_date }} 
+                                                  @if($loop->first)
+                                                      (Recommended)
+                                                  @endif
+                                                  </p>
                                               </div>
                                               
                                           </td>
@@ -338,6 +361,7 @@
                                           <td class="py-3 px-4 font-bold">{{$interview->timezone->title}}</td>
                                       </tr>
                                       @endforeach
+                                    @endif
                                       <tr class="border-b">
                                         <td class="px-4">
                                           <p x-show="errors.interviewTiming" class="text-red-500 text-xs italic" x-text="errors.interviewTiming"></p>
@@ -368,9 +392,11 @@
                               </table>
                           </div>
                           <div class="">
-                            <button type="submit" name="acceptinterview" class="bg-green-600 text-white py-2 px-4 rounded hover:bg-green-500 cursor-pointer">
-                              Accept Interview
-                            </button>
+                            @if(empty($interview->interview_acceptance_date))
+                              <button type="submit" name="acceptinterview" class="bg-green-600 text-white py-2 px-4 rounded hover:bg-green-500 cursor-pointer">
+                                Accept Interview
+                              </button>
+                            @endif
                           </div>
                       </form>
                       <div x-data="{ showModal: false }">
