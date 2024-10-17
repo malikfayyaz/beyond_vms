@@ -6,6 +6,7 @@
     <div class="ml-16">
         @include('client.layouts.partials.header')
         <div  x-data="{ tab: 'activejobs' }"  class="bg-white mx-4 my-8 rounded p-8">
+            @include('client.layouts.partials.alerts')
             @if($job->jobStatus == 2)
               <div x-data="{
                     rejectionReason: '{{ $job->rejectionReason->title }}',

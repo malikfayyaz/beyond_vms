@@ -8,6 +8,7 @@
         @include('client.layouts.partials.header')
 
         <div>
+            @include('client.layouts.partials.alerts')
           <div class="mx-4 rounded p-8">
             <div class="w-full flex justify-end items-center gap-4">
 
