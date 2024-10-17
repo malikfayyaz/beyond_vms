@@ -49,7 +49,7 @@ class CareerOpportunitiesInterview extends Model
     }
 
     public function rejectedBy() {
-        return $this->belongsTo(Vendor::class, 'rejected_by', 'user_id');
+        return $this->belongsTo(User::class, 'rejected_by', 'id');
     }
     
     public function location() {

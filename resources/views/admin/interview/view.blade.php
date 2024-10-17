@@ -134,7 +134,7 @@
                           </div>
                           <div class="flex justify-between py-3 px-4">
                             <span class="text-gray-600">Cancel By:</span>
-                            <span class="font-semibold">{{$interview->rejectedBy->full_name}}</span>
+                            <span class="font-semibold">{{$interview->rejectedBy->name}}</span>
                           </div>
                           <div class="flex justify-between py-3 px-4">
                             <span class="text-gray-600">Date & Time:</span>
