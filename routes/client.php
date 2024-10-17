@@ -43,6 +43,7 @@ Route::middleware(['user_role:client'])->group(function () {
         Route::POST('jobWorkFlowReject', [\App\Http\Controllers\Client\CareerOpportunitiesController::class, 'jobWorkFlowReject'])->name('jobWorkFlowReject');
             // contract
             Route::resource('contracts', \App\Http\Controllers\Client\CareerOpportunitiesContractController::class);
+            Route::POST('contracts/save-comments', [\App\Http\Controllers\Client\CareerOpportunitiesContractController::class, 'saveComments'])->name('saveComments');
 
 
     });
