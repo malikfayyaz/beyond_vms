@@ -126,10 +126,12 @@ class CareerOpportunitiesInterviewController extends Controller
         $interview = CareerOpportunitiesInterview::findOrFail($id);
         $interview->reason_rejection = $validateData['reschedule_reason'];
         $interview->notes = $validateData['rejection_note'];
+        $interview->interview_acceptance_date = null; 
+        $interview->acceptance_notes = null; 
         $interview->status = 3;
         $interview->rejected_by = $vendorid;       
         $interview->rejected_type = 3; 
-        $interview->interview_cancellation_date = now(); 
+        $interview->interview_cancellation_date = now()->toDateString();
         $interview->save();
         
         $successMessage = 'Interview rejected successfully!';
