@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Http\Controllers\Admin\CareerOpportunitiesSubmissionController;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -20,6 +21,14 @@ class CareerOpportunitiesContract extends Model
     public function careerOpportunity()
     {
         return $this->belongsTo(CareerOpportunity::class, 'career_opportunity_id' , 'id');
+    }
+    public function submission()
+    {
+        return $this->belongsTo(CareerOpportunitySubmission::class, 'submission_id' , 'id');
+    }
+    public function contractNotes()
+    {
+        return $this->hasMany(ContractNote::class, 'contract_id', 'id'); // Adjust the foreign key if necessary
     }
     public function workOrder()
     {
@@ -62,9 +71,9 @@ class CareerOpportunitiesContract extends Model
             case 2:
                 return 'Cancelled';
             case 3:
-                return 'Approved 3';
+                return 'Approved';
             case 4:
-                return 'Waiting For Supplier Approval 4';
+                return 'Waiting For Supplier Approval';
             default:
                 return 'danger N/A';
         }

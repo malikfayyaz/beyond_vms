@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Models\Admin;
 use App\Models\CareerOpportunitiesOffer;
 use App\Models\CareerOpportunity;
+use App\Models\ContractNote;
 use App\Models\OfferWorkFlow;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Support\Facades\Auth;
@@ -221,6 +222,28 @@ class CareerOpportunitiesContractController extends BaseController
         $contract = CareerOpportunitiesContract::with('careerOpportunity')->findOrFail($id);
         $job = CareerOpportunitiesContract::with('careerOpportunity')->findOrFail($id);
         return view('admin.contract.view', compact('contract','job'));
+    }
+    public function saveComments(Request $request)
+    {
+     //   dd($request->all());
+        $request->validate([
+            'note' => 'required|string',
+            'contract_id' => 'required|integer'
+        ]);
+        $note = new ContractNote();
+        $note->contract_id = $request->contract_id;
+        $note->user_id = Auth::id();
+        $note->notes = $request->note;
+        $note->posted_by_type = Auth::user()->role == 'Client' ? 'Client' : 'Admin';
+        $note->save();
+        session()->flash('success', 'Notes Added Successfully');
+        return response()->json([
+            'success' => true,
+            'message' => 'Notes Added Successfully',
+            'posted_by' => Auth::user()->name,
+            'created_at' => $note->created_at->format('m/d/Y H:i A'),
+            'redirect_url' => route('admin.contracts.show', $note->contract_id) // Redirect back URL for AJAX
+        ]);
     }
 
     /**

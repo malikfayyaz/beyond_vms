@@ -6,6 +6,7 @@
     <div class="ml-16">
     @include('admin.layouts.partials.header')
             <div class="bg-white mx-4 my-8 rounded p-8">
+                @include('admin.layouts.partials.alerts')
             <div x-data="{ activePage: 'tab1' }" class="mb-4">
                 <ul class="grid grid-flow-col text-center text-gray-500 bg-gray-100 rounded-lg p-1">
                     <!-- Tab 1: Active Jobs -->
@@ -44,7 +45,7 @@
                             </div>
                         </a>
                     </li>
-                       
+
 
                     <li class="flex justify-center items-center">
                         <a
@@ -81,7 +82,7 @@
                             </div>
                         </a>
                     </li>
-                        
+
                     <li class="flex justify-center items-center">
                         <a
                             href="javascript:void(0)"
@@ -110,17 +111,17 @@
                         </div>
 
                         <div x-show="activePage === 'tab3'">
-                            <h2 class="text-xl font-bold">tab3</p>
+                            @include('admin.contract.contract_tabdata')
                         </div>
                         <div x-show="activePage === 'tab4'">
-                            <h2 class="text-xl font-bold">tab4</p>
+                            @include('admin.contract.contract_tabdata')
                         </div>
                         <div x-show="activePage === 'tab5'">
-                            <h2 class="text-xl font-bold">tab5</p>
+                            @include('admin.contract.contract_tabdata')
                         </div>
                     </div>
                 </div>
-                
+
             </div>
 
 
