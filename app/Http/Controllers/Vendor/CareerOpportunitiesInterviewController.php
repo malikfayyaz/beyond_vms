@@ -95,6 +95,9 @@ class CareerOpportunitiesInterviewController extends Controller
         $interview->interview_acceptance_date = $formattedDate;
         $interview->acceptance_notes = $validateData['vendor_note'];
         $interview->status = 2;
+        $interview->rejected_by = null;       
+        $interview->rejected_type = null; 
+        $interview->interview_cancellation_date = null;
         $interview->save();
 
         if (!empty($validateData['can_phone'])) {
@@ -131,7 +134,7 @@ class CareerOpportunitiesInterviewController extends Controller
         $interview->status = 3;
         $interview->rejected_by = $vendorid;       
         $interview->rejected_type = 3; 
-        $interview->interview_cancellation_date = now()->toDateString();
+        $interview->interview_cancellation_date = now();
         $interview->save();
         
         $successMessage = 'Interview rejected successfully!';

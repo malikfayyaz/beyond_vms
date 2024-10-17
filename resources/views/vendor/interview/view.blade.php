@@ -118,6 +118,29 @@
                             class="bg-green-500 text-white px-2 py-1 rounded-full text-sm"
                             >{{$interview->status}}</span>
                         </div>
+                        @if($interview->status == 3)
+                          <div class="flex justify-between py-3 px-4">
+                            <p class="font-bold text-red-400">
+                              <i class="fas fa-clipboard"></i> Cancel Reason
+                            </p>
+                          </div>
+                          <div class="flex justify-between py-3 px-4">
+                            <span class="text-gray-600">Reason for Cancel::</span>
+                            <span class="font-semibold">{{$interview->reasonRejection->title}}</span>
+                          </div>
+                          <div class="flex justify-between py-3 px-4">
+                            <span class="text-gray-600">Cancel Notes:</span>
+                            <span class="font-semibold">{{$interview->notes}}</span>
+                          </div>
+                          <div class="flex justify-between py-3 px-4">
+                            <span class="text-gray-600">Cancel By:</span>
+                            <span class="font-semibold">{{$interview->rejectedBy->full_name}}</span>
+                          </div>
+                          <div class="flex justify-between py-3 px-4">
+                            <span class="text-gray-600">Date & Time:</span>
+                            <span class="font-semibold">{{$interview->formatted_interview_cancellation_date}}</span>
+                          </div>
+                        @endif
                         <div class="flex justify-between py-3 px-4">
                           <p class="font-bold text-blue-400">
                               <i class="fas fa-user"></i> Candidate Info
@@ -324,7 +347,7 @@
                                       </tr>
                                   </thead>
                                   <tbody>
-                                    @if($interview->interview_acceptance_date)
+                                    @if($interview->status == 2)
                                       @foreach($interview->interviewDates as $interviewDate)
                                         @if($interviewDate->schedule_date == $interview->interview_acceptance_date)
                                         <tr class="bg-green-100">
@@ -392,7 +415,7 @@
                               </table>
                           </div>
                           <div class="">
-                            @if(empty($interview->interview_acceptance_date))
+                            @if($interview->status == 1)
                               <button type="submit" name="acceptinterview" class="bg-green-600 text-white py-2 px-4 rounded hover:bg-green-500 cursor-pointer">
                                 Accept Interview
                               </button>
