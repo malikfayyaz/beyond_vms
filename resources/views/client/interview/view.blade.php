@@ -620,7 +620,7 @@
                     formData.append('cand_rej_note', this.formData.cand_rej_note);
 
                     // Specify your form submission URL
-                    const url = '{{ route("client.interview.rejectCandidate", $interview->id) }}';
+                    const url = '{{ route("interview.rejectCandidate", $interview->id) }}';
 
                     // Send AJAX request using ajaxCall function
                     ajaxCall(url, 'POST', [[this.onSuccess, ['response']]], formData);

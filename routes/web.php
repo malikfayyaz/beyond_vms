@@ -102,6 +102,7 @@ Route::middleware(['ensure_role_is_selected'])->group(function () {
     });
 
     Route::post('interview/{id}/reject_interview', [CommonController::class, 'rejectInterview'])->name('interview.reject_interview');
+    
     Route::post('interview/{id}/reject_candidate', [CommonController::class, 'rejectCandidate'])->name('interview.rejectCandidate');
 
 

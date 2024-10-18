@@ -40,7 +40,6 @@ Route::middleware(['user_role:client'])->group(function () {
         Route::get('interview/{id}/edit', [CareerOpportunitiesInterviewController::class, 'edit'])->name('interview.edit');
         Route::put('interview/{id}/update', [CareerOpportunitiesInterviewController::class, 'update'])->name('interview.update');
         Route::post('interview/{id}/complete_interview', [CareerOpportunitiesInterviewController::class, 'completeInterview'])->name('interview.complete_interview');
-        Route::post('interview/{id}/reject_candidate', [CareerOpportunitiesInterviewController::class, 'rejectCandidate'])->name('interview.rejectCandidate');
         
         
         
