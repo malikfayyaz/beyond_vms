@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Admin;
 use App\Models\CareerOpportunitiesContract;
 use App\Models\Client;
+use App\Models\ContractNote;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Yajra\DataTables\Facades\DataTables;
@@ -76,5 +77,27 @@ class CareerOpportunitiesContractController extends Controller
     {
         $contract = CareerOpportunitiesContract::with('careerOpportunity')->findOrFail($id);
         return view('client.contract.view', compact('contract'));
+    }
+    public function saveComments(Request $request) //SAVENOTES
+    {
+        //   dd($request->all());
+        $request->validate([
+            'note' => 'required|string',
+            'contract_id' => 'required|integer'
+        ]);
+        $note = new ContractNote();
+        $note->contract_id = $request->contract_id;
+        $note->user_id = Auth::id();
+        $note->notes = $request->note;
+        $note->posted_by_type = Auth::user()->role == 'Client' ? 'Client' : 'Admin';
+        $note->save();
+        session()->flash('success', 'Notes Added Successfully');
+        return response()->json([
+            'success' => true,
+            'message' => 'Notes Added Successfully',
+            'posted_by' => Auth::user()->name,
+            'created_at' => $note->created_at->format('m/d/Y H:i A'),
+            'redirect_url' => route('client.contracts.show', $note->contract_id) // Redirect back URL for AJAX
+        ]);
     }
 }

@@ -8,6 +8,7 @@
         @include('client.layouts.partials.header')
         <div class="ml-16">
             <div class="bg-white mx-4 my-8 rounded p-8">
+                @include('client.layouts.partials.alerts')
                 <div class="flex w-full gap-4">
                     <!-- Left Column -->
                     <div

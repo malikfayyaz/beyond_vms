@@ -1,6 +1,6 @@
 <!-- resources/views/partials/alerts.blade.php -->
 <div class="flex justify-center mb-8">
-    <img src="{{ asset('images/logo.png') }}" alt="Company Logo" class="h-12" />
+{{--    <img src="{{ asset('images/logo.png') }}" alt="Company Logo" class="h-12" />--}}
 </div>
 @if(session('status'))
             <div class="p-4 mb-4 text-sm text-green-700 bg-green-100 rounded-lg dark:bg-green-900 dark:text-green-300" role="alert">

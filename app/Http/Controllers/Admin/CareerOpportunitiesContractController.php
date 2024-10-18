@@ -223,7 +223,7 @@ class CareerOpportunitiesContractController extends BaseController
         $job = CareerOpportunitiesContract::with('careerOpportunity')->findOrFail($id);
         return view('admin.contract.view', compact('contract','job'));
     }
-    public function saveComments(Request $request)
+    public function saveComments(Request $request) //SAVENOTES
     {
      //   dd($request->all());
         $request->validate([

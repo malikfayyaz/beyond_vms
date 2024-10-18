@@ -6,6 +6,7 @@
     <div class="ml-16">
         @include('client.layouts.partials.header')
         <div  x-data="{ tab: 'activejobs' }"  class="bg-white mx-4 my-8 rounded p-8">
+            @include('client.layouts.partials.alerts')
             @if($job->jobStatus == 2)
               <div x-data="{
                     rejectionReason: '{{ $job->rejectionReason->title }}',
@@ -38,7 +39,7 @@
                 >
                     <li class="flex justify-center">
                         <a
-                            @click="tab = 'activejobs'" 
+                            @click="tab = 'activejobs'"
                             href="#page1"
                             class="w-full flex justify-center items-center gap-3 hover:bg-white hover:rounded-lg hover:shadow py-4 tab === 'activejobs'"
                         >
@@ -68,8 +69,8 @@
                     </li>
                     <li class="flex justify-center">
                         <a
-                        @click="tab = 'jobworkflow'" 
-                        :class="{ 'border-blue-500 text-blue-500': tab === 'jobworkflow' }" 
+                        @click="tab = 'jobworkflow'"
+                        :class="{ 'border-blue-500 text-blue-500': tab === 'jobworkflow' }"
                         class="flex justify-center items-center gap-3 py-4 w-full hover:bg-white hover:rounded-lg hover:shadow"
                         >
                           <i class="fa-solid fa-fill"></i>
@@ -319,6 +320,14 @@
                         >
                     </h3>
                     <div class="flex flex-col">
+                        <div class="flex items-center justify-between py-4 border-t">
+                            <div class="w-2/4">
+                                <h4 class="font-medium">Job Status:</h4>
+                            </div>
+                            <div class="w-2/4">
+                                <p class="font-light">{{ \App\Models\CareerOpportunity::getStatus($job->jobStatus) }}</p>
+                            </div>
+                        </div>
                         <div class="flex items-center justify-between py-4 border-t">
                             <div class="w-2/4">
                                 <h4 class="font-medium">Job Title:</h4>
@@ -608,7 +617,7 @@
             <div x-show="tab === 'jobworkflow'"   class="flex w-full gap-4">
          <div
           class="w-100 p-[30px] rounded border"
-          :style="{'border-color': 'var(--primary-color)'}"> 
+          :style="{'border-color': 'var(--primary-color)'}">
           <table class="min-w-full divide-y divide-gray-200" id="example">
             <thead class="bg-gray-50">
               <tr>
@@ -671,15 +680,15 @@
                                 .then(response => response.json())
                                 .then(data => {
                                     if (data.success) {
-                                        this.downloadUrl = data.downloadUrl; 
+                                        this.downloadUrl = data.downloadUrl;
                                     } else {
                                         console.error('Failed to fetch download URL');
                                     }
                                 })
                                 .catch(error => console.error('Error fetching download URL:', error));
                             }
-                        }" 
-                        x-init="fetchDownloadUrl()" 
+                        }"
+                        x-init="fetchDownloadUrl()"
                     >
                     <template x-if="downloadUrl">
                         <a :href="downloadUrl" class="underline" download> {{ $workflow->approval_doc }} </a>
@@ -721,7 +730,7 @@
         </div>
     </div>
 
-     
+
     </div>
          <div
               x-data="{
@@ -731,7 +740,7 @@
               note: '',
               errors: {},
               handleFileUpload(event) {
-                this.file = event.target.files[0];  
+                this.file = event.target.files[0];
               },
 
               validateForm() {
@@ -742,7 +751,7 @@
               submitForm() {
                 if (this.validateForm()) {
                   let formData = new FormData();
-                 
+
                   formData.append('note', this.note);
                   formData.append('workflow_id', this.currentRowId);
                   if (this.file) {
@@ -853,7 +862,7 @@
               submitForm() {
                 if (this.validateForm()) {
                   let formData = new FormData();
-                 
+
                   formData.append('note', this.note);
                   formData.append('workflow_id', this.currentRowId);
                   formData.append('reason', this.reason);
@@ -906,8 +915,8 @@
                     <div class="mb-4">
                           <div class="mt-2 px-7 py-3">
                             <p class="text-sm text-gray-500">
-                              
-                              
+
+
                             </p>
                           </div>
                           <label
@@ -927,8 +936,8 @@
                             <option value="">Select</option>
                             @foreach($rejectReasons as $reason)
                               <option value="{{ $reason->id }}">{{ $reason->title }}</option>
-                            @endforeach 
-                            
+                            @endforeach
+
                           </select>
                           <p
                             x-show="errors.reason"
@@ -947,7 +956,7 @@
                               x-model="note"
                           ></textarea>
                       </div>
-                      
+
                   </form>
                 </div>
 

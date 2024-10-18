@@ -6,6 +6,7 @@
     <div class="ml-16">
         @include('client.layouts.partials.header')
         <div class="bg-white mx-4 my-8 rounded p-8">
+            @include('client.layouts.partials.alerts')
             <div >
                 <div class="flex justify-between items-center mb-6">
                     <h2 class="text-2xl font-bold">Interviews</h2>
@@ -44,7 +45,7 @@
                         <th
                             class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                         >
-                            Job Profile 
+                            Job Profile
                         </th>
                         <th
                             class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
@@ -81,7 +82,7 @@
                         >
                             Action
                         </th>
-                        
+
                     </tr>
                     </thead>
                     <tbody>
@@ -97,9 +98,9 @@
     document.addEventListener('DOMContentLoaded', function() {
         if (window.$) {
             initializeDataTable('#listing', '/client/interview/index', [
-                { 
-                data: null, 
-                    name: 'serial', 
+                {
+                data: null,
+                    name: 'serial',
                     render: function (data, type, full, meta) {
                         return meta.row + 1;  // Display the row index (1-based)
                     }
@@ -116,7 +117,7 @@
                 { data: 'primary_end_time', name: 'primary_end_time'},
                 { data: 'worker_type', name: 'worker_type' },
                 { data: 'action', name: 'action', orderable: false, searchable: false }
-               
+
             ]);
         }
     });

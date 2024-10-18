@@ -8,6 +8,7 @@
         @include('client.layouts.partials.header')
 
         <div>
+            @include('client.layouts.partials.alerts')
           <div class="mx-4 rounded p-8">
             <div class="w-full flex justify-end items-center gap-4">
             @if (!in_array($submission->resume_status, array(6, 7, 2, 15, 8, 9, 11)) && (!in_array($submission->careerOpportunity->jobStatus, array(4, 12))) && $submission->careerOpportunity->interview_process == 'Yes')
@@ -19,7 +20,11 @@
                 schedule interview
               </a>
               @endif
-              @if (in_array($submission->resume_status, array(3, 7, 4, 5, 10)) && (empty($offer) || $offer->status == 2 ||  $offer->status == 13 ) && $offer->status != 12 &&(!in_array($submission->careerOpportunity->jobStatus, array(23, 24, 4, 1,5))))
+                @if (
+                  in_array($submission->resume_status, [3, 7, 4, 5, 10]) &&
+                  (empty($offer) || ($offer && ($offer->status == 2 || $offer->status == 13)) && $offer->status != 12) &&
+                  !in_array($submission->careerOpportunity->jobStatus, [23, 24, 4, 1, 5])
+              )
               <a href="{{ route('client.offer.create',  ['id' => $submission->id]) }}"
                 type="button"
                 class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 capitalize"

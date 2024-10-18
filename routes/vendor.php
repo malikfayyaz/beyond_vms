@@ -19,6 +19,8 @@ Route::middleware(['user_role:vendor'])->group(function () {
         Route::post('submission/store', [CareerOpportunitiesSubmissionController::class, 'store'])->name('submission.store');
         Route::match(['get', 'post'], 'submission/index', [CareerOpportunitiesSubmissionController::class, 'index'])->name('submission.index');
         Route::get('/submission/{id}', [CareerOpportunitiesSubmissionController::class, 'show'])->name('submission.show');
+        Route::post('submission/withdrawSubmission', [CareerOpportunitiesSubmissionController::class, 'withdrawSubmission'])->name('submission.withdraw');
+        Route::delete('submission/{id}', [CareerOpportunitiesSubmissionController::class, 'destroy'])->name('submission.destroy');
         // offer
         Route::get('offer/{id}/create', [CareerOpportunitiesOfferController::class, 'create'])->name('offer.create');
         Route::post('offer/store', [CareerOpportunitiesOfferController::class, 'store'])->name('offer.store');

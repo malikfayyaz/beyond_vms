@@ -346,4 +346,66 @@ class CareerOpportunitiesInterviewController extends Controller
        
         return view('client.interview.view', compact('interview','offer'));
     }
+
+    public function rejectInterview(Request $request,$id) 
+    {
+        $user = \Auth::user();
+        $userid = \Auth::id();
+        $clientid =  Client::getClientIdByUserId($userid);
+       
+        $validateData = $request->validate([
+            'reschedule_reason' => 'required|int',
+            'rejection_note' => 'required|string|max:250',
+        ]);
+        
+        $interview = CareerOpportunitiesInterview::findOrFail($id);
+        $interview->reason_rejection = $validateData['reschedule_reason'];
+        $interview->notes = $validateData['rejection_note'];
+        $interview->interview_acceptance_date = null; 
+        $interview->acceptance_notes = null; 
+        $interview->status = 3;
+        $interview->rejected_by = $clientid;       
+        $interview->rejected_type = 3; 
+        $interview->interview_cancellation_date = now();
+        $interview->save();
+        
+        $successMessage = 'Interview rejected successfully!';
+        session()->flash('success', $successMessage);
+
+        return response()->json([
+            'success' => true,
+            'message' => $successMessage,
+            'redirect_url' =>  route("client.interview.index")  // Redirect URL for AJAX
+        ]);
+    }
+
+    public function completeInterview(Request $request,$id) 
+    {
+        $validateData = $request->validate([
+            'complete_reason' => 'required|int',
+            'complete_note' => 'required|string|max:250',
+        ]);
+        // dd($validateData);
+
+        $interview = CareerOpportunitiesInterview::findOrFail($id);
+        
+        $interview->interview_completed_reason = $validateData['complete_reason'];
+        $interview->interview_completed_notes = $validateData['complete_note'];
+        $interview->interview_completed_date = now();
+		$interview->status = 5;
+        $interview->rejected_by = null;       
+        $interview->rejected_type = null;
+        $interview->notes = null;
+        $interview->interview_cancellation_date = null;
+        $interview->save();
+
+        $successMessage = 'Interview completed successfully!';
+        session()->flash('success', $successMessage);
+
+        return response()->json([
+            'success' => true,
+            'message' => $successMessage,
+            'redirect_url' =>  route("client.interview.index")  // Redirect URL for AJAX
+        ]);
+    }
 }

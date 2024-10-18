@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Admin;
+use App\Models\Setting;
 use Illuminate\Http\Request;
 use App\Models\CareerOpportunitySubmission;
 use App\Models\CareerOpportunitiesOffer;
@@ -105,5 +106,4 @@ class CareerOpportunitiesSubmissionController extends Controller
             'message' => 'Submission Shortlisted successfully!'
         ]);
     }
-
 }
