@@ -16,7 +16,7 @@
                   class="btn bg-red-600 text-white py-2 px-4 rounded hover:bg-red-500" 
                   @click="showModal = true"
                   x-bind:disabled="status == 3"
-                  :class="{ 'opacity-50 pointer-events-none': status == 3 }">
+                  :class="{ 'opacity-50 pointer-events-none': status == 3  || status == 5}">
                   Reschedule/Cancel Interview
                 </a>
                 <!-- The Modal -->
@@ -70,12 +70,13 @@
                     </div>
                 </div>
               </div>
+              
               <div x-data="{ showModal: false, status: {{ $interview->status }} }">
                 <a href="javascript:void(0);" 
                   class="btn bg-green-600 text-white py-2 px-4 rounded hover:bg-green-400" 
                   @click="showModal = true"
                   x-bind:disabled="status == 3"
-                  :class="{ 'opacity-50 pointer-events-none': status == 3 }">
+                  :class="{ 'opacity-50 pointer-events-none': status == 3 || status == 1 || status == 5 }">
                   Complete Interview
                 </a>
                 <!-- The Modal -->
@@ -122,6 +123,65 @@
                           <!-- Submit Button -->
                           <div class="flex justify-end space-x-4 mt-2">
                               <button type="submit" class="bg-green-600 text-white py-2 px-4 rounded hover:bg-green-500">Submit</button>
+                              <button type="button" class="bg-gray-600 text-white py-2 px-4 rounded hover:bg-gray-500" @click="showModal = false">Cancel</button>
+                          </div>
+                      </form>
+                        </div>
+                    </div>
+                </div>
+              </div>
+              <div x-data="{ showModal: false, status: {{ $interview->status }} }">
+                <a href="javascript:void(0);" 
+                  class="btn bg-red-600 text-white py-2 px-4 rounded hover:bg-red-400" 
+                  @click="showModal = true"
+                  x-bind:disabled="status == 3 || status == 1"
+                  :class="{ 'opacity-50 pointer-events-none': status == 3 || status == 1}">
+                  Reject Candidate
+                </a>
+                <!-- The Modal -->
+                <div x-show="showModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50" 
+                    @click.away="showModal = false">
+                    <div class="bg-white w-full max-w-lg rounded-lg shadow-lg">
+                        <!-- Modal Header -->
+                        <div class="flex justify-between items-center p-4 border-b">
+                            <h4 class="text-lg font-semibold ">Reject Candidate</h4>
+                            <button type="button" class="text-gray-500 hover:text-gray-700 bg-transparent" @click="showModal = false">&times;</button>
+                        </div>
+
+                        <!-- Modal Body -->
+                        <div class="p-4">
+                          <form x-data="rejectCandidate()" @submit.prevent="submitData()" class="complete-form space-y-4">
+                          @csrf
+                          <div class="mb-4">
+                              <label class="block text-sm font-medium text-gray-700">Reason for Candidate Rejection:</label>
+                              <select 
+                                  x-model="formData.cand_rej_reason"
+                                  id="cand_rej_reason" 
+                                  name="cand_rej_reason"
+                                  class="w-full px-3 py-2 border rounded-md"
+                                  :class="{'border-red-500': errors.cand_rej_reason}">
+                                  <option value="">Select</option>
+                                  @foreach (checksetting(24) as $key => $value)
+                                      <option value="{{ $key }}">{{ $value }}</option>
+                                  @endforeach
+                              </select>
+                              <p x-show="errors.cand_rej_reason" class="text-red-500 text-xs italic" x-text="errors.cand_rej_reason"></p>
+                          </div>
+                          
+                          <div>
+                              <label class="block text-sm font-medium text-gray-700">Note <i class="fa fa-asterisk text-red-600"></i>:</label>
+                              <textarea 
+                                  x-model="formData.cand_rej_note"
+                                  name="cand_rej_note" 
+                                  class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+                                  :class="{'border-red-500': errors.cand_rej_note}">
+                              </textarea>
+                              <p x-show="errors.cand_rej_note" class="text-red-500 text-xs italic" x-text="errors.cand_rej_note"></p>
+                          </div>
+
+                          <!-- Submit Button -->
+                          <div class="flex justify-end space-x-4 mt-2">
+                              <button type="submit" class="bg-red-600 text-white py-2 px-4 rounded hover:bg-red-500">Submit</button>
                               <button type="button" class="bg-gray-600 text-white py-2 px-4 rounded hover:bg-gray-500" @click="showModal = false">Cancel</button>
                           </div>
                       </form>
@@ -480,6 +540,7 @@
             }
           }
       }
+      
       function completeInterview() {
         return {
             formData: {
@@ -514,6 +575,52 @@
 
                     // Specify your form submission URL
                     const url = '{{ route("client.interview.complete_interview", $interview->id) }}';
+
+                    // Send AJAX request using ajaxCall function
+                    ajaxCall(url, 'POST', [[this.onSuccess, ['response']]], formData);
+                }
+            },
+
+            onSuccess(response) {
+              window.location.href = response.redirect_url;
+            }
+          }
+      }
+
+      function rejectCandidate() {
+        return {
+            formData: {
+              cand_rej_reason: '',
+              cand_rej_note: ''
+            },
+            errors: {},
+
+            validateFields() {
+                this.errors = {}; // Reset errors
+
+                let errorCount = 0;
+
+                if (this.formData.cand_rej_reason === "") {
+                    this.errors.cand_rej_reason = "Candidate rejection reason is required";
+                    errorCount++;
+                }
+
+                if (this.formData.cand_rej_note.trim() === "") {
+                    this.errors.cand_rej_note = "Candidate rejection note is required";
+                    errorCount++;
+                }
+
+                return errorCount === 0; // Returns true if no errors
+            },
+
+            submitData() {
+                if (this.validateFields()) {
+                    const formData = new FormData();
+                    formData.append('cand_rej_reason', this.formData.cand_rej_reason);
+                    formData.append('cand_rej_note', this.formData.cand_rej_note);
+
+                    // Specify your form submission URL
+                    const url = '{{ route("client.interview.rejectCandidate", $interview->id) }}';
 
                     // Send AJAX request using ajaxCall function
                     ajaxCall(url, 'POST', [[this.onSuccess, ['response']]], formData);

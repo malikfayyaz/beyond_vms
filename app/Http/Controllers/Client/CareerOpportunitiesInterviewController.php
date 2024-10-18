@@ -365,7 +365,7 @@ class CareerOpportunitiesInterviewController extends Controller
         $interview->acceptance_notes = null; 
         $interview->status = 3;
         $interview->rejected_by = $clientid;       
-        $interview->rejected_type = 3; 
+        $interview->rejected_type = 2; 
         $interview->interview_cancellation_date = now();
         $interview->save();
         
@@ -407,5 +407,26 @@ class CareerOpportunitiesInterviewController extends Controller
             'message' => $successMessage,
             'redirect_url' =>  route("client.interview.index")  // Redirect URL for AJAX
         ]);
+    }
+
+    public function rejectCandidate(Request $request,$id) 
+    {
+        $validateData = $request->validate([
+            'cand_rej_reason' => 'required|int',
+            'cand_rej_note' => 'required|string|max:250',
+        ]);
+        
+        $interview = CareerOpportunitiesInterview::findOrFail($id);
+        dd($interview);
+
+        $interview->reason_rejection = $validateData['cand_rej_reason'];
+        $interview->notes = $validateData['cand_rej_note'];
+        $interview->interview_acceptance_date = null; 
+        $interview->acceptance_notes = null; 
+        $interview->status = 3;
+        $interview->rejected_by = $clientid;       
+        $interview->rejected_type = 2; 
+        $interview->interview_cancellation_date = now();
+        $interview->save();
     }
 }
