@@ -8,9 +8,10 @@
         @include('client.layouts.partials.header')
 
         <div>
+            @include('client.layouts.partials.alerts')
           <div class="mx-4 rounded p-8">
             <div class="w-full flex justify-end items-center gap-4">
-            @if (!in_array($submission->resume_status, array(6, 7, 2, 15, 8, 9, 11)) && (!in_array($submission->careerOpportunity->jobStatus, array(4, 12))) && $submission->careerOpportunity->interview_process == 'Yes') 
+            @if (!in_array($submission->resume_status, array(6, 7, 2, 15, 8, 9, 11)) && (!in_array($submission->careerOpportunity->jobStatus, array(4, 12))) && $submission->careerOpportunity->interview_process == 'Yes')
               <a href="{{ route('client.interview.create',  ['id' => $submission->id]) }}"
 
                 type="button"
@@ -19,7 +20,11 @@
                 schedule interview
               </a>
               @endif
-              @if (in_array($submission->resume_status, array(3, 7, 4, 5, 10)) && (empty($offer) || $offer->status == 2 ||  $offer->status == 13 ) && $offer->status != 12 &&(!in_array($submission->careerOpportunity->jobStatus, array(23, 24, 4, 1,5))))
+                @if (
+                  in_array($submission->resume_status, [3, 7, 4, 5, 10]) &&
+                  (empty($offer) || ($offer && ($offer->status == 2 || $offer->status == 13)) && $offer->status != 12) &&
+                  !in_array($submission->careerOpportunity->jobStatus, [23, 24, 4, 1, 5])
+              )
               <a href="{{ route('client.offer.create',  ['id' => $submission->id]) }}"
                 type="button"
                 class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 capitalize"
@@ -27,14 +32,7 @@
                 create offer
               </a>
               @endif
-              @if($submission->careerOpportunity->jobStatus != 5)
-              <button
-                type="button"
-                class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 capitalize"
-              >
-                reject candidate
-              </button>
-              @endif
+
               <a href="{{ route('client.submission.index') }}">
                   <button
                       type="button"
@@ -144,7 +142,7 @@
                           <span class="text-gray-600">Status:</span>
                           <span
                             class="bg-green-500 text-white px-2 py-1 rounded-full text-sm"
-                          >{{$submission->resume_status}}</span>
+                          >{{\App\Models\CareerOpportunitySubmission::getSubmissionStatus($submission->resume_status)}}</span>
                         </div>
                         <div class="flex justify-between py-3 px-4">
                           <span class="text-gray-600">Unique ID:</span>
@@ -308,7 +306,7 @@
                             <span class="text-gray-600">Bill Rate:</span>
                             <span
                               class="font-semibold"
-                              
+
                             >${{$submission->vendor_bill_rate}}</span>
                           </div>
                           <div class="flex justify-between items-center mt-1">

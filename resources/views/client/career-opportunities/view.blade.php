@@ -6,6 +6,7 @@
     <div class="ml-16">
         @include('client.layouts.partials.header')
         <div  x-data="{ tab: 'activejobs' }"  class="bg-white mx-4 my-8 rounded p-8">
+            @include('client.layouts.partials.alerts')
             @if($job->jobStatus == 2)
               <div x-data="{
                     rejectionReason: '{{ $job->rejectionReason->title }}',
@@ -38,7 +39,7 @@
                 >
                     <li class="flex justify-center">
                         <a
-                            @click="tab = 'activejobs'" 
+                            @click="tab = 'activejobs'"
                             href="#page1"
                             class="w-full flex justify-center items-center gap-3 hover:bg-white hover:rounded-lg hover:shadow py-4 tab === 'activejobs'"
                         >
@@ -68,8 +69,8 @@
                     </li>
                     <li class="flex justify-center">
                         <a
-                        @click="tab = 'jobworkflow'" 
-                        :class="{ 'border-blue-500 text-blue-500': tab === 'jobworkflow' }" 
+                        @click="tab = 'jobworkflow'"
+                        :class="{ 'border-blue-500 text-blue-500': tab === 'jobworkflow' }"
                         class="flex justify-center items-center gap-3 py-4 w-full hover:bg-white hover:rounded-lg hover:shadow"
                         >
                           <i class="fa-solid fa-fill"></i>
@@ -319,6 +320,14 @@
                         >
                     </h3>
                     <div class="flex flex-col">
+                        <div class="flex items-center justify-between py-4 border-t">
+                            <div class="w-2/4">
+                                <h4 class="font-medium">Job Status:</h4>
+                            </div>
+                            <div class="w-2/4">
+                                <p class="font-light">{{ \App\Models\CareerOpportunity::getStatus($job->jobStatus) }}</p>
+                            </div>
+                        </div>
                         <div class="flex items-center justify-between py-4 border-t">
                             <div class="w-2/4">
                                 <h4 class="font-medium">Job Title:</h4>
@@ -608,7 +617,7 @@
             <div x-show="tab === 'jobworkflow'"   class="flex w-full gap-4">
          <div
           class="w-100 p-[30px] rounded border"
-          :style="{'border-color': 'var(--primary-color)'}"> 
+          :style="{'border-color': 'var(--primary-color)'}">
           <table class="min-w-full divide-y divide-gray-200" id="example">
             <thead class="bg-gray-50">
               <tr>
@@ -671,15 +680,15 @@
                                 .then(response => response.json())
                                 .then(data => {
                                     if (data.success) {
-                                        this.downloadUrl = data.downloadUrl; 
+                                        this.downloadUrl = data.downloadUrl;
                                     } else {
                                         console.error('Failed to fetch download URL');
                                     }
                                 })
                                 .catch(error => console.error('Error fetching download URL:', error));
                             }
-                        }" 
-                        x-init="fetchDownloadUrl()" 
+                        }"
+                        x-init="fetchDownloadUrl()"
                     >
                     <template x-if="downloadUrl">
                         <a :href="downloadUrl" class="underline" download> {{ $workflow->approval_doc }} </a>
@@ -748,9 +757,123 @@
         </div>
     </div>
 
-     
+
     </div>
-         
+         <div
+              x-data="{
+              openModal: false,
+              currentRowId: '',
+              reason: '',
+              note: '',
+              errors: {},
+              handleFileUpload(event) {
+                this.file = event.target.files[0];
+              },
+
+              validateForm() {
+                this.errors = {};
+                if (!this.note.trim()) this.errors.note = 'Please enter a note';
+                return Object.keys(this.errors).length === 0;
+              },
+              submitForm() {
+                if (this.validateForm()) {
+                  let formData = new FormData();
+
+                  formData.append('note', this.note);
+                  formData.append('workflow_id', this.currentRowId);
+                  if (this.file) {
+                      formData.append('jobAttachment', this.file);
+                  }
+                  const url = '/client/jobWorkFlowApprove';
+                  ajaxCall(url,'POST', [[onSuccess, ['response']]], formData);
+                  this.openModal = false;
+                }
+              },
+              clearError(field) {
+                delete this.errors[field];
+              }
+            }"
+              @open-modal.window="openModal = true; currentRowId = $event.detail.rowId"
+              x-show="openModal"
+              @click.away="openModal = false"
+              class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full"
+              x-transition:enter="transition ease-out duration-300"
+              x-transition:enter-start="opacity-0"
+              x-transition:enter-end="opacity-100"
+              x-transition:leave="transition ease-in duration-300"
+              x-transition:leave-start="opacity-100"
+              x-transition:leave-end="opacity-0"
+            >
+              <div
+                class="relative top-20 mx-auto p-5 border w-[600px] shadow-lg rounded-md bg-white"
+                @click.stop
+              >
+                <div class="flex items-center justify-between border-b p-4">
+                  <h2
+                    class="text-xl font-semibold"
+                    :id="$id('modal-title')"
+                  >
+                   Accept Workflow
+                  </h2>
+                  <button
+                    @click="openModal = false"
+                    class="text-gray-400 hover:text-gray-600 bg-transparent hover:bg-transparent"
+                  >
+                    &times;
+                  </button>
+                </div>
+
+                <!-- Content -->
+                <div class="p-4">
+                  <form @submit.prevent="submitForm" id="generalformwizard">
+                    @csrf()
+                    <input type="hidden" name="workflow_id" id="workflow_id" x-model="workflow_id" :value="currentRowId">
+                    <div class="mb-4">
+                          <label for="note" class="block text-sm font-medium text-gray-700 mb-1">
+                              Note <span class="text-red-500">*</span>
+                          </label>
+                          <textarea
+                              id="note"
+                              rows="4"
+                              class="w-full border border-gray-300 rounded-md shadow-sm"
+                              x-model="note"
+                          ></textarea>
+                      </div>
+                      <div class="mb-4">
+                          <label for="jobAttachment" class="block text-sm font-medium text-gray-700 mb-2">
+                              Job Attachment
+                          </label>
+                          <input
+                              type="file"
+                              id="jobAttachment"
+                              name="jobAttachment"
+                              class="block w-full px-2 py-3 text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none"
+                              @change="handleFileUpload"
+                          />
+                      </div>
+                  </form>
+                </div>
+
+                <!-- Footer -->
+                <div class="flex justify-end space-x-2 border-t p-4">
+                  <button
+                    type="button"
+                    @click="openModal = false"
+                    class="rounded-md bg-gray-200 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-300"
+                  >
+                    Close
+                  </button>
+                  <button
+                    type="button"
+                    @click="submitForm"
+                    class="rounded-md bg-green-500 px-4 py-2 text-sm font-medium text-white hover:bg-green-600"
+                  >
+                    Save
+                  </button>
+                </div>
+              </div>
+            </div>
+
 
             <div
               x-data="{
@@ -767,7 +890,7 @@
               submitForm() {
                 if (this.validateForm()) {
                   let formData = new FormData();
-                 
+
                   formData.append('note', this.note);
                   formData.append('workflow_id', this.currentRowId);
                   formData.append('job_id', {{$job->id}});
@@ -821,8 +944,8 @@
                     <div class="mb-4">
                           <div class="mt-2 px-7 py-3">
                             <p class="text-sm text-gray-500">
-                              
-                              
+
+
                             </p>
                           </div>
                           <label
@@ -842,8 +965,8 @@
                             <option value="">Select</option>
                             @foreach($rejectReasons as $reason)
                               <option value="{{ $reason->id }}">{{ $reason->title }}</option>
-                            @endforeach 
-                            
+                            @endforeach
+
                           </select>
                           <p
                             x-show="errors.reason"
@@ -862,7 +985,7 @@
                               x-model="note"
                           ></textarea>
                       </div>
-                      
+
                   </form>
                 </div>
 

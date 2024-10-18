@@ -30,10 +30,10 @@ class CareerOpportunitiesController extends Controller
                 ->withCount([
                     'submissions',
                 ])
-                ->where('user_id', $clientid) 
+                ->where('user_id', $clientid)
                 ->orWhereHas('workFlow', function ($query) use ($clientid) {
-                    $query->where('client_id', $clientid); 
-                })->orderby('id', 'desc'); 
+                    $query->where('client_id', $clientid);
+                })->orderby('id', 'desc');
 
             return DataTables::of($data)
                 ->addColumn('jobStatus', function ($row) {
@@ -183,6 +183,7 @@ class CareerOpportunitiesController extends Controller
             $newOpportunity = $originalOpportunity->replicate();
             $newOpportunity->jobstep2_complete = '0';
             $newOpportunity->title = $originalOpportunity->title;
+            $newOpportunity->jobStatus = '1';
             $newOpportunity->user_id = Client::getClientIdByUserId(Auth::id());
             $newOpportunity->created_at = Carbon::now();
             $newOpportunity->updated_at = Carbon::now();

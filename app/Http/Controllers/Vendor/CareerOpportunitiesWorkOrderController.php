@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Vendor;
 
 use App\Http\Controllers\Controller;
+use App\Models\CareerOpportunitiesOffer;
 use Illuminate\Support\Facades\Validator;
 use App\Models\CareerOpportunitiesWorkorder;
 use App\Models\Vendor;
@@ -30,6 +31,9 @@ class CareerOpportunitiesWorkOrderController extends Controller
                 })
                 ->addColumn('vendor_name', function($row) {
                     return $row->vendor ? $row->vendor->full_name : 'N/A';
+                })
+                ->addColumn('status', function($row) {
+                    return CareerOpportunitiesWorkorder::getWorkorderStatus($row->status);
                 })
                 ->addColumn('duration', function ($row) {
                     return $row->date_range ? $row->date_range : 'N/A';
@@ -61,7 +65,7 @@ class CareerOpportunitiesWorkOrderController extends Controller
 
     public function store(Request $request)
     {
-       
+
          // Convert "true"/"false" strings to boolean for the relevant fields
         $request->merge([
             'codeOfConduct' => filter_var($request->codeOfConduct, FILTER_VALIDATE_BOOLEAN),
@@ -80,7 +84,7 @@ class CareerOpportunitiesWorkOrderController extends Controller
             'workorder_id'=> 'required|integer',
             'fileUpload' => 'nullable|mimes:pdf,doc,docx|max:2048',
         ];
-        
+
         $messages = [
             'codeOfConduct.required' => 'You must agree to the Code of Conduct.',
             'dataPrivacy.required' => 'You must agree to the Data Privacy Policy.',
@@ -104,7 +108,7 @@ class CareerOpportunitiesWorkOrderController extends Controller
         }
         $validatedData = $validator->validated();
         $workorder = CareerOpportunitiesWorkorder::findOrFail($request->workorder_id);
-        
+
         $submission = $workorder->submission;
         if(isset($submission)) {
             $submission->emp_msp_account_mngr = $request->recruitmentManager;
@@ -136,7 +140,7 @@ class CareerOpportunitiesWorkOrderController extends Controller
                 'non_disclosure' => $validatedData['nonDisclosure'],
                 'file'=>$filename,
                 'criminal_background' => $validatedData['criminalBackground'],
-               
+
             ];
             $workorder->workorderbackground->update($bgVerfication);
         }
@@ -150,8 +154,8 @@ class CareerOpportunitiesWorkOrderController extends Controller
 				$workorder->markcompleted_date = now();
                 $workorder->save();
         }
-        
-            
+
+
         session()->flash('success', 'Onboarding Document Background Screening submitted successfully');
         return response()->json([
             'success' => true,
@@ -174,7 +178,7 @@ class CareerOpportunitiesWorkOrderController extends Controller
             // Delete file from storage
             Storage::delete('public/background_verify/' . $background->file);
         }
-        
+
         // Delete record from database
         // $background->delete();
         $background->file = null;

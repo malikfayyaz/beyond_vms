@@ -28,7 +28,10 @@ class CareerOpportunitiesInterview extends Model
     {
         return $this->belongsTo(CareerOpportunitySubmission::class, 'submission_id' , 'id');
     }
-
+    public function offer()
+    {
+        return $this->hasOne(CareerOpportunitiesOffer::class, 'submission_id' , 'submission_id');
+    }
     public function duration() {
         return $this->belongsTo(Setting::class, 'interview_duration', 'id');
     }
@@ -41,8 +44,25 @@ class CareerOpportunitiesInterview extends Model
         return $this->belongsTo(Setting::class, 'interview_type', 'id');
     }
     
+    public function reasonRejection() {
+        return $this->belongsTo(Setting::class, 'reason_rejection', 'id');
+    }
+
+    public function reasonCompletion() {
+        return $this->belongsTo(Setting::class, 'interview_completed_reason', 'id');
+    }
+
+    public function rejectedBy() {
+        return $this->belongsTo(User::class, 'rejected_by', 'id');
+    }
+    
     public function location() {
         return $this->belongsTo(Location::class, 'location_id', 'id');
+    }
+
+    public function getFormattedInterviewCancellationDateAttribute()
+    {
+        return \Carbon\Carbon::parse($this->interview_cancellation_date)->format('m/d/Y h:i A');
     }
 
     public function interviewDates()

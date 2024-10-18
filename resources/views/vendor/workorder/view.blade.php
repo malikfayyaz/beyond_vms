@@ -7,7 +7,7 @@
     <div class="ml-16">
         @include('vendor.layouts.partials.header')
         <div class="ml-16">
-        
+
             <div class="bg-white mx-4 my-8 rounded p-8">
             @include('vendor.layouts.partials.alerts')
                 <div class="flex w-full gap-4">
@@ -42,7 +42,7 @@
                                     <p class="font-light">
                       <span
                           class="px-2 inline-flex text-xs leading-5 text-white font-semibold rounded-full bg-green-500"
-                      >{{$workorder->status}}</span
+                      >{{\App\Models\CareerOpportunitiesWorkorder::getWorkorderStatus($workorder->status)}}</span
                       >
                                     </p>
                                 </div>
@@ -137,7 +137,7 @@
                                 >
                             </div>
                         </div>
-                        @php   
+                        @php
                                 $disabled = true;
                                 if ( $workorder->verification_status == 0 ) {
                                     $disabled = false;
@@ -206,7 +206,7 @@
                                     </div>
                                 </div>
                                 @php $vendorrecords = $workorder->vendor->teamMembers;
-                              
+
                                 @endphp
                                 <div class="flex space-x-4 mb-4">
                                     <div class="flex-1">
@@ -221,22 +221,22 @@
                                             id="accountManager"
                                             :disabled="isDisabled"
                                         >
-                                       
+
                                             <option value="">Select Account Manager</option>
-                                            
+
                                             @isset($workorder->vendor)
-                                            <option value="{{ $workorder->vendor->id }}" 
+                                            <option value="{{ $workorder->vendor->id }}"
                                                >
-                                                {{ $workorder->vendor->full_name }} 
+                                                {{ $workorder->vendor->full_name }}
                                             </option>
                                             {{-- Team Members --}}
                                                 @foreach($workorder->vendor->teamMembers as $team)
-                                                <option value="{{$team->teammember_id}}" 
-                                               
+                                                <option value="{{$team->teammember_id}}"
+
                                                 >{{$team->teammember->full_name}}</option>
                                                 @endforeach
                                             @endisset
-                                            
+
                                         </select>
                                         <p
                                             x-show="errors.accountManager"
@@ -258,14 +258,14 @@
                                         >
                                             <option value="">Select Recruitment Manager</option>
                                             @isset($workorder->vendor)
-                                            <option value="{{ $workorder->vendor->id }}" 
+                                            <option value="{{ $workorder->vendor->id }}"
                                                >
-                                                {{ $workorder->vendor->full_name }} 
+                                                {{ $workorder->vendor->full_name }}
                                             </option>
                                             {{-- Team Members --}}
                                                 @foreach($workorder->vendor->teamMembers as $team)
-                                                <option value="{{$team->teammember_id}}" 
-                                                
+                                                <option value="{{$team->teammember_id}}"
+
                                                 >{{$team->teammember->full_name}}</option>
                                                 @endforeach
                                             @endisset
@@ -462,10 +462,10 @@
                                                         <i class="fas fa-download"></i>
                                                     </a>
 
-                                                    <button 
-                                                        type="button" 
-                                                        class="text-red-500 hover:text-red-700 ml-3 bg-transparent" 
-                                                        @click="deleteBackgroundFile({{ $workorder->workorderbackground->id }})" 
+                                                    <button
+                                                        type="button"
+                                                        class="text-red-500 hover:text-red-700 ml-3 bg-transparent"
+                                                        @click="deleteBackgroundFile({{ $workorder->workorderbackground->id }})"
                                                     >
                                                         <i class="fas fa-trash"></i>
                                                     </button>

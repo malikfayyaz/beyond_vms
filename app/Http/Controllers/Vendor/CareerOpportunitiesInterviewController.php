@@ -6,14 +6,21 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\CareerOpportunitySubmission;
 use App\Models\CareerOpportunitiesInterview;
+use App\Models\CareerOpportunitiesOffer;
 use Yajra\DataTables\Facades\DataTables;
+use App\Models\Consultant;
+use Carbon\Carbon;
+use App\Models\Vendor;
+
 
 class CareerOpportunitiesInterviewController extends Controller
 {
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $interview = CareerOpportunitiesInterview::with(['consultant','careerOpportunity','duration','timezone','interviewtype','submission'])->get();
+            $interview = CareerOpportunitiesInterview::with(['consultant', 'careerOpportunity', 'duration', 'timezone', 'interviewtype', 'submission','interviewDates'])
+            ->orderBy('id', 'desc')
+            ->get();
             return DataTables::of($interview)
             ->addColumn('type', function($row) {
                 return $row->interviewtype ? $row->interviewtype->title : 'N/A';
@@ -30,6 +37,21 @@ class CareerOpportunitiesInterviewController extends Controller
             ->addColumn('vendor_name', function($row) {
                 return $row->submission ? $row->submission->vendor->full_name : 'N/A';
             })
+            ->addColumn('primary_date', function($row) {
+                $primaryDate = $row->interviewDates->where('schedule_date_order', 1)->first();
+                
+                return $primaryDate ? $primaryDate->formatted_schedule_date : 'N/A'; 
+            })
+            ->addColumn('primary_start_time', function($row) {
+                $primaryDate = $row->interviewDates->where('schedule_date_order', 1)->first();
+                
+                return $primaryDate ? $primaryDate->formatted_start_time : 'N/A'; 
+            })
+            ->addColumn('primary_end_time', function($row) {
+                $primaryDate = $row->interviewDates->where('schedule_date_order', 1)->first();
+                
+                return $primaryDate ? $primaryDate->formatted_end_time : 'N/A'; 
+            })
             ->addColumn('worker_type', function($row) {
                 return $row->careerOpportunity && $row->careerOpportunity->workerType 
                     ? $row->careerOpportunity->workerType->title
@@ -37,9 +59,9 @@ class CareerOpportunitiesInterviewController extends Controller
             })
             
             ->addColumn('action', function($row) {
-                return '<a href="' . route('vendor.interview.edit', $row->id) . '"
-                            class="text-green-500 hover:text-green-700 mr-2 bg-transparent hover:bg-transparent">
-                                <i class="fas fa-edit"></i>
+                return '<a href="' . route('vendor.interview.show', $row->id) . '"
+                            class="text-blue-500 hover:text-blue-700 mr-2 bg-transparent hover:bg-transparent">
+                                <i class="fas fa-eye"></i>
                         </a>';
             })
             ->make(true);
@@ -47,121 +69,81 @@ class CareerOpportunitiesInterviewController extends Controller
         return view('vendor.interview.index');
     }
 
-    public function create($id)
+    public function show($id)
     {
-        $submission =  CareerOpportunitySubmission::findOrFail($id);
-
-        return view('vendor.interview.create', compact('submission'));
-    }
-
-    public function store(Request $request)
-    {
-        $validatedData = $request->validate([
-            'eventName' => 'required|string|max:255',
-            'interviewDuration' => 'required|integer',
-            'timeZone' => 'required|integer',
-            'startDate' => 'required|date',
-            'location' => 'nullable|integer',
-            'remote' => 'required|integer',
-            'interview_detail' => 'required|string',
-            'interviewInstructions' => 'nullable|string',
-            'members' => 'nullable',
-            'otherDate1' => 'nullable|date',
-            'otherDate2' => 'nullable|date',
-            'otherDate3' => 'nullable|date',
-        ]);
-
-        $submission = CareerOpportunitySubmission::findOrFail($request->submissionid);
-        
-        $mapedData = [
-            "submission_id" =>$submission->id,
-            "candidate_id" =>$submission->candidate_id,
-            "career_opportunity_id" =>$submission->career_opportunity_id,
-            "event_name" =>$validatedData['eventName'],
-            "interview_duration" =>$validatedData['interviewDuration'],
-            "time_zone" =>$validatedData['timeZone'],
-            "interview_type" =>$validatedData['remote'],
-            "recommended_date" =>$validatedData['startDate'],
-            "other_date_1" =>$validatedData['otherDate1'],
-            "other_date_2" =>$validatedData['otherDate2'],
-            "other_date_3" =>$validatedData['otherDate3'],
-            "location_id" =>$validatedData['location'],
-            "interview_instructions" =>$validatedData['interviewInstructions'],
-            "interview_members" =>$validatedData['members'],
-            "interview_detail" =>$validatedData['interview_detail'],
-            "status" => 1,
-            "created_by_user" => 3,
-        ];
-
-        $InterviewCreate = CareerOpportunitiesInterview::create( $mapedData );
-
-        session()->flash('success', 'Interview saved successfully!');
-        return response()->json([
-            'success' => true,
-            'message' => 'Interview saved successfully!',
-            'redirect_url' => route('vendor.interview.index') // Redirect back URL for AJAX
-        ]);
-    }
-
-    public function edit($id)
-    {
-        $interview =  CareerOpportunitiesInterview::findOrFail($id);
-        $submission =  CareerOpportunitySubmission::findOrFail($interview->submission_id);
-
-        return view('vendor.interview.create', compact('interview','submission'))
-        ->with(['editMode' => true, 'editIndex' => $id]);
-    }
-
-    public function update(Request $request, $id)
-    {
-        
-        // Validate and update the interview
         $interview = CareerOpportunitiesInterview::findOrFail($id);
-        $submission =  CareerOpportunitySubmission::findOrFail($interview->submission_id);
-        
-        $validatedData = $request->validate([
-            'eventName' => 'required|string|max:255',
-            'interviewDuration' => 'required|integer',
-            'timeZone' => 'required|integer',
-            'startDate' => 'required|date',
-            'location' => 'nullable|integer',
-            'remote' => 'required|integer',
-            'interview_detail' => 'required|string',
-            'interviewInstructions' => 'nullable|string',
-            'members' => 'nullable',
-            'otherDate1' => 'nullable|date',
-            'otherDate2' => 'nullable|date',
-            'otherDate3' => 'nullable|date',
+        $offer = CareerOpportunitiesOffer::where('submission_id', $interview->submission_id)->first();
+       
+        return view('vendor.interview.view', compact('interview','offer'));
+    }
+
+    public function saveInterviewTiming(Request $request, $id)
+    {
+        $validateData = $request->validate([
+            'interviewTiming' => 'required',
+            'can_phone' => 'nullable|numeric',
+            'vendor_note' => 'required',
+            'phone_ext' => 'nullable|numeric',
         ]);
 
-        $mapedData = [
-            "submission_id" =>$submission->id,
-            "candidate_id" =>$submission->candidate_id,
-            "career_opportunity_id" =>$submission->career_opportunity_id,
-            "event_name" =>$validatedData['eventName'],
-            "interview_duration" =>$validatedData['interviewDuration'],
-            "time_zone" =>$validatedData['timeZone'],
-            "interview_type" =>$validatedData['remote'],
-            "recommended_date" =>$validatedData['startDate'],
-            "other_date_1" =>$validatedData['otherDate1'],
-            "other_date_2" =>$validatedData['otherDate2'],
-            "other_date_3" =>$validatedData['otherDate3'],
-            "location_id" =>$validatedData['location'],
-            "interview_instructions" =>$validatedData['interviewInstructions'],
-            "interview_members" =>$validatedData['members'],
-            "interview_detail" =>$validatedData['interview_detail'],
-            
-        ];
+        $interview = CareerOpportunitiesInterview::findOrFail($id);
 
-        $interview->update($mapedData);
+        $consultant = Consultant::findOrFail($interview->candidate_id);       
 
-        $successMessage = 'Interview updated successfully!';
+        $formattedDate = Carbon::createFromFormat('m/d/Y', $validateData['interviewTiming'])->format('Y-m-d');
+
+        $interview->interview_acceptance_date = $formattedDate;
+        $interview->acceptance_notes = $validateData['vendor_note'];
+        $interview->status = 2;
+        $interview->rejected_by = null;       
+        $interview->rejected_type = null; 
+        $interview->interview_cancellation_date = null;
+        $interview->save();
+
+        if (!empty($validateData['can_phone'])) {
+           $consultant->phone = $validateData['can_phone'];
+           $consultant->save();
+        }
+
+        $successMessage = 'Interview approved successfully!';
         session()->flash('success', $successMessage);
 
         return response()->json([
             'success' => true,
             'message' => $successMessage,
-            'redirect_url' => route('vendor.interview.index')  // Redirect URL for AJAX
+            'redirect_url' =>  route("vendor.interview.index")  // Redirect URL for AJAX
+        ]);
+    }
+
+    public function rejectInterview(Request $request,$id) 
+    {
+        $user = \Auth::user();
+        $userid = \Auth::id();
+        $vendorid =  Vendor::getVendorIdByUserId($userid);
+       
+        $validateData = $request->validate([
+            'reschedule_reason' => 'required|int',
+            'rejection_note' => 'required|string|max:250',
+        ]);
+        
+        $interview = CareerOpportunitiesInterview::findOrFail($id);
+        $interview->reason_rejection = $validateData['reschedule_reason'];
+        $interview->notes = $validateData['rejection_note'];
+        $interview->interview_acceptance_date = null; 
+        $interview->acceptance_notes = null; 
+        $interview->status = 3;
+        $interview->rejected_by = $vendorid;       
+        $interview->rejected_type = 3; 
+        $interview->interview_cancellation_date = now();
+        $interview->save();
+        
+        $successMessage = 'Interview rejected successfully!';
+        session()->flash('success', $successMessage);
+
+        return response()->json([
+            'success' => true,
+            'message' => $successMessage,
+            'redirect_url' =>  route("vendor.interview.index")  // Redirect URL for AJAX
         ]);
     }
 }

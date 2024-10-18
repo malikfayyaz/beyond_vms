@@ -9,9 +9,152 @@
 
         <div>
           <div class="mx-4 rounded p-8">
+              @include('vendor.layouts.partials.alerts')
+              @if($submission->resume_status == 12)
+                  <div x-data="{
+                    rejectionReason: '{{ $submission->rejectionReason ? $submission->rejectionReason->title : ' ' }}',
+                    notes: '{{ $submission->note_for_rejection }}',
+                    rejectedBy: '{{ $submission->rejectionUser ? $submission->rejectionUser->name : '' }}',
+                    rejectionDate: '{{ $submission->date_rejected }}'
+                }">
+                      <div class="alert alert-danger">
+                          <span class="bold">Rejection Reason:</span> <span x-text="rejectionReason"></span><br>
+                          <span class="bold">Notes:</span> <span x-text="notes"></span><br>
+                          <span class="bold">Rejected By:</span> <span x-text="rejectedBy"></span><br>
+                          <span class="bold">Rejection Date:</span> <span x-text="rejectionDate"></span>
+                      </div>
+                  </div>
+              @endif
             <div class="w-full flex justify-end items-center gap-4">
-              @if (!in_array($submission->resume_status, array(6, 7, 2, 15, 8, 9, 11)) && (!in_array($submission->careerOpportunity->jobStatus, array(4, 12))) && $submission->careerOpportunity->interview_process == 'Yes') 
-              <a href="{{ route('vendor.interview.create',  ['id' => $submission->id]) }}"
+                @if (!in_array($submission->resume_status, [8, 11, 12, 6]))
+                <div x-data="{     //withdraw submission
+        rejectModal1: false,
+        submissionId: '{{ $submission->id }}',
+        reason: '',
+        note: '',
+        errors: {},
+        validateForm() {
+            this.errors = {};
+            if (!this.reason.trim()) this.errors.reason = 'Please select a reason';
+            return Object.keys(this.errors).length === 0;
+        },
+        submitForm() {
+            if (this.validateForm()) {
+                let formData = new FormData();
+                formData.append('note', this.note);
+                formData.append('submission_id', this.submissionId);
+                formData.append('reason', this.reason);
+                const url = '/vendor/submission/withdrawSubmission';
+                ajaxCall(url, 'POST', [[onSuccess, ['response']]], formData);
+
+                this.rejectModal1 = false;
+            }
+        },
+        clearError(field) {
+            delete this.errors[field];
+        }
+    }">
+                    <button
+                        @click="rejectModal1 = true"
+                        class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 capitalize"
+                    >Withdraw</button>
+                    <div
+                        x-show="rejectModal1"
+                        @click.away="rejectModal1 = false"
+                        class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full"
+                        x-transition:enter="transition ease-out duration-300"
+                        x-transition:enter-start="opacity-0"
+                        x-transition:enter-end="opacity-100"
+                        x-transition:leave="transition ease-in duration-300"
+                        x-transition:leave-start="opacity-100"
+                        x-transition:leave-end="opacity-0">
+                        <div class="relative top-20 mx-auto p-5 border w-[600px] shadow-lg rounded-md bg-white" @click.stop>
+                            <!-- Modal Header -->
+                            <div class="flex items-center justify-between border-b p-4">
+                                <h2 class="text-xl font-semibold">Withdraw Submission</h2>
+                                <button
+                                    @click="rejectModal1 = false"
+                                    class="text-gray-400 hover:text-gray-600 bg-transparent hover:bg-transparent"
+                                >
+                                    &times;
+                                </button>
+                            </div>
+                            <!-- Modal Body -->
+                            <div class="p-4">
+                                <form @submit.prevent="submitForm" id="generalformwizard">
+                                    @csrf
+                                    <input type="hidden" name="submission_id" id="submission_id" x-model="submission_id" :value="submissionId">
+
+                                    <!-- Reason for Withdrawal -->
+                                    <div class="mb-4">
+                                        <label for="reason" class="block text-sm font-medium text-gray-700 mb-1">
+                                            Reason for Withdrawal
+                                            <span class="text-red-500">*</span>
+                                        </label>
+                                        <select
+                                            id="reason"
+                                            x-model="reason"
+                                            @change="clearError('reason')"
+                                            :class="{'border-red-500': errors.reason}"
+                                            class="w-full border rounded-md shadow-sm"
+                                        >
+                                            <option value="">Select</option>
+                                            @foreach($rejectReasons as $reason)
+                                                <option value="{{ $reason->id }}">{{ $reason->title }}</option>
+                                            @endforeach
+                                        </select>
+                                        <p
+                                            x-show="errors.reason"
+                                            x-text="errors.reason"
+                                            class="text-red-500 text-xs mt-1"
+                                        ></p>
+                                    </div>
+
+                                    <!-- Notes -->
+                                    <div class="mb-4">
+                                        <label for="note" class="block text-sm font-medium text-gray-700 mb-1">
+                                            Note <span class="text-red-500">*</span>
+                                        </label>
+                                        <textarea
+                                            id="note"
+                                            rows="4"
+                                            class="w-full border border-gray-300 rounded-md shadow-sm"
+                                            x-model="note"
+                                        ></textarea>
+                                    </div>
+                                </form>
+                            </div>
+
+                            <!-- Modal Footer -->
+                            <div class="flex justify-end space-x-2 border-t p-4">
+                                <button
+                                    type="button"
+                                    @click="rejectModal1 = false"
+                                    class="rounded-md bg-gray-200 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-300"
+                                >
+                                    Close
+                                </button>
+                                <button
+                                    type="button"
+                                    @click="submitForm"
+                                    class="rounded-md bg-green-500 px-4 py-2 text-sm font-medium text-white hover:bg-green-600"
+                                >
+                                    Withdraw
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                @endif
+                @if($submission->resume_status == 1)
+                   <form action="{{ route('vendor.submission.destroy', ['id' => $submission->id]) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this submission?');">
+                   @csrf
+                   @method('DELETE')
+                   <button type="submit" class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600">Delete</button>
+                   </form>
+                @endif
+            @if (!in_array($submission->resume_status, array(6, 7, 2, 15, 8, 9, 11)) && (!in_array($submission->careerOpportunity->jobStatus, array(4, 12))) && $submission->careerOpportunity->interview_process == 'Yes')
+              <a href="{{ route('vendor.interview.index',  ['id' => $submission->id]) }}"
 
                 type="button"
                 class="px-4 py-2 capitalize bg-blue-500 text-white rounded hover:bg-blue-600 capitalize"
@@ -19,22 +162,18 @@
                 schedule interview
               </a>
              @endif
-             
-              @if (in_array($submission->resume_status, array(3, 7, 4, 5, 10)) && (empty($offer) || $offer->status == 2 ||  $offer->status == 13 ) && $offer->status != 12 &&(!in_array($submission->careerOpportunity->jobStatus, array(23, 24, 4, 1,5))))
+              @if (
+                  in_array($submission->resume_status, [3, 7, 4, 5, 10]) &&
+                  (empty($offer) || ($offer && ($offer->status == 2 || $offer->status == 13)) && $offer->status != 12) &&
+                  !in_array($submission->careerOpportunity->jobStatus, [23, 24, 4, 1, 5])
+              )
               <a href="{{ route('vendor.offer.create',  ['id' => $submission->id]) }}"
                 class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 capitalize"
               >
                 create offer
               </a>
               @endif
-              @if($submission->careerOpportunity->jobStatus != 5)
-              <button
-                type="button"
-                class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 capitalize"
-              >
-                reject candidate
-              </button>
-              @endif
+
               <a href="{{ route('vendor.submission.index') }}">
                   <button
                       type="button"
@@ -144,7 +283,7 @@
                           <span class="text-gray-600">Status:</span>
                           <span
                             class="bg-green-500 text-white px-2 py-1 rounded-full text-sm"
-                          >{{$submission->resume_status}}</span>
+                          >{{\App\Models\CareerOpportunitySubmission::getSubmissionStatus($submission->resume_status)}}</span>
                         </div>
                         <div class="flex justify-between py-3 px-4">
                           <span class="text-gray-600">Unique ID:</span>
@@ -308,7 +447,7 @@
                             <span class="text-gray-600">Bill Rate:</span>
                             <span
                               class="font-semibold"
-                              
+
                             >${{$submission->vendor_bill_rate}}</span>
                           </div>
                           <div class="flex justify-between items-center mt-1">

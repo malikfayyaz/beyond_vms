@@ -345,7 +345,7 @@
                     @php $clients = \App\Models\Client::byStatus();@endphp
                     @foreach ($clients as $key => $value)
                         <option value="{{ $value->id }}"
-                        x-bind:selected="formData.interviewMembers.includes({{ $value->id }})">
+                       >
                         {{ $value->full_name }}</option>
                     @endforeach
                 </select>
@@ -416,6 +416,7 @@
                             :name="'slot-' + date"
                             class="form-radio text-blue-500"
                             @change="selectTimeSlot(date, slot)"
+                            :checked="formData.selectedTimeSlots[date] === slot"
                         />
                         <span x-text="slot"></span>
                         </label>
@@ -468,7 +469,7 @@
                 jobAttachment: "{{ old('jobAttachment', $interview->job_attachment ?? '') }}",
                 interviewInstructions: "{{ old('interviewInstructions', $interview->interview_instructions ?? '') }}",
                 interviewMembers:  @json(isset($interview) ? $interview->interviewMembers->pluck('member_id') : []),
-                selectedTimeSlots: {},
+                selectedTimeSlots: @json($selectedTimeSlots),
                 selectedDate: null,
             },
           errors: {},
@@ -621,6 +622,9 @@
                 );
               }
               currentTime = slotEnd;
+             
+              
+             
             }
 
             return slots;
@@ -684,6 +688,8 @@
           },
 
           selectTimeSlot(date, slot) {
+            console.log(date);
+            
             this.formData.selectedTimeSlots[date] = slot;
           },
 
@@ -719,7 +725,7 @@
                     url = '{{ route("admin.interview.store") }}';
                 @endif
 
-                ajaxCall(url, method, this.onSuccess, formData);
+                ajaxCall(url, method,  [[onSuccess, ['response']]], formData);
             }
           },
 

@@ -106,7 +106,7 @@ Route::middleware(['user_role:admin'])->group(function () {
 
         Route::match(['get', 'post'], 'job-workflow-data', [CareerOpportunitiesController::class, 'jobWorkFlowData'])->name('jobWorkFlowData');
 
-        
+
 
         // offer
         Route::get('offer/{id}/create', [CareerOpportunitiesOfferController::class, 'create'])->name('offer.create');
@@ -120,7 +120,7 @@ Route::middleware(['user_role:admin'])->group(function () {
         Route::post('workorder/store', [\App\Http\Controllers\Admin\CareerOpportunitiesWorkOrderController::class, 'store'])->name('workorder.store');
         Route::get('workorder/index', [\App\Http\Controllers\Admin\CareerOpportunitiesWorkOrderController::class, 'index'])->name('workorder.index');
         Route::get('workorder/view/{id}', [\App\Http\Controllers\Admin\CareerOpportunitiesWorkOrderController::class, 'show'])->name('workorder.show');
-      
+
         //workflow
 
        Route::match(['get', 'post'], 'workflow', [GenericDataController::class, 'workflow'])->name('workflow');
@@ -128,11 +128,11 @@ Route::middleware(['user_role:admin'])->group(function () {
        Route::match(['get', 'post'], 'workflow/store', [GenericDataController::class, 'workflowStore'])->name('workflow.store');
        Route::match(['get', 'post'], 'workflow/edit/{id}', [GenericDataController::class, 'workflowEdit'])->name('workflow.edit');
        Route::put('workflow/{id}/update', [GenericDataController::class, 'workflowUpdate'])->name('workflow.update');
-      
+
        //submission
 
-        
-        
+
+
         Route::match(['get', 'post'], 'submission/index', [CareerOpportunitiesSubmissionController::class, 'index'])->name('submission.index');
         Route::get('submission/{id}', [CareerOpportunitiesSubmissionController::class, 'show'])->name('submission.show');
         Route::post('reject-candidate', [CareerOpportunitiesSubmissionController::class, 'rejectCandidate'])->name('interview.reject_candidate');
@@ -156,8 +156,9 @@ Route::middleware(['user_role:admin'])->group(function () {
 
         Route::POST('rejectAdminJob', [CareerOpportunitiesController::class, 'rejectAdminJob'])->name('rejectAdminJob');
 
-        // contract 
+        // contract
         Route::resource('contracts', CareerOpportunitiesContractController::class);
+        Route::POST('contracts/save-comments', [CareerOpportunitiesContractController::class, 'saveComments'])->name('saveComments');
 
          Route::get('/career-opportunities/{id}/vendorrelease', [CareerOpportunitiesController::class, 'vendorrelease'])->name('admin.career-opportunities.vendorrelease');
 

@@ -6,11 +6,10 @@
 
     <div class="ml-16">
         @include('admin.layouts.partials.header')
-
         <div>
-        @include('admin.layouts.partials.alerts')
           <div class="mx-4 rounded p-8">
-            <div class="w-full flex justify-end items-center gap-4">
+              @include('admin.layouts.partials.alerts')
+              <div class="w-full flex justify-end items-center gap-4">
             @if (!in_array($submission->resume_status, array(6, 7, 2, 15, 8, 9, 11)) && (!in_array($submission->careerOpportunity->jobStatus, array(4, 12))) && $submission->careerOpportunity->interview_process == 'Yes')
               <a href="{{ route('admin.interview.create',  ['id' => $submission->id]) }}"
                 type="button"
@@ -30,7 +29,7 @@
               >
                 create offer
               </a>
-{{--              @endif--}}
+             @endif
               @if($submission->careerOpportunity->jobStatus != 5)
                 <div x-data="addSubWizarForm()" x-init="mounted()">
                 <button
@@ -164,7 +163,7 @@
                           <span class="text-gray-600">Status:</span>
                           <span
                             class="bg-green-500 text-white px-2 py-1 rounded-full text-sm"
-                          >{{$submission->resume_status}}</span>
+                          >{{\App\Models\CareerOpportunitySubmission::getSubmissionStatus($submission->resume_status)}}</span>
                         </div>
                         <div class="flex justify-between py-3 px-4">
                           <span class="text-gray-600">Unique ID:</span>

@@ -19,6 +19,8 @@ Route::middleware(['user_role:vendor'])->group(function () {
         Route::post('submission/store', [CareerOpportunitiesSubmissionController::class, 'store'])->name('submission.store');
         Route::match(['get', 'post'], 'submission/index', [CareerOpportunitiesSubmissionController::class, 'index'])->name('submission.index');
         Route::get('/submission/{id}', [CareerOpportunitiesSubmissionController::class, 'show'])->name('submission.show');
+        Route::post('submission/withdrawSubmission', [CareerOpportunitiesSubmissionController::class, 'withdrawSubmission'])->name('submission.withdraw');
+        Route::delete('submission/{id}', [CareerOpportunitiesSubmissionController::class, 'destroy'])->name('submission.destroy');
         // offer
         Route::get('offer/{id}/create', [CareerOpportunitiesOfferController::class, 'create'])->name('offer.create');
         Route::post('offer/store', [CareerOpportunitiesOfferController::class, 'store'])->name('offer.store');
@@ -31,12 +33,12 @@ Route::middleware(['user_role:vendor'])->group(function () {
         Route::post('workorder/store', [CareerOpportunitiesWorkOrderController::class, 'store'])->name('workorder.store');
         Route::delete('workorderbackground/{id}', [CareerOpportunitiesWorkOrderController::class, 'destroy'])->name('workorderbackground.destroy');
 
-         //interview
-         Route::match(['get', 'post'], 'interview/index', [CareerOpportunitiesInterviewController::class, 'index'])->name('interview.index');
-         Route::get('interview/{id}/create', [CareerOpportunitiesInterviewController::class, 'create'])->name('interview.create');
-         Route::post('interview/store', [CareerOpportunitiesInterviewController::class, 'store'])->name('interview.store');
-         Route::get('interview/{id}/edit', [CareerOpportunitiesInterviewController::class, 'edit'])->name('interview.edit');
-         Route::put('interview/{id}/update', [CareerOpportunitiesInterviewController::class, 'update'])->name('interview.update');
+        //interview
+        Route::match(['get', 'post'], 'interview/index', [CareerOpportunitiesInterviewController::class, 'index'])->name('interview.index');
+        Route::get('interview/{id}', [CareerOpportunitiesInterviewController::class, 'show'])->name('interview.show');
+        Route::post('interview/{id}/saveTiming', [CareerOpportunitiesInterviewController::class, 'saveInterviewTiming'])->name('interview.saveTiming');
+        Route::post('interview/{id}/reject_interview', [CareerOpportunitiesInterviewController::class, 'rejectInterview'])->name('interview.reject_interview');
+
         // contract
         Route::resource('contracts', \App\Http\Controllers\Vendor\CareerOpportunitiesContractController::class);
 

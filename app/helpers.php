@@ -396,6 +396,22 @@ if (!function_exists('getMiscContractEndDate')) {
     }
 }
 
+if (!function_exists('updateContractReason')) {
+    function updateContractReason(){
+        return array(
+            '1' => 'Additional Budget',
+            '5' => 'Update Start Date',
+            '6' => 'Assignment Termination',
+            //'9' => 'Cost Center Rate Change', // used for cost center rate change
+            //'10' => 'New Cost Center Added', // used for new cost center addition.
+            '2' => 'Extension',
+            '3' => 'Rate Change',
+            // '7' => 'Update Job Level',
+            '4' => 'Non-Financial Change',
+        );
+    }
+}
+
 
 
 

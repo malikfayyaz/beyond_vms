@@ -26,6 +26,9 @@ class CareerOpportunitiesWorkOrderController extends Controller
                 ->addColumn('consultant_name', function($row) {
                     return $row->consultant ? $row->consultant->full_name : 'N/A';
                 })
+                ->addColumn('status', function($row) {
+                    return CareerOpportunitiesWorkorder::getWorkorderStatus($row->status);
+                })
                 ->addColumn('vendor_name', function($row) {
                     return $row->vendor ? $row->vendor->full_name : 'N/A';
                 })

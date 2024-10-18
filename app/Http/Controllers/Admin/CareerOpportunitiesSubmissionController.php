@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Admin;
+use App\Models\Setting;
 use Illuminate\Http\Request;
 use App\Models\CareerOpportunitySubmission;
 use App\Models\CareerOpportunitiesOffer;
@@ -81,10 +82,12 @@ class CareerOpportunitiesSubmissionController extends Controller
         $careersubmission->reason_for_rejection = '';
         $careersubmission->date_rejected =now(); //Rejected Date time.
         $careersubmission->save(); // Save the changes
-
-        return response()->json(['success' => true,
-        'redirect_url' => route('admin.submission.show',$request->submissionId),
-            'message' => 'Submission Rejected successfully!']);
+        session()->flash('success', 'Submission Rejected successfully!');
+        return response()->json([
+            'success' => true,
+            'redirect_url' => route('admin.submission.show', $request->submissionId),
+            'message' => 'Submission Rejected successfully!'
+        ]);
     }
     public function shortlistCandidate(Request $request)
     {
@@ -96,9 +99,11 @@ class CareerOpportunitiesSubmissionController extends Controller
         $careersubmission->release_to_client = 1;
         $careersubmission->shortlisted_date = now();
         $careersubmission->save(); // Save the changes
-
-        return response()->json(['success' => true,
-            'message' => 'Submission Shortlisted successfully!']);
+        session()->flash('success', 'Submission Shortlisted successfully!');
+        return response()->json([
+            'success' => true,
+            'redirect_url' => route('admin.submission.show', $careersubmission->id),
+            'message' => 'Submission Shortlisted successfully!'
+        ]);
     }
-
 }

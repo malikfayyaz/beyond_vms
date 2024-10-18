@@ -10,7 +10,7 @@
                 <div class="flex justify-between items-center mb-6">
                     <h2 class="text-2xl font-bold"></h2>
                     @if(jobVendSubmissionLimit($job->id) < $job->num_openings )
-   
+
                     <div class="flex space-x-2">
                         <button
                             type="button"
@@ -18,6 +18,13 @@
                             onclick="window.location.href='{{route('vendor.submission.create', ['id' => $job->id]) }}'"
                         >
                             Create Submission
+                        </button>
+                        <button
+                            type="button"
+                            class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 capitalize"
+                            onclick="window.location.href='{{route('vendor.career-opportunities.index') }}'"
+                        >
+                            Back to list of Career Opportunities
                         </button>
                     </div>
                     @endif
@@ -293,6 +300,14 @@
                         >
                     </h3>
                     <div class="flex flex-col">
+                        <div class="flex items-center justify-between py-4 border-t">
+                            <div class="w-2/4">
+                                <h4 class="font-medium">Job Status:</h4>
+                            </div>
+                            <div class="w-2/4">
+                                <p class="font-light">{{ \App\Models\CareerOpportunity::getStatus($job->jobStatus) }}</p>
+                            </div>
+                        </div>
                         <div class="flex items-center justify-between py-4 border-t">
                             <div class="w-2/4">
                                 <h4 class="font-medium">Job Title:</h4>

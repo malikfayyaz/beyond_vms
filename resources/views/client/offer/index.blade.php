@@ -6,6 +6,7 @@
     <div class="ml-16">
         @include('client.layouts.partials.header')
         <div class="bg-white mx-4 my-8 rounded p-8">
+            @include('client.layouts.partials.alerts')
             <div >
                 <div class="flex justify-between items-center mb-6">
                     <h2 class="text-2xl font-bold">Offers</h2>
@@ -34,7 +35,7 @@
                         <th
                             class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                         >
-                            Job Profile 
+                            Job Profile
                         </th>
                         <th
                             class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
@@ -71,7 +72,7 @@
                         >
                             Action
                         </th>
-                        
+
                     </tr>
                     </thead>
                     <tbody>
@@ -89,7 +90,7 @@
             initializeDataTable('#listing', '/client/offer/index', [
                 { data: 'status', name: 'status' },
                 { data: 'id', name: 'id' },
-                { data: 'consultant_name', name: 'consultant_name' }, 
+                { data: 'consultant_name', name: 'consultant_name' },
                 { data: 'career_opportunity', name: 'career_opportunity' },
                 { data: 'hiring_manger', name: 'hiring_manger' },
                 { data: 'vendor_name', name: 'vendor_name' },
@@ -98,7 +99,7 @@
                 { data: 'wo_status', name: 'wo_status' },
                 { data: 'worker_type', name: 'worker_type' },
                 { data: 'action', name: 'action', orderable: false, searchable: false }
-               
+
             ]);
         }
     });

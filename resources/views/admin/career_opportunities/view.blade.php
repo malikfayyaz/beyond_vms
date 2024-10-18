@@ -5,10 +5,10 @@
     @include('admin.layouts.partials.dashboard_side_bar')
       <div class="ml-16">
           @include('admin.layouts.partials.header')
-
-
           <div  x-data="{ tab: 'activejobs' }" class="bg-white mx-4 my-8 rounded p-8">
-             @if($job->jobStatus == 2)
+              @include('admin.layouts.partials.alerts')
+
+          @if($job->jobStatus == 2)
               <div x-data="{
                     rejectionReason: '{{ $job->rejectionReason ? $job->rejectionReason->title : ' ' }}',
                     notes: '{{ $job->note_for_rejection }}',
@@ -27,7 +27,7 @@
 
           <div class="mb-4">
             <ul
-              class="grid grid-flow-col text-center text-gray-500 bg-gray-100 rounded-lg p-1"
+              class="grid grid-flow-col text-center text-gray-500 bg-gray-100 rounded-lg p-1 -mx-6"
             >
               <li class="flex justify-center">
                 <a
@@ -75,7 +75,6 @@
                   </div>
                 </a>
               </li>
-
                <li class="flex justify-center" x-data="{ status: {{ $job->jobStatus }} }" x-show="status === 3 || status === 5">
                 <a
                 @click="tab = 'vendorrelease'"
@@ -153,7 +152,7 @@
         <div x-show="tab === 'activejobs'" class="flex w-full gap-4">
 
 
-          <div class="bg-white mx-4 my-8 rounded p-8">
+          <div class="bg-white mx-4 my-8 rounded p-8 mt-0 pt-0">
               <div class="flex justify-between items-center mb-6">
                   <h2 class="text-2xl font-bold"></h2>
 
@@ -161,7 +160,7 @@
                     <div x-data="{
                       rejectModal1: false,
                       jobId: '{{ $job->id }}',
-                      status: {{ $job->jobStatus }}, 
+                      status: {{ $job->jobStatus }},
                       reason: '',
                       note: '',
                       errors: {},
@@ -281,7 +280,7 @@
                           </div>
                       </div>
                   </div>
-              
+
 
 
 
@@ -480,6 +479,14 @@
                 >
               </h3>
               <div class="flex flex-col">
+                  <div class="flex items-center justify-between py-4 border-t">
+                      <div class="w-2/4">
+                          <h4 class="font-medium">Job Status:</h4>
+                      </div>
+                      <div class="w-2/4">
+                          <p class="font-light">{{ \App\Models\CareerOpportunity::getStatus($job->jobStatus) }}</p>
+                      </div>
+                  </div>
                 <div class="flex items-center justify-between py-4 border-t">
                   <div class="w-2/4">
                     <h4 class="font-medium">Job Title:</h4>
@@ -881,98 +888,93 @@
           </table>
       </div>
        </div>
-       <div x-show="tab === 'vendorrelease'"   class="flex w-full gap-4">
-          <div x-data="{
-            selectedVendor: '',
-            showErrors: false,
-            jobID : '{{ $job->id }}',
-            errors: {},
-            isFieldValid(field) {
-                return !this.errors[field];
-            },
-            getErrorMessageById(field) {
-                return this.errors[field] || '';
-            },
-            validate() {
-                this.errors = {};
-                if (!this.selectedVendor) {
-                    this.errors.vendor = 'Please select a vendor.';
-                    this.showErrors = true;
-                }
-            },
-            submitForm(event) {
-                event.preventDefault();
-                this.validate();
-                if (Object.keys(this.errors).length === 0) {
-                    const formData = new FormData();
-                    formData.append('vendor_id', this.selectedVendor);
-                    formData.append('job_id', this.jobID);
-
-                   const url = '/admin/releaseJobVendor';
-                   ajaxCall(url,'POST', [[onSuccess, ['response']]], formData);
-
-                }
+       <div x-show="tab === 'vendorrelease'"   class="w-full gap-4">
+        <div x-data="{
+        selectedVendor: '',
+        vendor_id : '',
+        showErrors: false,
+        jobID: '{{ $job->id }}',
+        errors: {},
+        isFieldValid(field) {
+            return !this.errors[field];
+        },
+        getErrorMessageById(field) {
+            return this.errors[field] || '';
+        },
+        validate() {
+            this.errors = {};
+            var vendor_id = $('#vendor').val();
+            if (!vendor_id) {
+                this.errors.vendor = 'Please select a vendor.';
+                this.showErrors = true;
+            } else {
+                this.showErrors = true; 
             }
-        }">
+        },
+        submitForm(event) {
+            event.preventDefault();  
+            this.validate(); 
+            if (Object.keys(this.errors).length === 0) {
+                const formData = new FormData();
+                formData.append('vendor_id', $('#vendor').val());
+                formData.append('job_id', this.jobID);
 
-        <form @submit="submitForm">
-            <label class="block mb-2">Vendors <span class="text-red-500">*</span></label>
-            <select
-                x-ref="vendor"
-                name="vendor_id"
-                x-model="selectedVendor"
-                @change="validate()"
-                class="w-50 select2-single custom-style"
-                id="vendor"
-            >
-                <option value="">Select Vendor</option>
-                @foreach ($vendors as $vendor)
-                    <option value="{{ $vendor->id }}">{{ $vendor->first_name.' '.$vendor->last_name }}</option>
-                @endforeach
-            </select>
-            <p x-show="showErrors && !isFieldValid('vendor')" class="text-red-500 text-sm mt-1"
-               x-text="getErrorMessageById('vendor')"></p>
+                const url = '/admin/releaseJobVendor';
+                ajaxCall(url, 'POST', [[onSuccess, ['response']]], formData);
+            }
+        }
+    }">
 
-            <button type="submit" class="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                Submit
-            </button>
-        </form>
+    <form @submit="submitForm" id="generalformwizard">
+        <label class="block mb-2">Vendors <span class="text-red-500">*</span></label>
+        <select
+            x-ref="selectedVendor"
+            name="vendor_id"
+            x-model="selectedVendor"
+            class="w-50 select2-single custom-style"
+            id="vendor"
+        >
+            <option value="">Select Vendor</option>
+            @foreach ($vendors as $vendor)
+                <option value="{{ $vendor->id }}">{{ $vendor->first_name.' '.$vendor->last_name }}</option>
+            @endforeach
+        </select>
+        <p x-show="showErrors && !isFieldValid('vendor')" class="text-red-500 text-sm mt-1"
+           x-text="getErrorMessageById('vendor')"></p>
+
+        <button type="submit" class="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+            Submit
+        </button>
+    </form>
+
+    <!-- Content -->
+    <div class="p-4">
+        <!-- Table -->
         <div class="overflow-x-auto" x-data="{ rows: {{ json_encode($vendorRelease) }} }">
-              <table class="min-w-full bg-white border border-gray-200">
-                  <thead>
-                      <tr class="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
-                          <th class="py-3 px-6 text-left">Sr. #</th>
-                          <th class="py-3 px-6 text-left">Vendor Name</th>
-                          <th class="py-3 px-6 text-left">Release Date/Time</th>
-                          <!-- <th class="py-3 px-6 text-left">Action</th> -->
-                      </tr>
-                  </thead>
-                   <tbody class="text-gray-600 text-sm font-light">
+            <table class="w-full">
+                <thead>
+                    <tr class="bg-gray-50 text-left">
+                        <th class="py-4 px-4 text-center font-semibold text-sm text-gray-600">Sr. #</th>
+                        <th class="py-4 px-4 text-center font-semibold text-sm text-gray-600">Vendor Name</th>
+                        <th class="py-4 px-4 text-center font-semibold text-sm text-gray-600">Release Date/Time</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-200">
                     <template x-for="(row, index) in rows" :key="index">
-                        <tr class="border-b border-gray-200 hover:bg-gray-100">
-                            <!-- Counter (Sr. #) -->
-                            <td class="py-3 px-6 text-left whitespace-nowrap">
-                                <div class="flex items-center">
-                                    <span x-text="index + 1"></span> <!-- Displaying the index as the serial number -->
-                                </div>
+                        <tr>
+                            <td class="py-4 px-4 text-center text-sm"><span x-text="index + 1"></span></td>
+                            <td class="py-4 px-4 text-center text-sm">
+                                <span x-text="row.vendor_name.first_name + ' ' + row.vendor_name.last_name"></span>
                             </td>
-
-                            <!-- Vendor Name (first_name and last_name) -->
-                            <td class="py-3 px-6 text-left">
-                                <span x-text="row.vendor_name.first_name + ' ' + row.vendor_name.last_name"></span> <!-- Combining first and last name -->
-                            </td>
-
-                            <!-- Release Date/Time -->
-                            <td class="py-3 px-6 text-left">
-                                <span x-text="row.job_released_time"></span>
-                            </td>
+                            <td class="py-4 px-4 text-center text-sm"><span x-text="row.job_released_time"></span></td>
                         </tr>
                     </template>
                 </tbody>
-              </table>
-          </div>
-
+            </table>
+        </div>
     </div>
+</div>
+
 
 
 
@@ -1243,9 +1245,9 @@
         const url = "/vendor/submission/store";
         ajaxCall(url,'POST', [[onSuccess, ['response']]], formData);
 
-
-
     }
+  
+    
  function submitworkflowform(event) {
         alert('Form Submitted!'); // Just to ensure it's being called
 
@@ -1271,6 +1273,7 @@
             console.error('Error:', error);
         });
       }
+    
     document.addEventListener('alpine:init', () => {
         Alpine.data('workflowHandler', () => ({
             note: '', // To store the note input
@@ -1306,7 +1309,39 @@
                 this.file = event.target.files[0];
             }
         }));
+
+        Alpine.data('selectHandler', () => ({
+        init() {
+            this.initSelect2();
+        },
+        initSelect2() {
+            this.$nextTick(() => {
+                $(".select2-single").each((index, element) => {
+                    const fieldName = $(element).data("field");
+                    $(element).select2({
+                        width: "100%",
+                    });
+                });
+            });
+        }
+    }));
     });
+
+    // Function to initialize Select2 outside of Alpine context
+function initSelect2() {
+    $(".select2-single").each((index, element) => {
+        const fieldName = $(element).data("field");
+        $(element).select2({
+            width: "100%",
+        });
+    });
+}
+
+// Initialize Select2 on page load
+document.addEventListener('DOMContentLoaded', function() {
+    initSelect2();
+});
+  
 </script>
 
 

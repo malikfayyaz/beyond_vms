@@ -200,6 +200,7 @@ class CareerOpportunitiesController extends BaseController
             $originalOpportunity = CareerOpportunity::with('careerOpportunitiesBu')->findOrFail($id);
             $newOpportunity = $originalOpportunity->replicate();
             $newOpportunity->jobstep2_complete = '0';
+            $newOpportunity->jobStatus = '1';
             $newOpportunity->title = $originalOpportunity->title;
             $newOpportunity->user_id = Admin::getAdminIdByUserId(Auth::id());
             $newOpportunity->created_at = Carbon::now();
@@ -477,6 +478,7 @@ class CareerOpportunitiesController extends BaseController
             'message' => $successMessage,
             'redirect_url' =>  url("admin/career-opportunities", $request->job_id) 
         ]);
+
     }
 
     public function jobWorkFlowReject(Request $request){
@@ -497,7 +499,6 @@ class CareerOpportunitiesController extends BaseController
         $job = CareerOpportunity::find($id);
         $job->jobstatus = 3;
         $job->save();
-
         $successMessage = 'Job Approved successfully';
         session()->flash('success', $successMessage);
         return response()->json([
@@ -505,6 +506,7 @@ class CareerOpportunitiesController extends BaseController
             'message' => $successMessage,
             'redirect_url' =>  url("admin/career-opportunities", $id) 
         ]);
+
     }
     public function jobReject(String $id){
         $job = CareerOpportunity::find($id);

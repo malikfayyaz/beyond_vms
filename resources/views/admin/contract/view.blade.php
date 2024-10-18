@@ -5,7 +5,18 @@
     @include('admin.layouts.partials.dashboard_side_bar')
     <div class="ml-16">
     @include('admin.layouts.partials.header')
-            <div class="bg-white mx-4 my-8 rounded p-8">
+            <div class="mx-4 rounded p-8 ">
+            @if(!in_array($contract->status, array(2,3,7,14)) && ($contract->termination_status != 2 || in_array($contract->workOrder->contract_type, [0, 1])) )
+            <a href="{{ route('admin.contracts.edit',  ['contract' => $contract->id]) }}"
+                type="button"
+                class="px-4 py-2 capitalize bg-blue-500 text-white rounded hover:bg-blue-600 capitalize"
+              >
+                Update Contract
+              </a>
+              @endif
+                @include('admin.layouts.partials.alerts')
+            </div>
+         <div class="bg-white mx-4 my-8 rounded p-8">
             <div x-data="{ activePage: 'tab1' }" class="mb-4">
                 <ul class="grid grid-flow-col text-center text-gray-500 bg-gray-100 rounded-lg p-1">
                     <!-- Tab 1: Active Jobs -->
@@ -44,7 +55,7 @@
                             </div>
                         </a>
                     </li>
-                       
+
 
                     <li class="flex justify-center items-center">
                         <a
@@ -81,7 +92,7 @@
                             </div>
                         </a>
                     </li>
-                        
+
                     <li class="flex justify-center items-center">
                         <a
                             href="javascript:void(0)"
@@ -110,17 +121,17 @@
                         </div>
 
                         <div x-show="activePage === 'tab3'">
-                            <h2 class="text-xl font-bold">tab3</p>
+                            @include('admin.contract.contract_tabdata')
                         </div>
                         <div x-show="activePage === 'tab4'">
-                            <h2 class="text-xl font-bold">tab4</p>
+                            @include('admin.contract.contract_tabdata')
                         </div>
                         <div x-show="activePage === 'tab5'">
-                            <h2 class="text-xl font-bold">tab5</p>
+                            @include('admin.contract.contract_tabdata')
                         </div>
                     </div>
                 </div>
-                
+
             </div>
 
 

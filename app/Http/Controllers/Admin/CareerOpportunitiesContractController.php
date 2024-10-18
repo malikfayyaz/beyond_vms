@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Models\Admin;
 use App\Models\CareerOpportunitiesOffer;
 use App\Models\CareerOpportunity;
+use App\Models\ContractNote;
 use App\Models\OfferWorkFlow;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Support\Facades\Auth;
@@ -98,7 +99,7 @@ class CareerOpportunitiesContractController extends BaseController
      */
     public function store(Request $request)
     {
-    //    dd($request);
+        //    dd($request);
         $rules = [
 
             'timesheetType' => 'required|integer',
@@ -207,7 +208,7 @@ class CareerOpportunitiesContractController extends BaseController
                 return response()->json([
                     'success' => true,
                     'message' => 'Contractor Login information has been emailed!',
-                    'redirect_url' => route('admin.contracts') // Redirect back URL for AJAX
+                    'redirect_url' => route('admin.contracts.index') // Redirect back URL for AJAX
                 ]);
 
 
@@ -222,13 +223,36 @@ class CareerOpportunitiesContractController extends BaseController
         $job = CareerOpportunitiesContract::with('careerOpportunity')->findOrFail($id);
         return view('admin.contract.view', compact('contract','job'));
     }
+    public function saveComments(Request $request) //SAVENOTES
+    {
+     //   dd($request->all());
+        $request->validate([
+            'note' => 'required|string',
+            'contract_id' => 'required|integer'
+        ]);
+        $note = new ContractNote();
+        $note->contract_id = $request->contract_id;
+        $note->user_id = Auth::id();
+        $note->notes = $request->note;
+        $note->posted_by_type = Auth::user()->role == 'Client' ? 'Client' : 'Admin';
+        $note->save();
+        session()->flash('success', 'Notes Added Successfully');
+        return response()->json([
+            'success' => true,
+            'message' => 'Notes Added Successfully',
+            'posted_by' => Auth::user()->name,
+            'created_at' => $note->created_at->format('m/d/Y H:i A'),
+            'redirect_url' => route('admin.contracts.show', $note->contract_id) // Redirect back URL for AJAX
+        ]);
+    }
 
     /**
      * Show the form for editing the specified resource.
      */
     public function edit(string $id)
     {
-        //
+        $contract = CareerOpportunitiesContract::findOrFail($id);
+        return view('admin.contract.contract_update', compact('contract'));
     }
 
     /**
