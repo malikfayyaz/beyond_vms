@@ -304,7 +304,7 @@
                             </p>
                           </div>
                           <div class="flex justify-between py-3 px-4">
-                            <span class="text-gray-600">Reason for Cancel::</span>
+                            <span class="text-gray-600">Reason for Cancel:</span>
                             <span class="font-semibold">{{$interview->reasonRejection->title}}</span>
                           </div>
                           <div class="flex justify-between py-3 px-4">
