@@ -5,10 +5,10 @@
     @include('client.layouts.partials.dashboard_side_bar')
     <div class="ml-16">
         @include('client.layouts.partials.header')
-        <div class="bg-white mx-4 my-8 rounded p-8">
+        <div class="bg-white mx-4 my-8 rounded p-8 pt-0">
             @include('client.layouts.partials.alerts')
             <div >
-                <div class="flex justify-between items-center mb-6">
+                <div class="flex justify-between items-center mb-6 mb-0">
                     <h2 class="text-2xl font-bold">WorkOrder</h2>
                 </div>
                 <table class="min-w-full divide-y divide-gray-200" id="listing">

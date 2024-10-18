@@ -34,7 +34,7 @@ class CareerOpportunitySubmission extends Model
     {
         return $this->belongsTo(CareerOpportunity::class, 'career_opportunity_id' , 'id');
     }
-   
+
 
     public function getEstimateStartDateAttribute()
     {
@@ -81,6 +81,13 @@ class CareerOpportunitySubmission extends Model
             default:
                 return 'Danger';
         }
+    }
+    public function rejectionReason(){
+        return $this->belongsTo(Setting::class, 'reason_for_rejection', 'id');
+    }
+
+    public function rejectionUser(){
+        return $this->belongsTo(User::class, 'rejected_by', 'id');
     }
 
 }

@@ -7,6 +7,7 @@ use App\Models\CareerOpportunity;
 use App\Models\Markup;
 use App\Models\Country;
 use App\Models\Location;
+use App\Models\Setting;
 use App\Models\Vendor;
 use App\Models\User;
 use App\Models\CareerOpportunitySubmission;
@@ -230,8 +231,8 @@ class CareerOpportunitiesSubmissionController extends Controller
         $offer = CareerOpportunitiesOffer::where('submission_id', $submission->id)
         ->orderBy('id', 'DESC')
         ->first();
-        // Return a view or other response with the submission details
-        return view('vendor.submission.view', compact('submission','offer'));
+        $rejectReasons =  Setting::where('category_id', 22)->get();
+        return view('vendor.submission.view', compact('submission','offer','rejectReasons'));
     }
 
     /**
@@ -249,15 +250,6 @@ class CareerOpportunitiesSubmissionController extends Controller
     {
         //
     }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
-    }
-
     protected function mapConsultantData(array $validatedData, $consultant, $request,$resume, $additional_doc)
     {
         $vendorId = Vendor::getVendorIdByUserId(\Auth::id());
@@ -361,5 +353,35 @@ class CareerOpportunitiesSubmissionController extends Controller
 
 
         return true;
+    }
+    public function withdrawSubmission(Request $request)
+    {
+        $request->validate([
+            'submission_id' => 'required|exists:career_opportunities_submission,id',
+            'reason' => 'required|string',
+            'note' => 'required|string',
+        ]);
+        // Find the submission and update status
+        $submission = CareerOpportunitySubmission::find($request->submission_id);
+        $submission->resume_status = 12;  // Example status update
+        $submission->reason_for_rejection = $request->reason;
+        $submission->note_for_rejection = $request->note;
+        $submission->notes = $request->note;
+        $submission->rejected_type = 3;
+        $submission->rejected_by = Vendor::getVendorIdByUserId($submission->created_by_user);
+        $submission->date_rejected = now();
+        $submission->save();
+        session()->flash('success', 'Submission rejected successfully');
+        return response()->json([
+            'success' => true,
+            'message' => 'Submission rejected successfully',
+            'redirect_url' => route('vendor.submission.show', $submission->id)
+        ]);
+    }
+    public function destroy($id)
+    {
+        $submission = CareerOpportunitySubmission::findOrFail($id);
+        $submission->delete();
+        return redirect()->route('vendor.submission.index')->with('success', 'Submission deleted successfully.');
     }
 }
