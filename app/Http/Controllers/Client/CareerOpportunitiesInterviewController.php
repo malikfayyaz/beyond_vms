@@ -377,45 +377,4 @@ class CareerOpportunitiesInterviewController extends Controller
         ]);
     }
 
-    public function rejectCandidate(Request $request,$id) 
-    {
-        $validateData = $request->validate([
-            'cand_rej_reason' => 'required|int',
-            'cand_rej_note' => 'required|string|max:250',
-        ]);
-
-        $user = \Auth::user();
-        $userid = \Auth::id();
-        $clientid =  Client::getClientIdByUserId($userid);
-        
-        $interview = CareerOpportunitiesInterview::findOrFail($id);
-        $submission = CareerOpportunitySubmission::findOrFail($interview->submission_id);
-
-        $interview->reason_rejection = $validateData['cand_rej_reason'];
-        $interview->notes = $validateData['cand_rej_note'];
-        $interview->interview_acceptance_date = null; 
-        $interview->acceptance_notes = null; 
-        $interview->status = 3;
-        $interview->rejected_by = $clientid;       
-        $interview->rejected_type = 2; 
-        $interview->interview_cancellation_date = now();
-        $interview->save();
-
-        $submission->reason_for_rejection = $validateData['cand_rej_reason'];
-        $submission->note_for_rejection = $validateData['cand_rej_note'];
-        $submission->resume_status = 6;
-        $submission->rejected_by = $clientid;
-        $submission->rejected_type = 2;
-        $submission->date_rejected = now();
-        $submission->save();
-
-        $successMessage = 'Interview & candidate rejected successfully!';
-        session()->flash('success', $successMessage);
-
-        return response()->json([
-            'success' => true,
-            'message' => $successMessage,
-            'redirect_url' =>  route("client.interview.index")  // Redirect URL for AJAX
-        ]);
-    }
 }
