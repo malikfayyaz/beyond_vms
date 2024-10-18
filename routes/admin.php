@@ -144,9 +144,7 @@ Route::middleware(['user_role:admin'])->group(function () {
         Route::post('interview/store', [CareerOpportunitiesInterviewController::class, 'store'])->name('interview.store');
         Route::get('interview/{id}/edit', [CareerOpportunitiesInterviewController::class, 'edit'])->name('interview.edit');
         Route::put('interview/{id}/update', [CareerOpportunitiesInterviewController::class, 'update'])->name('interview.update');
-        Route::post('interview/{id}/reject_interview', [CareerOpportunitiesInterviewController::class, 'rejectInterview'])->name('interview.reject_interview');
-        Route::post('interview/{id}/reject_candidate', [CareerOpportunitiesInterviewController::class, 'rejectCandidate'])->name('interview.rejectCandidate');
-
+        
 
        Route::POST('career-opportunities/{id}/jobApprove', [CareerOpportunitiesController::class, 'jobApprove'])->name('jobApprove');
        Route::POST('career-opportunities/{id}/jobReject', [CareerOpportunitiesController::class, 'jobReject'])->name('jobReject');

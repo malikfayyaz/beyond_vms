@@ -8,6 +8,7 @@ use App\Http\Controllers\{
 
     TeamController,
     UserController,
+    CommonController,
     Vendor\VendorController,
     Admin\AdminController,
     Admin\GenericDataController,
@@ -99,6 +100,10 @@ Route::middleware(['ensure_role_is_selected'])->group(function () {
                 'destroy' => 'client.career-opportunities.destroy'
             ]);
     });
+
+    Route::post('interview/{id}/reject_interview', [CommonController::class, 'rejectInterview'])->name('interview.reject_interview');
+    Route::post('interview/{id}/reject_candidate', [CommonController::class, 'rejectCandidate'])->name('interview.rejectCandidate');
+
 
 
 });

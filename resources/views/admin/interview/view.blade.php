@@ -471,7 +471,7 @@
                 formData.append('rejection_note', this.formData.rejection_note);
 
                 // Specify your form submission URL
-                const url = '{{ route("admin.interview.reject_interview", $interview->id) }}';
+                const url = '{{ route("interview.reject_interview", $interview->id) }}';
 
                 // Send AJAX request using ajaxCall function
                 ajaxCall(url, 'POST', [[this.onSuccess, ['response']]], formData);
@@ -516,7 +516,7 @@
                 formData.append('cand_rej_note', this.formData.cand_rej_note);
 
                 // Specify your form submission URL
-                const url = '{{ route("admin.interview.rejectCandidate", $interview->id) }}';
+                const url = '{{ route("interview.rejectCandidate", $interview->id) }}';
 
                 // Send AJAX request using ajaxCall function
                 ajaxCall(url, 'POST', [[this.onSuccess, ['response']]], formData);
