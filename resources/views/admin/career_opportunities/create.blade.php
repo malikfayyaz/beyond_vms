@@ -355,7 +355,7 @@
                }
            }">
                     <div class="flex-1">
-                        <label class="block mb-2">Labour Type <span class="text-red-500">*</span></label>
+                        <label class="block mb-2">Labor Type <span class="text-red-500">*</span></label>
                         <select name="labour_type" x-ref="laborType" x-model="formData.laborType"
                             class="w-full select2-single custom-style" data-field="laborType" id="laborType">
                             <option value="">Select a category</option>

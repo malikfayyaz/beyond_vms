@@ -160,6 +160,5 @@ Route::middleware(['user_role:admin'])->group(function () {
         Route::resource('contracts', CareerOpportunitiesContractController::class);
         Route::POST('contracts/save-comments', [CareerOpportunitiesContractController::class, 'saveComments'])->name('saveComments');
 
-
     });
 });
