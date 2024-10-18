@@ -118,6 +118,29 @@
                             class="bg-green-500 text-white px-2 py-1 rounded-full text-sm"
                             >{{$interview->status}}</span>
                         </div>
+                        @if($interview->status == 3)
+                          <div class="flex justify-between py-3 px-4">
+                            <p class="font-bold text-red-400">
+                              <i class="fas fa-clipboard"></i> Cancel Reason
+                            </p>
+                          </div>
+                          <div class="flex justify-between py-3 px-4">
+                            <span class="text-gray-600">Reason for Cancel::</span>
+                            <span class="font-semibold">{{$interview->reasonRejection->title}}</span>
+                          </div>
+                          <div class="flex justify-between py-3 px-4">
+                            <span class="text-gray-600">Cancel Notes:</span>
+                            <span class="font-semibold">{{$interview->notes}}</span>
+                          </div>
+                          <div class="flex justify-between py-3 px-4">
+                            <span class="text-gray-600">Cancel By:</span>
+                            <span class="font-semibold">{{$interview->rejectedBy->name}}</span>
+                          </div>
+                          <div class="flex justify-between py-3 px-4">
+                            <span class="text-gray-600">Date & Time:</span>
+                            <span class="font-semibold">{{$interview->formatted_interview_cancellation_date}}</span>
+                          </div>
+                        @endif
                         <div class="flex justify-between py-3 px-4">
                           <p class="font-bold text-blue-400">
                               <i class="fas fa-user"></i> Candidate Info
@@ -323,8 +346,8 @@
                                           <th class="py-3 px-4 text-left" colspan="2">Timezone</th>
                                       </tr>
                                   </thead>
-                                  <tbody>
-                                    @if($interview->interview_acceptance_date)
+                                  <tbody x-data="{ status: {{ $interview->status }} }">
+                                    @if($interview->status == 2)
                                       @foreach($interview->interviewDates as $interviewDate)
                                         @if($interviewDate->schedule_date == $interview->interview_acceptance_date)
                                         <tr class="bg-green-100">
@@ -347,7 +370,10 @@
                                       <tr class="">
                                           <td class="py-3 px-4">
                                               <div class="flex items-center">
-                                                  <input type="radio" x-model="formData.interviewTiming" value="{{ $interviewDate->formatted_schedule_date }}" class="mr-2">
+                                                  <input type="radio" x-model="formData.interviewTiming" value="{{ $interviewDate->formatted_schedule_date }}" class="mr-2"
+                                                  :disabled="status == 3" 
+                                                  :class="{ 'opacity-50 pointer-events-none': status == 3 }"
+                                                  >
                                                   <p class="font-bold">{{ $interviewDate->formatted_schedule_date }} 
                                                   @if($loop->first)
                                                       (Recommended)
@@ -371,38 +397,50 @@
                                           <td class="py-3 px-4">Candidate Phone Number:</td>
                                           <td class="py-3 px-4" colspan="3">
                                               <input type="tel" x-model="formData.can_phone" x-on:input="formatPhoneNumber($event.target)" name="can_phone" class="w-full h-12 px-4 text-gray-500 border border-gray-300 rounded-md shadow-sm focus:outline-none"
-                                              placeholder="(XXXX) XXX-XXXX">
+                                              placeholder="(XXXX) XXX-XXXX"
+                                              :disabled="status == 3" 
+                                              :class="{ 'opacity-50 pointer-events-none': status == 3 }"
+                                              >
                                 
                                           </td>
                                       </tr>
                                       <tr class="border-b">
                                           <td class="py-3 px-4">Ext No:</td>
                                           <td class="py-3 px-2">
-                                              <input type="number" x-model="formData.phone_ext" name="phone_ext" max="99" min="0" class="w-full p-2 text-gray-500 border rounded-md shadow-sm focus:outline-none">
+                                              <input type="number" x-model="formData.phone_ext" name="phone_ext" max="99" min="0" class="w-full p-2 text-gray-500 border rounded-md shadow-sm focus:outline-none"
+                                              :disabled="status == 3" 
+                                              :class="{ 'opacity-50 pointer-events-none': status == 3 }"
+                                              >
                                           </td>
                                       </tr>
                                       <tr class="border-b">
                                           <td class="py-3 px-4" colspan="5">
                                               <label for="vendor_note" class="block font-bold">Note <i class="fa fa-asterisk text-red-600"></i>:</label>
-                                              <textarea x-model="formData.vendor_note" id="vendor_note" name="vendor_note" placeholder="Enter Note..." class="w-full p-2 mt-2 text-gray-500 border rounded-md shadow-sm focus:outline-none min-h-[150px]"></textarea>
-                                              <p x-show="errors.vendor_note" class="text-red-500 text-xs italic" x-text="errors.vendor_note"></p>
+                                              <textarea x-model="formData.vendor_note" id="vendor_note" name="vendor_note" placeholder="Enter Note..." class="w-full p-2 mt-2 text-gray-500 border rounded-md shadow-sm focus:outline-none min-h-[150px]"
+                                              :disabled="status == 3" 
+                                              :class="{ 'opacity-50 pointer-events-none': status == 3 }"
+                                              ></textarea>
+                                              <p x-show="errors.vendor_note" class="text-red-500 text-xs italic" x-text="errors.vendor_note"
+                                              ></p>
                                           </td>
                                       </tr>
                                   </tbody>
                               </table>
                           </div>
                           <div class="">
-                            @if(empty($interview->interview_acceptance_date))
+                            @if($interview->status == 1)
                               <button type="submit" name="acceptinterview" class="bg-green-600 text-white py-2 px-4 rounded hover:bg-green-500 cursor-pointer">
                                 Accept Interview
                               </button>
                             @endif
                           </div>
                       </form>
-                      <div x-data="{ showModal: false }">
+                      <div x-data="{ showModal: false, status: {{ $interview->status }} }">
                               <a href="javascript:void(0);" 
                                 class="btn bg-red-600 text-white py-2 px-4 rounded hover:bg-red-500" 
-                                @click="showModal = true">
+                                @click="showModal = true"
+                                x-bind:disabled="status == 3"
+                                :class="{ 'opacity-50 pointer-events-none': status == 3 }">
                                 Reschedule/Cancel Interview
                               </a>
                               <!-- The Modal -->
@@ -455,7 +493,7 @@
                                       </div>
                                   </div>
                               </div>
-                            </div>
+                      </div>
                     </div>
 
                     <div class="h-[1024px]" x-show="activePage === 'tab2'">

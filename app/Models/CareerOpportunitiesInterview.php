@@ -47,9 +47,18 @@ class CareerOpportunitiesInterview extends Model
     public function reasonRejection() {
         return $this->belongsTo(Setting::class, 'reason_rejection', 'id');
     }
+
+    public function rejectedBy() {
+        return $this->belongsTo(User::class, 'rejected_by', 'id');
+    }
     
     public function location() {
         return $this->belongsTo(Location::class, 'location_id', 'id');
+    }
+
+    public function getFormattedInterviewCancellationDateAttribute()
+    {
+        return \Carbon\Carbon::parse($this->interview_cancellation_date)->format('m/d/Y h:i A');
     }
 
     public function interviewDates()
