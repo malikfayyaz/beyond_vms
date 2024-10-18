@@ -528,7 +528,7 @@
                     formData.append('rejection_note', this.formData.rejection_note);
 
                     // Specify your form submission URL
-                    const url = '{{ route("client.interview.reject_interview", $interview->id) }}';
+                    const url = '{{ route("interview.reject_interview", $interview->id) }}';
 
                     // Send AJAX request using ajaxCall function
                     ajaxCall(url, 'POST', [[this.onSuccess, ['response']]], formData);

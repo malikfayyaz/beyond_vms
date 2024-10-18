@@ -20,7 +20,7 @@ class CommonController extends Controller
         } else if ($sessionrole === 'vendor') {
             $role = 3;
         }
-        
+
         $user_id =  checkUserId($userid,$sessionrole);
 
         $validateData = $request->validate([

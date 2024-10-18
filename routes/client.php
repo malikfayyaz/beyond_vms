@@ -39,7 +39,6 @@ Route::middleware(['user_role:client'])->group(function () {
         Route::post('interview/store', [CareerOpportunitiesInterviewController::class, 'store'])->name('interview.store');
         Route::get('interview/{id}/edit', [CareerOpportunitiesInterviewController::class, 'edit'])->name('interview.edit');
         Route::put('interview/{id}/update', [CareerOpportunitiesInterviewController::class, 'update'])->name('interview.update');
-        Route::post('interview/{id}/reject_interview', [CareerOpportunitiesInterviewController::class, 'rejectInterview'])->name('interview.reject_interview');
         Route::post('interview/{id}/complete_interview', [CareerOpportunitiesInterviewController::class, 'completeInterview'])->name('interview.complete_interview');
         Route::post('interview/{id}/reject_candidate', [CareerOpportunitiesInterviewController::class, 'rejectCandidate'])->name('interview.rejectCandidate');
         
