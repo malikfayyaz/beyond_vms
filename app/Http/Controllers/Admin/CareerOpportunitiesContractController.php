@@ -99,7 +99,7 @@ class CareerOpportunitiesContractController extends BaseController
      */
     public function store(Request $request)
     {
-    //    dd($request);
+        //    dd($request);
         $rules = [
 
             'timesheetType' => 'required|integer',
@@ -251,7 +251,8 @@ class CareerOpportunitiesContractController extends BaseController
      */
     public function edit(string $id)
     {
-        //
+        $contract = CareerOpportunitiesContract::findOrFail($id);
+        return view('admin.contract.contract_update', compact('contract'));
     }
 
     /**
