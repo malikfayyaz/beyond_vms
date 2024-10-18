@@ -358,4 +358,42 @@ class CareerOpportunitiesInterviewController extends Controller
        
         return view('admin.interview.view', compact('interview','offer'));
     }
+
+    public function rejectInterview(Request $request,$id) 
+    {
+        $user = \Auth::user();
+        $userid = \Auth::id();
+        $adminid =  Admin::getAdminIdByUserId($userid);
+       
+        $validateData = $request->validate([
+            'reschedule_reason' => 'required|int',
+            'rejection_note' => 'required|string|max:250',
+        ]);
+
+        $interview = CareerOpportunitiesInterview::findOrFail($id);
+
+        $interview->reason_rejection = $validateData['reschedule_reason'];
+        $interview->notes = $validateData['rejection_note'];
+        $interview->interview_acceptance_date = null; 
+        $interview->acceptance_notes = null; 
+        $interview->status = 3;
+        $interview->rejected_by = $adminid;       
+        $interview->rejected_type = 1; 
+        $interview->interview_cancellation_date = now();
+        $interview->save();
+
+        $successMessage = 'Interview rejected successfully!';
+        session()->flash('success', $successMessage);
+
+        return response()->json([
+            'success' => true,
+            'message' => $successMessage,
+            'redirect_url' =>  route("admin.interview.index")  // Redirect URL for AJAX
+        ]);
+    }
+    
+    public function rejectCandidate(Request $request,$id) 
+    {
+        dd();
+    }
 }
