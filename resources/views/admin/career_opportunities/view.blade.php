@@ -75,21 +75,23 @@
                   </div>
                 </a>
               </li>
-              <li class="flex justify-center" x-data="" x-show="">
+
+               <li class="flex justify-center" x-data="{ status: {{ $job->jobStatus }} }" x-show="status === 3 || status === 5">
                 <a
                 @click="tab = 'vendorrelease'"
                 :class="{ 'border-blue-500 text-blue-500': tab === 'vendorrelease' }"
                 class="flex justify-center items-center gap-3 py-4 w-full hover:bg-white hover:rounded-lg hover:shadow"
                 >
-                  <i class="fa-solid fa-fill"></i>
-                  <span class="capitalize">Vendor Release</span>
-                  <div
-                    class="px-1 py-1 flex items-center justify-center bg-gray-500 text-white rounded-lg"
-                  >
-                    <span class="text-[10px]">20</span>
-                  </div>
+                    <i class="fa-solid fa-fill"></i>
+                    <span class="capitalize">Vendor Release</span>
+                    <div
+                      class="px-1 py-1 flex items-center justify-center bg-gray-500 text-white rounded-lg"
+                    >
+                        <span class="text-[10px]">20</span>
+                    </div>
                 </a>
-              </li>
+            </li>
+
               <li class="flex justify-center">
                 <a
                   href="#page1"
@@ -222,7 +224,7 @@
                           <div class="p-4">
                               <form @submit.prevent="submitForm" id="generalformwizard">
                                   @csrf
-                                  <input type="hidden" name="workflow_id" id="workflow_id" x-model="workflow_id" :value="currentRowId">
+                                  <input type="hidden" name="workflow_id" id="workflow_id" x-model="workflow_id" :value="{{ $job->id }}">
                                   <div class="mb-4">
                                       <label for="reason" class="block text-sm font-medium text-gray-700 mb-1">
                                           Reason for Rejection
@@ -283,12 +285,24 @@
 
 
 
-                    <form action="{{ route('admin.jobApprove', $job->id) }}" method="POST" style="display: inline-block;">
-                        @csrf
-                        <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 capitalize">
-                            Approve
-                        </button>
-                    </form>
+                   <div x-data="{
+                      jobId: '{{ $job->id }}',
+                      status: {{ $job->jobStatus }},
+                      submitApprove() {
+                          let formData = new FormData();
+                          const url = '{{ route('admin.jobApprove', $job->id) }}';
+                          ajaxCall(url, 'POST', [[onSuccess, ['response']]], formData);
+                      }
+                  }">
+                      <button 
+                          type="button" 
+                          class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 capitalize" 
+                          x-show="status == 4"
+                          @click="submitApprove"
+                      >
+                          Approve
+                      </button>
+                  </div>
                 </div>
 
                       <form action="{{ route('admin.career-opportunities.copy', $job->id) }}" method="POST" style="display: inline-block;">
@@ -923,20 +937,52 @@
                 Submit
             </button>
         </form>
+        <div class="overflow-x-auto" x-data="{ rows: {{ json_encode($vendorRelease) }} }">
+              <table class="min-w-full bg-white border border-gray-200">
+                  <thead>
+                      <tr class="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
+                          <th class="py-3 px-6 text-left">Sr. #</th>
+                          <th class="py-3 px-6 text-left">Vendor Name</th>
+                          <th class="py-3 px-6 text-left">Release Date/Time</th>
+                          <!-- <th class="py-3 px-6 text-left">Action</th> -->
+                      </tr>
+                  </thead>
+                   <tbody class="text-gray-600 text-sm font-light">
+                    <template x-for="(row, index) in rows" :key="index">
+                        <tr class="border-b border-gray-200 hover:bg-gray-100">
+                            <!-- Counter (Sr. #) -->
+                            <td class="py-3 px-6 text-left whitespace-nowrap">
+                                <div class="flex items-center">
+                                    <span x-text="index + 1"></span> <!-- Displaying the index as the serial number -->
+                                </div>
+                            </td>
+
+                            <!-- Vendor Name (first_name and last_name) -->
+                            <td class="py-3 px-6 text-left">
+                                <span x-text="row.vendor_name.first_name + ' ' + row.vendor_name.last_name"></span> <!-- Combining first and last name -->
+                            </td>
+
+                            <!-- Release Date/Time -->
+                            <td class="py-3 px-6 text-left">
+                                <span x-text="row.job_released_time"></span>
+                            </td>
+                        </tr>
+                    </template>
+                </tbody>
+              </table>
+          </div>
+
     </div>
 
 
 
       </div>
 
-
-
-
-
          <div
               x-data="{
               openModal: false,
               currentRowId: '',
+              job_id:{{$job->id}},
               reason: '',
               note: '',
               errors: {},
@@ -954,6 +1000,7 @@
 
                   formData.append('note', this.note);
                   formData.append('workflow_id', this.currentRowId);
+                  formData.append('job_id', this.job_id);
                   if (this.file) {
                       formData.append('jobAttachment', this.file);
                   }
@@ -1003,6 +1050,7 @@
                   <form @submit.prevent="submitForm" id="generalformwizard">
                     @csrf()
                     <input type="hidden" name="workflow_id" id="workflow_id" x-model="workflow_id" :value="currentRowId">
+                    <input type="hidden" name="job_id" id="job_id" x-model="job_id" :value="job_id">
                     <div class="mb-4">
                           <label for="note" class="block text-sm font-medium text-gray-700 mb-1">
                               Note <span class="text-red-500">*</span>
@@ -1053,6 +1101,7 @@
               x-data="{
               rejectModal: false,
               currentRowId: '',
+              job_id : {{ $job->id }},
               reason: '',
               note: '',
               errors: {},
@@ -1067,6 +1116,7 @@
 
                   formData.append('note', this.note);
                   formData.append('workflow_id', this.currentRowId);
+                  formData.append('job_id', this.job_id);
                   formData.append('reason', this.reason);
                   const url = '/admin/jobWorkFlowReject';
                   ajaxCall(url,'POST', [[onSuccess, ['response']]], formData);

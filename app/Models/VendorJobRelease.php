@@ -8,4 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class VendorJobRelease extends Model
 {
     use HasFactory;
+
+    public function vendorName()
+    {
+        return $this->belongsTo(Vendor::class, 'vendor_id', 'id');
+    }
 }

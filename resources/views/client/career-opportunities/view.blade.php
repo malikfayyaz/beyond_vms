@@ -690,15 +690,42 @@
                 </td>
                 <td class="py-4 px-4 text-center text-sm">
                     <div x-data="{ status: '{{ $workflow->status }}', emailSent: {{ $workflow->email_sent }}, clientId: {{ $workflow->client_id }}, loginClientId: {{ $loginClientid }}  }">
-                        <template x-if="(status == 'Pending' && emailSent == 1 && loginClientId == clientId)">
-                            <button
-                                @click="$dispatch('open-modal', { rowId: {{ $workflow->id }} })"
-                                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                            >
-                                Accept
-                            </button>
-                        </template>
+                    <template x-if="(status == 'Pending' && emailSent == 1 && loginClientId == clientId)">
+                    <div
+                        x-data="{
+                            currentRowId: {{ $workflow->id }},
+                            note: '',          
+                            errors: {},       
+                            submitForm() {
+                                let formData = new FormData();
+                                formData.append('note', 'N/A'); 
+                                formData.append('workflow_id', {{$workflow->id }});
+                                formData.append('job_id', {{$job->id }});
+                                const url = '/client/jobWorkFlowApprove';
+                                ajaxCall(url, 'POST', [[onSuccess, ['response']]], formData); // Submit the form data
+                                this.currentRowId = ''; 
+                                this.note = ''; 
+                                this.file = null; 
+                                this.errors = {}; 
+                                
+                            },
+                            clearError(field) {
+                                delete this.errors[field];
+                            }
+                        }"
+                        class="flex flex-col space-y-4"
+                    >
 
+                        <!-- Submit Button -->
+                        <button
+                            @click="submitForm()"
+                            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                        >
+                            Accept
+                        </button>
+                    </div>
+
+                        </template>
                         <template x-if="(status == 'Pending' && emailSent == 1 && loginClientId == clientId)">
                             <button
                                 @click="$dispatch('open-rejectmodal', { rowId: {{ $workflow->id }} })"
@@ -723,120 +750,7 @@
 
      
     </div>
-         <div
-              x-data="{
-              openModal: false,
-              currentRowId: '',
-              reason: '',
-              note: '',
-              errors: {},
-              handleFileUpload(event) {
-                this.file = event.target.files[0];  
-              },
-
-              validateForm() {
-                this.errors = {};
-                if (!this.note.trim()) this.errors.note = 'Please enter a note';
-                return Object.keys(this.errors).length === 0;
-              },
-              submitForm() {
-                if (this.validateForm()) {
-                  let formData = new FormData();
-                 
-                  formData.append('note', this.note);
-                  formData.append('workflow_id', this.currentRowId);
-                  if (this.file) {
-                      formData.append('jobAttachment', this.file);
-                  }
-                  const url = '/client/jobWorkFlowApprove';
-                  ajaxCall(url,'POST', [[onSuccess, ['response']]], formData);
-                  this.openModal = false;
-                }
-              },
-              clearError(field) {
-                delete this.errors[field];
-              }
-            }"
-              @open-modal.window="openModal = true; currentRowId = $event.detail.rowId"
-              x-show="openModal"
-              @click.away="openModal = false"
-              class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full"
-              x-transition:enter="transition ease-out duration-300"
-              x-transition:enter-start="opacity-0"
-              x-transition:enter-end="opacity-100"
-              x-transition:leave="transition ease-in duration-300"
-              x-transition:leave-start="opacity-100"
-              x-transition:leave-end="opacity-0"
-            >
-              <div
-                class="relative top-20 mx-auto p-5 border w-[600px] shadow-lg rounded-md bg-white"
-                @click.stop
-              >
-                <div class="flex items-center justify-between border-b p-4">
-                  <h2
-                    class="text-xl font-semibold"
-                    :id="$id('modal-title')"
-                  >
-                   Accept Workflow
-                  </h2>
-                  <button
-                    @click="openModal = false"
-                    class="text-gray-400 hover:text-gray-600 bg-transparent hover:bg-transparent"
-                  >
-                    &times;
-                  </button>
-                </div>
-
-                <!-- Content -->
-                <div class="p-4">
-                  <form @submit.prevent="submitForm" id="generalformwizard">
-                    @csrf()
-                    <input type="hidden" name="workflow_id" id="workflow_id" x-model="workflow_id" :value="currentRowId">
-                    <div class="mb-4">
-                          <label for="note" class="block text-sm font-medium text-gray-700 mb-1">
-                              Note <span class="text-red-500">*</span>
-                          </label>
-                          <textarea
-                              id="note"
-                              rows="4"
-                              class="w-full border border-gray-300 rounded-md shadow-sm"
-                              x-model="note"
-                          ></textarea>
-                      </div>
-                      <div class="mb-4">
-                          <label for="jobAttachment" class="block text-sm font-medium text-gray-700 mb-2">
-                              Job Attachment
-                          </label>
-                          <input
-                              type="file"
-                              id="jobAttachment"
-                              name="jobAttachment"
-                              class="block w-full px-2 py-3 text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none"
-                              @change="handleFileUpload"
-                          />
-                      </div>
-                  </form>
-                </div>
-
-                <!-- Footer -->
-                <div class="flex justify-end space-x-2 border-t p-4">
-                  <button
-                    type="button"
-                    @click="openModal = false"
-                    class="rounded-md bg-gray-200 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-300"
-                  >
-                    Close
-                  </button>
-                  <button
-                    type="button"
-                    @click="submitForm"
-                    class="rounded-md bg-green-500 px-4 py-2 text-sm font-medium text-white hover:bg-green-600"
-                  >
-                    Save
-                  </button>
-                </div>
-              </div>
-            </div>
+         
 
             <div
               x-data="{
@@ -856,6 +770,7 @@
                  
                   formData.append('note', this.note);
                   formData.append('workflow_id', this.currentRowId);
+                  formData.append('job_id', {{$job->id}});
                   formData.append('reason', this.reason);
                   const url = '/client/jobWorkFlowReject';
                   ajaxCall(url,'POST', [[onSuccess, ['response']]], formData);

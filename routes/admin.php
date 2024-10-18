@@ -159,5 +159,7 @@ Route::middleware(['user_role:admin'])->group(function () {
         // contract 
         Route::resource('contracts', CareerOpportunitiesContractController::class);
 
+         Route::get('/career-opportunities/{id}/vendorrelease', [CareerOpportunitiesController::class, 'vendorrelease'])->name('admin.career-opportunities.vendorrelease');
+
     });
 });

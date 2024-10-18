@@ -40,6 +40,7 @@ class JobWorkflowUpdate
     }
 
     public static function approveJobWorkFlow($request){
+
         $user = \Auth::user();
         $userid = \Auth::id();
         $sessionrole = session('selected_role');
@@ -52,7 +53,6 @@ class JobWorkflowUpdate
         } elseif ($sessionrole == "Consultant") {
             $userid = Consultant::getConsultantIdByUserId($userid);
         }
-
         
         $portal = 'Portal';
 
