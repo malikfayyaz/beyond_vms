@@ -27,7 +27,7 @@
 
           <div class="mb-4">
             <ul
-              class="grid grid-flow-col text-center text-gray-500 bg-gray-100 rounded-lg p-1"
+              class="grid grid-flow-col text-center text-gray-500 bg-gray-100 rounded-lg p-1 -mx-6"
             >
               <li class="flex justify-center">
                 <a
@@ -875,7 +875,7 @@
           </table>
       </div>
        </div>
-       <div x-show="tab === 'vendorrelease'"   class="flex w-full gap-4">
+       <div x-show="tab === 'vendorrelease'"   class="w-full gap-4">
           <div x-data="{
             selectedVendor: '',
             showErrors: false,
@@ -909,7 +909,7 @@
             }
         }">
 
-        <form @submit="submitForm">
+        <form @submit="submitForm" id="generalformwizard">
             <label class="block mb-2">Vendors <span class="text-red-500">*</span></label>
             <select
                 x-ref="vendor"
@@ -931,6 +931,58 @@
                 Submit
             </button>
         </form>
+         <!-- Content -->
+ <div class="p-4">
+<!-- Table -->
+
+<table class="w-full">
+                      <thead>
+                        <tr class="bg-gray-50 text-left">
+                          <th
+                            class="py-4 px-4 text-center font-semibold text-sm text-gray-600"
+                          >
+                            S.NO
+                          </th>
+                          <th
+                            class="py-4 px-4 text-center font-semibold text-sm text-gray-600"
+                          >
+                            Job Level
+                          </th>
+                          <th
+                            class="py-4 px-4 text-center font-semibold text-sm text-gray-600"
+                          >
+                            Minimum Bill Rate
+                          </th>
+                          <th
+                            class="py-4 px-4 text-center font-semibold text-sm text-gray-600"
+                          >
+                            Maximum Bill Rate
+                          </th>
+                          <th
+                            class="py-4 px-4 text-center font-semibold text-sm text-gray-600"
+                          >
+                            Currency
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody class="divide-y divide-gray-200">
+                        <tr>
+                          <td class="py-4 px-4 text-center text-sm">1</td>
+                          <td class="py-4 px-4 text-center text-sm">Mid</td>
+                          <td class="py-4 px-4 text-center text-sm">$40.43</td>
+                          <td class="py-4 px-4 text-center text-sm">$47.56</td>
+                          <td class="py-4 px-4 text-center text-sm">$</td>
+                        </tr>
+                        <tr>
+                          <td class="py-4 px-4 text-center text-sm">2</td>
+                          <td class="py-4 px-4 text-center text-sm">Sr</td>
+                          <td class="py-4 px-4 text-center text-sm">$43.21</td>
+                          <td class="py-4 px-4 text-center text-sm">$50.84</td>
+                          <td class="py-4 px-4 text-center text-sm">$</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                    </div>
     </div>
 
 
@@ -1201,9 +1253,9 @@
         const url = "/vendor/submission/store";
         ajaxCall(url,'POST', [[onSuccess, ['response']]], formData);
 
-
-
     }
+  
+    
  function submitworkflowform(event) {
         alert('Form Submitted!'); // Just to ensure it's being called
 
@@ -1229,6 +1281,7 @@
             console.error('Error:', error);
         });
       }
+    
     document.addEventListener('alpine:init', () => {
         Alpine.data('workflowHandler', () => ({
             note: '', // To store the note input
@@ -1264,7 +1317,39 @@
                 this.file = event.target.files[0];
             }
         }));
+
+        Alpine.data('selectHandler', () => ({
+        init() {
+            this.initSelect2();
+        },
+        initSelect2() {
+            this.$nextTick(() => {
+                $(".select2-single").each((index, element) => {
+                    const fieldName = $(element).data("field");
+                    $(element).select2({
+                        width: "100%",
+                    });
+                });
+            });
+        }
+    }));
     });
+
+    // Function to initialize Select2 outside of Alpine context
+function initSelect2() {
+    $(".select2-single").each((index, element) => {
+        const fieldName = $(element).data("field");
+        $(element).select2({
+            width: "100%",
+        });
+    });
+}
+
+// Initialize Select2 on page load
+document.addEventListener('DOMContentLoaded', function() {
+    initSelect2();
+});
+  
 </script>
 
 
