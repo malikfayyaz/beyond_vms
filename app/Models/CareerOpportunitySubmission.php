@@ -4,11 +4,13 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Carbon\Carbon;
 
 
 class CareerOpportunitySubmission extends Model
 {
+    use SoftDeletes;
     protected $table = 'career_opportunities_submission';
     protected $guarded = [
         // List attributes you want to guard from mass assignment
