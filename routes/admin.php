@@ -120,7 +120,7 @@ Route::middleware(['user_role:admin'])->group(function () {
         Route::post('workorder/store', [\App\Http\Controllers\Admin\CareerOpportunitiesWorkOrderController::class, 'store'])->name('workorder.store');
         Route::get('workorder/index', [\App\Http\Controllers\Admin\CareerOpportunitiesWorkOrderController::class, 'index'])->name('workorder.index');
         Route::get('workorder/view/{id}', [\App\Http\Controllers\Admin\CareerOpportunitiesWorkOrderController::class, 'show'])->name('workorder.show');
-
+        Route::post('workorder/withdrawWorkorder', [\App\Http\Controllers\Admin\CareerOpportunitiesWorkOrderController::class, 'withdrawWorkorder'])->name('workorder.withdrawWorkorder');       
         //workflow
 
        Route::match(['get', 'post'], 'workflow', [GenericDataController::class, 'workflow'])->name('workflow');
