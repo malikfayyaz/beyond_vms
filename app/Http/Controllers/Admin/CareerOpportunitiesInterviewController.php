@@ -358,4 +358,5 @@ class CareerOpportunitiesInterviewController extends Controller
        
         return view('admin.interview.view', compact('interview','offer'));
     }
+
 }

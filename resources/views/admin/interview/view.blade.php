@@ -11,6 +11,126 @@
           <div class="mx-4 rounded p-8">
             <div class="w-full flex justify-end items-center gap-4">
 
+              <div x-data="{ showModal: false, status: {{ $interview->status }} }">
+                  <a href="javascript:void(0);" 
+                    class="btn bg-red-600 text-white py-2 px-4 rounded hover:bg-red-500" 
+                    @click="showModal = true"
+                    x-bind:disabled="status == 3"
+                    :class="{ 'opacity-50 pointer-events-none': status == 3  || status == 5}">
+                    Reschedule/Cancel Interview
+                  </a>
+                  <!-- The Modal -->
+                  <div x-show="showModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50" 
+                      @click.away="showModal = false">
+                      <div class="bg-white w-full max-w-lg rounded-lg shadow-lg">
+                          <!-- Modal Header -->
+                          <div class="flex justify-between items-center p-4 border-b">
+                              <h4 class="text-lg font-semibold">Reschedule/Cancel Interview</h4>
+                              <button type="button" class="text-gray-500 hover:text-gray-700 bg-transparent" @click="showModal = false">&times;</button>
+                          </div>
+
+                          <!-- Modal Body -->
+                          <div class="p-4">
+                            <form x-data="rejectInterview()" @submit.prevent="submitData()" class="reject-form space-y-4">
+                              @csrf
+                                <div class="mb-4">
+                                    <label class="block text-sm font-medium text-gray-700">Reschedule Reason:</label>
+                                    <select 
+                                        x-model="formData.reschedule_reason"
+                                        id="reschedule_reason" 
+                                        name="reschedule_reason"
+                                        class="w-full px-3 py-2 border rounded-md"
+                                        :class="{'border-red-500': errors.reschedule_reason}">
+                                        <option value="">Select</option>
+                                        @foreach (checksetting(20) as $key => $value)
+                                            <option value="{{ $key }}">{{ $value }}</option>
+                                        @endforeach
+                                    </select>
+                                    <p x-show="errors.reschedule_reason" class="text-red-500 text-xs italic" x-text="errors.reschedule_reason"></p>
+                                </div>
+                                
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700">Note <i class="fa fa-asterisk text-red-600"></i>:</label>
+                                    <textarea 
+                                        x-model="formData.rejection_note"
+                                        name="rejection_note" 
+                                        class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+                                        :class="{'border-red-500': errors.rejection_note}">
+                                    </textarea>
+                                    <p x-show="errors.rejection_note" class="text-red-500 text-xs italic" x-text="errors.rejection_note"></p>
+                                </div>
+
+                                <!-- Submit Button -->
+                                <div class="flex justify-end space-x-4 mt-2">
+                                    <button type="submit" class="bg-red-600 text-white py-2 px-4 rounded hover:bg-red-500">Submit</button>
+                                    <button type="button" class="bg-gray-600 text-white py-2 px-4 rounded hover:bg-gray-500" @click="showModal = false">Cancel</button>
+                                </div>
+                            </form>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+
+              <div x-data="{ showModal: false, status: {{ $interview->status }} }">
+                <a href="javascript:void(0);" 
+                  class="btn bg-red-600 text-white py-2 px-4 rounded hover:bg-red-400" 
+                  @click="showModal = true"
+                  x-bind:disabled="status == 3 || status == 1"
+                  :class="{ 'opacity-50 pointer-events-none': status == 3 || status == 1}">
+                  Reject Candidate
+                </a>
+                <!-- The Modal -->
+                <div x-show="showModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50" 
+                    @click.away="showModal = false">
+                    <div class="bg-white w-full max-w-lg rounded-lg shadow-lg">
+                        <!-- Modal Header -->
+                        <div class="flex justify-between items-center p-4 border-b">
+                            <h4 class="text-lg font-semibold ">Reject Candidate</h4>
+                            <button type="button" class="text-gray-500 hover:text-gray-700 bg-transparent" @click="showModal = false">&times;</button>
+                        </div>
+
+                        <!-- Modal Body -->
+                        <div class="p-4">
+                          <form x-data="rejectCandidate()" @submit.prevent="submitData()" class="complete-form space-y-4">
+                          @csrf
+                          <div class="mb-4">
+                              <label class="block text-sm font-medium text-gray-700">Reason for Candidate Rejection:</label>
+                              <select 
+                                  x-model="formData.cand_rej_reason"
+                                  id="cand_rej_reason" 
+                                  name="cand_rej_reason"
+                                  class="w-full px-3 py-2 border rounded-md"
+                                  :class="{'border-red-500': errors.cand_rej_reason}">
+                                  <option value="">Select</option>
+                                  @foreach (checksetting(24) as $key => $value)
+                                      <option value="{{ $key }}">{{ $value }}</option>
+                                  @endforeach
+                              </select>
+                              <p x-show="errors.cand_rej_reason" class="text-red-500 text-xs italic" x-text="errors.cand_rej_reason"></p>
+                          </div>
+                          
+                          <div>
+                              <label class="block text-sm font-medium text-gray-700">Note <i class="fa fa-asterisk text-red-600"></i>:</label>
+                              <textarea 
+                                  x-model="formData.cand_rej_note"
+                                  name="cand_rej_note" 
+                                  class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+                                  :class="{'border-red-500': errors.cand_rej_note}">
+                              </textarea>
+                              <p x-show="errors.cand_rej_note" class="text-red-500 text-xs italic" x-text="errors.cand_rej_note"></p>
+                          </div>
+
+                          <!-- Submit Button -->
+                          <div class="flex justify-end space-x-4 mt-2">
+                              <button type="submit" class="bg-red-600 text-white py-2 px-4 rounded hover:bg-red-500">Submit</button>
+                              <button type="button" class="bg-gray-600 text-white py-2 px-4 rounded hover:bg-gray-500" @click="showModal = false">Cancel</button>
+                          </div>
+                      </form>
+                        </div>
+                    </div>
+                </div>
+              </div>
+
               <a href="{{ route('admin.interview.index') }}">
                   <button
                       type="button"
@@ -125,7 +245,7 @@
                             </p>
                           </div>
                           <div class="flex justify-between py-3 px-4">
-                            <span class="text-gray-600">Reason for Cancel::</span>
+                            <span class="text-gray-600">Reason for Cancel:</span>
                             <span class="font-semibold">{{$interview->reasonRejection->title}}</span>
                           </div>
                           <div class="flex justify-between py-3 px-4">
@@ -316,4 +436,97 @@
         </div>
 
     </div>
+
+<script>
+  function rejectInterview() {
+    return {
+        formData: {
+            reschedule_reason: '',
+            rejection_note: ''
+        },
+        errors: {},
+
+        validateFields() {
+            this.errors = {}; // Reset errors
+
+            let errorCount = 0;
+
+            if (this.formData.reschedule_reason === "") {
+                this.errors.reschedule_reason = "Reschedule reason is required";
+                errorCount++;
+            }
+
+            if (this.formData.rejection_note.trim() === "") {
+                this.errors.rejection_note = "Rejection note is required";
+                errorCount++;
+            }
+
+            return errorCount === 0; // Returns true if no errors
+        },
+
+        submitData() {
+            if (this.validateFields()) {
+                const formData = new FormData();
+                formData.append('reschedule_reason', this.formData.reschedule_reason);
+                formData.append('rejection_note', this.formData.rejection_note);
+
+                // Specify your form submission URL
+                const url = '{{ route("interview.reject_interview", $interview->id) }}';
+
+                // Send AJAX request using ajaxCall function
+                ajaxCall(url, 'POST', [[this.onSuccess, ['response']]], formData);
+            }
+        },
+
+        onSuccess(response) {
+          window.location.href = response.redirect_url;
+        }
+      }
+  }
+  function rejectCandidate() {
+    return {
+        formData: {
+          cand_rej_reason: '',
+          cand_rej_note: ''
+        },
+        errors: {},
+
+        validateFields() {
+            this.errors = {}; // Reset errors
+
+            let errorCount = 0;
+
+            if (this.formData.cand_rej_reason === "") {
+                this.errors.cand_rej_reason = "Candidate rejection reason is required";
+                errorCount++;
+            }
+
+            if (this.formData.cand_rej_note.trim() === "") {
+                this.errors.cand_rej_note = "Candidate rejection note is required";
+                errorCount++;
+            }
+
+            return errorCount === 0; // Returns true if no errors
+        },
+
+        submitData() {
+            if (this.validateFields()) {
+                const formData = new FormData();
+                formData.append('cand_rej_reason', this.formData.cand_rej_reason);
+                formData.append('cand_rej_note', this.formData.cand_rej_note);
+
+                // Specify your form submission URL
+                const url = '{{ route("interview.rejectCandidate", $interview->id) }}';
+
+                // Send AJAX request using ajaxCall function
+                ajaxCall(url, 'POST', [[this.onSuccess, ['response']]], formData);
+            }
+        },
+
+        onSuccess(response) {
+          window.location.href = response.redirect_url;
+        }
+      }
+  }
+</script>
     @endsection

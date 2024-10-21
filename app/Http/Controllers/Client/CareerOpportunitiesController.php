@@ -391,11 +391,26 @@ class CareerOpportunitiesController extends Controller
     public function jobWorkFlowApprove(Request $request){
         $jobWorkflow = new JobWorkflowUpdate();
         $jobWorkflow->approveJobWorkFlow($request);
+        $successMessage = 'Workflow Accepted successfully';
+        session()->flash('success', $successMessage);
+        return response()->json([
+            'success' => true,
+            'message' => $successMessage,
+            'redirect_url' =>  url("client/career-opportunities", $request->job_id) 
+        ]);
+
     }
 
     public function jobWorkFlowReject(Request $request){
         $jobWorkflow = new JobWorkflowUpdate();
         $jobWorkflow->rejectJobWorkFlow($request);
+        $successMessage = 'Workflow Rejected successfully';
+        session()->flash('success', $successMessage);
+        return response()->json([
+            'success' => true,
+            'message' => $successMessage,
+            'redirect_url' =>  url("client/career-opportunities", $request->job_id) 
+        ]);
     }
 
 

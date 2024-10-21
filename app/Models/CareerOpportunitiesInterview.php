@@ -48,6 +48,10 @@ class CareerOpportunitiesInterview extends Model
         return $this->belongsTo(Setting::class, 'reason_rejection', 'id');
     }
 
+    public function reasonCompletion() {
+        return $this->belongsTo(Setting::class, 'interview_completed_reason', 'id');
+    }
+
     public function rejectedBy() {
         return $this->belongsTo(User::class, 'rejected_by', 'id');
     }
