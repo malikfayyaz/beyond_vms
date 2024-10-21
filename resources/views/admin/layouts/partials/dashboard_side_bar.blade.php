@@ -22,7 +22,7 @@
           <ul class="space-y-2 font-medium">
             <li>
               <a
-                href="#"
+                href="{{ route('admin.dashboard') }}"
                 class="flex items-center p-2 text-white rounded-lg hover:bg-gray-700 overflow-hidden"
                 :class="{'justify-center': miniSidebar}"
               >
