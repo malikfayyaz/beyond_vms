@@ -102,4 +102,9 @@ class CommonController extends Controller
             'redirect_url' =>  route("$sessionrole.interview.index")  // Redirect URL for AJAX
         ]);
     }
+
+    public function closeAssignmentTemp(Request $request,$id) 
+    {
+        dd($request);
+    }
 }
