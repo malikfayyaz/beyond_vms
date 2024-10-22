@@ -13,7 +13,7 @@
                         @click="showModal = true"
                         x-bind:disabled="status == 3"
                         :class="{ 'opacity-50 pointer-events-none': status == 2 }">
-                        Temporarily Close Contract 
+                        Temporary Close Contract 
                     </a>
                     <!-- The Modal -->
                     <div x-show="showModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50" 
@@ -68,7 +68,7 @@
                 </div>
                 
                 @if($contract->termination_status == 2)
-                <a href="{{ route('admin.contracts.edit',  ['contract' => $contract->id]) }}"
+                <a href="{{ route('contracts.open',  ['contract' => $contract->id]) }}"
                     type="button"
                     class="px-4 py-2 capitalize bg-green-500 text-white rounded hover:bg-gren-600 capitalize"
                 >

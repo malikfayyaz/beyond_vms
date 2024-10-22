@@ -148,4 +148,9 @@ class CommonController extends Controller
             'redirect_url' =>  route("$sessionrole.contracts.index")  // Redirect URL for AJAX
         ]);
     }
+    
+    public function openContract(Request $request,$id) 
+    {
+        dd();
+    }
 }
