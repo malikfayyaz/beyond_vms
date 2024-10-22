@@ -13,7 +13,8 @@ return new class extends Migration
     {
         Schema::table('career_opportunities_workorder', function (Blueprint $table) {
             $table->text('rejection_notes')->nullable();
-        }
+        });
+    }
 
     /**
      * Reverse the migrations.

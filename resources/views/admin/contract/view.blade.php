@@ -7,13 +7,13 @@
     @include('admin.layouts.partials.header')
             <div class="mx-4 rounded p-8 w-full flex justify-end items-center gap-4 ">
 
-                <div x-data="{ showModal: false, status: 1 }">
+                <div x-data="{ showModal: false, status: {{ json_encode($contract->termination_status) }} }">
                     <a href="javascript:void(0);" 
                         class="btn bg-red-600 text-white py-2 px-4 rounded hover:bg-red-500" 
                         @click="showModal = true"
                         x-bind:disabled="status == 3"
-                        :class="{ 'opacity-50 pointer-events-none': status == 3  || status == 5}">
-                        Temporarily Close Assignment
+                        :class="{ 'opacity-50 pointer-events-none': status == 2 }">
+                        Temporarily Close Contract 
                     </a>
                     <!-- The Modal -->
                     <div x-show="showModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50" 
@@ -21,7 +21,7 @@
                         <div class="bg-white w-full max-w-lg rounded-lg shadow-lg">
                             <!-- Modal Header -->
                             <div class="flex justify-between items-center p-4 border-b">
-                                <h4 class="text-lg font-semibold">Temporarily Close Assignment</h4>
+                                <h4 class="text-lg font-semibold">Temporarily Close Contract </h4>
                                 <button type="button" class="text-gray-500 hover:text-gray-700 bg-transparent" @click="showModal = false">&times;</button>
                             </div>
 
@@ -38,7 +38,7 @@
                                             class="w-full px-3 py-2 border rounded-md"
                                             :class="{'border-red-500': errors.close_contr_reason}">
                                             <option value="">Select</option>
-                                            @foreach (checksetting(27) as $key => $value)
+                                            @foreach (checksetting(28) as $key => $value)
                                                 <option value="{{ $key }}">{{ $value }}</option>
                                             @endforeach
                                         </select>
@@ -66,6 +66,15 @@
                         </div>
                     </div>
                 </div>
+                
+                @if($contract->termination_status == 2)
+                <a href="{{ route('admin.contracts.edit',  ['contract' => $contract->id]) }}"
+                    type="button"
+                    class="px-4 py-2 capitalize bg-green-500 text-white rounded hover:bg-gren-600 capitalize"
+                >
+                    Open Contract
+                </a>
+                @endif
 
                 @if(!in_array($contract->status, array(2,3,7,14)) && ($contract->termination_status != 2 || in_array($contract->workOrder->contract_type, [0, 1])) )
                 <a href="{{ route('admin.contracts.edit',  ['contract' => $contract->id]) }}"

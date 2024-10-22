@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\CareerOpportunitiesInterview;
 use App\Models\CareerOpportunitySubmission;
+use App\Models\CareerOpportunitiesContract;
+use App\Models\CareerOpportunity;
 
 class CommonController extends Controller
 {
@@ -105,6 +107,45 @@ class CommonController extends Controller
 
     public function closeAssignmentTemp(Request $request,$id) 
     {
-        dd($request);
+        $validateData = $request->validate([
+            'close_contr_reason' => 'required|int',
+            'close_contr_note' => 'required|string|max:250',
+        ]);
+
+        $user = \Auth::user();
+        $userid = \Auth::id();
+        $sessionrole = session('selected_role');
+        
+        if ($sessionrole === 'admin') {
+           $role = 1;
+        } else if ($sessionrole === 'client') {
+            $role = 2;
+        } else if ($sessionrole === 'vendor') {
+            $role = 3;
+        }
+
+        $user_id =  checkUserId($userid,$sessionrole);
+        // dd($validateData);
+        
+        $contract = CareerOpportunitiesContract::findOrFail($id);
+        $CareerOpportunity = CareerOpportunity::findOrFail($contract->career_opportunity_id);
+
+        $contract->status = 3;
+        $contract->termination_status = 2;
+        $contract->termination_reason = $validateData['close_contr_reason'];
+        $contract->termination_notes = $validateData['close_contr_note'];
+        $contract->term_by_id = $user_id;
+        $contract->term_by_type = $role;
+        $contract->termination_date = now();
+        $contract->save();
+
+        $successMessage = 'Contract terminated successfully!';
+        session()->flash('success', $successMessage);
+
+        return response()->json([
+            'success' => true,
+            'message' => $successMessage,
+            'redirect_url' =>  route("$sessionrole.contracts.index")  // Redirect URL for AJAX
+        ]);
     }
 }
