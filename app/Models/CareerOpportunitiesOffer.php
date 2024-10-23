@@ -61,6 +61,8 @@ class CareerOpportunitiesOffer extends Model
                 return 'Approved';
             case 4:
                 return 'Waiting For Supplier Approval';
+            case 13:
+                return 'Withdrawn';
             default:
                 return 'danger';
         }

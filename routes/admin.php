@@ -120,7 +120,7 @@ Route::middleware(['user_role:admin'])->group(function () {
         Route::post('workorder/store', [\App\Http\Controllers\Admin\CareerOpportunitiesWorkOrderController::class, 'store'])->name('workorder.store');
         Route::get('workorder/index', [\App\Http\Controllers\Admin\CareerOpportunitiesWorkOrderController::class, 'index'])->name('workorder.index');
         Route::get('workorder/view/{id}', [\App\Http\Controllers\Admin\CareerOpportunitiesWorkOrderController::class, 'show'])->name('workorder.show');
-
+        Route::post('workorder/withdrawWorkorder', [\App\Http\Controllers\Admin\CareerOpportunitiesWorkOrderController::class, 'withdrawWorkorder'])->name('workorder.withdrawWorkorder');       
         //workflow
 
        Route::match(['get', 'post'], 'workflow', [GenericDataController::class, 'workflow'])->name('workflow');
@@ -144,7 +144,7 @@ Route::middleware(['user_role:admin'])->group(function () {
         Route::post('interview/store', [CareerOpportunitiesInterviewController::class, 'store'])->name('interview.store');
         Route::get('interview/{id}/edit', [CareerOpportunitiesInterviewController::class, 'edit'])->name('interview.edit');
         Route::put('interview/{id}/update', [CareerOpportunitiesInterviewController::class, 'update'])->name('interview.update');
-
+        
 
        Route::POST('career-opportunities/{id}/jobApprove', [CareerOpportunitiesController::class, 'jobApprove'])->name('jobApprove');
        Route::POST('career-opportunities/{id}/jobReject', [CareerOpportunitiesController::class, 'jobReject'])->name('jobReject');
@@ -159,6 +159,8 @@ Route::middleware(['user_role:admin'])->group(function () {
         // contract
         Route::resource('contracts', CareerOpportunitiesContractController::class);
         Route::POST('contracts/save-comments', [CareerOpportunitiesContractController::class, 'saveComments'])->name('saveComments');
+
+         Route::get('/career-opportunities/{id}/vendorrelease', [CareerOpportunitiesController::class, 'vendorrelease'])->name('admin.career-opportunities.vendorrelease');
 
     });
 });

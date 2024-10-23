@@ -77,8 +77,8 @@ class CareerOpportunitiesInterviewController extends Controller
     public function create($id)
     {
         $submission =  CareerOpportunitySubmission::findOrFail($id);
-        $selectedTimeSlots = [];
-        return view('admin.interview.create', compact('submission','selectedTimeSlots'));
+        
+        return view('admin.interview.create', compact('submission',));
     }
 
     public function store(Request $request)
@@ -358,4 +358,5 @@ class CareerOpportunitiesInterviewController extends Controller
        
         return view('admin.interview.view', compact('interview','offer'));
     }
+
 }

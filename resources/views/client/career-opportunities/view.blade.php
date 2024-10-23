@@ -699,15 +699,42 @@
                 </td>
                 <td class="py-4 px-4 text-center text-sm">
                     <div x-data="{ status: '{{ $workflow->status }}', emailSent: {{ $workflow->email_sent }}, clientId: {{ $workflow->client_id }}, loginClientId: {{ $loginClientid }}  }">
-                        <template x-if="(status == 'Pending' && emailSent == 1 && loginClientId == clientId)">
-                            <button
-                                @click="$dispatch('open-modal', { rowId: {{ $workflow->id }} })"
-                                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                            >
-                                Accept
-                            </button>
-                        </template>
+                    <template x-if="(status == 'Pending' && emailSent == 1 && loginClientId == clientId)">
+                    <div
+                        x-data="{
+                            currentRowId: {{ $workflow->id }},
+                            note: '',          
+                            errors: {},       
+                            submitForm() {
+                                let formData = new FormData();
+                                formData.append('note', 'N/A'); 
+                                formData.append('workflow_id', {{$workflow->id }});
+                                formData.append('job_id', {{$job->id }});
+                                const url = '/client/jobWorkFlowApprove';
+                                ajaxCall(url, 'POST', [[onSuccess, ['response']]], formData); // Submit the form data
+                                this.currentRowId = ''; 
+                                this.note = ''; 
+                                this.file = null; 
+                                this.errors = {}; 
+                                
+                            },
+                            clearError(field) {
+                                delete this.errors[field];
+                            }
+                        }"
+                        class="flex flex-col space-y-4"
+                    >
 
+                        <!-- Submit Button -->
+                        <button
+                            @click="submitForm()"
+                            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                        >
+                            Accept
+                        </button>
+                    </div>
+
+                        </template>
                         <template x-if="(status == 'Pending' && emailSent == 1 && loginClientId == clientId)">
                             <button
                                 @click="$dispatch('open-rejectmodal', { rowId: {{ $workflow->id }} })"
@@ -847,6 +874,7 @@
               </div>
             </div>
 
+
             <div
               x-data="{
               rejectModal: false,
@@ -865,6 +893,7 @@
 
                   formData.append('note', this.note);
                   formData.append('workflow_id', this.currentRowId);
+                  formData.append('job_id', {{$job->id}});
                   formData.append('reason', this.reason);
                   const url = '/client/jobWorkFlowReject';
                   ajaxCall(url,'POST', [[onSuccess, ['response']]], formData);
