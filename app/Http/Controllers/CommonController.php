@@ -151,6 +151,6 @@ class CommonController extends Controller
     
     public function openContract(Request $request,$id) 
     {
-        dd();
+        dd($id);
     }
 }

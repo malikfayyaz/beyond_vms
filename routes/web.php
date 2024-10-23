@@ -107,9 +107,7 @@ Route::middleware(['ensure_role_is_selected'])->group(function () {
 
     Route::post('contracts/{id}/reject_contract', [CommonController::class, 'closeAssignmentTemp'])->name('contract.reject_contract');
 
-    Route::get('contracts/open/{contract}', [CommonController::class, 'openContract'])->name('contracts.open');
-
-
+    Route::post('contract/{id}/open_contract', [CommonController::class, 'openContract'])->name('contract.open_contract');
 
 
 });

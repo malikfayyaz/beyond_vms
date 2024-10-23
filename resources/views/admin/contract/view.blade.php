@@ -5,7 +5,11 @@
     @include('admin.layouts.partials.dashboard_side_bar')
     <div class="ml-16">
     @include('admin.layouts.partials.header')
-            <div class="mx-4 rounded p-8 w-full flex justify-end items-center gap-4 ">
+            <div class="rounded mx-4 my-2">
+                @include('admin.layouts.partials.alerts')
+            </div>
+
+            <div class="mx-2 my-4 rounded px-8 w-full flex justify-end items-center gap-4 ">
 
                 <div x-data="{ showModal: false, status: {{ json_encode($contract->termination_status) }} }">
                     <a href="javascript:void(0);" 
@@ -68,12 +72,15 @@
                 </div>
                 
                 @if($contract->termination_status == 2)
-                <a href="{{ route('contracts.open',  ['contract' => $contract->id]) }}"
-                    type="button"
-                    class="px-4 py-2 capitalize bg-green-500 text-white rounded hover:bg-gren-600 capitalize"
-                >
-                    Open Contract
-                </a>
+                <form x-data="openContract()" @submit.prevent="submitData()">
+                    @csrf
+
+                    <button type="submit"
+                        class="px-4 py-2 capitalize bg-green-500 text-white rounded hover:bg-green-600"
+                    >
+                        Open Contract
+                    </button>
+                </form>
                 @endif
 
                 @if(!in_array($contract->status, array(2,3,7,14)) && ($contract->termination_status != 2 || in_array($contract->workOrder->contract_type, [0, 1])) )
@@ -84,7 +91,6 @@
                     Update Contract
                 </a>
                 @endif
-                @include('admin.layouts.partials.alerts')
             </div>
          <div class="bg-white mx-4 my-8 rounded p-8">
             <div x-data="{ activePage: 'tab1' }" class="mb-4">
@@ -249,6 +255,19 @@
         onSuccess(response) {
             window.location.href = response.redirect_url;
         }
+        }
+    }
+
+    function openContract() {
+        return {
+            submitData() {
+                const url = "{{ route('contract.open_contract', $contract->id) }}";
+                ajaxCall(url, 'POST', [[this.onSuccess, ['response']]]);
+            },
+
+            onSuccess(response) {
+                window.location.href = response.redirect_url;
+            }
         }
     }
 </script>
