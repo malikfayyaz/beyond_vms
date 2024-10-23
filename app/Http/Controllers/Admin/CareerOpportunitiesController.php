@@ -19,6 +19,7 @@ use App\Models\Setting;
 use App\Models\Vendor;
 use App\JobWorkflowUpdate;
 use App\Models\VendorJobRelease;
+use App\Facades\Rateshelper as Rateshelper;
 
 class CareerOpportunitiesController extends BaseController
 {
@@ -113,7 +114,7 @@ class CareerOpportunitiesController extends BaseController
 
                 $this->syncBusinessUnits($request->input('businessUnits'), $job->id);
 
-                calculateJobEstimates($job);
+                Rateshelper::calculateJobEstimates($job);
                 $jobWorkflow = new JobWorkflowUpdate();
                 $jobWorkflow->createJobWorkflow($job);
                 // get hiring manager id
@@ -243,7 +244,7 @@ class CareerOpportunitiesController extends BaseController
             $job->update($mappedData);
 
             $this->syncBusinessUnits($request->input('businessUnits'), $job->id);
-            calculateJobEstimates($job);
+            Rateshelper::calculateJobEstimates($job);
             session()->flash('success', 'Job updated successfully!');
             return response()->json([
                 'success' => true,

@@ -2,16 +2,17 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Models\Admin;
-use App\Models\CareerOpportunitiesOffer;
-use App\Models\CareerOpportunity;
-use App\Models\ContractNote;
-use App\Models\OfferWorkFlow;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use App\Facades\Rateshelper as Rateshelper;
+use App\Models\Admin;
+use App\Models\CareerOpportunitiesOffer;
+use App\Models\CareerOpportunity;
+use App\Models\ContractNote;
+use App\Models\OfferWorkFlow;
 use App\Models\CareerOpportunitiesContract;
 use Yajra\DataTables\Facades\DataTables;
 use App\Models\CareerOpportunitiesWorkorder;
@@ -138,7 +139,7 @@ class CareerOpportunitiesContractController extends BaseController
                 $contractModel->save();
 
                 $jobData = $workOrderModel->careerOpportunity;
-                calculateContractEstimates($contractModel,$workOrderModel,$jobData);
+                Rateshelper::calculateContractEstimates($contractModel,$workOrderModel,$jobData);
 
                 $workOrderModel->onboard_change_start_date = Carbon::createFromFormat('m/d/Y', $request->startDate)->format('Y-m-d');
                 $workOrderModel->onboard_changed_end_date = Carbon::createFromFormat('m/d/Y', $request->endDate)->format('Y-m-d');

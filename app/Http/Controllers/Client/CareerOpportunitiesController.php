@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Yajra\DataTables\Facades\DataTables;
+use App\Facades\Rateshelper as Rateshelper;
 use App\JobWorkflowUpdate;
 use App\Models\Setting;
 use App\Models\JobWorkFlow;
@@ -118,7 +119,7 @@ class CareerOpportunitiesController extends Controller
 
             $this->syncBusinessUnits($request->input('businessUnits'), $job->id);
 
-            calculateJobEstimates($job);
+            Rateshelper::calculateJobEstimates($job);
             session()->flash('success', 'Job saved successfully!');
             return response()->json([
                 'success' => true,
@@ -222,7 +223,7 @@ class CareerOpportunitiesController extends Controller
             $job->update($mappedData);
 
             $this->syncBusinessUnits($request->input('businessUnits'), $job->id);
-            calculateJobEstimates($job);
+            Rateshelper::calculateJobEstimates($job);
             session()->flash('success', 'Job updated successfully!');
             return response()->json([
                 'success' => true,

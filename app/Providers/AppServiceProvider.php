@@ -5,6 +5,7 @@ namespace App\Providers;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Blade;
 use App\Services\CareerOpportunitiesOfferService;
+use App\Services\RateshelpersService;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -15,6 +16,9 @@ class AppServiceProvider extends ServiceProvider
     {
         $this->app->singleton('careerOpportunitiesoffer', function () {
             return new CareerOpportunitiesOfferService();
+        });
+        $this->app->singleton('Rateshelper', function () {
+            return new RateshelpersService();
         });
     }
 

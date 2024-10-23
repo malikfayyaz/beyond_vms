@@ -43,6 +43,7 @@ if (!function_exists('calculateJobEstimates')) {
         // dd($model); 
         return true;
     }
+}
 
     if (!function_exists('vendorPayrate')) {
         function vendorPayrate($billRate, $markup)
@@ -147,4 +148,4 @@ if (!function_exists('calculateJobEstimates')) {
         }
     }
     
-}
+

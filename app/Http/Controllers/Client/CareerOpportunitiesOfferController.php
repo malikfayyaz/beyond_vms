@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Validator;
 use App\Models\CareerOpportunitiesOffer;
 use App\Models\CareerOpportunitySubmission;
 use App\Facades\CareerOpportunitiesOffer as offerHelper;
+use App\Facades\Rateshelper as Rateshelper;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Yajra\DataTables\Facades\DataTables;
@@ -144,8 +145,8 @@ class CareerOpportunitiesOfferController extends Controller
             ? Carbon::createFromFormat('Y/m/d', $validatedData['endDate'])->format('Y-m-d')  : null,
          ];
          $offerCreate = CareerOpportunitiesOffer::create( $mapedData );
-         calculateVendorRates($offerCreate,$offerCreate->offer_bill_rate,$offerCreate->client_overtime,$offerCreate->client_doubletime);
-         calculateOfferEstimates($offerCreate,$jobData);
+         Rateshelper::calculateVendorRates($offerCreate,$offerCreate->offer_bill_rate,$offerCreate->client_overtime,$offerCreate->client_doubletime);
+         Rateshelper::calculateOfferEstimates($offerCreate,$jobData);
 
          session()->flash('success', 'Offer saved successfully!');
          return response()->json([

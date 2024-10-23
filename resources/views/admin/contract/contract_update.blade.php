@@ -7,6 +7,7 @@
     @include('admin.layouts.partials.header')
     <div class="bg-white mx-4 my-8 rounded p-8" id="generalformwizard">
         @include('admin.layouts.partials.alerts')
+        @php $rate = App\Services\RateshelpersService::returnContractEffectiveRate($contract->id);  @endphp
         <div x-data="formData()" x-init="initSelect2" class="bg-white p-6 rounded-lg shadow-md">
             <h2 class="text-2xl font-bold mb-4">Contract Update</h2>
             <form @submit.prevent="submitForm">
@@ -239,6 +240,146 @@
                                 </div>
                             </div>
                         </div>
+
+                        <!-- Extension rate Fields -->
+                        <div x-show="selectedOption === '2'" class="space-y-4">
+                            <div class="flex space-x-4 mt-4">
+                                
+                                <div class="flex-1">
+                                    <label for="bill_rate" 
+                                        class="block text-sm font-medium text-gray-700 mb-2">Bill Rate <span class="text-red-500">*</span></label>
+                                    <input type="text"
+                                        class="w-full h-12 px-4 text-gray-500 border rounded-md shadow-sm focus:outline-none pl-7"
+                                        placeholder="00.00" id="bill_rate" name="bill_rate" x-model="formFields.bill_rate"
+                                        @input="formatRate('bill_rate', $event)" onchange="calculateRates('bill_rate')" @blur="formatRate('bill_rate', $event)" />
+                                    <p x-show="errors.bill_rate" x-text="errors.bill_rate" class="text-red-500 text-xs mt-1">
+                                    </p>
+                                </div>
+                                <div class="flex-1">
+                                    <label for="client_overtime_bill_rate" 
+                                        class="block text-sm font-medium text-gray-700 mb-2">Client Over Time Rate <span class="text-red-500">*</span></label>
+                                    <input type="text"
+                                        class="w-full h-12 px-4 text-gray-500 border rounded-md shadow-sm focus:outline-none pl-7"
+                                        placeholder="00.00" id="client_overtime_bill_rate" name="client_overtime_bill_rate" x-model="formFields.client_overtime_bill_rate"
+                                        @input="formatRate('client_overtime_bill_rate', $event)" @blur="formatRate('client_overtime_bill_rate', $event)" />
+                                    <p x-show="errors.client_overtime_bill_rate" x-text="errors.client_overtime_bill_rate" class="text-red-500 text-xs mt-1">
+                                    </p>
+                                </div>
+                                <div class="flex-1">
+                                    <label for="client_doubletime_bill_rate" 
+                                        class="block text-sm font-medium text-gray-700 mb-2">Client Double Time Rate <span class="text-red-500">*</span></label>
+                                    <input type="text"
+                                        class="w-full h-12 px-4 text-gray-500 border rounded-md shadow-sm focus:outline-none pl-7"
+                                        placeholder="00.00" id="client_doubletime_bill_rate" name="client_doubletime_bill_rate" x-model="formFields.client_doubletime_bill_rate"
+                                        @input="formatRate('client_doubletime_bill_rate', $event)" @blur="formatRate('client_doubletime_bill_rate', $event)" />
+                                    <p x-show="errors.client_doubletime_bill_rate" x-text="errors.client_doubletime_bill_rate" class="text-red-500 text-xs mt-1">
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="flex space-x-4 mt-4">
+                                
+                                <div class="flex-1">
+                                    <label for="pay_rate" 
+                                        class="block text-sm font-medium text-gray-700 mb-2">Pay Rate <span class="text-red-500">*</span></label>
+                                    <input type="text"
+                                        class="w-full h-12 px-4 text-gray-500 border rounded-md shadow-sm focus:outline-none pl-7"
+                                        placeholder="00.00" id="pay_rate" name="pay_rate" x-model="formFields.pay_rate"
+                                        @input="formatRate('pay_rate', $event)" onchange="calculateRates('pay_rate')" @blur="formatRate('pay_rate', $event)" />
+                                    <p x-show="errors.pay_rate" x-text="errors.pay_rate" class="text-red-500 text-xs mt-1">
+                                    </p>
+                                </div>
+                                <div class="flex-1">
+                                    <label for="contractor_overtime_pay_rate" 
+                                        class="block text-sm font-medium text-gray-700 mb-2">Contractor Over Time Rate <span class="text-red-500">*</span></label>
+                                    <input type="text"
+                                        class="w-full h-12 px-4 text-gray-500 border rounded-md shadow-sm focus:outline-none pl-7"
+                                        placeholder="00.00" id="contractor_overtime_pay_rate" name="contractor_overtime_pay_rate" x-model="formFields.contractor_overtime_pay_rate"
+                                        @input="formatRate('contractor_overtime_pay_rate', $event)" @blur="formatRate('contractor_overtime_pay_rate', $event)" />
+                                    <p x-show="errors.contractor_overtime_pay_rate" x-text="errors.contractor_overtime_pay_rate" class="text-red-500 text-xs mt-1">
+                                    </p>
+                                </div>
+                                <div class="flex-1">
+                                    <label for="contractor_double_time_rate" 
+                                        class="block text-sm font-medium text-gray-700 mb-2">Contractor Double Time Rate<span class="text-red-500">*</span></label>
+                                    <input type="text"
+                                        class="w-full h-12 px-4 text-gray-500 border rounded-md shadow-sm focus:outline-none pl-7"
+                                        placeholder="00.00" id="contractor_double_time_rate" name="contractor_double_time_rate" x-model="formFields.contractor_double_time_rate"
+                                        @input="formatRate('contractor_double_time_rate', $event)" @blur="formatRate('contractor_double_time_rate', $event)" />
+                                    <p x-show="errors.contractor_double_time_rate" x-text="errors.contractor_double_time_rate" class="text-red-500 text-xs mt-1">
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="flex space-x-4 mt-4">
+                                <div class="flex-1">
+                                    <label for="new_contract_start_date" class="block mb-2">Start Date:
+                                        <span class="text-red-500">*</span></label>
+                                    <input id="new_contract_start_date" x-model="formFields.new_contract_start_date" disabled
+                                        class="w-full h-12 px-4 text-gray-500 border rounded-md shadow-sm focus:outline-none pl-7"
+                                        type="text" name="new_contract_start_date" placeholder="Select start date" />
+                                    <p x-show="errors.new_contract_start_date" x-text="errors.new_contract_start_date"
+                                        class="text-red-500 text-xs mt-1"></p>
+                                </div>
+                                <div class="flex-1">
+                                    <label for="end_date" class="block mb-2">End Date:
+                                        <span class="text-red-500">*</span></label>
+                                    <input id="end_date" x-model="formFields.end_date" disabled
+                                        class="w-full h-12 px-4 text-gray-500 border rounded-md shadow-sm focus:outline-none pl-7"
+                                        type="text" name="end_date" placeholder="Select start date" />
+                                    <p x-show="errors.end_date" x-text="errors.end_date"
+                                        class="text-red-500 text-xs mt-1"></p>
+                                </div>
+                                <div class="flex-1">
+                                    <label for="markup" 
+                                        class="block text-sm font-medium text-gray-700 mb-2">Markup<span class="text-red-500">*</span></label>
+                                    <input type="text"
+                                        class="w-full h-12 px-4 text-gray-500 border rounded-md shadow-sm focus:outline-none pl-7"
+                                        placeholder="00.00" id="markup" name="markup" x-model="formFields.markup" disabled
+                                        @input="formatRate('markup', $event)" @blur="formatRate('markup', $event)" />
+                                    <p x-show="errors.markup" x-text="errors.markup" class="text-red-500 text-xs mt-1">
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="flex space-x-4 mt-4">
+                                <div class="flex-1">
+                                    <label class="block mb-2">
+                                    Extension Reason
+                                        <span class="text-red-500">*</span></label>
+                                    <select class="w-full select2-single custom-style" name="reason_of_extension"
+                                        id="reason_of_extension">
+                                        <option value="">Select </option>
+                                        @foreach (checksetting(26) as $key => $value)
+                                        <option value="{{ $key }}">
+                                            {{ $value }}</option>
+                                        @endforeach
+                                    </select>
+                                    <p x-show="errors.reason_of_extension" x-text="errors.reason_of_extension"
+                                        class="text-red-500 text-xs mt-1"></p>
+                                </div>
+                                <div class="flex-1">
+                                    <label for="extension_date" class="block mb-2">Assignment New End Date:
+                                        <span class="text-red-500">*</span></label>
+                                    <input id="extension_date" name="extension_date" x-model="formFields.extension_date"
+                                        class="w-full h-12 px-4 text-gray-500 border rounded-md shadow-sm focus:outline-none pl-7"
+                                        type="text" name="extension_date" placeholder="Select start date" />
+                                    <p x-show="errors.extension_date" x-text="errors.extension_date"
+                                        class="text-red-500 text-xs mt-1"></p>
+                                </div>
+                        </div>
+
+                            <div class="flex space-x-4 mt-4">
+                                <div class="flex-1">
+                                    <label class="block mb-2">Notes<span class="text-red-500">*</span></label>
+                                    <textarea id="additional_budget_notes" name="additional_budget_notes"
+                                        x-model="formFields.additional_budget_notes"
+                                        @input="clearFieldError('additional_budget_notes')"
+                                        class="w-full border rounded" rows="5"
+                                        :style="{'border-color': 'var(--primary-color)'}"
+                                        placeholder="Enter Notes"></textarea>
+                                    <p x-show="errors.additional_budget_notes" x-text="errors.additional_budget_notes"
+                                        class="text-red-500 text-xs mt-1"></p>
+                                </div>
+                            </div>
+                        </div>
                          <!-- Update Start Date Fields -->
                          <div x-show="selectedOption === '5'" class="space-y-4">
                             <div class="flex space-x-4 mt-4">
@@ -254,7 +395,7 @@
                                 <div class="flex-1">
                                     <label for="end_date" class="block mb-2">End Date:
                                         <span class="text-red-500">*</span></label>
-                                    <input id="end_date" x-model="formFields.end_date" disable
+                                    <input id="end_date" x-model="formFields.end_date" disabled
                                         class="w-full h-12 px-4 text-gray-500 border rounded-md shadow-sm focus:outline-none pl-7"
                                         type="text" name="end_date" placeholder="Select start date" />
                                     <p x-show="errors.end_date" x-text="errors.end_date"
@@ -317,25 +458,7 @@
                                 </div>
                             </div>
                         </div>
-                        <!-- Education Information Fields -->
-                        <div x-show="selectedOption === 'education'" class="space-y-4">
-                            <div>
-                                <label for="degree" class="block text-sm font-medium text-gray-700 mb-2">Degree:</label>
-                                <input type="text" id="degree" x-model="formFields.degree"
-                                    class="w-full px-3 py-2 border rounded-md"
-                                    :class="{'border-red-500': errors.degree}" />
-                                <p x-show="errors.degree" x-text="errors.degree" class="text-red-500 text-xs mt-1"></p>
-                            </div>
-                            <div>
-                                <label for="university"
-                                    class="block text-sm font-medium text-gray-700 mb-2">University:</label>
-                                <input type="text" id="university" x-model="formFields.university"
-                                    class="w-full px-3 py-2 border rounded-md"
-                                    :class="{'border-red-500': errors.university}" />
-                                <p x-show="errors.university" x-text="errors.university"
-                                    class="text-red-500 text-xs mt-1"></p>
-                            </div>
-                        </div>
+                      
                     </div>
                 </div>
                 <div class="mt-6">
@@ -362,6 +485,13 @@ function formData() {
             hiringmanager: "",
             worklocation: "",
             glaccount: "",
+            bill_rate:'{{ old('bill_rate ', $rate["bill_rate"] ?? '') }}',
+            client_overtime_bill_rate:'{{ old('client_overtime_bill_rate ', $rate["client_overtime_bill_rate"] ?? '') }}',
+            client_doubletime_bill_rate:'{{ old('client_doubletime_bill_rate ', $rate["client_doubletime_bill_rate"] ?? '') }}',
+            pay_rate:'{{ old('pay_rate ', $rate["pay_rate"] ?? '') }}',
+            contractor_overtime_pay_rate:'{{ old('contractor_overtime_pay_rate ', $rate["contractor_overtime_pay_rate"] ?? '') }}',
+            contractor_double_time_rate:'{{ old('contractor_double_time_rate ', $rate["contractor_double_time_rate"] ?? '') }}',
+            markup: '{{ old('markup ', $contract->workOrder->markup ?? '') }}',
             vendoraccountmanager: "",
             contractorportal: '{{ old('contractorportal ', $contract->workOrder->consultant->candidate_id ?? '') }}',
             originalstartdate: '{{ old('originalstartdate ', formatDate($contract->workOrder->original_start_date) ?? '') }}',
@@ -369,6 +499,7 @@ function formData() {
             new_contract_start_date: '{{ old('new_contract_start_date ', formatDate($contract->workOrder->start_date) ?? '') }}',
             end_date: '{{ old('end_date ', formatDate($contract->workOrder->end_date) ?? '') }}',
             termination_date:"",
+            extension_date:"",
             labortype: "",
             candidatesourcetype: "",
             businessjustification: "",
@@ -444,6 +575,13 @@ function formData() {
                         this.clearFieldError("termination_date");
                     },
                 });
+                flatpickr("#extension_date", {
+                    dateFormat: "m/d/Y",
+                    onChange: (selectedDates, dateStr) => {
+                        this.formFields.extension_date = dateStr;
+                        this.clearFieldError("extension_date");
+                    },
+                });
             });
         },
 
@@ -461,7 +599,84 @@ function formData() {
             }
             this[field] = parts.join(".");
             this.clearFieldError(field);
+            this.calculateRates(field);
         },
+        calculateRates(event){
+                      var bill_rate = document.getElementById("bill_rate").value;
+                      var payRateElement = document.getElementById("payRate");
+                      var pay_rate;
+
+                      if (payRateElement) {
+                          pay_rate = payRateElement.value;
+                      } else {
+                          pay_rate = 0;
+                      }
+
+                      pay_rate = parseFloat(pay_rate); // Ensure it's a number
+
+
+                      // console.log(markup);
+
+                      // $('#pay_rate_error_message').html('');
+
+                      if (pay_rate == '') {
+                          pay_rate = 0;
+                      }
+                      let url = `/calculate-rate`;
+                      let data = new FormData();
+
+                      // Append form data
+                      data.append('pay_rate', pay_rate);
+                      data.append('bill_rate', bill_rate);
+
+                      data.append('markup', this.formData.markup);
+                      data.append('submission_id', this.formData.submissionid);
+
+                      // Determine which field was changed
+
+                      data.append('type', event);
+
+                        // console.log(this.formData); return false;
+
+                      // AJAX call to update fields based on pay rate or bill rate change
+                      const updates = {
+                        //   '#billRate': { type: 'value', field: 'billRate' },
+                        //   '#payRate': { type: 'value', field: 'payRate' },
+                          '#client_overtime_bill_rate': { type: 'value', field: 'overTime' },
+                          '#client_doubletime_bill_rate': { type: 'value', field: 'doubleRate' },
+                          
+                          '#contractor_overtime_pay_rate': { type: 'value', field: 'overTimeCandidate' },
+                          '#contractor_double_time_rate': { type: 'value', field: 'doubleTimeCandidate' },
+                          '#markup': { type: 'value', field: 'markup_contract' },
+                        // Add more mappings as needed
+                      };
+                      ajaxCall(url, 'POST', [[updateElements, ['response', updates]]], data);
+                      const intervalId = setInterval(() => {
+                          const billRate = $('#billRate').val();
+                          const payRate = $('#payRate').val();
+                          const client_overtime_bill_rate = $('#client_overtime_bill_rate').val();
+                          const client_doubletime_bill_rate= $('#client_doubletime_bill_rate').val();
+                          const contractor_overtime_pay_rate = $('#contractor_overtime_pay_rate').val();
+                          const contractor_double_time_rate = $('#contractor_double_time_rate').val();
+                          over_time
+                          const markup = $('#markup').val();
+
+                          // Only set formData when all the required fields have been populated
+                              this.formData.billRate = billRate;
+                              this.formData.payRate = payRate;
+                              this.formData.client_overtime_bill_rate = client_overtime_bill_rate;
+                              this.formData.client_doubletime_bill_rate = client_doubletime_bill_rate;
+                              this.formData.contractor_overtime_pay_rate = contractor_overtime_pay_rate;
+                              this.formData.contractor_double_time_rate =contractor_double_time_rate;
+                              this.formData.markup =markup;
+                              // Enable the fields or do further processing
+
+                              // Clear the interval
+                              clearInterval(intervalId);
+                      }, 100);
+
+
+              },
 
         clearFieldError(fieldName) {
             if (this.errors[fieldName]) {

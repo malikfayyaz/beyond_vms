@@ -145,8 +145,8 @@ class CareerOpportunitiesOfferController extends BaseController
             ? Carbon::createFromFormat('Y/m/d', $validatedData['endDate'])->format('Y-m-d')  : null,
          ];
          $offerCreate = CareerOpportunitiesOffer::create( $mapedData );
-         calculateVendorRates($offerCreate,$offerCreate->offer_bill_rate,$offerCreate->client_overtime,$offerCreate->client_doubletime);
-         calculateOfferEstimates($offerCreate,$jobData);
+         Rateshelper::calculateVendorRates($offerCreate,$offerCreate->offer_bill_rate,$offerCreate->client_overtime,$offerCreate->client_doubletime);
+         Rateshelper::calculateOfferEstimates($offerCreate,$jobData);
          offerHelper::createOfferWorkflow($offerCreate);
         session()->flash('success', 'Offer saved successfully!');
          return response()->json([
@@ -241,6 +241,8 @@ class CareerOpportunitiesOfferController extends BaseController
                 $data['doubleTimeCandidate'] = $this->numberFormat($pay_rate + ($pay_rate * $double_time));
                 $data['overTimeCandidate'] = $this->numberFormat($pay_rate + ($pay_rate * $over_time));
             }
+
+            $data['markup_contract']=round((($bill_rate - $pay_rate) / $pay_rate*100),2);
 
 
 
