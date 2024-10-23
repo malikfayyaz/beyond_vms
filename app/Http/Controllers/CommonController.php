@@ -151,6 +151,27 @@ class CommonController extends Controller
     
     public function openContract(Request $request,$id) 
     {
-        dd($id);
+        $contract = CareerOpportunitiesContract::findOrFail($id);
+        $sessionrole = session('selected_role');
+
+        $contract->status = 1;
+        $contract->termination_status = 0;
+        $contract->termination_reason = null;
+        $contract->termination_notes = null;
+        $contract->term_by_id = null;
+        $contract->term_by_type = null;
+        $contract->termination_date = null;
+
+        $contract->save();
+
+        $successMessage = 'Contract open-back successfully!';
+        session()->flash('success', $successMessage);
+
+        return response()->json([
+            'success' => true,
+            'message' => $successMessage,
+            'redirect_url' =>  route("$sessionrole.contracts.index")  // Redirect URL for AJAX
+        ]);
+        
     }
 }
