@@ -241,7 +241,7 @@
                         </div>
 
                         <!-- Extension rate Fields -->
-                        <div x-show="selectedOption === '2'" class="space-y-4">
+                        <div x-show="selectedOption === '2' || selectedOption === '3'" class="space-y-4">
                             <div class="flex space-x-4 mt-4">
                                 
                                 <div class="flex-1">
@@ -338,7 +338,7 @@
                                     </p>
                                 </div>
                             </div>
-                            <div class="flex space-x-4 mt-4">
+                            <div class="flex space-x-4 mt-4"  x-show="selectedOption === '2'">
                                 <div class="flex-1">
                                     <label class="block mb-2">
                                     Extension Reason
@@ -364,8 +364,20 @@
                                         class="text-red-500 text-xs mt-1"></p>
                                 </div>
                         </div>
+                        <div class="flex space-x-4 mt-4"  x-show="selectedOption === '3'">
+                               
+                                <div class="flex-1">
+                                    <label for="effective_date" class="block mb-2">Effective Date:
+                                        <span class="text-red-500">*</span></label>
+                                    <input id="effective_date" name="effective_date" x-model="formFields.effective_date"
+                                        class="w-full h-12 px-4 text-gray-500 border rounded-md shadow-sm focus:outline-none pl-7"
+                                        type="text" name="effective_date" placeholder="Select start date" />
+                                    <p x-show="errors.effective_date" x-text="errors.effective_date"
+                                        class="text-red-500 text-xs mt-1"></p>
+                                </div>
+                        </div>
 
-                            <div class="flex space-x-4 mt-4">
+                            <div class="flex space-x-4 mt-4"  x-show="selectedOption === '2'">
                                 <div class="flex-1">
                                     <label class="block mb-2">Notes<span class="text-red-500">*</span></label>
                                     <textarea id="additional_budget_notes" name="additional_budget_notes"
@@ -410,15 +422,15 @@
                                     <label class="block mb-2">
                                         Reason for Termination
                                         <span class="text-red-500">*</span></label>
-                                    <select class="w-full select2-single custom-style" name="additional_budget_reason"
-                                        id="AdditionalBuget">
+                                    <select class="w-full select2-single custom-style" name="termination_reason"
+                                        id="termination_reason">
                                         <option value="">Select </option>
                                         @foreach (checksetting(25) as $key => $value)
                                         <option value="{{ $key }}">
                                             {{ $value }}</option>
                                         @endforeach
                                     </select>
-                                    <p x-show="errors.AdditionalBuget" x-text="errors.AdditionalBuget"
+                                    <p x-show="errors.termination_reason" x-text="errors.termination_reason"
                                         class="text-red-500 text-xs mt-1"></p>
                                 </div>
                                 <div class="flex-1">
@@ -492,6 +504,7 @@ function formData({ id }) {
             contractor_overtime_pay_rate:'{{ old('contractor_overtime_pay_rate ', $rate["contractor_overtime_pay_rate"] ?? '') }}',
             contractor_double_time_rate:'{{ old('contractor_double_time_rate ', $rate["contractor_double_time_rate"] ?? '') }}',
             markup: '{{ old('markup ', $contract->workOrder->markup ?? '') }}',
+            submissionid:'{{ old('submissionid ', $contract->workOrder->submission_id ?? '') }}',
             vendoraccountmanager: "",
             contractorportal: '{{ old('contractorportal ', $contract->workOrder->consultant->candidate_id ?? '') }}',
             originalstartdate: '{{ old('originalstartdate ', formatDate($contract->workOrder->original_start_date) ?? '') }}',
@@ -499,6 +512,7 @@ function formData({ id }) {
             new_contract_start_date: '{{ old('new_contract_start_date ', formatDate($contract->workOrder->start_date) ?? '') }}',
             end_date: '{{ old('end_date ', formatDate($contract->workOrder->end_date) ?? '') }}',
             termination_date:"",
+            effective_date:'{{ old('effective_date ', formatDate($contract->workOrder->effective_date) ?? '') }}',
             extension_date:"",
             labortype: "",
             candidatesourcetype: "",
@@ -544,9 +558,13 @@ function formData({ id }) {
         },
 
         initDatePickers() {
+           let minDate = "{{formatDate($contract->workOrder->start_date)}}"; // Set the minimum date
+           let maxDate = "{{formatDate($contract->workOrder->end_date)}}"; // Set the maximum date
             this.$nextTick(() => {
                 flatpickr("#originalstartdate", {
                     dateFormat: "m/d/Y",
+                    minDate: minDate, // Set the minimum date
+                    maxDate: maxDate, // Set the maximum date
                     onChange: (selectedDates, dateStr) => {
                         this.formFields.originalstartdate = dateStr;
                         this.clearFieldError("originalstartdate");
@@ -555,6 +573,7 @@ function formData({ id }) {
                 // start date
                 flatpickr("#new_contract_start_date", {
                     dateFormat: "m/d/Y",
+                    maxDate: maxDate, // Set the maximum date
                     onChange: (selectedDates, dateStr) => {
                         this.formFields.new_contract_start_date = dateStr;
                         this.clearFieldError("new_contract_start_date");
@@ -563,6 +582,8 @@ function formData({ id }) {
                 // end date
                 flatpickr("#end_date", {
                     dateFormat: "m/d/Y",
+                    minDate: minDate, // Set the minimum date
+                    maxDate: maxDate, // Set the maximum date
                     onChange: (selectedDates, dateStr) => {
                         this.formFields.end_date = dateStr;
                         this.clearFieldError("end_date");
@@ -570,6 +591,8 @@ function formData({ id }) {
                 });
                 flatpickr("#termination_date", {
                     dateFormat: "m/d/Y",
+                    minDate: minDate, // Set the minimum date
+                    maxDate: maxDate, // Set the maximum date
                     onChange: (selectedDates, dateStr) => {
                         this.formFields.termination_date = dateStr;
                         this.clearFieldError("termination_date");
@@ -577,9 +600,20 @@ function formData({ id }) {
                 });
                 flatpickr("#extension_date", {
                     dateFormat: "m/d/Y",
+                    minDate: minDate, // Set the minimum date
+                    maxDate: maxDate, // Set the maximum date
                     onChange: (selectedDates, dateStr) => {
                         this.formFields.extension_date = dateStr;
                         this.clearFieldError("extension_date");
+                    },
+                });
+                flatpickr("#effective_date", {
+                    dateFormat: "m/d/Y",
+                    minDate: minDate, // Set the minimum date
+                    maxDate: maxDate, // Set the maximum date
+                    onChange: (selectedDates, dateStr) => {
+                        this.formFields.effective_date = dateStr;
+                        this.clearFieldError("effective_date");
                     },
                 });
             });
@@ -603,7 +637,7 @@ function formData({ id }) {
         },
         calculateRates(event){
                       var bill_rate = document.getElementById("bill_rate").value;
-                      var payRateElement = document.getElementById("payRate");
+                      var payRateElement = document.getElementById("pay_rate");
                       var pay_rate;
 
                       if (payRateElement) {
@@ -629,8 +663,8 @@ function formData({ id }) {
                       data.append('pay_rate', pay_rate);
                       data.append('bill_rate', bill_rate);
 
-                      data.append('markup', this.formData.markup);
-                      data.append('submission_id', this.formData.submissionid);
+                      data.append('markup', this.formFields.markup);
+                      data.append('submission_id', this.formFields.submissionid);
 
                       // Determine which field was changed
 
@@ -652,23 +686,23 @@ function formData({ id }) {
                       };
                       ajaxCall(url, 'POST', [[updateElements, ['response', updates]]], data);
                       const intervalId = setInterval(() => {
-                          const billRate = $('#billRate').val();
-                          const payRate = $('#payRate').val();
+                          const billRate = $('#bill_rate').val();
+                          const payRate = $('#pay_rate').val();
                           const client_overtime_bill_rate = $('#client_overtime_bill_rate').val();
                           const client_doubletime_bill_rate= $('#client_doubletime_bill_rate').val();
                           const contractor_overtime_pay_rate = $('#contractor_overtime_pay_rate').val();
                           const contractor_double_time_rate = $('#contractor_double_time_rate').val();
-                          over_time
+                          
                           const markup = $('#markup').val();
 
                           // Only set formData when all the required fields have been populated
-                              this.formData.billRate = billRate;
-                              this.formData.payRate = payRate;
-                              this.formData.client_overtime_bill_rate = client_overtime_bill_rate;
-                              this.formData.client_doubletime_bill_rate = client_doubletime_bill_rate;
-                              this.formData.contractor_overtime_pay_rate = contractor_overtime_pay_rate;
-                              this.formData.contractor_double_time_rate =contractor_double_time_rate;
-                              this.formData.markup =markup;
+                              this.formFields.bill_rate = billRate;
+                              this.formFields.pay_rate = payRate;
+                              this.formFields.client_overtime_bill_rate = client_overtime_bill_rate;
+                              this.formFields.client_doubletime_bill_rate = client_doubletime_bill_rate;
+                              this.formFields.contractor_overtime_pay_rate = contractor_overtime_pay_rate;
+                              this.formFields.contractor_double_time_rate =contractor_double_time_rate;
+                              this.formFields.markup =markup;
                               // Enable the fields or do further processing
 
                               // Clear the interval
