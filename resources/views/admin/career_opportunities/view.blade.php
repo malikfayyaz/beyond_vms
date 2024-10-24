@@ -430,7 +430,7 @@
                 <p class="color-[#202124] font-light">Internal Notes</p>
                 <div class="mt-4">
                   <ul class="color-[#202124] font-light">
-                    {{ $job->internal_notes }}
+                    {{-- $job->internal_notes --}}
                   </ul>
                 </div>
               </div>
@@ -438,7 +438,7 @@
                     <p class="color-[#202124] font-light">Skills</p>
                     <div class="mt-4">
                         <ul class="color-[#202124] font-light">
-                            {{ $job->skills }}
+                            {{-- $job->skills --}}
                         </ul>
                     </div>
                 </div>

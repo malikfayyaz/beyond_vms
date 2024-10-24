@@ -469,7 +469,7 @@
                                     <td class="py-2 px-3" x-text="bu.percentage + '%'"></td>
                                     <td class="py-2 px-3 text-center">
                                         <button @click="removeBusinessUnit(index)" type="button"
-                                            class="text-red-500 hover:text-red-700 transition duration-150 ease-in-out">
+                                            class="text-red-500 hover:text-red-700 transition duration-150 ease-in-out bg-transparent">
                                             <i class="fas fa-trash-alt"></i>
                                         </button>
                                     </td>
@@ -570,7 +570,7 @@
                             <!-- Add options here -->
                         </select>
                     </div>
-                    <div class="flex-1">
+                    <div class="flex-1" x-show="formData.subLedgerType">
                         <label class="block mb-2">Sub Ledger Code <span class="text-red-500 ledger_code__"
                                 style="display:none;">*</span></label>
                         <input name="ledger_code" type="text" id="ledger_code" x-model="formData.subLedgerCode"
