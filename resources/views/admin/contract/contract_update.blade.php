@@ -199,25 +199,25 @@
                         <div x-show="selectedOption === '1'" class="space-y-4">
                             <div class="flex space-x-4 mt-4">
                                 <div class="flex-1">
-                                    <label class="block mb-2">
+                                    <label for ="additional_budget_reason" class="block mb-2">
                                         Reason for Additional Budget
                                         <span class="text-red-500">*</span></label>
-                                    <select class="w-full select2-single custom-style" name="additional_budget_reason"
-                                        id="AdditionalBuget">
-                                        <option value="">Select </option>
+                                    <select class="w-full select2-single required custom-style" name="additional_budget_reason"
+                                        id="additional_budget_reason">
+                                        <option >Select </option>
                                         @foreach (checksetting(21) as $key => $value)
                                         <option value="{{ $key }}">
                                             {{ $value }}</option>
                                         @endforeach
                                     </select>
-                                    <p x-show="errors.AdditionalBuget" x-text="errors.AdditionalBuget"
+                                    <p x-show="errors.additional_budget_reason" x-text="errors.additional_budget_reason"
                                         class="text-red-500 text-xs mt-1"></p>
                                 </div>
                                 <div class="flex-1">
                                     <label for="amount" 
                                         class="block text-sm font-medium text-gray-700 mb-2">Amount <span class="text-red-500">*</span></label>
                                     <input type="text"
-                                        class="w-full h-12 px-4 text-gray-500 border rounded-md shadow-sm focus:outline-none pl-7"
+                                        class="w-full h-12 px-4 text-gray-500 required border rounded-md shadow-sm focus:outline-none pl-7"
                                         placeholder="00.00" id="amount" name="amount" x-model="formFields.amount"
                                         @input="formatRate('amount', $event)" @blur="formatRate('amount', $event)" />
                                     <p x-show="errors.amount" x-text="errors.amount" class="text-red-500 text-xs mt-1">
@@ -227,11 +227,11 @@
 
                             <div class="flex space-x-4 mt-4">
                                 <div class="flex-1">
-                                    <label class="block mb-2">Notes<span class="text-red-500">*</span></label>
+                                    <label for= "additional_budget_notes" class="block mb-2">Notes<span class="text-red-500">*</span></label>
                                     <textarea id="additional_budget_notes" name="additional_budget_notes"
                                         x-model="formFields.additional_budget_notes"
                                         @input="clearFieldError('additional_budget_notes')"
-                                        class="w-full border rounded" rows="5"
+                                        class="w-full border rounded required" rows="5"
                                         :style="{'border-color': 'var(--primary-color)'}"
                                         placeholder="Enter Notes"></textarea>
                                     <p x-show="errors.additional_budget_notes" x-text="errors.additional_budget_notes"
@@ -490,7 +490,7 @@
 <script>
 function formData({ id }) {
     return {
-        currentId: id,
+        currentId: '{{$contract->id}}',
         selectedOption: "",
         formFields: {
             timesheet: "",
@@ -633,9 +633,11 @@ function formData({ id }) {
             }
             this[field] = parts.join(".");
             this.clearFieldError(field);
+            if(event == "bill_rate" || event == "pay_rate") {
             this.calculateRates(field);
+            }
         },
-        calculateRates(event){
+            calculateRates(event){
                       var bill_rate = document.getElementById("bill_rate").value;
                       var payRateElement = document.getElementById("pay_rate");
                       var pay_rate;
@@ -710,7 +712,7 @@ function formData({ id }) {
                       }, 100);
 
 
-              },
+            },
 
         clearFieldError(fieldName) {
             if (this.errors[fieldName]) {
@@ -721,120 +723,63 @@ function formData({ id }) {
             }
         },
 
-        validateForm() {
-//            console.log("Selected option:", this.selectedOption);
-            this.errors = {};
-            if (!this.selectedOption) {
-                this.errors.selectedOption = "Please select an option";
-            }
-            if (this.selectedOption == '4') 
-            {
-                const timesheet = document.getElementById('timesheet').value;
-                if (!timesheet) {
-                    this.errors.timesheet = "Timesheet Approving Manager is required";
-                }
-                const hiringManager = document.getElementById('hiringmanager').value;
-                if (!hiringManager) {
-                    this.errors.hiringmanager = "Hiring Manager is required";
+            validateForm() {
+                this.errors = {};
+                
+                // Validate if an option is selected
+                if (!this.selectedOption) {
+                    this.errors.selectedOption = "Please select an option";
                 }
 
-                // Validate Work Location
-                const workLocation = document.getElementById('worklocation').value;
-                if (!workLocation) {
-                    this.errors.worklocation = "Work Location is required";
-                }
-                const vendorAccountManager = document.getElementById('vendoraccountmanager').value;
-                if (!vendorAccountManager) {
-                    this.errors.vendoraccountmanager = "Vendor Account Manager is required";
-                }
-                if (!this.formFields.contractorportal.trim()) {
-                    this.errors.contractorportal = "Contractor Portal ID is required";
-                }
+                const form = document.querySelector('#rawdata');
+                const formFields = form.querySelectorAll('[name].required'); // Select all fields with a name attribute
 
-                // Validate Original Start Date
-                if (!this.formFields.originalstartdate.trim()) {
-                    this.errors.originalstartdate = "Original Start Date is required";
-                }
-                const candidateSourceType = document.getElementById('candidatesourcetype').value;
-                if (!candidateSourceType) {
-                    this.errors.candidatesourcetype = "Candidate Sourcing Type is required";
-                }
-                if (!this.formFields.locationTax.trim()) {
-                    this.errors.locationTax = "Location Tax is required";
-                }
-                const expensesAllowed = document.getElementById('expensesallowed').value;
-                if (!expensesAllowed) {
-                    this.errors.expensesallowed = "Expense Allowed is required";
-                }
-                 if (!this.formFields.businessjustification.trim()) {
-                    this.errors.businessjustification = "Business Justification is required";
-                }
-                // Log all validation results
-                if (Object.keys(this.errors).length > 0) {
-                    console.log("Validation errors for step 4:", this.errors);
-                    return this.errors; // Return errors for step 4
-                } else {
-                    console.log("All validation for step 4 are done");
-                    return {}; // Return an empty object if no errors
-                }
-            }
-            Object.keys(this.formFields).forEach((field) => {
-                if (!this.formFields[field].trim()) {
-                    this.errors[field] = `${
-                  field.charAt(0).toUpperCase() +
-                  field
-                    .slice(1)
-                    .replace(/([A-Z])/g, " $1")
-                    .trim()
-                } is required`;
-                }
-            });
+                formFields.forEach((field) => {
+                    // Check if the field should be shown based on the selectedOption
+                    const parentDiv = field.closest('[x-show]'); // Find the nearest ancestor with `x-show`
 
-            if (!this.billRate) {
-                this.billRateError = "Bill Rate is required";
-            } else if (isNaN(parseFloat(this.billRate.replace(/,/g, "")))) {
-                this.billRateError = "Bill Rate must be a valid number";
-            } else {
-                this.billRateError = "";
-            }
+                    if ((parentDiv && parentDiv.style.display !== 'none') || !parentDiv) {
+                        if (field.tagName.toLowerCase() === 'select') {
+                            // Special handling for select fields
+                            if (!field.value || field.value === "Select") {
+                                const label = form.querySelector(`label[for="${field.id}"]`) || field.closest('label');
+                                const labelText = label ? label.childNodes[0].textContent.trim() : field.name;
+                                this.errors[field.name] = `${labelText} is required`;
+                            }
+                        } else if (!field.value.trim()) {
+                            // Handle input fields
+                            const label = form.querySelector(`label[for="${field.id}"]`) || field.closest('label');
+                            const labelText = label ? label.childNodes[0].textContent.trim() : field.name;
+                            this.errors[field.name] = `${labelText} is required`;
+                        }
+                    }
+                });
 
-            console.log("Validation errors:", this.errors);
-            console.log("Current form fields:", this.formFields);
+                return Object.keys(this.errors).length === 0;
+            },
 
-            return Object.keys(this.errors).length === 0 && !this.billRateError;
-        },
 
         submitForm() {
             if (this.validateForm()) {
-                console.log(
-                    "Form submitted:",
-                    this.selectedOption,
-                    this.formFields);
-            let form = document.getElementById('rawdata');
-            if (this.selectedOption === '4') {
-                let formRecord = new FormData(form);
+                // console.log(parentDiv);
+            const form = document.querySelector('#rawdata');
+            const formFields = form.querySelectorAll('[name]');
+            let formRecord = new FormData();
                 formRecord.append('selectedOption', this.selectedOption);
                 formRecord.append('contractId', this.currentId);
                 formRecord.append('_method', 'PUT');
-                for (const [key, value] of Object.entries(this.formFields)) {
-                formRecord.append(key, value);
-            }
-//                console.log("Form submitted here:", [...formRecord.entries()]);
-                const url = `/admin/contracts/${this.currentRowId}`;
+           
+                for (const field of formFields) {
+                    const parentDiv = field.closest('[x-show]'); // Find the nearest ancestor with `x-show`
+
+                    if ((parentDiv && parentDiv.style.display !== 'none') || !parentDiv) {
+                    formRecord.append(field.name, field.value);
+                    }
+                }
+            
+            const url = `/admin/contracts/${this.currentId}`;
                 ajaxCall(url, 'POST', [[onSuccess, ['response']]], formRecord);
-                this.openModal = false;
-                this.submitted = true;
-            }
-                setTimeout(() => {
-                    this.selectedOption = "";
-                    Object.keys(this.formFields).forEach(
-                        (key) => (this.formFields[key] = "")
-                    );
-                    this.billRate = "";
-                    this.submitted = false;
-                    $(".select2-single").val(null).trigger("change");
-                    flatpickr("#originalstartdate").clear();
-                }, 3000);
+                
             } else {
                 console.log("Form validation failed");
             }
