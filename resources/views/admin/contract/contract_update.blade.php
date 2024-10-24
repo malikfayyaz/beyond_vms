@@ -10,7 +10,7 @@
         @php $rate = App\Services\RateshelpersService::returnContractEffectiveRate($contract->id);  @endphp
         <div x-data="formData({ id: @json($contract->id) })"  x-init="initSelect2" class="bg-white p-6 rounded-lg shadow-md">
             <h2 class="text-2xl font-bold mb-4">Contract Update</h2>
-            <form @submit.prevent="submitForm">
+            <form id="rawdata" @submit.prevent="submitForm">
                 <div class="my-4">
                     <div class="p-[30px] rounded border" :style="{'border-color': 'var(--primary-color)'}">
                         <label for="select-option" class="block mb-2">Select Update Assignment Reason:
@@ -478,7 +478,7 @@
 <script>
 function formData({ id }) {
     return {
-        currentRowId: id,
+        currentId: id,
         selectedOption: "",
         formFields: {
             timesheet: "",
@@ -775,35 +775,22 @@ function formData({ id }) {
                 console.log(
                     "Form submitted:",
                     this.selectedOption,
-                    this.formFields,
-                    this.billRate
-                );
-                this.submitted = true;
-//                let formData = new FormData();
-                if (this.selectedOption === '4') 
-            {
-                console.log("here i am ");
-                let formData = new FormData();
-                formData.append('selectedOption', this.selectedOption);
-                formData.append('timesheet', document.getElementById('timesheet').value);
-                formData.append('hiringManager', document.getElementById('hiringmanager').value);
-                formData.append('workLocation', document.getElementById('worklocation').value);
-                formData.append('vendorAccountManager', document.getElementById('vendoraccountmanager').value);
-                formData.append('contractorPortal', this.formFields.contractorportal);
-                formData.append('contractId', this.currentRowId);
-                formData.append('originalStartDate', this.formFields.originalstartdate);
-                formData.append('candidateSourceType', document.getElementById('candidatesourcetype').value);
-                formData.append('locationTax', this.formFields.locationTax);
-                formData.append('expensesAllowed', document.getElementById('expensesallowed').value);
-                formData.append('businessJustification', this.formFields.businessjustification);
-                formData.append('_method', 'PUT');
-                const url = `/admin/contracts/${this.currentRowId}`;
-//                console.log("FormData contents:", [...formData.entries()]);
-                ajaxCall(url, 'POST', [[onSuccess, ['response']]], formData);
-                this.openModal = false;
+                    this.formFields);
+            let form = document.getElementById('rawdata');
+            if (this.selectedOption === '4') {
+                let formRecord = new FormData(form);
+                formRecord.append('selectedOption', this.selectedOption);
+                formRecord.append('contractId', this.currentId);
+                formRecord.append('_method', 'PUT');
+                for (const [key, value] of Object.entries(this.formFields)) {
+                formRecord.append(key, value);
             }
-
-
+//                console.log("Form submitted here:", [...formRecord.entries()]);
+                const url = `/admin/contracts/${this.currentRowId}`;
+                ajaxCall(url, 'POST', [[onSuccess, ['response']]], formRecord);
+                this.openModal = false;
+                this.submitted = true;
+            }
                 setTimeout(() => {
                     this.selectedOption = "";
                     Object.keys(this.formFields).forEach(

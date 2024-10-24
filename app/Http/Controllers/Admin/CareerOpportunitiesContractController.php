@@ -261,7 +261,24 @@ class CareerOpportunitiesContractController extends BaseController
      */
     public function update(Request $request, string $id)
     {
-        dd($request->all());
+//        dd($request->all());
+       if ($request->selectedOption == '4') {
+        $validatedData = $request->validate([
+        'contractId' => 'required',
+        'businessjustification' => 'required',
+        'expensesallowed' => 'required',
+        'timesheet' => 'required',
+        'hiringmanager' => 'required',
+        'worklocation' => 'required',
+        'vendoraccountmanager' => 'required',
+        'contractorportal' => 'required',
+        'originalstartdate' => 'required',
+        'locationTax' => 'required',
+        'candidatesourcetype' => 'required',
+            ]);
+        dd($validatedData);
+            # code...
+        } 
     }
     /**
      * Remove the specified resource from storage.
