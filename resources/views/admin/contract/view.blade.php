@@ -4,13 +4,12 @@
     <!-- Sidebar -->
     @include('admin.layouts.partials.dashboard_side_bar')
     <div class="ml-16">
-    @include('admin.layouts.partials.header')
+        @include('admin.layouts.partials.header')
             <div class="rounded mx-4 my-2">
                 @include('admin.layouts.partials.alerts')
             </div>
 
             <div class="mx-2 my-4 rounded px-8 w-full flex justify-end items-center gap-4 ">
-
                 <div x-data="{ showModal: false, status: {{ json_encode($contract->termination_status) }} }">
                     <a href="javascript:void(0);" 
                         class="btn bg-red-600 text-white py-2 px-4 rounded hover:bg-red-500" 
@@ -34,7 +33,7 @@
                                 <form x-data="closeAssignmentTemp()" @submit.prevent="submitData()" class="reject-form space-y-4">
                                 @csrf
                                     <div class="mb-4">
-                                        <label class="block text-sm font-medium text-gray-700">Reason for Closing:</label>
+                                        <label class="block text-sm font-medium text-gray-700">Reason for Closing <i class="fa fa-asterisk text-red-600"></i>:</label>
                                         <select 
                                             x-model="formData.close_contr_reason"
                                             id="close_contr_reason" 
@@ -108,7 +107,7 @@
                     </p>
                 </div>
             @endif
-         <div class="bg-white mx-4 my-8 rounded p-8">
+        <div class="bg-white mx-4 my-8 rounded p-8">
             <div x-data="{ activePage: 'tab1' }" class="mb-4">
                 <ul class="grid grid-flow-col text-center text-gray-500 bg-gray-100 rounded-lg p-1">
                     <!-- Tab 1: Active Jobs -->
@@ -205,11 +204,11 @@
                 </ul>
                     <div class="mt-6">
                         <div x-show="activePage === 'tab1'">
-                        @include('admin.contract.contract_info')
+                            @include('admin.contract.contract_info')
                         </div>
 
                         <div x-show="activePage === 'tab2'">
-                        @include('admin.contract.contract_bu')
+                            @include('admin.contract.contract_bu')
                         </div>
 
                         <div x-show="activePage === 'tab3'">
@@ -222,9 +221,9 @@
                             @include('admin.contract.contract_tabdata')
                         </div>
                     </div>
-                </div>
-
             </div>
+        </div>
+    </div>
 
 
 <script>
