@@ -92,7 +92,7 @@
                                         Vendor Account Manager
                                         <span class="text-red-500">*</span></label>
                                     <select class="w-full select2-single custom-style" id="vendoraccountmanager">
-                                        <option value="">Select location</option>
+                                        <option value="">Select Vendor Account Manager</option>
 
                                         <!-- Vendor option -->
                                         <option value="{{ $contract->submission->vendor_id }}"

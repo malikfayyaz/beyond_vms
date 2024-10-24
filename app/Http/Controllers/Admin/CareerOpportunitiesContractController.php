@@ -261,24 +261,62 @@ class CareerOpportunitiesContractController extends BaseController
      */
     public function update(Request $request, string $id)
     {
-//        dd($request->all());
-       if ($request->selectedOption == '4') {
-        $validatedData = $request->validate([
-        'contractId' => 'required',
-        'businessjustification' => 'required',
-        'expensesallowed' => 'required',
-        'timesheet' => 'required',
-        'hiringmanager' => 'required',
-        'worklocation' => 'required',
-        'vendoraccountmanager' => 'required',
-        'contractorportal' => 'required',
-        'originalstartdate' => 'required',
-        'locationTax' => 'required',
-        'candidatesourcetype' => 'required',
+        $contractId = $request->contractId;
+        $contract = CareerOpportunitiesContract::with('careerOpportunity')->findOrFail($contractId);
+/*        $originalDate = $request->originalstartdate;
+        $convertedDate = Carbon::createFromFormat('m/d/Y', $originalDate)->format('Y/m/d');
+*/       if ($request->selectedOption == '4') {
+        $validator = Validator::make($request->all(), [
+            'businessjustification' => 'required|string',
+            'expensesallowed' => 'required|string',
+            'timesheet' => 'required',
+            'hiringmanager' => 'required',
+            'worklocation' => 'required|string',
+            'vendoraccountmanager' => 'required|string',
+            'contractorportal' => 'required|string',
+            'originalstartdate' => ['required'],
+            'locationTax' => 'required|string',
+            'candidatesourcetype' => 'required|string',
+        ]);
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+        $validatedData = $validator->validated();
+        $contract->update([
+            'hiring_manager_id' => $validatedData['hiringmanager'],
+            'location_id' => $validatedData['worklocation'],
+        ]);
+        if ($contract->workOrder) {
+            $contract->workOrder->update([
+
+                'original_start_date' => Carbon::createFromFormat('m/d/Y', $validatedData['originalstartdate'])->format('Y/m/d'),
+                'approval_manager' => $validatedData['timesheet'],
+                'location_tax' => $validatedData['locationTax'],
+                'expenses_allowed' => $validatedData['expensesallowed'],
+                'job_level_notes' => $validatedData['businessjustification'],
+                'sourcing_type' => $validatedData['candidatesourcetype'],
             ]);
-        dd($validatedData);
-            # code...
-        } 
+        }
+        if ($contract->submission) {
+            $contract->submission->update([
+                'vendor_id' => $validatedData['vendoraccountmanager'],
+            ]);
+        }
+        if ($contract->workOrder->consultant) {
+                $contract->workOrder->consultant->update([
+                    'candidate_id' => $validatedData['contractorportal'],
+                ]);
+            }
+        session()->flash('success', 'Contract updated successfully!');
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Contract updated successfully!',
+                    'redirect_url' => route('admin.contracts.show', $contractId)
+                ]);
+    }
+
+    // If selectedOption is not '4', return an appropriate response
+    return response()->json(['message' => 'No update made'], 400);
     }
     /**
      * Remove the specified resource from storage.
