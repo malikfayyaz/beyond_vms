@@ -1,4 +1,4 @@
-<div class="ml-16">
+<div class="">
         <header
           class="mx-4 py-2 px-4 mt-4 rounded flex justify-between items-center transition-all duration-300 ease-in-out"
           :style="{'background-color': 'var(--primary-color)'}"
