@@ -145,7 +145,7 @@ class CommonController extends Controller
         return response()->json([
             'success' => true,
             'message' => $successMessage,
-            'redirect_url' =>  route("$sessionrole.contracts.index")  // Redirect URL for AJAX
+            'redirect_url' =>  route("$sessionrole.contracts.show", $contract->id)  // Redirect URL for AJAX
         ]);
     }
     
@@ -170,7 +170,7 @@ class CommonController extends Controller
         return response()->json([
             'success' => true,
             'message' => $successMessage,
-            'redirect_url' =>  route("$sessionrole.contracts.index")  // Redirect URL for AJAX
+            'redirect_url' =>  route("$sessionrole.contracts.show", $contract->id)
         ]);
         
     }

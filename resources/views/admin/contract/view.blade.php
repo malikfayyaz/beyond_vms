@@ -92,6 +92,22 @@
                 </a>
                 @endif
             </div>
+            @if($contract->status == 3 && $contract->termination_status == 2)
+                <div class="rounded mx-4 my-2 p-4 bg-red-100">
+                    <p>
+                        <span class="font-bold m-b-10 text-red-800">Reason for Termination/Closing: </span>
+                        <span class="text-red-800"> {{$contract->reasonClose->title}} </span>
+                    </p>
+                    <p>
+                        <span class="font-bold m-b-10 text-red-800">Termination/Closing Notes: </span>
+                        <span class="text-red-800"> {{$contract->termination_notes}} </span>
+                    </p>
+                    <p>
+                        <span class="font-bold m-b-10 text-red-800">Date: </span>
+                        <span class="text-red-800"> {{$contract->formatted_termination_date}} </span>
+                    </p>
+                </div>
+            @endif
          <div class="bg-white mx-4 my-8 rounded p-8">
             <div x-data="{ activePage: 'tab1' }" class="mb-4">
                 <ul class="grid grid-flow-col text-center text-gray-500 bg-gray-100 rounded-lg p-1">
