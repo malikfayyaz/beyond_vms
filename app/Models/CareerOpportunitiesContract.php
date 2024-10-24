@@ -78,4 +78,13 @@ class CareerOpportunitiesContract extends Model
                 return 'danger N/A';
         }
     }
+
+    public function reasonClose() {
+        return $this->belongsTo(Setting::class, 'termination_reason', 'id');
+    }
+
+    public function getFormattedTerminationDateAttribute()
+    {
+        return Carbon::parse($this->termination_date)->format('m/d/Y');
+    }
 }

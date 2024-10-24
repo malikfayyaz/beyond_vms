@@ -154,24 +154,24 @@ class RateshelpersService
                 $contract = CareerOpportunitiesContract::findOrFail($id);
                 $endDate = now()->format('Y-m-d');
                 $contractID = $contract->id;
-
                 // Define query to get contract rate ID based on start date and effective date
                 if ($contract->start_date > $endDate) {
                     $contractRateID = DB::table('contract_rates')
-                        // ->where('costcenter_config_id', 0)
                         ->where('contract_id', $contractID)
+                        ->selectRaw('MAX(id) as id, MAX(effective_date) as effective_date')
                         ->groupBy('effective_date')
                         ->orderByDesc('effective_date')
-                        ->value(DB::raw('MAX(id)')); // Get the MAX id
+                        ->value('id'); // Get the MAX id
                 } else {
                     $contractRateID = DB::table('contract_rates')
                         ->where('effective_date', '<=', $endDate)
-                        // ->where('costcenter_config_id', 0)
                         ->where('contract_id', $contractID)
+                        ->selectRaw('MAX(id) as id, MAX(effective_date) as effective_date')
                         ->groupBy('effective_date')
-                        ->orderByDesc('id')
-                        ->value(DB::raw('MAX(id)')); // Get the MAX id
+                        ->orderByDesc('effective_date')
+                        ->value('id'); // Get the MAX id
                 }
+                
 
                 // Fetch the contract rate by ID
                 $contractRate = ContractRate::where('id', $contractRateID)->orderBy('id', 'desc')->first();

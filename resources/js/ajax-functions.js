@@ -20,7 +20,6 @@ function initializeDataTable(tableId, ajaxUrl, columns) {
         if (form === null) {
             form = new FormData();
         }
-
         console.log('before ajax', form.values);
 
         $.ajax({

@@ -261,9 +261,8 @@ class CareerOpportunitiesContractController extends BaseController
      */
     public function update(Request $request, string $id)
     {
-        //
+        dd($request->all());
     }
-
     /**
      * Remove the specified resource from storage.
      */

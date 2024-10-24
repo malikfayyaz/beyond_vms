@@ -8,7 +8,7 @@
     <div class="bg-white mx-4 my-8 rounded p-8" id="generalformwizard">
         @include('admin.layouts.partials.alerts')
         @php $rate = App\Services\RateshelpersService::returnContractEffectiveRate($contract->id);  @endphp
-        <div x-data="formData()" x-init="initSelect2" class="bg-white p-6 rounded-lg shadow-md">
+        <div x-data="formData({ id: @json($contract->id) })"  x-init="initSelect2" class="bg-white p-6 rounded-lg shadow-md">
             <h2 class="text-2xl font-bold mb-4">Contract Update</h2>
             <form @submit.prevent="submitForm">
                 <div class="my-4">
@@ -195,7 +195,6 @@
                                 </div>
                             </div>
                         </div>
-
                         <!-- Additional Budget Fields -->
                         <div x-show="selectedOption === '1'" class="space-y-4">
                             <div class="flex space-x-4 mt-4">
@@ -489,8 +488,9 @@
 </div>
 @endsection
 <script>
-function formData() {
+function formData({ id }) {
     return {
+        currentRowId: id,
         selectedOption: "",
         formFields: {
             timesheet: "",
@@ -722,11 +722,62 @@ function formData() {
         },
 
         validateForm() {
+//            console.log("Selected option:", this.selectedOption);
             this.errors = {};
             if (!this.selectedOption) {
                 this.errors.selectedOption = "Please select an option";
             }
+            if (this.selectedOption == '4') 
+            {
+                const timesheet = document.getElementById('timesheet').value;
+                if (!timesheet) {
+                    this.errors.timesheet = "Timesheet Approving Manager is required";
+                }
+                const hiringManager = document.getElementById('hiringmanager').value;
+                if (!hiringManager) {
+                    this.errors.hiringmanager = "Hiring Manager is required";
+                }
 
+                // Validate Work Location
+                const workLocation = document.getElementById('worklocation').value;
+                if (!workLocation) {
+                    this.errors.worklocation = "Work Location is required";
+                }
+                const vendorAccountManager = document.getElementById('vendoraccountmanager').value;
+                if (!vendorAccountManager) {
+                    this.errors.vendoraccountmanager = "Vendor Account Manager is required";
+                }
+                if (!this.formFields.contractorportal.trim()) {
+                    this.errors.contractorportal = "Contractor Portal ID is required";
+                }
+
+                // Validate Original Start Date
+                if (!this.formFields.originalstartdate.trim()) {
+                    this.errors.originalstartdate = "Original Start Date is required";
+                }
+                const candidateSourceType = document.getElementById('candidatesourcetype').value;
+                if (!candidateSourceType) {
+                    this.errors.candidatesourcetype = "Candidate Sourcing Type is required";
+                }
+                if (!this.formFields.locationTax.trim()) {
+                    this.errors.locationTax = "Location Tax is required";
+                }
+                const expensesAllowed = document.getElementById('expensesallowed').value;
+                if (!expensesAllowed) {
+                    this.errors.expensesallowed = "Expense Allowed is required";
+                }
+                 if (!this.formFields.businessjustification.trim()) {
+                    this.errors.businessjustification = "Business Justification is required";
+                }
+                // Log all validation results
+                if (Object.keys(this.errors).length > 0) {
+                    console.log("Validation errors for step 4:", this.errors);
+                    return this.errors; // Return errors for step 4
+                } else {
+                    console.log("All validation for step 4 are done");
+                    return {}; // Return an empty object if no errors
+                }
+            }
             Object.keys(this.formFields).forEach((field) => {
                 if (!this.formFields[field].trim()) {
                     this.errors[field] = `${
@@ -762,6 +813,31 @@ function formData() {
                     this.billRate
                 );
                 this.submitted = true;
+//                let formData = new FormData();
+                if (this.selectedOption === '4') 
+            {
+                console.log("here i am ");
+                let formData = new FormData();
+                formData.append('selectedOption', this.selectedOption);
+                formData.append('timesheet', document.getElementById('timesheet').value);
+                formData.append('hiringManager', document.getElementById('hiringmanager').value);
+                formData.append('workLocation', document.getElementById('worklocation').value);
+                formData.append('vendorAccountManager', document.getElementById('vendoraccountmanager').value);
+                formData.append('contractorPortal', this.formFields.contractorportal);
+                formData.append('contractId', this.currentRowId);
+                formData.append('originalStartDate', this.formFields.originalstartdate);
+                formData.append('candidateSourceType', document.getElementById('candidatesourcetype').value);
+                formData.append('locationTax', this.formFields.locationTax);
+                formData.append('expensesAllowed', document.getElementById('expensesallowed').value);
+                formData.append('businessJustification', this.formFields.businessjustification);
+                formData.append('_method', 'PUT');
+                const url = `/admin/contracts/${this.currentRowId}`;
+//                console.log("FormData contents:", [...formData.entries()]);
+                ajaxCall(url, 'POST', [[onSuccess, ['response']]], formData);
+                this.openModal = false;
+            }
+
+
                 setTimeout(() => {
                     this.selectedOption = "";
                     Object.keys(this.formFields).forEach(
