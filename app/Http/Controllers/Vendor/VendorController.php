@@ -11,6 +11,7 @@ use App\Models\CareerOpportunity;
 use App\Models\CareerOpportunitiesContract;
 use App\Models\CareerOpportunitiesWorkorder;
 use Carbon\Carbon;
+use App\Facades\Rateshelper as Rateshelper;
 
 class VendorController extends BaseController
 {
@@ -89,7 +90,7 @@ class VendorController extends BaseController
         $jobModel = CareerOpportunity::findOrFail($jobID);
         // dd($jobModel);
         // Recommended pay rate calculation
-        $recommendedPayRate = vendorPayrate($jobModel->min_bill_rate, $adjustedMarkup);
+        $recommendedPayRate = Rateshelper::vendorPayrate($jobModel->min_bill_rate, $adjustedMarkup);
 
         // Initialize data array
         $data = [
@@ -107,7 +108,7 @@ class VendorController extends BaseController
 
             case 'adjusted_markup_changed':
                 $data['candidate_bill_rate'] = number_format($candidatePayRate + ($candidatePayRate * $adjustedMarkup / 100), 2, '.', '');
-                $data['candidate_pay_rate'] = vendorPayrate($data['candidate_bill_rate'], $adjustedMarkup);
+                $data['candidate_pay_rate'] = Rateshelper::vendorPayrate($data['candidate_bill_rate'], $adjustedMarkup);
                 break;
         }
 
