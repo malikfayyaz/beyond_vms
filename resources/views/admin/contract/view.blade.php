@@ -92,7 +92,7 @@
                 @endif
             </div>
             @if($contract->status == 3 && $contract->termination_status == 2)
-                <div class="rounded mx-4 my-2 p-4 bg-red-100">
+                <div class="rounded mx-4 my-2 p-4 bg-red-100 text-sm">
                     <p>
                         <span class="font-bold m-b-10 text-red-800">Reason for Termination/Closing: </span>
                         <span class="text-red-800"> {{$contract->reasonClose->title}} </span>
