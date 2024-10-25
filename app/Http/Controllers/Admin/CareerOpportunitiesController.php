@@ -585,7 +585,7 @@ class CareerOpportunitiesController extends BaseController
         $release->save();
 
         $job = CareerOpportunity::find($request->job_id);
-        $job->jobstatus = 5;
+        $job->jobstatus = 13;
         $job->save();
         $successMessage = 'Job release to vendor successfully';
         session()->flash('success', $successMessage);
