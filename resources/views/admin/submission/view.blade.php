@@ -48,7 +48,7 @@
                         type="button"
                         @click="shortlistCandidate({{ $submission->id }})"
                         aria-label="Shortlist candidate {{ $submission->consultant->full_name }}"
-                        class="px-4 py-2 bg-green-500 text-white rounded hover:bg-red-600 capitalize"
+                        class="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 capitalize"
                     >
                     Shortlist
                     </button>
