@@ -14,6 +14,7 @@ use App\Models\CareerOpportunity;
 use App\Models\ContractNote;
 use App\Models\OfferWorkFlow;
 use App\Models\CareerOpportunitiesContract;
+use App\Models\contractAdditionalBudget;
 use Yajra\DataTables\Facades\DataTables;
 use App\Models\CareerOpportunitiesWorkorder;
 use App\Models\ContractRate;
@@ -261,12 +262,19 @@ class CareerOpportunitiesContractController extends BaseController
      */
     public function update(Request $request, string $id)
     {
-        dd($request->all);
         $contractId = $request->contractId;
         $contract = CareerOpportunitiesContract::with('careerOpportunity')->findOrFail($contractId);
-/*        $originalDate = $request->originalstartdate;
-        $convertedDate = Carbon::createFromFormat('m/d/Y', $originalDate)->format('Y/m/d');
-*/       if ($request->selectedOption == '4') {
+       if ($request->selectedOption == '1') {
+        $additionbudget = $this->additionBudgetUpdateData($contract,$request);
+        session()->flash('success', 'Contract Aditional Budget updated successfully!');
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Contract Aditional Budget updated successfully!',
+                    'redirect_url' => route('admin.contracts.show', $contractId)
+                ]);
+       }
+
+       if ($request->selectedOption == '4') {
         $nonfinancial = $this->nonFinancialupdateData($contract,$request);
         session()->flash('success', 'Contract updated successfully!');
                 return response()->json([
@@ -336,6 +344,37 @@ class CareerOpportunitiesContractController extends BaseController
 
         return true;
     }
+    public function additionBudgetUpdateData($contract,$request)
+    {
+            $validator = Validator::make($request->all(), [
+            'additional_budget_reason' => ['required'],
+            'amount' => 'required|string',
+            'additional_budget_notes' => 'required|string',
+        ]);
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+        $validatedData = $validator->validated();
+        $contractAdditionalBudget = new ContractAdditionalBudget();
+        $contractAdditionalBudget->user_id = Admin::getAdminIdByUserId(auth()->id());
+        $contractAdditionalBudget->created_by = 1;
+        $contractAdditionalBudget->history_id = 0;
+        $contractAdditionalBudget->created_by_type = 'MSP';
+        $contractAdditionalBudget->contract_id = $contract->id;
+        $contractAdditionalBudget->amount = $validatedData['amount'];
+        $contractAdditionalBudget->notes = $validatedData['additional_budget_notes'];
+        $contractAdditionalBudget->additional_budget_reason = $validatedData['additional_budget_reason'];
+        $contractAdditionalBudget->status = 'Pending';
+        $contractAdditionalBudget->save();
+        if ($contractAdditionalBudget->save()) {
+        return true;
+            }else{
+                return false;
+            }
+        
+    }
+    
+
     /**
      * Remove the specified resource from storage.
      */

@@ -202,7 +202,7 @@
                                     <label for ="additional_budget_reason" class="block mb-2">
                                         Reason for Additional Budget
                                         <span class="text-red-500">*</span></label>
-                                    <select class="w-full select2-single required custom-style" name="additional_budget_reason"
+                                    <select name="additional_budget_reason" class="w-full select2-single required custom-style required" name="additional_budget_reason"
                                         id="additional_budget_reason">
                                         <option >Select </option>
                                         @foreach (checksetting(21) as $key => $value)
@@ -216,8 +216,8 @@
                                 <div class="flex-1">
                                     <label for="amount" 
                                         class="block text-sm font-medium text-gray-700 mb-2">Amount <span class="text-red-500">*</span></label>
-                                    <input type="text"
-                                        class="w-full h-12 px-4 text-gray-500 required border rounded-md shadow-sm focus:outline-none pl-7"
+                                    <input type="text" name="amount" 
+                                        class="w-full h-12 px-4 text-gray-500 required border rounded-md shadow-sm focus:outline-none pl-7 required"
                                         placeholder="00.00" id="amount" name="amount" x-model="formFields.amount"
                                         @input="formatRate('amount', $event)" @blur="formatRate('amount', $event)" />
                                     <p x-show="errors.amount" x-text="errors.amount" class="text-red-500 text-xs mt-1">
@@ -761,7 +761,6 @@ function formData({ id }) {
 
         submitForm() {
             if (this.validateForm()) {
-                // console.log(parentDiv);
             const form = document.querySelector('#rawdata');
             const formFields = form.querySelectorAll('[name]');
             let formRecord = new FormData();
@@ -776,8 +775,10 @@ function formData({ id }) {
                     formRecord.append(field.name, field.value);
                     }
                 }
-            
-            const url = `/admin/contracts/${this.currentId}`;
+/*for (let [key, value] of formRecord.entries()) {
+            console.log(`${key}: ${value}`);
+        }
+*/            const url = `/admin/contracts/${this.currentId}`;
                 ajaxCall(url, 'POST', [[onSuccess, ['response']]], formRecord);
                 
             } else {

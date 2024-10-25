@@ -42,7 +42,7 @@
                 </button>
                 </div>
                 @endif
-                @if ($submission->careerOpportunity->jobStatus != 5 && !in_array($submission->resume_status, array(8, 11, 6)))
+                @if ( !in_array($submission->resume_status, array(8, 11, 6)))
                   @if (!in_array($submission->resume_status, array(3, 4, 5, 7, 9, 15)) && (!in_array($submission->careerOpportunity->jobStatus, array(4))))
                     <button
                         type="button"
