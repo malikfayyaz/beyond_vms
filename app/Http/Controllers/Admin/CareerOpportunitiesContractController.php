@@ -358,7 +358,6 @@ class CareerOpportunitiesContractController extends BaseController
         $contractAdditionalBudget = new ContractAdditionalBudget();
         $contractAdditionalBudget->user_id = Admin::getAdminIdByUserId(auth()->id());
         $contractAdditionalBudget->created_by = 1;
-        $contractAdditionalBudget->history_id = 0;
         $contractAdditionalBudget->created_by_type = 'MSP';
         $contractAdditionalBudget->contract_id = $contract->id;
         $contractAdditionalBudget->amount = $validatedData['amount'];

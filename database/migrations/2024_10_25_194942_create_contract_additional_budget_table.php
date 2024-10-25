@@ -17,7 +17,6 @@ return new class extends Migration
             $table->foreignId('contract_id')->constrained('career_opportunities_contract')->onDelete('cascade'); 
             $table->unsignedBigInteger('created_by'); 
             $table->enum('created_by_type', ['', 'MSP', 'Client']); 
-            $table->unsignedBigInteger('history_id');
             $table->decimal('amount', 10, 2); 
             $table->text('notes')->nullable();
             $table->unsignedBigInteger('additional_budget_reason');
