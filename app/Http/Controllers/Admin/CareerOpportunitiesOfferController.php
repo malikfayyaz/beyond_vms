@@ -13,6 +13,8 @@ use App\Facades\CareerOpportunitiesOffer as offerHelper;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Yajra\DataTables\Facades\DataTables;
+use App\Facades\Rateshelper as Rateshelper;
+
 
 class CareerOpportunitiesOfferController extends BaseController
 {
