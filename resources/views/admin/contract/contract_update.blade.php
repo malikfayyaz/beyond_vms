@@ -36,14 +36,14 @@
                         <div x-show="selectedOption === '4'" class="space-y-4">
                             <div class="flex space-x-4 mt-4">
                                 <div class="flex-1">
-                                    <label class="block mb-2">Timesheet Approving Manager
+                                    <label for="timesheet" class="block mb-2">Timesheet Approving Manager
                                         <span class="text-red-500">*</span></label>
                                     @php $clients_hiring = \App\Models\Client::where('profile_status', 1)
                                     ->orderBy('first_name', 'ASC')
                                     ->get();
                                     $location = \App\Models\Location::byStatus();
                                     @endphp
-                                    <select class="w-full select2-single custom-style" id="timesheet">
+                                    <select name="timesheet" class="w-full select2-single custom-style required" id="timesheet">
                                         <option value="">Select Timesheet Approving Manager</option>
                                         @foreach ($clients_hiring as $key => $value)
                                         <option value="{{ $value->id }}"
@@ -56,9 +56,9 @@
                                         class="text-red-500 text-xs mt-1"></p>
                                 </div>
                                 <div class="flex-1">
-                                    <label class="block mb-2">Hiring Manager
+                                    <label for="hiringmanager" class="block mb-2">Hiring Manager
                                         <span class="text-red-500">*</span></label>
-                                    <select class="w-full select2-single custom-style" id="hiringmanager">
+                                    <select name="hiringmanager" class="w-full select2-single custom-style required" id="hiringmanager">
                                         <option value="">Select location</option>
                                         @foreach ($clients_hiring as $key => $value)
                                         <option value="{{ $value->id }}"
@@ -70,10 +70,10 @@
                                         class="text-red-500 text-xs mt-1"></p>
                                 </div>
                                 <div class="flex-1">
-                                    <label class="block mb-2">
+                                    <label for="worklocation" class="block mb-2">
                                         Work Location
                                         <span class="text-red-500">*</span></label>
-                                    <select class="w-full select2-single custom-style" id="worklocation">
+                                    <select name="worklocation" class="w-full select2-single custom-style required" id="worklocation">
                                         <option value="">Select location</option>
                                         @foreach ($location as $key => $value)
                                         <option value="{{ $value->id }}"
@@ -88,10 +88,10 @@
                             <div class="flex space-x-4 mt-4">
 
                                 <div class="flex-1">
-                                    <label class="block mb-2">
+                                    <label for="vendoraccountmanager" class="block mb-2">
                                         Vendor Account Manager
                                         <span class="text-red-500">*</span></label>
-                                    <select class="w-full select2-single custom-style" id="vendoraccountmanager">
+                                    <select name="vendoraccountmanager" class="w-full select2-single custom-style required" id="vendoraccountmanager">
                                         <option value="">Select Vendor Account Manager</option>
 
                                         <!-- Vendor option -->
@@ -112,9 +112,9 @@
                                         class="text-red-500 text-xs mt-1"></p>
                                 </div>
                                 <div class="flex-1">
-                                    <label class="block mb-2">Contractor Portal ID
+                                    <label for="contractorportal" class="block mb-2">Contractor Portal ID
                                         <span class="text-red-500">*</span></label>
-                                    <input type="text" id="contractorportal" x-model="formFields.contractorportal"
+                                    <input name="contractorportal" type="text" id="contractorportal" x-model="formFields.contractorportal"
                                         @input="clearFieldError('contractorportal')"
                                         value="{{$contract->workOrder->consultant->candidate_id}}"
                                         class="w-full h-12 px-4 text-gray-500 border border-gray-300 rounded-md shadow-sm focus:outline-none"
@@ -127,18 +127,18 @@
                                 <div class="flex-1">
                                     <label for="originalstartdate" class="block mb-2">Original Start Date:
                                         <span class="text-red-500">*</span></label>
-                                    <input id="originalstartdate" x-model="formFields.originalstartdate"
-                                        class="w-full h-12 px-4 text-gray-500 border rounded-md shadow-sm focus:outline-none pl-7"
+                                    <input name="originalstartdate" id="originalstartdate" x-model="formFields.originalstartdate"
+                                        class="w-full h-12 px-4 text-gray-500 border rounded-md shadow-sm focus:outline-none pl-7 required"
                                         type="text" placeholder="Select start date" />
                                     <p x-show="errors.originalstartdate" x-text="errors.originalstartdate"
                                         class="text-red-500 text-xs mt-1"></p>
                                 </div>
 
                                 <div class="flex-1">
-                                    <label class="block mb-2">
+                                    <label for="candidatesourcetype" class="block mb-2">
                                         Candidate Sourcing Type & Worker Type
                                         <span class="text-red-500">*</span></label>
-                                    <select class="w-full select2-single custom-style" id="candidatesourcetype">
+                                    <select name="candidatesourcetype" class="w-full select2-single custom-style required" id="candidatesourcetype">
                                         <option value="">Select </option>
                                         @foreach (checksetting(18) as $key => $value)
                                         <option value="{{ $key }}"
@@ -152,13 +152,13 @@
                             </div>
                             <div class="flex space-x-4 mt-4">
                                 <div class="flex-1">
-                                    <label for="billRate" class="block mb-2 capitalize">Location Tax </label>
+                                    <label for="locationTax" class="block mb-2 capitalize">Location Tax </label>
                                     <div>
                                         <div class="relative">
                                             <span
                                                 class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">$</span>
-                                            <input type="text"
-                                                class="w-full h-12 px-4 text-gray-500 border rounded-md shadow-sm focus:outline-none pl-7"
+                                            <input type="text" name="locationTax" 
+                                                class="w-full h-12 px-4 text-gray-500 border rounded-md shadow-sm focus:outline-none pl-7 required"
                                                 placeholder="00.00" id="locationTax" x-model="formFields.locationTax"
                                                 @input="formatRate('locationTax', $event)"
                                                 @blur="formatRate('locationTax', $event)" />
@@ -166,9 +166,9 @@
                                     </div>
                                 </div>
                                 <div class="flex-1">
-                                    <label class="block mb-2">Expense Allowed {{$contract->workOrder->expenses_allowed}}
+                                    <label for="expensesallowed" class="block mb-2">Expense Allowed 
                                         <span class="text-red-500">*</span></label>
-                                    <select class="w-full select2-single custom-style" id="expensesallowed">
+                                    <select name="expensesallowed" class="w-full select2-single custom-style required" id="expensesallowed">
                                         <option value="">Select location</option>
                                         <option value="yes"
                                             {{$contract->workOrder->expenses_allowed == "Yes" ? 'selected' : ''}}>Yes
@@ -184,10 +184,10 @@
                             </div>
                             <div class="flex space-x-4 mt-4">
                                 <div class="flex-1">
-                                    <label class="block mb-2">Business Justification<span
+                                    <label for="businessjustification" class="block mb-2">Business Justification<span
                                             class="text-red-500">*</span></label>
-                                    <textarea id="businessjustification" x-model="formFields.businessjustification"
-                                        @input="clearFieldError('businessjustification')" class="w-full border rounded"
+                                    <textarea name="businessjustification" id="businessjustification" x-model="formFields.businessjustification"
+                                        @input="clearFieldError('businessjustification')" class="w-full border rounded required"
                                         rows="5" :style="{'border-color': 'var(--primary-color)'}"
                                         placeholder="Enter Business Justification"></textarea>
                                     <p x-show="errors.businessjustification" x-text="errors.businessjustification"

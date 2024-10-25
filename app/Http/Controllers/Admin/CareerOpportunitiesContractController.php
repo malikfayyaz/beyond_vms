@@ -261,12 +261,38 @@ class CareerOpportunitiesContractController extends BaseController
      */
     public function update(Request $request, string $id)
     {
+        dd($request->all);
         $contractId = $request->contractId;
         $contract = CareerOpportunitiesContract::with('careerOpportunity')->findOrFail($contractId);
 /*        $originalDate = $request->originalstartdate;
         $convertedDate = Carbon::createFromFormat('m/d/Y', $originalDate)->format('Y/m/d');
 */       if ($request->selectedOption == '4') {
-        $validator = Validator::make($request->all(), [
+        $nonfinancial = $this->nonFinancialupdateData($contract,$request);
+        session()->flash('success', 'Contract updated successfully!');
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Contract updated successfully!',
+                    'redirect_url' => route('admin.contracts.show', $contractId)
+                ]);
+    }
+        if ($request->selectedOption =='5') {
+        $request->validate([
+            'new_start_date' => 'required|date_format:m/d/Y',
+        ]);
+        dd($request->new_start_date);
+        $startDate = Carbon::createFromFormat('m/d/Y', $request->start_date)->format('Y-m-d');
+
+        $contract->update([
+            'start_date' => $startDate,
+        ]);        }
+
+    // If selectedOption is not '4', return an appropriate response
+    return response()->json(['message' => 'No update made'], 400);
+    }
+
+    public function nonFinancialupdateData($contract,$request)
+    {
+            $validator = Validator::make($request->all(), [
             'businessjustification' => 'required|string',
             'expensesallowed' => 'required|string',
             'timesheet' => 'required',
@@ -282,7 +308,7 @@ class CareerOpportunitiesContractController extends BaseController
             return response()->json(['errors' => $validator->errors()], 422);
         }
         $validatedData = $validator->validated();
-        $contract->update([
+                $contract->update([
             'hiring_manager_id' => $validatedData['hiringmanager'],
             'location_id' => $validatedData['worklocation'],
         ]);
@@ -307,16 +333,8 @@ class CareerOpportunitiesContractController extends BaseController
                     'candidate_id' => $validatedData['contractorportal'],
                 ]);
             }
-        session()->flash('success', 'Contract updated successfully!');
-                return response()->json([
-                    'success' => true,
-                    'message' => 'Contract updated successfully!',
-                    'redirect_url' => route('admin.contracts.show', $contractId)
-                ]);
-    }
 
-    // If selectedOption is not '4', return an appropriate response
-    return response()->json(['message' => 'No update made'], 400);
+        return true;
     }
     /**
      * Remove the specified resource from storage.
