@@ -15,11 +15,11 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade'); 
             $table->foreignId('contract_id')->constrained('career_opportunities_contract')->onDelete('cascade'); 
-            $table->unsignedBigInteger('created_by'); 
-            $table->enum('created_by_type', ['', 'MSP', 'Client']); 
-            $table->decimal('amount', 10, 2); 
+            $table->unsignedBigInteger('created_by')->nullable(); 
+            $table->unsignedBigInteger('created_by_type')->nullable();
+            $table->decimal('amount', 10, 2)->nullable(); 
             $table->text('notes')->nullable();
-            $table->unsignedBigInteger('additional_budget_reason');
+            $table->unsignedBigInteger('additional_budget_reason')->nullable();
             $table->enum('status', ['Pending', 'Approved', 'Rejected'])->nullable()->default('Pending'); 
             $table->datetime('approval_rejection_date')->nullable(); 
             $table->timestamps();

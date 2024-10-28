@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use App\Facades\Rateshelper as Rateshelper;
+use App\Facades\CareerOpportunitiesContract as contractHelper;
 use App\Models\Admin;
 use App\Models\CareerOpportunitiesOffer;
 use App\Models\CareerOpportunity;
@@ -344,7 +345,7 @@ class CareerOpportunitiesContractController extends BaseController
 
         return true;
     }
-    public function additionBudgetUpdateData($contract,$request)
+    public function additionBudgetUpda0teData($contract,$request)
     {
             $validator = Validator::make($request->all(), [
             'additional_budget_reason' => ['required'],
@@ -358,7 +359,7 @@ class CareerOpportunitiesContractController extends BaseController
         $contractAdditionalBudget = new ContractAdditionalBudget();
         $contractAdditionalBudget->user_id = Admin::getAdminIdByUserId(auth()->id());
         $contractAdditionalBudget->created_by = 1;
-        $contractAdditionalBudget->created_by_type = 'MSP';
+        $contractAdditionalBudget->created_by_type = 1;
         $contractAdditionalBudget->contract_id = $contract->id;
         $contractAdditionalBudget->amount = $validatedData['amount'];
         $contractAdditionalBudget->notes = $validatedData['additional_budget_notes'];
@@ -366,6 +367,7 @@ class CareerOpportunitiesContractController extends BaseController
         $contractAdditionalBudget->status = 'Pending';
         $contractAdditionalBudget->save();
         if ($contractAdditionalBudget->save()) {
+        contractHelper::createContractSpendWorkflowProcess($contractAdditionalBudget, $contract->id);
         return true;
             }else{
                 return false;
