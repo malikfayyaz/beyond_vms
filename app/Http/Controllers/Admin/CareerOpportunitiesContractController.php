@@ -285,18 +285,70 @@ class CareerOpportunitiesContractController extends BaseController
                 ]);
     }
         if ($request->selectedOption =='5') {
-        $request->validate([
-            'new_start_date' => 'required|date_format:m/d/Y',
-        ]);
-        dd($request->new_start_date);
-        $startDate = Carbon::createFromFormat('m/d/Y', $request->start_date)->format('Y-m-d');
+            $nonfinancial = $this->ContractDateUpdate($contract,$request); 
+            session()->flash('success', 'Contract updated successfully!');
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Contract updated successfully!',
+                    'redirect_url' => route('admin.contracts.show', $contractId)
+                ]);
+       
 
-        $contract->update([
-            'start_date' => $startDate,
-        ]);        }
+      }
 
     // If selectedOption is not '4', return an appropriate response
     return response()->json(['message' => 'No update made'], 400);
+    }
+
+    public function ContractDateUpdate($contract,$request) {
+      
+        $validator = Validator::make($request->all(), [
+            'new_contract_start_date' => 'required|date_format:m/d/Y',
+        ]);
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+        $validatedData = $validator->validated();
+        $startDate = Carbon::createFromFormat('m/d/Y', $request->new_contract_start_date)->format('Y-m-d');
+
+        $contract->update([
+            'start_date' => $startDate,
+        ]); 
+            if ($contract->workOrder) { 
+               
+                $contract->workorder->onboard_change_start_date =$startDate;
+                if(strtotime($contract->workorder->end_date) >= strtotime(date('Y-m-d'))){
+                    $contract->workorder->status = 1;
+                }
+                if($contract->workorder->save()){
+                        // Find the ContractRate record
+                        $contractRate = ContractRate::where('contract_id', $contract->id)->first();
+
+                        if ($contractRate && Carbon::parse($startDate)->lt(Carbon::parse($contractRate->effective_date))) {
+                            // Update the effective_date field
+                            $contractRate->effective_date = $startDate;
+                            $contractRate->save();
+                        }
+
+                        // Find all TimesheetProject records for the contract
+                        $timesheetProjects = TimesheetProject::where('contract_id', $contract->id)->get();
+
+                        foreach ($timesheetProjects as $timesheetProject) {
+                            if (Carbon::parse($startDate)->lt(Carbon::parse($timesheetProject->effective_date))) {
+                                // Update the effective_date field
+                                $timesheetProject->effective_date = $startDate;
+                                $timesheetProject->save();
+                            }
+                        }
+
+                        Rateshelper::calculateContractEstimates($contract,$contract->workorder,$contract->careerOpportunity);
+
+                       
+                }
+            
+            }
+            // return true;
+
     }
 
     public function nonFinancialupdateData($contract,$request)
@@ -345,7 +397,7 @@ class CareerOpportunitiesContractController extends BaseController
 
         return true;
     }
-    public function additionBudgetUpda0teData($contract,$request)
+    public function additionBudgetUpdateData($contract,$request)
     {
             $validator = Validator::make($request->all(), [
             'additional_budget_reason' => ['required'],
@@ -367,7 +419,7 @@ class CareerOpportunitiesContractController extends BaseController
         $contractAdditionalBudget->status = 'Pending';
         $contractAdditionalBudget->save();
         if ($contractAdditionalBudget->save()) {
-        contractHelper::createContractSpendWorkflowProcess($contractAdditionalBudget, $contract->id);
+        contractHelper::createContractSpendWorkflowProcess($contractAdditionalBudget, $contract);
         return true;
             }else{
                 return false;

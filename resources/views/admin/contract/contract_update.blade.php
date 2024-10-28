@@ -248,7 +248,7 @@
                                     <label for="bill_rate" 
                                         class="block text-sm font-medium text-gray-700 mb-2">Bill Rate <span class="text-red-500">*</span></label>
                                     <input type="text"
-                                        class="w-full h-12 px-4 text-gray-500 border rounded-md shadow-sm focus:outline-none pl-7"
+                                        class="w-full h-12 px-4 text-gray-500 border rounded-md shadow-sm focus:outline-none pl-7 required"
                                         placeholder="00.00" id="bill_rate" name="bill_rate" x-model="formFields.bill_rate"
                                         @input="formatRate('bill_rate', $event)" onchange="calculateRates('bill_rate')" @blur="formatRate('bill_rate', $event)" />
                                     <p x-show="errors.bill_rate" x-text="errors.bill_rate" class="text-red-500 text-xs mt-1">
@@ -258,7 +258,7 @@
                                     <label for="client_overtime_bill_rate" 
                                         class="block text-sm font-medium text-gray-700 mb-2">Client Over Time Rate <span class="text-red-500">*</span></label>
                                     <input type="text"
-                                        class="w-full h-12 px-4 text-gray-500 border rounded-md shadow-sm focus:outline-none pl-7"
+                                        class="w-full h-12 px-4 text-gray-500 border rounded-md shadow-sm focus:outline-none pl-7 required"
                                         placeholder="00.00" id="client_overtime_bill_rate" name="client_overtime_bill_rate" x-model="formFields.client_overtime_bill_rate"
                                         @input="formatRate('client_overtime_bill_rate', $event)" @blur="formatRate('client_overtime_bill_rate', $event)" />
                                     <p x-show="errors.client_overtime_bill_rate" x-text="errors.client_overtime_bill_rate" class="text-red-500 text-xs mt-1">

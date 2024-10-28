@@ -5,7 +5,7 @@ use App\Models\CareerOpportunitiesOffer;
 use App\Models\CareerOpportunity;
 use App\Models\Setting;
 use App\Models\Workflow;
-use App\Models\OfferWorkFlow;
+use App\Models\ContractBudgetWorkflow;
 use App\Models\Admin;
 use App\Models\Vendor;
 use App\Models\Client;
@@ -32,10 +32,10 @@ class CareerOpportunitiesContractService
                 $emailSentValue = 1;
             }
             $workflowData[] = [
-                'offer_id' => $offer->id,
+                'contract_id' => $contract->id,
                 'client_id' => $wf->hiring_manager_id,
                 'workflow_id' => 0,
-                'costcenter_id' => 0,
+                'request_id' => 0,
                 'approval_role_id' => $wf->approval_role_id,
                 'bulk_approval' => 0,
                 'approval_number' => $wf->approval_number,
@@ -48,23 +48,23 @@ class CareerOpportunitiesContractService
         }
 
         // Insert all records at once using batch insert
-        OfferWorkFlow::insert($workflowData);
+        ContractBudgetWorkflow::insert($workflowData);
 
         return true;
     }
 
-    public static function approveofferWorkFlow($request){
+    public static function approveContractSpendWorkWorkFlow($request){
         $user = \Auth::user();
         $userid = \Auth::id();
 
         $sessionrole = session('selected_role');
         $userid =  checkUserId($userid,$sessionrole);
         $portal = 'Portal';
-        $workflow = OfferWorkFlow::findOrFail($request->rowId);
+        $workflow = ContractBudgetWorkflow::findOrFail($request->rowId);
 
-        self::acceptOfferWorkFlow($request->rowId, $userid, $sessionrole, $portal,$request);
-        $nextWorkflow = OfferWorkFlow::where([
-            ['offer_id', '=', $workflow->offer_id],
+        self::acceptContractBudgetWorkflow($request->rowId, $userid, $sessionrole, $portal,$request);
+        $nextWorkflow = ContractBudgetWorkflow::where([
+            ['contract_id', '=', $workflow->contract_id],
             ['status', '=', 'Pending'],
             ['email_sent', '=', 0]
         ])
@@ -77,7 +77,7 @@ class CareerOpportunitiesContractService
             foreach($nextWorkflow as $workflow){
                 if($count == 0){
                     if($workflow->approval_required == 0 ){ // Just Approve this Record as no Approval Required
-                        self::acceptOfferWorkFlow($workflow->id, $userid, $sessionrole, $portal,$request);
+                        self::acceptContractBudgetWorkflow($workflow->id, $userid, $sessionrole, $portal,$request);
                     }else{
                         $workflow->email_sent = 1;
                         $workflow->save();
@@ -93,10 +93,10 @@ class CareerOpportunitiesContractService
         }
     }
 
-    protected static function acceptOfferWorkFlow($workflowid, $userid, $role, $portal, $request){
+    protected static function acceptContractBudgetWorkflow($workflowid, $userid, $role, $portal, $request){
 
         $filename = handleFileUpload($request, 'jobAttachment', 'offer_workflow_attachments');
-        $workflow = OfferWorkFlow::findOrFail($workflowid);
+        $workflow = ContractBudgetWorkflow::findOrFail($workflowid);
         $workflow->status = 'Approved'; // Update the status to approved
         $workflow->approval_notes = $request->note;
         $workflow->approve_reject_by = $userid;
@@ -118,10 +118,10 @@ class CareerOpportunitiesContractService
         $userid =  checkUserId($userid,$sessionrole);
 
         $portal = 'Portal';
-        $workflow = OfferWorkFlow::findOrFail($request->rowId);
+        $workflow = ContractBudgetWorkflow::findOrFail($request->rowId);
         self::rejectOfferWorkFlow($request->rowId, $userid, $sessionrole, $portal, $request);
-        $nextWorkflow = OfferWorkFlow::where([
-            ['offer_id', '=', $workflow->offer_id],
+        $nextWorkflow = ContractBudgetWorkflow::where([
+            ['contract_id', '=', $workflow->contract_id],
             ['status', '=', 'Pending'],
             ['email_sent', '=', 0]
         ])
@@ -134,7 +134,7 @@ class CareerOpportunitiesContractService
             foreach($nextWorkflow as $workflow){
                 if($count == 0){
                     if($workflow->approval_required == 0 ){ // Just Approve this Record as no Approval Required
-                        self::acceptOfferWorkFlow($workflow->id, $userid, $sessionrole, $portal,$request);
+                        self::acceptContractBudgetWorkflow($workflow->id, $userid, $sessionrole, $portal,$request);
                     }else{
                         $workflow->email_sent = 1;
                         $workflow->save();
@@ -151,7 +151,7 @@ class CareerOpportunitiesContractService
     }
 
     protected static function rejectOfferWorkFlow($workflowid, $userid, $role, $portal, $request) {
-        $workflow = OfferWorkFlow::findOrFail($workflowid);
+        $workflow = ContractBudgetWorkflow::findOrFail($workflowid);
         $workflow->status = 'Rejected'; // Update the status to Rejected
         $workflow->rejection_reason = $request->reason;
         $workflow->approval_notes = $request->note;
