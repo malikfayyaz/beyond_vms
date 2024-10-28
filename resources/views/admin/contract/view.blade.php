@@ -14,7 +14,7 @@
                     <a href="javascript:void(0);" 
                         class="btn bg-red-600 text-white py-2 px-4 rounded hover:bg-red-500" 
                         @click="showModal = true"
-                        x-bind:disabled="status == 3"
+                        x-show="status != 2"
                         :class="{ 'opacity-50 pointer-events-none': status == 2 }">
                         Temporary Close Contract 
                     </a>
