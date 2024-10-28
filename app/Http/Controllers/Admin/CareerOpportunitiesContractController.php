@@ -267,6 +267,10 @@ class CareerOpportunitiesContractController extends BaseController
         $contract = CareerOpportunitiesContract::with('careerOpportunity')->findOrFail($contractId);
        if ($request->selectedOption == '1') {
         $additionbudget = $this->additionBudgetUpdateData($contract,$request);
+        if ($additionbudget !== true) {
+            // Return validation error if it's a JSON response
+            return $additionbudget;
+        }
         session()->flash('success', 'Contract Aditional Budget updated successfully!');
                 return response()->json([
                     'success' => true,
@@ -277,27 +281,76 @@ class CareerOpportunitiesContractController extends BaseController
 
        if ($request->selectedOption == '4') {
         $nonfinancial = $this->nonFinancialupdateData($contract,$request);
+        if ($nonfinancial !== true) {
+            // Return validation error if it's a JSON response
+            return $nonfinancial;
+        }
         session()->flash('success', 'Contract updated successfully!');
                 return response()->json([
                     'success' => true,
                     'message' => 'Contract updated successfully!',
                     'redirect_url' => route('admin.contracts.show', $contractId)
                 ]);
-    }
+        }
         if ($request->selectedOption =='5') {
-            $nonfinancial = $this->ContractDateUpdate($contract,$request); 
+            $dateupdate = $this->ContractDateUpdate($contract,$request); 
+            if ($dateupdate !== true) {
+                // Return validation error if it's a JSON response
+                return $dateupdate;
+            }
             session()->flash('success', 'Contract updated successfully!');
                 return response()->json([
                     'success' => true,
                     'message' => 'Contract updated successfully!',
                     'redirect_url' => route('admin.contracts.show', $contractId)
                 ]);
-       
+        }
 
-      }
+        if ($request->selectedOption =='6') {
+            $termination = $this->ContractTermination($contract,$request); 
+            if ($termination !== true) {
+                // Return validation error if it's a JSON response
+                return $termination;
+            }
+            session()->flash('success', 'Contract updated successfully!');
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Contract updated successfully!',
+                    'redirect_url' => route('admin.contracts.show', $contractId)
+                ]);
+        }
 
     // If selectedOption is not '4', return an appropriate response
     return response()->json(['message' => 'No update made'], 400);
+    }
+
+    public function ContractTermination($contract,$request) {
+        $validator = Validator::make($request->all(), [
+            'termination_date' => 'required|date_format:m/d/Y',
+            'termination_notes' => 'required|string',
+            'termination_reason' => 'required',
+            'termination_can_feedback' => 'required',
+        ]);
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+        $validatedData = $validator->validated();
+        $terminationDate = Carbon::createFromFormat('m/d/Y', $request->termination_date)->format('Y-m-d');
+
+        $contract->update([
+            'termination_date' => $terminationDate,
+            'termination_reason' => $request->termination_reason,
+            'termination_notes' => $request->termination_notes,
+            'termination_feedback' => $request->termination_can_feedback,
+            'termination_status' => 2,
+            'status' => 6,
+            'termination_date' => now(),
+            'term_by_id' =>Admin::getAdminIdByUserId(auth()->id()),
+            'term_by_type' =>1,
+        ]); 
+            
+        return true;
+
     }
 
     public function ContractDateUpdate($contract,$request) {
@@ -347,7 +400,7 @@ class CareerOpportunitiesContractController extends BaseController
                 }
             
             }
-            // return true;
+            return true;
 
     }
 
