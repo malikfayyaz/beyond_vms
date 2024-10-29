@@ -11,7 +11,7 @@
             @include('client.layouts.partials.alerts')
           <div class="mx-4 rounded p-8">
             <div class="w-full flex justify-end items-center gap-4">
-            @if (!in_array($submission->resume_status, array(6, 7, 2, 15, 8, 9, 11)) && (!in_array($submission->careerOpportunity->jobStatus, array(4, 12))) && $submission->careerOpportunity->interview_process == 'Yes')
+            @if (!in_array($submission->resume_status, array(6, 7, 2, 15, 8, 9, 11, 12)) && (!in_array($submission->careerOpportunity->jobStatus, array(4, 12))) && $submission->careerOpportunity->interview_process == 'Yes')
               <a href="{{ route('client.interview.create',  ['id' => $submission->id]) }}"
 
                 type="button"
