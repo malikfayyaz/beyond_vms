@@ -40,6 +40,12 @@ class CareerOpportunitiesController extends BaseController
                 ->addColumn('jobStatus', function ($row) {
                     return (isset($row->jobStatus)) ? $row->getStatus($row->jobStatus) : 'N/A';
                 })
+                ->addColumn('id', function ($row) {
+                    return '<span class="job-detail-trigger text-blue-500 cursor-pointer" data-id="' . $row->id . '">' . $row->id . '</span>';
+                })
+                ->addColumn('title', function ($row) {
+                    return '<span class="job-detail-trigger text-blue-500 cursor-pointer" data-id="' . $row->id . '">' . $row->title . '</span>';
+                })
                 ->addColumn('duration', function ($row) {
                     return $row->date_range ? $row->date_range : 'N/A';
                 })
@@ -69,7 +75,7 @@ class CareerOpportunitiesController extends BaseController
 
                     return $btn . $deleteBtn;
                 })
-                ->rawColumns(['action'])
+                ->rawColumns(['action','id', 'title'])
                 ->make(true);
         }
 

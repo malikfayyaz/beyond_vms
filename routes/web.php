@@ -109,5 +109,6 @@ Route::middleware(['ensure_role_is_selected'])->group(function () {
 
     Route::post('contract/{id}/open_contract', [CommonController::class, 'openContract'])->name('contract.open_contract');
 
+    Route::get('job/{id}/flyout', [CommonController::class, 'jobFlyout'])->name('job.flyout');
 
 });
