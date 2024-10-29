@@ -25,7 +25,7 @@ use App\Models\ContractEditHistory;
 use App\Models\TimesheetProject;
 use App\Models\ContractRateEditRequest;
 use App\Models\CareerOpportunitiesBu;
-use App\Services\RateshelpersService;
+
 
 class CareerOpportunitiesContractController extends BaseController
 {
@@ -521,22 +521,13 @@ class CareerOpportunitiesContractController extends BaseController
 
     public function createContractEditHistory($contract,$workorderOld,$candidateOld,$jobOld,$offerOld,$contractOld,$postType,$notes){
 
-        $user = \Auth::user();
-        $userid = \Auth::id();
-        $sessionrole = session('selected_role');
-        if ($sessionrole == "Admin") {
-            $userid = Admin::getAdminIdByUserId($userid);
-        } elseif ($sessionrole == "Client") {
-            $userid = Client::getClientIdByUserId($userid);
-        } elseif ($sessionrole == "Vendor") {
-            $userid = Vendor::getVendorIdByUserId($userid);
-        } elseif ($sessionrole == "Consultant") {
-            $userid = Consultant::getConsultantIdByUserId($userid);
-        }
+     
+        
+        
 
         $data = new ContractEditHistory;
-        $data->created_by = $userid;
-        $data->created_from = $sessionrole;
+        $data->created_by = Admin::getAdminIdByUserId(\Auth::id());
+        $data->created_from = 1;
         $data->contract_id = $contract->id;
         $data->job_level = $workorderOld->job_level;
         $data->job_level_notes = $notes;
@@ -599,19 +590,6 @@ class CareerOpportunitiesContractController extends BaseController
 
     public function ContractExtensionReq($post, $workorder, $job, $contract, $editHist){
 
-        $user = \Auth::user();
-        $userid = \Auth::id();
-        $sessionrole = session('selected_role');
-        if ($sessionrole == "Admin") {
-            $userid = Admin::getAdminIdByUserId($userid);
-        } elseif ($sessionrole == "Client") {
-            $userid = Client::getClientIdByUserId($userid);
-        } elseif ($sessionrole == "Vendor") {
-            $userid = Vendor::getVendorIdByUserId($userid);
-        } elseif ($sessionrole == "Consultant") {
-            $userid = Consultant::getConsultantIdByUserId($userid);
-        }
-
         $model = new ContractExtensionRequest;
         // dd($post);
 
@@ -624,8 +602,8 @@ class CareerOpportunitiesContractController extends BaseController
         $vendorDoubleRate=$clientDoubleTime-($clientDoubleTime*($workorder->markup/100));
 
         $model->history_id =  $editHist->id;
-        $model->created_by =  $userid;
-        $model->created_by_type =  $sessionrole;
+        $model->created_by =   Admin::getAdminIdByUserId(\Auth::id());
+        $model->created_by_type =  1;
         $model->reason_of_extension =  $post['reason_of_extension'];
         $model->note_of_extension =  $post['additional_budget_notes'];
        // $model->hr_approver = $post['hr_approver'];
@@ -635,7 +613,7 @@ class CareerOpportunitiesContractController extends BaseController
         $model->new_contract_end_date = date('Y-m-d', strtotime($post['extension_date']));
         $model->new_contract_start_date = $contract->end_date;
          
-        if(RateshelpersService::checkSowStatus($workorder->id)) {
+        if(Rateshelper::checkSowStatus($workorder->id)) {
             $model->bill_rate =  $billRate;
             $model->overtime_billrate = $clientOverTime;
             $model->doubletime_billrate =  $clientDoubleTime;
@@ -644,12 +622,12 @@ class CareerOpportunitiesContractController extends BaseController
             $model->overtime_payrate = str_replace(',','',$post['client_overtime_bill_rate']);
             $model->doubletime_payrate =str_replace(',','',$post['client_doubletime_bill_rate']);
 
-            $working_days = RateshelpersService::number_of_working_days($model->new_contract_start_date,$model->new_contract_end_date);
+            $working_days = Rateshelper::number_of_working_days($model->new_contract_start_date,$model->new_contract_end_date);
             $hoursPerWeek = $job->hours_per_week;
             $hoursPerDay = $job->hours_per_day;
             $daysPerWeek = $job->day_per_week;
 
-            $estimatedExtBudget = RateshelpersService::estimateWithPaymentType($working_days,$billRate,$job);
+            $estimatedExtBudget = Rateshelper::estimateWithPaymentType($working_days,$billRate,$job);
             $model->new_estimate_cost =  $estimatedExtBudget;
 
             $model->vendor_bill_rate =  $vendorBillRate;
@@ -684,22 +662,9 @@ class CareerOpportunitiesContractController extends BaseController
     }
 
     public function contractRateChangeRequest($postValues, $workorder, $contract, $editHist){
-        $user = \Auth::user();
-        $userid = \Auth::id();
-        $sessionrole = session('selected_role');
-        if ($sessionrole == "Admin") {
-            $userid = Admin::getAdminIdByUserId($userid);
-        } elseif ($sessionrole == "Client") {
-            $userid = Client::getClientIdByUserId($userid);
-        } elseif ($sessionrole == "Vendor") {
-            $userid = Vendor::getVendorIdByUserId($userid);
-        } elseif ($sessionrole == "Consultant") {
-            $userid = Consultant::getConsultantIdByUserId($userid);
-        }
+       $jobModel = CareerOpportunity::find($contract->career_opportunity_id);
 
-        $jobModel = CareerOpportunity::find($contract->career_opportunity_id);
-
-        if(RateshelpersService::checkSowStatus($workorder->id)) {
+        if(Rateshelper::checkSowStatus($workorder->id)) {
             $billRate = str_replace(",", "",$postValues['bill_rate']);
             $clientOverTime = str_replace(",", "",$postValues['client_overtime_bill_rate']);
             $clientDoubleTime = str_replace(",", "",$postValues['client_doubletime_bill_rate']);
@@ -712,8 +677,8 @@ class CareerOpportunitiesContractController extends BaseController
             $vendorOvertimeRate = $clientOverTime - ($clientOverTime * ($workorder->msp_per/100));
             $vendorDoubleRate = $clientDoubleTime - ($clientDoubleTime * ($workorder->msp_per/100));
 
-            $working_days = RateshelpersService::number_of_working_days($contract->start_date,$contract->end_date);
-            $total_estimated_cost = RateshelpersService::estimateWithPaymentType($working_days,$billRate,$jobModel);
+            $working_days = Rateshelper::number_of_working_days($contract->start_date,$contract->end_date);
+            $total_estimated_cost = Rateshelper::estimateWithPaymentType($working_days,$billRate,$jobModel);
 
         } else {
             $billRate = 0;
@@ -728,13 +693,12 @@ class CareerOpportunitiesContractController extends BaseController
             $total_estimated_cost = 0 ;
         }
 
-        $fromdateFormat = $sessionrole;
         
 
         $model = new ContractRateEditRequest;
         $model->contract_id = $contract->id;
-        $model->created_by = $userid;
-        $model->created_by_type= $sessionrole;
+        $model->created_by = Admin::getAdminIdByUserId(\Auth::id());
+        $model->created_by_type= 1;
         $model->bill_rate =  $billRate;
         $model->pay_rate =  $payRate;
         $model->candidate_overtime_payrate =  $consultantOT;
@@ -757,13 +721,13 @@ class CareerOpportunitiesContractController extends BaseController
         if($model->save()) {
 
             
-            $currentRates = RateshelpersService::returnContractEffectiveRate($workorder->id);
+            $currentRates = Rateshelper::returnContractEffectiveRate($workorder->id);
             if($billRate <= $currentRates['bill_rate'] ||  !ListingUtility::checkSowStatus($workorder->id)){
-                $Rateseditrequest->status = 3;
-                $Rateseditrequest->save();
+                $model->status = 3;
+                $model->save();
                 
             }else{
-                
+                Rateshelper::contractEditRatesWorkflowProcess($model,  $contract);
             }
         }
     }
