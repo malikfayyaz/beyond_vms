@@ -407,30 +407,32 @@ class CareerOpportunitiesContractController extends BaseController
     public function nonFinancialupdateData($contract,$request)
     {
             $validator = Validator::make($request->all(), [
-            'businessjustification' => 'required|string',
-            'expensesallowed' => 'required|string',
+            'businessjustification' => 'required',
+            'expensesallowed' => 'required',
             'timesheet' => 'required',
             'hiringmanager' => 'required',
-            'worklocation' => 'required|string',
-            'vendoraccountmanager' => 'required|string',
-            'contractorportal' => 'required|string',
+            'worklocation' => 'required',
+            'vendoraccountmanager' => 'required',
+            'contractorportal' => 'required',
             'originalstartdate' => ['required'],
-            'locationTax' => 'required|string',
-            'candidatesourcetype' => 'required|string',
+            'locationTax' => 'required',
+            'candidatesourcetype' => 'required',
         ]);
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 422);
         }
         $validatedData = $validator->validated();
-                $contract->update([
-            'hiring_manager_id' => $validatedData['hiringmanager'],
-            'location_id' => $validatedData['worklocation'],
-        ]);
+        //         $contract->update([
+        //     'hiring_manager_id' => $validatedData['hiringmanager'],
+        //     'location_id' => $validatedData['worklocation'],
+        // ]);
         if ($contract->workOrder) {
             $contract->workOrder->update([
 
-                'original_start_date' => Carbon::createFromFormat('m/d/Y', $validatedData['originalstartdate'])->format('Y/m/d'),
+                'original_start_date' => Carbon::createFromFormat('m/d/Y', $validatedData['originalstartdate'])->format('Y-m-d'),
                 'approval_manager' => $validatedData['timesheet'],
+                'hiring_manager_id' =>$validatedData['hiringmanager'],
+                'location_id' =>$validatedData['worklocation'],
                 'location_tax' => $validatedData['locationTax'],
                 'expenses_allowed' => $validatedData['expensesallowed'],
                 'job_level_notes' => $validatedData['businessjustification'],
@@ -439,7 +441,7 @@ class CareerOpportunitiesContractController extends BaseController
         }
         if ($contract->submission) {
             $contract->submission->update([
-                'vendor_id' => $validatedData['vendoraccountmanager'],
+                'emp_msp_account_mngr' => $validatedData['vendoraccountmanager'],
             ]);
         }
         if ($contract->workOrder->consultant) {
