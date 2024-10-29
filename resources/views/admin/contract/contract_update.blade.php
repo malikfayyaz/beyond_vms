@@ -446,14 +446,14 @@
 
                             <div class="flex space-x-4 mt-4">
                                 <div class="flex-1">
-                                    <label for="termination_can_feedback" class="block mb-2">Contractor Feedback<span class="text-red-500">*</span></label>
-                                    <textarea id="termination_can_feedback" name="termination_can_feedback"
-                                        x-model="formFields.termination_can_feedback"
-                                        @input="clearFieldError('termination_can_feedback')"
+                                    <label for="termination_feedback" class="block mb-2">Contractor Feedback<span class="text-red-500">*</span></label>
+                                    <textarea id="termination_feedback" name="termination_feedback"
+                                        x-model="formFields.termination_feedback"
+                                        @input="clearFieldError('termination_feedback')"
                                         class="w-full border rounded required" rows="5"
                                         :style="{'border-color': 'var(--primary-color)'}"
                                         placeholder="Enter Notes"></textarea>
-                                    <p x-show="errors.termination_can_feedback" x-text="errors.termination_can_feedback"
+                                    <p x-show="errors.termination_feedback" x-text="errors.termination_feedback"
                                         class="text-red-500 text-xs mt-1"></p>
                                 </div>
                                 <div class="flex-1">
