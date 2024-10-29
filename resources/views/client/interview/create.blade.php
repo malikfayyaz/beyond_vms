@@ -469,7 +469,7 @@
                 jobAttachment: "{{ old('jobAttachment', $interview->job_attachment ?? '') }}",
                 interviewInstructions: "{{ old('interviewInstructions', $interview->interview_instructions ?? '') }}",
                 interviewMembers:  @json(isset($interview) ? $interview->interviewMembers->pluck('member_id') : []),
-                selectedTimeSlots: @json($selectedTimeSlots),
+                selectedTimeSlots: @json($selectedTimeSlots ?? (object)[]),
                 selectedDate: null,
             },
           errors: {},

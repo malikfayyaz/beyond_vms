@@ -341,7 +341,7 @@ class CareerOpportunitiesContractController extends BaseController
             'termination_date' => $terminationDate,
             'termination_reason' => $request->termination_reason,
             'termination_notes' => $request->termination_notes,
-            'termination_feedback' => $request->termination_can_feedback,
+            'termination_can_feedback' => $request->termination_can_feedback,
             'termination_status' => 2,
             'status' => 6,
             'termination_date' => now(),

@@ -437,7 +437,7 @@
                                     <label for="termination_date" class="block mb-2">Date of Termination/Assignment Closing:
                                         <span class="text-red-500">*</span></label>
                                     <input id="termination_date" name="termination_date" x-model="formFields.termination_date"
-                                        class="w-full h-12 px-4 text-gray-500 required border rounded-md shadow-sm focus:outline-none pl-7"
+                                        class="w-full h-12 px-4 text-gray-500 border rounded-md shadow-sm focus:outline-none pl-7 required"
                                         type="text" name="termination_date" placeholder="Select start date" />
                                     <p x-show="errors.termination_date" x-text="errors.termination_date"
                                         class="text-red-500 text-xs mt-1"></p>
