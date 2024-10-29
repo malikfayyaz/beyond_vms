@@ -23,6 +23,7 @@ use App\Models\Consultant;
 use App\Models\ContractExtensionRequest;
 use App\Models\ContractEditHistory;
 use App\Models\TimesheetProject;
+use App\Models\ContractRateEditRequest;
 use App\Models\CareerOpportunitiesBu;
 use App\Services\RateshelpersService;
 
@@ -366,8 +367,33 @@ class CareerOpportunitiesContractController extends BaseController
                     'redirect_url' => route('admin.contracts.show', $contractId)
                 ]);
         }
-    dd($request);
-    // If selectedOption is not return an appropriate response
+        if($request->selectedOption =='2') {
+            $notes = $request->extension_reason_notes;
+            $postType = $request->all();
+            
+            $contractOld = CareerOpportunitiesContract::with('careerOpportunity')->findOrFail($contractId);
+            $workorderOld = CareerOpportunitiesWorkorder::findOrFail($contract->workorder_id);
+            $offerOld = CareerOpportunitiesOffer::findOrFail($contract->offer_id);
+            $jobOld = CareerOpportunity::findOrFail($contract->career_opportunity_id);
+            $candidateOld = Consultant::findOrFail($contract->candidate_id);
+
+            $editHist = $this->createContractEditHistory($contract,$workorderOld,$candidateOld,$jobOld,$offerOld,$contractOld,$request->selectedOption,$notes);
+            $this->ContractExtensionReq($request->all() , $workorder, $job, $contract, $editHist);
+        }
+        if($request->selectedOption == '3') {
+            $postType = $request->all();
+            
+            $contractOld = CareerOpportunitiesContract::with('careerOpportunity')->findOrFail($contractId);
+            $workorderOld = CareerOpportunitiesWorkorder::findOrFail($contract->workorder_id);
+            $offerOld = CareerOpportunitiesOffer::findOrFail($contract->offer_id);
+            $jobOld = CareerOpportunity::findOrFail($contract->career_opportunity_id);
+            $candidateOld = Consultant::findOrFail($contract->candidate_id);
+
+            $editHist=$this->createContractEditHistory($contract,$workorderOld,$candidateOld,$jobOld,$offerOld,$contractOld,$request->selectedOption,'');
+            $this->contractRateChangeRequest($request->all(), $workorder, $contract, $editHist);
+        }
+       
+    // If selectedOption is not, return an appropriate response
     return response()->json(['message' => 'No update made'], 400);
     }
 
@@ -699,8 +725,7 @@ class CareerOpportunitiesContractController extends BaseController
 
     }
 
-    public function contractRateChangeRequest($postValues, $workorder, $contract, $ediHist){
-
+    public function contractRateChangeRequest($postValues, $workorder, $contract, $editHist){
         $user = \Auth::user();
         $userid = \Auth::id();
         $sessionrole = session('selected_role');
@@ -729,8 +754,8 @@ class CareerOpportunitiesContractController extends BaseController
             $vendorDoubleRate = $clientDoubleTime - ($clientDoubleTime * ($workorder->msp_per/100));
 
             $working_days = RateshelpersService::number_of_working_days($contract->start_date,$contract->end_date);
-
             $total_estimated_cost = RateshelpersService::estimateWithPaymentType($working_days,$billRate,$jobModel);
+
         } else {
             $billRate = 0;
             $clientOverTime = 0;
@@ -747,7 +772,7 @@ class CareerOpportunitiesContractController extends BaseController
         $fromdateFormat = $sessionrole;
         $model = new ContractRateEditRequest;
         $model->contract_id = $contract->id;
-        $model->created_by = $user_id;
+        $model->created_by = $userid;
         $model->created_by_type= $sessionrole;
         $model->bill_rate =  $billRate;
         $model->pay_rate =  $payRate;
@@ -763,30 +788,21 @@ class CareerOpportunitiesContractController extends BaseController
         $model->status = 0;
         $model->request_notes= '';
         $model->effective_date= date('Y-m-d',strtotime($postValues['effective_date']));
-        $model->location_tax= $postValues['location_tax'];
-        $model->impacted_timesheet_ids=$postValues['impacted_timesheets'];
-        $model->markup= $postValues['Workorder']['markup'];
+        //$model->location_tax= ''; //$postValues['location_tax'];
+        $model->impacted_timesheet_ids=''; //$postValues['impacted_timesheets'];
+        $model->markup= $postValues['markup'];
         $model->history_id=$editHist->id;
         $model->total_estimated_cost= $total_estimated_cost;
-        $model->date_created=date('Y-m-d H:i:s');
         if($model->save()) {
 
-            //if bill rate is less then workorder billrate then workflow approval is not needed only vendor have to approve.
-            $currentRates = RatesDisplay::returnContractEffectiveRate($workorder->id);
-            //$billRate <= $workorder->wo_bill_rate
+            
+            $currentRates = RateshelpersService::returnContractEffectiveRate($workorder->id);
             if($billRate <= $currentRates['bill_rate'] ||  !ListingUtility::checkSowStatus($workorder->id)){
-                //$Rateseditrequest->status = 1;
                 $Rateseditrequest->status = 3;
-                $Rateseditrequest->save(false);
-                //now after workflow approval vendor will approve this.
-                ContractWorkflowEmail::contractEditRateVendorApproval($Rateseditrequest,$contract);
-                Yii::app()->user->setFlash('success', '<div class="alert alert-success"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                                Assignment will be updated after vendor approval. </div>');
+                $Rateseditrequest->save();
+                
             }else{
-                //now first approval persons will approve then only vendor will approve it.
-                WorkflowProcess::contractEditRatesWorkflowProcess($Rateseditrequest, $Rateseditrequest->id, $contract->id,$workorder->wo_hiring_manager/*,$businessApprover,$financeApprover*/);
-                Yii::app()->user->setFlash('success', '<div class="alert alert-success"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                                Assignment will be updated once the approval process is successful. </div>');
+                
             }
         }
     }
