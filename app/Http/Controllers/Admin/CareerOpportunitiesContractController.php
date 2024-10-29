@@ -19,8 +19,13 @@ use App\Models\contractAdditionalBudget;
 use Yajra\DataTables\Facades\DataTables;
 use App\Models\CareerOpportunitiesWorkorder;
 use App\Models\ContractRate;
+use App\Models\Consultant;
+use App\Models\ContractExtensionRequest;
+use App\Models\ContractEditHistory;
 use App\Models\TimesheetProject;
 use App\Models\CareerOpportunitiesBu;
+use App\Services\RateshelpersService;
+
 class CareerOpportunitiesContractController extends BaseController
 {
     /**
@@ -265,45 +270,41 @@ class CareerOpportunitiesContractController extends BaseController
     {
         $contractId = $request->contractId;
         $contract = CareerOpportunitiesContract::with('careerOpportunity')->findOrFail($contractId);
-       if ($request->selectedOption == '1') {
-        $additionbudget = $this->additionBudgetUpdateData($contract,$request);
-        if ($additionbudget !== true) {
-            // Return validation error if it's a JSON response
-            return $additionbudget;
-        }
-        session()->flash('success', 'Contract Aditional Budget updated successfully!');
-                return response()->json([
-                    'success' => true,
-                    'message' => 'Contract Aditional Budget updated successfully!',
-                    'redirect_url' => route('admin.contracts.show', $contractId)
-                ]);
-       }
 
-       if ($request->selectedOption == '4') {
-        $nonfinancial = $this->nonFinancialupdateData($contract,$request);
-        if ($nonfinancial !== true) {
-            // Return validation error if it's a JSON response
-            return $nonfinancial;
+        $workorder = CareerOpportunitiesWorkorder::findOrFail($contract->workorder_id);
+        $offer = CareerOpportunitiesOffer::findOrFail($contract->offer_id);
+        $job = CareerOpportunity::findOrFail($contract->career_opportunity_id);
+        $candidate = Consultant::findOrFail($contract->candidate_id);
+
+        if ($request->selectedOption == '1') {
+            $additionbudget = $this->additionBudgetUpdateData($contract,$request);
+            session()->flash('success', 'Contract Aditional Budget updated successfully!');
+            return response()->json([
+                'success' => true,
+                'message' => 'Contract Aditional Budget updated successfully!',
+                'redirect_url' => route('admin.contracts.show', $contractId)
+            ]);
         }
-        session()->flash('success', 'Contract updated successfully!');
-                return response()->json([
-                    'success' => true,
-                    'message' => 'Contract updated successfully!',
-                    'redirect_url' => route('admin.contracts.show', $contractId)
-                ]);
-        }
-        if ($request->selectedOption =='5') {
-            $dateupdate = $this->ContractDateUpdate($contract,$request); 
-            if ($dateupdate !== true) {
-                // Return validation error if it's a JSON response
-                return $dateupdate;
-            }
+
+        if($request->selectedOption == '4') {
+            $nonfinancial = $this->nonFinancialupdateData($contract,$request);
             session()->flash('success', 'Contract updated successfully!');
-                return response()->json([
-                    'success' => true,
-                    'message' => 'Contract updated successfully!',
-                    'redirect_url' => route('admin.contracts.show', $contractId)
-                ]);
+            return response()->json([
+                'success' => true,
+                'message' => 'Contract updated successfully!',
+                'redirect_url' => route('admin.contracts.show', $contractId)
+            ]);
+        }
+
+        if($request->selectedOption =='5') {
+            $request->validate([
+                'new_start_date' => 'required|date_format:m/d/Y',
+            ]);
+            $startDate = Carbon::createFromFormat('m/d/Y', $request->start_date)->format('Y-m-d');
+
+            $contract->update([
+                'start_date' => $startDate,
+            ]);        
         }
 
         if ($request->selectedOption =='6') {
@@ -319,6 +320,37 @@ class CareerOpportunitiesContractController extends BaseController
                     'redirect_url' => route('admin.contracts.show', $contractId)
                 ]);
         }
+
+        if($request->selectedOption =='2') {
+            $notes = $request->extension_reason_notes;
+            $postType = $request->all();
+            
+            $contractOld = CareerOpportunitiesContract::with('careerOpportunity')->findOrFail($contractId);
+            $workorderOld = CareerOpportunitiesWorkorder::findOrFail($contract->workorder_id);
+            $offerOld = CareerOpportunitiesOffer::findOrFail($contract->offer_id);
+            $jobOld = CareerOpportunity::findOrFail($contract->career_opportunity_id);
+            $candidateOld = Consultant::findOrFail($contract->candidate_id);
+
+            $editHist = $this->createContractEditHistory($contract,$workorderOld,$candidateOld,$jobOld,$offerOld,$contractOld,$request->selectedOption,$notes);
+            $this->ContractExtensionReq($request->all() , $workorder, $job, $contract, $editHist);
+        }
+        if($request->selectedOption == '3') {
+            $postType = $request->all();
+            
+            $contractOld = CareerOpportunitiesContract::with('careerOpportunity')->findOrFail($contractId);
+            $workorderOld = CareerOpportunitiesWorkorder::findOrFail($contract->workorder_id);
+            $offerOld = CareerOpportunitiesOffer::findOrFail($contract->offer_id);
+            $jobOld = CareerOpportunity::findOrFail($contract->career_opportunity_id);
+            $candidateOld = Consultant::findOrFail($contract->candidate_id);
+
+            $editHist=$this->createContractEditHistory($contract,$workorderOld,$candidateOld,$jobOld,$offerOld,$contractOld,$request->selectedOption,'');
+            $this->contractRateChangeRequest($request->all() , $workorder, $contract, $editHist);
+        }
+
+    dd($request);
+
+
+
 
     // If selectedOption is not '4', return an appropriate response
     return response()->json(['message' => 'No update made'], 400);
@@ -407,30 +439,32 @@ class CareerOpportunitiesContractController extends BaseController
     public function nonFinancialupdateData($contract,$request)
     {
             $validator = Validator::make($request->all(), [
-            'businessjustification' => 'required|string',
-            'expensesallowed' => 'required|string',
+            'businessjustification' => 'required',
+            'expensesallowed' => 'required',
             'timesheet' => 'required',
             'hiringmanager' => 'required',
-            'worklocation' => 'required|string',
-            'vendoraccountmanager' => 'required|string',
-            'contractorportal' => 'required|string',
+            'worklocation' => 'required',
+            'vendoraccountmanager' => 'required',
+            'contractorportal' => 'required',
             'originalstartdate' => ['required'],
-            'locationTax' => 'required|string',
-            'candidatesourcetype' => 'required|string',
+            'locationTax' => 'required',
+            'candidatesourcetype' => 'required',
         ]);
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 422);
         }
         $validatedData = $validator->validated();
-                $contract->update([
-            'hiring_manager_id' => $validatedData['hiringmanager'],
-            'location_id' => $validatedData['worklocation'],
-        ]);
+        //         $contract->update([
+        //     'hiring_manager_id' => $validatedData['hiringmanager'],
+        //     'location_id' => $validatedData['worklocation'],
+        // ]);
         if ($contract->workOrder) {
             $contract->workOrder->update([
 
-                'original_start_date' => Carbon::createFromFormat('m/d/Y', $validatedData['originalstartdate'])->format('Y/m/d'),
+                'original_start_date' => Carbon::createFromFormat('m/d/Y', $validatedData['originalstartdate'])->format('Y-m-d'),
                 'approval_manager' => $validatedData['timesheet'],
+                'hiring_manager_id' =>$validatedData['hiringmanager'],
+                'location_id' =>$validatedData['worklocation'],
                 'location_tax' => $validatedData['locationTax'],
                 'expenses_allowed' => $validatedData['expensesallowed'],
                 'job_level_notes' => $validatedData['businessjustification'],
@@ -439,7 +473,7 @@ class CareerOpportunitiesContractController extends BaseController
         }
         if ($contract->submission) {
             $contract->submission->update([
-                'vendor_id' => $validatedData['vendoraccountmanager'],
+                'emp_msp_account_mngr' => $validatedData['vendoraccountmanager'],
             ]);
         }
         if ($contract->workOrder->consultant) {
@@ -488,4 +522,263 @@ class CareerOpportunitiesContractController extends BaseController
     {
         //
     }
+
+    public function createContractEditHistory($contract,$workorderOld,$candidateOld,$jobOld,$offerOld,$contractOld,$postType,$notes){
+
+        $user = \Auth::user();
+        $userid = \Auth::id();
+        $sessionrole = session('selected_role');
+        if ($sessionrole == "Admin") {
+            $userid = Admin::getAdminIdByUserId($userid);
+        } elseif ($sessionrole == "Client") {
+            $userid = Client::getClientIdByUserId($userid);
+        } elseif ($sessionrole == "Vendor") {
+            $userid = Vendor::getVendorIdByUserId($userid);
+        } elseif ($sessionrole == "Consultant") {
+            $userid = Consultant::getConsultantIdByUserId($userid);
+        }
+
+        $data = new ContractEditHistory;
+        $data->created_by = $userid;
+        $data->created_from = $sessionrole;
+        $data->contract_id = $contract->id;
+        $data->job_level = $workorderOld->job_level;
+        $data->job_level_notes = $notes;
+        $data->candidate_id = $contract->candidate_id;
+        $data->bill_rate = $workorderOld->wo_bill_rate;
+        $data->pay_rate = $workorderOld->wo_pay_rate;
+        $data->contractor_overtimerate = $workorderOld->wo_over_time;
+        $data->client_overtimerate = $workorderOld->wo_client_over_time;
+        $data->contractor_doubletimerate = $workorderOld->wo_double_time;
+        $data->client_doubletimerate = $workorderOld->wo_client_double_time;
+        $data->vendor_bill_rate = $workorderOld->vendor_bill_rate;
+        $data->vendor_overtime_rate = $workorderOld->vendor_overtime_rate;
+        $data->vendor_doubletime_rate = $workorderOld->vendor_doubletime_rate;
+        $data->hiring_manager = $workorderOld->hiring_manager_id;
+        //$data->vendor_account_manager = $old_account_manager;
+        $data->sales_tax = $workorderOld->sales_tax;
+        $data->county_tax = $workorderOld->county_tax;
+        $data->location_tax = $workorderOld->location_tax;
+        $data->markup = $workorderOld->markup;
+        $data->total_estimated_cost = $contract->total_estimated_cost;
+        $data->location = $offerOld->location_id;
+        $data->timesheet_approval_manager = $workorderOld->approval_manager;
+        $data->start_date = $contractOld->start_date;
+        $data->end_date = $contractOld->end_date;
+        $data->effective_date = $contractOld->effective_date;
+        $data->gl_code_id = $workorderOld->gl_code_id;
+        $data->group_number = $workorderOld->group_number_id;
+        $data->acc_unit = $workorderOld->acc_unit;
+        $data->cost_center = $workorderOld->wo_cost_center;
+        $data->sub_company = $workorderOld->sub_company;
+        $data->location_identifier = $workorderOld->location_identifier;
+        $data->job_type = $workorderOld->job_type;
+        $data->hire_type = $workorderOld->hire_type;
+        $data->bu_number = $workorderOld->bu_number;
+        $data->department_code = $workorderOld->department_code;
+        $data->candidate_type = $workorderOld->candidate_type;
+        $data->fieldglass_id = $workorderOld->fieldglass_id;
+        $data->workday_position_id = $workorderOld->workday_position_id;
+        $data->job_id = $jobOld->id;
+        $data->category_id = $jobOld->cat_id;
+        $data->sourcing_type = $workorderOld->sourcing_type;
+        $data->msp_fees = $workorderOld->msp_per;
+        $data->job_brand = $workorderOld->job_brand;
+        $data->po_number = $workorderOld->po_number_id;
+        $data->bcbs_lan_id = $workorderOld->bcbs_lan_id;
+        $data->timesheet_method = $workorderOld->timesheet_method;
+        $data->resume = $candidateOld->resume;
+        $data->candidate_portal_id = $candidateOld->candidate_ID;
+        $data->offer_digital_doc = $offerOld->offer_digital_doc;
+        $data->offer_second_digital_doc = $offerOld->offer_second_digital_doc;
+        $data->budget_manager = $workorderOld->budget_manager;
+        $data->original_start_date = $workorderOld->original_start_date;
+        $data->created_at = date('Y-m-d H:i:s');
+        $data->updated_history_screen =  'Other';
+        $data->contract_update_type =  $postType;
+        if($data->save()){
+            return $data;
+        }
+    }
+
+    public function ContractExtensionReq($post, $workorder, $job, $contract, $editHist){
+
+        $user = \Auth::user();
+        $userid = \Auth::id();
+        $sessionrole = session('selected_role');
+        if ($sessionrole == "Admin") {
+            $userid = Admin::getAdminIdByUserId($userid);
+        } elseif ($sessionrole == "Client") {
+            $userid = Client::getClientIdByUserId($userid);
+        } elseif ($sessionrole == "Vendor") {
+            $userid = Vendor::getVendorIdByUserId($userid);
+        } elseif ($sessionrole == "Consultant") {
+            $userid = Consultant::getConsultantIdByUserId($userid);
+        }
+
+        $model = new ContractExtensionRequest;
+        // dd($post);
+
+        $billRate = str_replace(",", "",$post['bill_rate']);
+        $clientOverTime = str_replace(",", "",$post['client_overtime_bill_rate']);
+        $clientDoubleTime = str_replace(",", "",$post['client_doubletime_bill_rate']);
+
+        $vendorBillRate=$billRate-($billRate * ($workorder->markup/100));
+        $vendorOvertimeRate =$clientOverTime-($clientOverTime*($workorder->markup/100));
+        $vendorDoubleRate=$clientDoubleTime-($clientDoubleTime*($workorder->markup/100));
+
+        $model->history_id =  $editHist->id;
+        $model->created_by =  $userid;
+        $model->created_by_type =  $sessionrole;
+        $model->reason_of_extension =  $post['reason_of_extension'];
+        $model->note_of_extension =  $post['additional_budget_notes'];
+       // $model->hr_approver = $post['hr_approver'];
+        
+       // $fromdateFormat = ListingUtility::phpdateFormatByUserId(Yii::app()->user->id,'msp');
+
+        $model->new_contract_end_date = date('Y-m-d', strtotime($post['extension_date']));
+        $model->new_contract_start_date = $contract->end_date;
+         
+        if(RateshelpersService::checkSowStatus($workorder->id)) {
+            $model->bill_rate =  $billRate;
+            $model->overtime_billrate = $clientOverTime;
+            $model->doubletime_billrate =  $clientDoubleTime;
+
+            $model->pay_rate = str_replace(",", "",$post['pay_rate']);
+            $model->overtime_payrate = str_replace(',','',$post['client_overtime_bill_rate']);
+            $model->doubletime_payrate =str_replace(',','',$post['client_doubletime_bill_rate']);
+
+            $working_days = RateshelpersService::number_of_working_days($model->new_contract_start_date,$model->new_contract_end_date);
+            $hoursPerWeek = $job->hours_per_week;
+            $hoursPerDay = $job->hours_per_day;
+            $daysPerWeek = $job->day_per_week;
+
+            $estimatedExtBudget = RateshelpersService::estimateWithPaymentType($working_days,$billRate,$job);
+            $model->new_estimate_cost =  $estimatedExtBudget;
+
+            $model->vendor_bill_rate =  $vendorBillRate;
+            $model->vendor_overtime_billrate =  $vendorOvertimeRate;
+            $model->vendor_doubletime_billrate =  $vendorDoubleRate;
+        }
+        $model->contract_id =  $contract->id;
+        $model->ext_status = 1;
+        $model->ext_vendor_approval = 0;
+
+        if($model->save()){
+            if($workorder->contract_type != 2) {
+
+            }else{
+                $model->ext_status = 2;
+                $model->ext_vendor_approval = 2;
+                $model->cronjob_status = 1;
+                $model->cronjob_date_time = date("Y-m-d H:i:s");
+                $model->save(false);
+
+                $contract->status = 1;
+                $contract->end_date = date('Y-m-d h:i:s', strtotime($model->new_contract_end_date));
+                $contract->save(false);
+
+                $workorder->workorder_status = 1;
+                $workorder->onboard_changed_end_date = date('Y-m-d h:i:s', strtotime($model->new_contract_end_date));
+                $workorder->save(false);
+
+            }
+        }
+
+    }
+
+    public function contractRateChangeRequest($postValues, $workorder, $contract, $ediHist){
+
+        $user = \Auth::user();
+        $userid = \Auth::id();
+        $sessionrole = session('selected_role');
+        if ($sessionrole == "Admin") {
+            $userid = Admin::getAdminIdByUserId($userid);
+        } elseif ($sessionrole == "Client") {
+            $userid = Client::getClientIdByUserId($userid);
+        } elseif ($sessionrole == "Vendor") {
+            $userid = Vendor::getVendorIdByUserId($userid);
+        } elseif ($sessionrole == "Consultant") {
+            $userid = Consultant::getConsultantIdByUserId($userid);
+        }
+
+        $jobModel = careerOpportunity::model()->findByPk($contract->job_id);
+        if(RateshelpersService::checkSowStatus($workorder->id)) {
+            $billRate = str_replace(",", "",$postValues['bill_rate']);
+            $clientOverTime = str_replace(",", "",$postValues['client_over_time_rate']);
+            $clientDoubleTime = str_replace(",", "",$postValues['client_double_time_rate']);
+
+            $payRate = str_replace(",", "",$postValues['pay_rate']);
+            $consultantOT = str_replace(',','',$postValues['over_time_rate']);
+            $consultantDT =  str_replace(',','',$postValues['double_time_rate']);
+
+            $vendorBillRate = $billRate - ($billRate * ($workorder->msp_per/100));
+            $vendorOvertimeRate = $clientOverTime - ($clientOverTime * ($workorder->msp_per/100));
+            $vendorDoubleRate = $clientDoubleTime - ($clientDoubleTime * ($workorder->msp_per/100));
+
+            $working_days = RateshelpersService::number_of_working_days($contract->start_date,$contract->end_date);
+
+            $total_estimated_cost = RateshelpersService::estimateWithPaymentType($working_days,$billRate,$jobModel);
+        } else {
+            $billRate = 0;
+            $clientOverTime = 0;
+            $clientDoubleTime = 0;
+            $payRate = 0;
+            $consultantOT = 0;
+            $consultantDT = 0;
+            $vendorBillRate = 0;
+            $vendorOvertimeRate = 0;
+            $vendorDoubleRate = 0;
+            $total_estimated_cost = 0 ;
+        }
+
+        $fromdateFormat = $sessionrole;
+        
+        $model = new ContractRateEditRequest;
+
+        $model->contract_id = $contract->id;
+        $model->created_by = $user_id;
+        $model->created_by_type= $sessionrole;
+        $model->bill_rate =  $billRate;
+        $model->pay_rate =  $payRate;
+        $model->candidate_overtime_payrate =  $consultantOT;
+        $model->client_overtime_payrate =  $clientOverTime;
+        $model->candidate_doubletime_payrate =  $consultantDT;
+        $model->client_doubletime_payrate =  $clientDoubleTime;
+        $model->vendor_bill_rate = $vendorBillRate;
+        $model->vendor_overtime_rate = $vendorOvertimeRate;
+        $model->vendor_doubletime_rate = $vendorDoubleRate;
+        $model->start_date = $contract->start_date;
+        $model->end_date = $contract->end_date;
+        $model->status = 0;
+        $model->request_notes= '';
+        $model->effective_date= date('Y-m-d',strtotime($postValues['effective_date']));
+        $model->location_tax= $postValues['location_tax'];
+        $model->impacted_timesheet_ids=$postValues['impacted_timesheets'];
+        $model->markup= $postValues['Workorder']['markup'];
+        $model->history_id=$editHist->id;
+        $model->total_estimated_cost= $total_estimated_cost;
+        $model->date_created=date('Y-m-d H:i:s');
+        if($model->save()) {
+
+            //if bill rate is less then workorder billrate then workflow approval is not needed only vendor have to approve.
+            $currentRates = RatesDisplay::returnContractEffectiveRate($workorder->id);
+            //$billRate <= $workorder->wo_bill_rate
+            if($billRate <= $currentRates['bill_rate'] ||  !ListingUtility::checkSowStatus($workorder->id)){
+                //$Rateseditrequest->status = 1;
+                $Rateseditrequest->status = 3;
+                $Rateseditrequest->save(false);
+                //now after workflow approval vendor will approve this.
+                ContractWorkflowEmail::contractEditRateVendorApproval($Rateseditrequest,$contract);
+                Yii::app()->user->setFlash('success', '<div class="alert alert-success"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                                Assignment will be updated after vendor approval. </div>');
+            }else{
+                //now first approval persons will approve then only vendor will approve it.
+                WorkflowProcess::contractEditRatesWorkflowProcess($Rateseditrequest, $Rateseditrequest->id, $contract->id,$workorder->wo_hiring_manager/*,$businessApprover,$financeApprover*/);
+                Yii::app()->user->setFlash('success', '<div class="alert alert-success"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                                Assignment will be updated once the approval process is successful. </div>');
+            }
+        }
+    }
+
 }
