@@ -248,7 +248,7 @@
                                     <label for="bill_rate" 
                                         class="block text-sm font-medium text-gray-700 mb-2">Bill Rate <span class="text-red-500">*</span></label>
                                     <input type="text"
-                                        class="w-full h-12 px-4 text-gray-500 border rounded-md shadow-sm focus:outline-none pl-7"
+                                        class="w-full h-12 px-4 text-gray-500 border rounded-md shadow-sm focus:outline-none pl-7 required"
                                         placeholder="00.00" id="bill_rate" name="bill_rate" x-model="formFields.bill_rate"
                                         @input="formatRate('bill_rate', $event)" onchange="calculateRates('bill_rate')" @blur="formatRate('bill_rate', $event)" />
                                     <p x-show="errors.bill_rate" x-text="errors.bill_rate" class="text-red-500 text-xs mt-1">
@@ -258,7 +258,7 @@
                                     <label for="client_overtime_bill_rate" 
                                         class="block text-sm font-medium text-gray-700 mb-2">Client Over Time Rate <span class="text-red-500">*</span></label>
                                     <input type="text"
-                                        class="w-full h-12 px-4 text-gray-500 border rounded-md shadow-sm focus:outline-none pl-7"
+                                        class="w-full h-12 px-4 text-gray-500 border rounded-md shadow-sm focus:outline-none pl-7 required"
                                         placeholder="00.00" id="client_overtime_bill_rate" name="client_overtime_bill_rate" x-model="formFields.client_overtime_bill_rate"
                                         @input="formatRate('client_overtime_bill_rate', $event)" @blur="formatRate('client_overtime_bill_rate', $event)" />
                                     <p x-show="errors.client_overtime_bill_rate" x-text="errors.client_overtime_bill_rate" class="text-red-500 text-xs mt-1">
@@ -419,10 +419,10 @@
                         <div x-show="selectedOption === '6'" class="space-y-4">
                             <div class="flex space-x-4 mt-4">
                                 <div class="flex-1">
-                                    <label class="block mb-2">
+                                    <label for="termination_reason" class="block mb-2">
                                         Reason for Termination
                                         <span class="text-red-500">*</span></label>
-                                    <select class="w-full select2-single custom-style" name="termination_reason"
+                                    <select class="w-full select2-single custom-style required" name="termination_reason"
                                         id="termination_reason">
                                         <option value="">Select </option>
                                         @foreach (checksetting(25) as $key => $value)
@@ -437,7 +437,7 @@
                                     <label for="termination_date" class="block mb-2">Date of Termination/Assignment Closing:
                                         <span class="text-red-500">*</span></label>
                                     <input id="termination_date" name="termination_date" x-model="formFields.termination_date"
-                                        class="w-full h-12 px-4 text-gray-500 border rounded-md shadow-sm focus:outline-none pl-7"
+                                        class="w-full h-12 px-4 text-gray-500 border rounded-md shadow-sm focus:outline-none pl-7 required"
                                         type="text" name="termination_date" placeholder="Select start date" />
                                     <p x-show="errors.termination_date" x-text="errors.termination_date"
                                         class="text-red-500 text-xs mt-1"></p>
@@ -446,22 +446,22 @@
 
                             <div class="flex space-x-4 mt-4">
                                 <div class="flex-1">
-                                    <label class="block mb-2">Contractor Feedback<span class="text-red-500">*</span></label>
+                                    <label for="termination_can_feedback" class="block mb-2">Contractor Feedback<span class="text-red-500">*</span></label>
                                     <textarea id="termination_can_feedback" name="termination_can_feedback"
                                         x-model="formFields.termination_can_feedback"
                                         @input="clearFieldError('termination_can_feedback')"
-                                        class="w-full border rounded" rows="5"
+                                        class="w-full border rounded required" rows="5"
                                         :style="{'border-color': 'var(--primary-color)'}"
                                         placeholder="Enter Notes"></textarea>
                                     <p x-show="errors.termination_can_feedback" x-text="errors.termination_can_feedback"
                                         class="text-red-500 text-xs mt-1"></p>
                                 </div>
                                 <div class="flex-1">
-                                    <label class="block mb-2">Notes/Comments<span class="text-red-500">*</span></label>
+                                    <label for="termination_notes" class="block mb-2">Notes/Comments<span class="text-red-500">*</span></label>
                                     <textarea id="termination_notes" name="termination_notes"
                                         x-model="formFields.termination_notes"
                                         @input="clearFieldError('termination_notes')"
-                                        class="w-full border rounded" rows="5"
+                                        class="w-full border rounded required" rows="5"
                                         :style="{'border-color': 'var(--primary-color)'}"
                                         placeholder="Enter Notes"></textarea>
                                     <p x-show="errors.termination_notes" x-text="errors.termination_notes"

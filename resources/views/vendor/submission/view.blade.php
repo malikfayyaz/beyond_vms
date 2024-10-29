@@ -153,7 +153,7 @@
                    <button type="submit" class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600">Delete</button>
                    </form>
                 @endif
-            @if (!in_array($submission->resume_status, array(6, 7, 2, 15, 8, 9, 11)) && (!in_array($submission->careerOpportunity->jobStatus, array(4, 12))) && $submission->careerOpportunity->interview_process == 'Yes')
+            @if (!in_array($submission->resume_status, array(6, 7, 2, 15, 8, 9, 11, 12)) && (!in_array($submission->careerOpportunity->jobStatus, array(4, 12))) && $submission->careerOpportunity->interview_process == 'Yes')
               <a href="{{ route('vendor.interview.index',  ['id' => $submission->id]) }}"
 
                 type="button"

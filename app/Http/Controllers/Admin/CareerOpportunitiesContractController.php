@@ -270,6 +270,7 @@ class CareerOpportunitiesContractController extends BaseController
     {
         $contractId = $request->contractId;
         $contract = CareerOpportunitiesContract::with('careerOpportunity')->findOrFail($contractId);
+
         $workorder = CareerOpportunitiesWorkorder::findOrFail($contract->workorder_id);
         $offer = CareerOpportunitiesOffer::findOrFail($contract->offer_id);
         $job = CareerOpportunity::findOrFail($contract->career_opportunity_id);
@@ -306,33 +307,48 @@ class CareerOpportunitiesContractController extends BaseController
             ]);        
         }
 
-    if($request->selectedOption =='2') {
-        $notes = $request->extension_reason_notes;
-        $postType = $request->all();
-        
-        $contractOld = CareerOpportunitiesContract::with('careerOpportunity')->findOrFail($contractId);
-        $workorderOld = CareerOpportunitiesWorkorder::findOrFail($contract->workorder_id);
-        $offerOld = CareerOpportunitiesOffer::findOrFail($contract->offer_id);
-        $jobOld = CareerOpportunity::findOrFail($contract->career_opportunity_id);
-        $candidateOld = Consultant::findOrFail($contract->candidate_id);
+        if ($request->selectedOption =='6') {
+            $termination = $this->ContractTermination($contract,$request); 
+            if ($termination !== true) {
+                // Return validation error if it's a JSON response
+                return $termination;
+            }
+            session()->flash('success', 'Contract updated successfully!');
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Contract updated successfully!',
+                    'redirect_url' => route('admin.contracts.show', $contractId)
+                ]);
+        }
 
-        $editHist = $this->createContractEditHistory($contract,$workorderOld,$candidateOld,$jobOld,$offerOld,$contractOld,$request->selectedOption,$notes);
-        $this->ContractExtensionReq($request->all() , $workorder, $job, $contract, $editHist);
-    }
-    if($request->selectedOption == '3') {
-        $postType = $request->all();
-        
-        $contractOld = CareerOpportunitiesContract::with('careerOpportunity')->findOrFail($contractId);
-        $workorderOld = CareerOpportunitiesWorkorder::findOrFail($contract->workorder_id);
-        $offerOld = CareerOpportunitiesOffer::findOrFail($contract->offer_id);
-        $jobOld = CareerOpportunity::findOrFail($contract->career_opportunity_id);
-        $candidateOld = Consultant::findOrFail($contract->candidate_id);
+        if($request->selectedOption =='2') {
+            $notes = $request->extension_reason_notes;
+            $postType = $request->all();
+            
+            $contractOld = CareerOpportunitiesContract::with('careerOpportunity')->findOrFail($contractId);
+            $workorderOld = CareerOpportunitiesWorkorder::findOrFail($contract->workorder_id);
+            $offerOld = CareerOpportunitiesOffer::findOrFail($contract->offer_id);
+            $jobOld = CareerOpportunity::findOrFail($contract->career_opportunity_id);
+            $candidateOld = Consultant::findOrFail($contract->candidate_id);
 
-        $editHist=$this->createContractEditHistory($contract,$workorderOld,$candidateOld,$jobOld,$offerOld,$contractOld,$request->selectedOption,'');
-        $this->contractRateChangeRequest($request->all() , $workorder, $contract, $editHist);
-    }
+            $editHist = $this->createContractEditHistory($contract,$workorderOld,$candidateOld,$jobOld,$offerOld,$contractOld,$request->selectedOption,$notes);
+            $this->ContractExtensionReq($request->all() , $workorder, $job, $contract, $editHist);
+        }
+        if($request->selectedOption == '3') {
+            $postType = $request->all();
+            
+            $contractOld = CareerOpportunitiesContract::with('careerOpportunity')->findOrFail($contractId);
+            $workorderOld = CareerOpportunitiesWorkorder::findOrFail($contract->workorder_id);
+            $offerOld = CareerOpportunitiesOffer::findOrFail($contract->offer_id);
+            $jobOld = CareerOpportunity::findOrFail($contract->career_opportunity_id);
+            $candidateOld = Consultant::findOrFail($contract->candidate_id);
+
+            $editHist=$this->createContractEditHistory($contract,$workorderOld,$candidateOld,$jobOld,$offerOld,$contractOld,$request->selectedOption,'');
+            $this->contractRateChangeRequest($request->all() , $workorder, $contract, $editHist);
+        }
 
     dd($request);
+
 
 
 
@@ -340,33 +356,115 @@ class CareerOpportunitiesContractController extends BaseController
     return response()->json(['message' => 'No update made'], 400);
     }
 
-    public function nonFinancialupdateData($contract,$request)
-    {
-            $validator = Validator::make($request->all(), [
-            'businessjustification' => 'required|string',
-            'expensesallowed' => 'required|string',
-            'timesheet' => 'required',
-            'hiringmanager' => 'required',
-            'worklocation' => 'required|string',
-            'vendoraccountmanager' => 'required|string',
-            'contractorportal' => 'required|string',
-            'originalstartdate' => ['required'],
-            'locationTax' => 'required|string',
-            'candidatesourcetype' => 'required|string',
+    public function ContractTermination($contract,$request) {
+        $validator = Validator::make($request->all(), [
+            'termination_date' => 'required|date_format:m/d/Y',
+            'termination_notes' => 'required|string',
+            'termination_reason' => 'required',
+            'termination_can_feedback' => 'required',
         ]);
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 422);
         }
         $validatedData = $validator->validated();
-                $contract->update([
-            'hiring_manager_id' => $validatedData['hiringmanager'],
-            'location_id' => $validatedData['worklocation'],
+        $terminationDate = Carbon::createFromFormat('m/d/Y', $request->termination_date)->format('Y-m-d');
+
+        $contract->update([
+            'termination_date' => $terminationDate,
+            'termination_reason' => $request->termination_reason,
+            'termination_notes' => $request->termination_notes,
+            'termination_can_feedback' => $request->termination_can_feedback,
+            'termination_status' => 2,
+            'status' => 6,
+            'termination_date' => now(),
+            'term_by_id' =>Admin::getAdminIdByUserId(auth()->id()),
+            'term_by_type' =>1,
+        ]); 
+            
+        return true;
+
+    }
+
+    public function ContractDateUpdate($contract,$request) {
+      
+        $validator = Validator::make($request->all(), [
+            'new_contract_start_date' => 'required|date_format:m/d/Y',
         ]);
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+        $validatedData = $validator->validated();
+        $startDate = Carbon::createFromFormat('m/d/Y', $request->new_contract_start_date)->format('Y-m-d');
+
+        $contract->update([
+            'start_date' => $startDate,
+        ]); 
+            if ($contract->workOrder) { 
+               
+                $contract->workorder->onboard_change_start_date =$startDate;
+                if(strtotime($contract->workorder->end_date) >= strtotime(date('Y-m-d'))){
+                    $contract->workorder->status = 1;
+                }
+                if($contract->workorder->save()){
+                        // Find the ContractRate record
+                        $contractRate = ContractRate::where('contract_id', $contract->id)->first();
+
+                        if ($contractRate && Carbon::parse($startDate)->lt(Carbon::parse($contractRate->effective_date))) {
+                            // Update the effective_date field
+                            $contractRate->effective_date = $startDate;
+                            $contractRate->save();
+                        }
+
+                        // Find all TimesheetProject records for the contract
+                        $timesheetProjects = TimesheetProject::where('contract_id', $contract->id)->get();
+
+                        foreach ($timesheetProjects as $timesheetProject) {
+                            if (Carbon::parse($startDate)->lt(Carbon::parse($timesheetProject->effective_date))) {
+                                // Update the effective_date field
+                                $timesheetProject->effective_date = $startDate;
+                                $timesheetProject->save();
+                            }
+                        }
+
+                        Rateshelper::calculateContractEstimates($contract,$contract->workorder,$contract->careerOpportunity);
+
+                       
+                }
+            
+            }
+            return true;
+
+    }
+
+    public function nonFinancialupdateData($contract,$request)
+    {
+            $validator = Validator::make($request->all(), [
+            'businessjustification' => 'required',
+            'expensesallowed' => 'required',
+            'timesheet' => 'required',
+            'hiringmanager' => 'required',
+            'worklocation' => 'required',
+            'vendoraccountmanager' => 'required',
+            'contractorportal' => 'required',
+            'originalstartdate' => ['required'],
+            'locationTax' => 'required',
+            'candidatesourcetype' => 'required',
+        ]);
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+        $validatedData = $validator->validated();
+        //         $contract->update([
+        //     'hiring_manager_id' => $validatedData['hiringmanager'],
+        //     'location_id' => $validatedData['worklocation'],
+        // ]);
         if ($contract->workOrder) {
             $contract->workOrder->update([
 
-                'original_start_date' => Carbon::createFromFormat('m/d/Y', $validatedData['originalstartdate'])->format('Y/m/d'),
+                'original_start_date' => Carbon::createFromFormat('m/d/Y', $validatedData['originalstartdate'])->format('Y-m-d'),
                 'approval_manager' => $validatedData['timesheet'],
+                'hiring_manager_id' =>$validatedData['hiringmanager'],
+                'location_id' =>$validatedData['worklocation'],
                 'location_tax' => $validatedData['locationTax'],
                 'expenses_allowed' => $validatedData['expensesallowed'],
                 'job_level_notes' => $validatedData['businessjustification'],
@@ -375,7 +473,7 @@ class CareerOpportunitiesContractController extends BaseController
         }
         if ($contract->submission) {
             $contract->submission->update([
-                'vendor_id' => $validatedData['vendoraccountmanager'],
+                'emp_msp_account_mngr' => $validatedData['vendoraccountmanager'],
             ]);
         }
         if ($contract->workOrder->consultant) {
@@ -408,7 +506,7 @@ class CareerOpportunitiesContractController extends BaseController
         $contractAdditionalBudget->status = 'Pending';
         $contractAdditionalBudget->save();
         if ($contractAdditionalBudget->save()) {
-        contractHelper::createContractSpendWorkflowProcess($contractAdditionalBudget, $contract->id);
+        contractHelper::createContractSpendWorkflowProcess($contractAdditionalBudget, $contract);
         return true;
             }else{
                 return false;

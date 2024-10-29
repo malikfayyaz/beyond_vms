@@ -74,6 +74,8 @@ class CareerOpportunitiesContract extends Model
                 return 'Approved';
             case 4:
                 return 'Waiting For Supplier Approval';
+            case 6:
+                return 'Terminated';
             default:
                 return 'danger N/A';
         }

@@ -11,18 +11,9 @@
             <div >
         <div class="bg-white mx-4 my-8 rounded p-8" x-data='wizardForm({!! json_encode($careerOpportunity) !!},{!! json_encode($businessUnitsData) !!})' x-init="mounted()">
 
-            <!-- Success Notification -->
-            @include('client.layouts.partials.alerts')
-            <!-- Include the partial view -->
-            <!-- <div
-               x-show="showSuccessMessage"
-               class="mb-4 p-4 bg-green-100 border border-green-400 text-green-700 rounded"
-             >
-               Job is Added Successfully.
-             </div> -->
-            <!-- Progress bar -->
+            
             @php         $user = Auth::user();
-        $sessionrole = session('selected_role');
+            $sessionrole = session('selected_role');
             @endphp
             <script>
                 var sessionrole = "{{ $sessionrole }}";

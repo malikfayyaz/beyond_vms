@@ -120,6 +120,8 @@ class CareerOpportunitiesController extends Controller
             $this->syncBusinessUnits($request->input('businessUnits'), $job->id);
 
             Rateshelper::calculateJobEstimates($job);
+            $jobWorkflow = new JobWorkflowUpdate();
+            $jobWorkflow->createJobWorkflow($job);
             session()->flash('success', 'Job saved successfully!');
             return response()->json([
                 'success' => true,
@@ -196,6 +198,8 @@ class CareerOpportunitiesController extends Controller
                 ];
             })->toArray();
             $this->syncBusinessUnits($businessUnitsData, $newOpportunity->id);
+            $jobWorkflow = new JobWorkflowUpdate();
+            $jobWorkflow->createJobWorkflow($newOpportunity);
             session()->flash('success', 'Career Opportunity Copied successfully!');
             return redirect()->route('client.career-opportunities.edit', $newOpportunity->id);
         } catch (\Exception $e) {
