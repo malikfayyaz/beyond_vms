@@ -347,10 +347,7 @@ class CareerOpportunitiesContractController extends BaseController
             $this->contractRateChangeRequest($request->all() , $workorder, $contract, $editHist);
         }
 
-    dd($request);
-
-
-
+    
 
     // If selectedOption is not '4', return an appropriate response
     return response()->json(['message' => 'No update made'], 400);
