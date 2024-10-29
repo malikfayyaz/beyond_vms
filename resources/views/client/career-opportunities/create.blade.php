@@ -12,7 +12,7 @@
         <div class="bg-white mx-4 my-8 rounded p-8" x-data='wizardForm({!! json_encode($careerOpportunity) !!},{!! json_encode($businessUnitsData) !!})' x-init="mounted()">
 
             <!-- Success Notification -->
-            @include('client.layouts.partials.alerts')
+            <!-- @include('client.layouts.partials.alerts') -->
             <!-- Include the partial view -->
             <!-- <div
                x-show="showSuccessMessage"

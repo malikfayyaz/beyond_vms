@@ -147,6 +147,7 @@ class CareerOpportunitiesOfferController extends Controller
          $offerCreate = CareerOpportunitiesOffer::create( $mapedData );
          Rateshelper::calculateVendorRates($offerCreate,$offerCreate->offer_bill_rate,$offerCreate->client_overtime,$offerCreate->client_doubletime);
          Rateshelper::calculateOfferEstimates($offerCreate,$jobData);
+         offerHelper::createOfferWorkflow($offerCreate);
 
          session()->flash('success', 'Offer saved successfully!');
          return response()->json([

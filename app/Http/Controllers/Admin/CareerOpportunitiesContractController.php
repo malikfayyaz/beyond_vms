@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use App\Facades\Rateshelper as Rateshelper;
+use App\Facades\CareerOpportunitiesContract as contractHelper;
 use App\Models\Admin;
 use App\Models\CareerOpportunitiesOffer;
 use App\Models\CareerOpportunity;
@@ -266,6 +267,10 @@ class CareerOpportunitiesContractController extends BaseController
         $contract = CareerOpportunitiesContract::with('careerOpportunity')->findOrFail($contractId);
        if ($request->selectedOption == '1') {
         $additionbudget = $this->additionBudgetUpdateData($contract,$request);
+        if ($additionbudget !== true) {
+            // Return validation error if it's a JSON response
+            return $additionbudget;
+        }
         session()->flash('success', 'Contract Aditional Budget updated successfully!');
                 return response()->json([
                     'success' => true,
@@ -276,26 +281,127 @@ class CareerOpportunitiesContractController extends BaseController
 
        if ($request->selectedOption == '4') {
         $nonfinancial = $this->nonFinancialupdateData($contract,$request);
+        if ($nonfinancial !== true) {
+            // Return validation error if it's a JSON response
+            return $nonfinancial;
+        }
         session()->flash('success', 'Contract updated successfully!');
                 return response()->json([
                     'success' => true,
                     'message' => 'Contract updated successfully!',
                     'redirect_url' => route('admin.contracts.show', $contractId)
                 ]);
-    }
+        }
         if ($request->selectedOption =='5') {
-        $request->validate([
-            'new_start_date' => 'required|date_format:m/d/Y',
-        ]);
-        dd($request->new_start_date);
-        $startDate = Carbon::createFromFormat('m/d/Y', $request->start_date)->format('Y-m-d');
+            $dateupdate = $this->ContractDateUpdate($contract,$request); 
+            if ($dateupdate !== true) {
+                // Return validation error if it's a JSON response
+                return $dateupdate;
+            }
+            session()->flash('success', 'Contract updated successfully!');
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Contract updated successfully!',
+                    'redirect_url' => route('admin.contracts.show', $contractId)
+                ]);
+        }
 
-        $contract->update([
-            'start_date' => $startDate,
-        ]);        }
+        if ($request->selectedOption =='6') {
+            $termination = $this->ContractTermination($contract,$request); 
+            if ($termination !== true) {
+                // Return validation error if it's a JSON response
+                return $termination;
+            }
+            session()->flash('success', 'Contract updated successfully!');
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Contract updated successfully!',
+                    'redirect_url' => route('admin.contracts.show', $contractId)
+                ]);
+        }
 
     // If selectedOption is not '4', return an appropriate response
     return response()->json(['message' => 'No update made'], 400);
+    }
+
+    public function ContractTermination($contract,$request) {
+        $validator = Validator::make($request->all(), [
+            'termination_date' => 'required|date_format:m/d/Y',
+            'termination_notes' => 'required|string',
+            'termination_reason' => 'required',
+            'termination_can_feedback' => 'required',
+        ]);
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+        $validatedData = $validator->validated();
+        $terminationDate = Carbon::createFromFormat('m/d/Y', $request->termination_date)->format('Y-m-d');
+
+        $contract->update([
+            'termination_date' => $terminationDate,
+            'termination_reason' => $request->termination_reason,
+            'termination_notes' => $request->termination_notes,
+            'termination_feedback' => $request->termination_can_feedback,
+            'termination_status' => 2,
+            'status' => 6,
+            'termination_date' => now(),
+            'term_by_id' =>Admin::getAdminIdByUserId(auth()->id()),
+            'term_by_type' =>1,
+        ]); 
+            
+        return true;
+
+    }
+
+    public function ContractDateUpdate($contract,$request) {
+      
+        $validator = Validator::make($request->all(), [
+            'new_contract_start_date' => 'required|date_format:m/d/Y',
+        ]);
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+        $validatedData = $validator->validated();
+        $startDate = Carbon::createFromFormat('m/d/Y', $request->new_contract_start_date)->format('Y-m-d');
+
+        $contract->update([
+            'start_date' => $startDate,
+        ]); 
+            if ($contract->workOrder) { 
+               
+                $contract->workorder->onboard_change_start_date =$startDate;
+                if(strtotime($contract->workorder->end_date) >= strtotime(date('Y-m-d'))){
+                    $contract->workorder->status = 1;
+                }
+                if($contract->workorder->save()){
+                        // Find the ContractRate record
+                        $contractRate = ContractRate::where('contract_id', $contract->id)->first();
+
+                        if ($contractRate && Carbon::parse($startDate)->lt(Carbon::parse($contractRate->effective_date))) {
+                            // Update the effective_date field
+                            $contractRate->effective_date = $startDate;
+                            $contractRate->save();
+                        }
+
+                        // Find all TimesheetProject records for the contract
+                        $timesheetProjects = TimesheetProject::where('contract_id', $contract->id)->get();
+
+                        foreach ($timesheetProjects as $timesheetProject) {
+                            if (Carbon::parse($startDate)->lt(Carbon::parse($timesheetProject->effective_date))) {
+                                // Update the effective_date field
+                                $timesheetProject->effective_date = $startDate;
+                                $timesheetProject->save();
+                            }
+                        }
+
+                        Rateshelper::calculateContractEstimates($contract,$contract->workorder,$contract->careerOpportunity);
+
+                       
+                }
+            
+            }
+            return true;
+
     }
 
     public function nonFinancialupdateData($contract,$request)
@@ -358,7 +464,7 @@ class CareerOpportunitiesContractController extends BaseController
         $contractAdditionalBudget = new ContractAdditionalBudget();
         $contractAdditionalBudget->user_id = Admin::getAdminIdByUserId(auth()->id());
         $contractAdditionalBudget->created_by = 1;
-        $contractAdditionalBudget->created_by_type = 'MSP';
+        $contractAdditionalBudget->created_by_type = 1;
         $contractAdditionalBudget->contract_id = $contract->id;
         $contractAdditionalBudget->amount = $validatedData['amount'];
         $contractAdditionalBudget->notes = $validatedData['additional_budget_notes'];
@@ -366,6 +472,7 @@ class CareerOpportunitiesContractController extends BaseController
         $contractAdditionalBudget->status = 'Pending';
         $contractAdditionalBudget->save();
         if ($contractAdditionalBudget->save()) {
+        contractHelper::createContractSpendWorkflowProcess($contractAdditionalBudget, $contract);
         return true;
             }else{
                 return false;
