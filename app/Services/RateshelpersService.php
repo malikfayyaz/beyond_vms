@@ -228,25 +228,6 @@ class RateshelpersService
             return true;
     }
 
-    public static function estimateWithPaymentType($noOfDays,$billRate,$jobData){
-
-        $hoursPerDay = $jobData->hours_per_day;
-        $daysPerWeek = $jobData->day_per_week;
-
-        $extraDays = $noOfDays%5;
-        $numberOfWeeks = ($noOfDays - $extraDays) / 5;
-        $totalNumberOfHours = $numberOfWeeks*$daysPerWeek*$hoursPerDay + $extraDays*$hoursPerDay;
-
-        if($jobData->payment_type == 'Per Week'){
-            $estimates = $numberOfWeeks*$billRate;
-        }elseif($jobData->payment_type == 'Per Day'){
-            $estimates = $noOfDays*$billRate;
-        }else{
-            $estimates = $billRate * $totalNumberOfHours;
-        }
-
-        return $estimates;
-    }
 
     
 }
