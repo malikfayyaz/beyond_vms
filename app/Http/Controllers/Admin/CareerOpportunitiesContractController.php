@@ -270,24 +270,64 @@ class CareerOpportunitiesContractController extends BaseController
     {
         $contractId = $request->contractId;
         $contract = CareerOpportunitiesContract::with('careerOpportunity')->findOrFail($contractId);
-
+        $postType = $request->selectedOption;
         $workorder = CareerOpportunitiesWorkorder::findOrFail($contract->workorder_id);
         $offer = CareerOpportunitiesOffer::findOrFail($contract->offer_id);
         $job = CareerOpportunity::findOrFail($contract->career_opportunity_id);
         $candidate = Consultant::findOrFail($contract->candidate_id);
-
-        if ($request->selectedOption == '1') {
-            $additionbudget = $this->additionBudgetUpdateData($contract,$request);
+        dump($postType);
+        if ($postType == '1') {
+            $notes = $request->additional_budget_notes;
+            $contractOld = CareerOpportunitiesContract::with('careerOpportunity')->findOrFail($contractId);
+            $workorderOld = CareerOpportunitiesWorkorder::findOrFail($contract->workorder_id);
+            $offerOld = CareerOpportunitiesOffer::findOrFail($contract->offer_id);
+            $jobOld = CareerOpportunity::findOrFail($contract->career_opportunity_id);
+            $candidateOld = Consultant::findOrFail($contract->candidate_id);
+            $editHist = $this->createContractEditHistory($contract,$workorderOld,$candidateOld,$jobOld,$offerOld,$contractOld,$postType,$notes);
+            $this->additionBudgetUpdateData($contract,$workorder,$request,$editHist);
             session()->flash('success', 'Contract Aditional Budget updated successfully!');
             return response()->json([
                 'success' => true,
                 'message' => 'Contract Aditional Budget updated successfully!',
                 'redirect_url' => route('admin.contracts.show', $contractId)
-            ]);
+            ]);            
         }
-
-        if($request->selectedOption == '4') {
-            $nonfinancial = $this->nonFinancialupdateData($contract,$request);
+        if($postType =='2') {
+            $notes = $request->extension_reason_notes;
+            $postType = $request->all();
+            $contractOld = CareerOpportunitiesContract::with('careerOpportunity')->findOrFail($contractId);
+            $workorderOld = CareerOpportunitiesWorkorder::findOrFail($contract->workorder_id);
+            $offerOld = CareerOpportunitiesOffer::findOrFail($contract->offer_id);
+            $jobOld = CareerOpportunity::findOrFail($contract->career_opportunity_id);
+            $candidateOld = Consultant::findOrFail($contract->candidate_id);
+            $editHist = $this->createContractEditHistory($contract,$workorderOld,$candidateOld,$jobOld,$offerOld,$contractOld,$request->selectedOption,$notes);
+            $this->ContractExtensionReq($request->all() , $workorder, $job, $contract, $editHist);
+            session()->flash('success', 'Contract Extension Added successfully!');
+            return response()->json([
+                'success' => true,
+                'message' => 'Contract Contract Extension Added successfully!',
+                'redirect_url' => route('admin.contracts.show', $contractId)
+            ]);    
+        }
+        if($postType == '3') {
+            $postType = $request->all();            
+            $contractOld = CareerOpportunitiesContract::with('careerOpportunity')->findOrFail($contractId);
+            $workorderOld = CareerOpportunitiesWorkorder::findOrFail($contract->workorder_id);
+            $offerOld = CareerOpportunitiesOffer::findOrFail($contract->offer_id);
+            $jobOld = CareerOpportunity::findOrFail($contract->career_opportunity_id);
+            $candidateOld = Consultant::findOrFail($contract->candidate_id);
+            $editHist=$this->createContractEditHistory($contract,$workorderOld,$candidateOld,$jobOld,$offerOld,$contractOld,$request->selectedOption,'');
+            $this->contractRateChangeRequest($request->all() , $workorder, $contract, $editHist);
+        }
+        if($postType == '4') {
+            $notes = '';
+            $contractOld = CareerOpportunitiesContract::with('careerOpportunity')->findOrFail($contractId);
+            $workorderOld = CareerOpportunitiesWorkorder::findOrFail($contract->workorder_id);
+            $offerOld = CareerOpportunitiesOffer::findOrFail($contract->offer_id);
+            $jobOld = CareerOpportunity::findOrFail($contract->career_opportunity_id);
+            $candidateOld = Consultant::findOrFail($contract->candidate_id);
+            $editHist = $this->createContractEditHistory($contract,$workorderOld,$candidateOld,$jobOld,$offerOld,$contractOld,$postType,$notes);
+            $this->nonFinancialupdateData($contract,$request);
             session()->flash('success', 'Contract updated successfully!');
             return response()->json([
                 'success' => true,
@@ -296,15 +336,21 @@ class CareerOpportunitiesContractController extends BaseController
             ]);
         }
 
-        if($request->selectedOption =='5') {
-            $request->validate([
-                'new_start_date' => 'required|date_format:m/d/Y',
+        if($postType =='5') {
+            $notes = '';
+            $contractOld = CareerOpportunitiesContract::with('careerOpportunity')->findOrFail($contractId);
+            $workorderOld = CareerOpportunitiesWorkorder::findOrFail($contract->workorder_id);
+            $offerOld = CareerOpportunitiesOffer::findOrFail($contract->offer_id);
+            $jobOld = CareerOpportunity::findOrFail($contract->career_opportunity_id);
+            $candidateOld = Consultant::findOrFail($contract->candidate_id);
+            $editHist = $this->createContractEditHistory($contract,$workorderOld,$candidateOld,$jobOld,$offerOld,$contractOld,$postType,$notes);
+            $this->contractDateUpdate($contract,$request);
+            session()->flash('success', 'Contract Date updated successfully!');
+            return response()->json([
+                'success' => true,
+                'message' => 'Contract Date updated successfully!',
+                'redirect_url' => route('admin.contracts.show', $contractId)
             ]);
-            $startDate = Carbon::createFromFormat('m/d/Y', $request->start_date)->format('Y-m-d');
-
-            $contract->update([
-                'start_date' => $startDate,
-            ]);        
         }
 
         if ($request->selectedOption =='6') {
@@ -320,39 +366,8 @@ class CareerOpportunitiesContractController extends BaseController
                     'redirect_url' => route('admin.contracts.show', $contractId)
                 ]);
         }
-
-        if($request->selectedOption =='2') {
-            $notes = $request->extension_reason_notes;
-            $postType = $request->all();
-            
-            $contractOld = CareerOpportunitiesContract::with('careerOpportunity')->findOrFail($contractId);
-            $workorderOld = CareerOpportunitiesWorkorder::findOrFail($contract->workorder_id);
-            $offerOld = CareerOpportunitiesOffer::findOrFail($contract->offer_id);
-            $jobOld = CareerOpportunity::findOrFail($contract->career_opportunity_id);
-            $candidateOld = Consultant::findOrFail($contract->candidate_id);
-
-            $editHist = $this->createContractEditHistory($contract,$workorderOld,$candidateOld,$jobOld,$offerOld,$contractOld,$request->selectedOption,$notes);
-            $this->ContractExtensionReq($request->all() , $workorder, $job, $contract, $editHist);
-        }
-        if($request->selectedOption == '3') {
-            $postType = $request->all();
-            
-            $contractOld = CareerOpportunitiesContract::with('careerOpportunity')->findOrFail($contractId);
-            $workorderOld = CareerOpportunitiesWorkorder::findOrFail($contract->workorder_id);
-            $offerOld = CareerOpportunitiesOffer::findOrFail($contract->offer_id);
-            $jobOld = CareerOpportunity::findOrFail($contract->career_opportunity_id);
-            $candidateOld = Consultant::findOrFail($contract->candidate_id);
-
-            $editHist=$this->createContractEditHistory($contract,$workorderOld,$candidateOld,$jobOld,$offerOld,$contractOld,$request->selectedOption,'');
-            $this->contractRateChangeRequest($request->all() , $workorder, $contract, $editHist);
-        }
-
     dd($request);
-
-
-
-
-    // If selectedOption is not '4', return an appropriate response
+    // If selectedOption is not return an appropriate response
     return response()->json(['message' => 'No update made'], 400);
     }
 
@@ -484,7 +499,7 @@ class CareerOpportunitiesContractController extends BaseController
 
         return true;
     }
-    public function additionBudgetUpdateData($contract,$request)
+    public function additionBudgetUpdateData($contract,$workorder,$request,$editHist)
     {
             $validator = Validator::make($request->all(), [
             'additional_budget_reason' => ['required'],
@@ -508,10 +523,10 @@ class CareerOpportunitiesContractController extends BaseController
         if ($contractAdditionalBudget->save()) {
         contractHelper::createContractSpendWorkflowProcess($contractAdditionalBudget, $contract);
         return true;
-            }else{
+            }
+            else{
                 return false;
             }
-        
     }
     
 
@@ -615,10 +630,7 @@ class CareerOpportunitiesContractController extends BaseController
         } elseif ($sessionrole == "Consultant") {
             $userid = Consultant::getConsultantIdByUserId($userid);
         }
-
         $model = new ContractExtensionRequest;
-        // dd($post);
-
         $billRate = str_replace(",", "",$post['bill_rate']);
         $clientOverTime = str_replace(",", "",$post['client_overtime_bill_rate']);
         $clientDoubleTime = str_replace(",", "",$post['client_doubletime_bill_rate']);
@@ -701,16 +713,16 @@ class CareerOpportunitiesContractController extends BaseController
         } elseif ($sessionrole == "Consultant") {
             $userid = Consultant::getConsultantIdByUserId($userid);
         }
-
-        $jobModel = careerOpportunity::model()->findByPk($contract->job_id);
+        $jobModel = CareerOpportunity::findOrFail($contract->career_opportunity_id);
+        //dd($postValues);
         if(RateshelpersService::checkSowStatus($workorder->id)) {
             $billRate = str_replace(",", "",$postValues['bill_rate']);
-            $clientOverTime = str_replace(",", "",$postValues['client_over_time_rate']);
-            $clientDoubleTime = str_replace(",", "",$postValues['client_double_time_rate']);
+            $clientOverTime = str_replace(",", "",$postValues['client_overtime_bill_rate']);
+            $clientDoubleTime = str_replace(",", "",$postValues['client_doubletime_bill_rate']);
 
             $payRate = str_replace(",", "",$postValues['pay_rate']);
-            $consultantOT = str_replace(',','',$postValues['over_time_rate']);
-            $consultantDT =  str_replace(',','',$postValues['double_time_rate']);
+            $consultantOT = str_replace(',','',$postValues['contractor_overtime_pay_rate']);
+            $consultantDT =  str_replace(',','',$postValues['contractor_double_time_rate']);
 
             $vendorBillRate = $billRate - ($billRate * ($workorder->msp_per/100));
             $vendorOvertimeRate = $clientOverTime - ($clientOverTime * ($workorder->msp_per/100));
@@ -733,9 +745,7 @@ class CareerOpportunitiesContractController extends BaseController
         }
 
         $fromdateFormat = $sessionrole;
-        
         $model = new ContractRateEditRequest;
-
         $model->contract_id = $contract->id;
         $model->created_by = $user_id;
         $model->created_by_type= $sessionrole;

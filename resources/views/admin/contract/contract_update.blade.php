@@ -313,7 +313,7 @@
                                     <label for="new_contract_start_date" class="block mb-2">Start Date:
                                         <span class="text-red-500">*</span></label>
                                     <input id="new_contract_start_date" x-model="formFields.new_contract_start_date" disabled
-                                        class="w-full h-12 px-4 text-gray-500 border rounded-md shadow-sm focus:outline-none pl-7"
+                                        class="w-full h-12 px-4 text-gray-500 border rounded-md shadow-sm focus:outline-none pl-7 required"
                                         type="text" name="new_contract_start_date" placeholder="Select start date" />
                                     <p x-show="errors.new_contract_start_date" x-text="errors.new_contract_start_date"
                                         class="text-red-500 text-xs mt-1"></p>
