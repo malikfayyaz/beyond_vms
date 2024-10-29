@@ -751,14 +751,14 @@ class CareerOpportunitiesContractController extends BaseController
         $model->start_date = $contract->start_date;
         $model->end_date = $contract->end_date;
         $model->status = 0;
-        $model->request_notes=> '';
-        $model->effective_date=> date('Y-m-d',strtotime($postValues['effective_date']));
-        $model->location_tax=> $postValues['location_tax'];
-        $model->impacted_timesheet_ids=>$postValues['impacted_timesheets'];
-        $model->markup=> $postValues['Workorder']['markup'];
-        $model->history_id=>$editHist->id;
-        $model->total_estimated_cost=> $total_estimated_cost;
-        $model->date_created=>date('Y-m-d H:i:s');
+        $model->request_notes= '';
+        $model->effective_date= date('Y-m-d',strtotime($postValues['effective_date']));
+        $model->location_tax= $postValues['location_tax'];
+        $model->impacted_timesheet_ids=$postValues['impacted_timesheets'];
+        $model->markup= $postValues['Workorder']['markup'];
+        $model->history_id=$editHist->id;
+        $model->total_estimated_cost= $total_estimated_cost;
+        $model->date_created=date('Y-m-d H:i:s');
         if($model->save()) {
 
             //if bill rate is less then workorder billrate then workflow approval is not needed only vendor have to approve.
