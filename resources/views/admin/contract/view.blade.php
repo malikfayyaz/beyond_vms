@@ -107,6 +107,46 @@
                     </p>
                 </div>
             @endif
+
+            @if(!empty($extensionReq))
+                <div class="rounded mx-4 my-2 flex">
+                    <div class="flex items-center bg-white border border-gray-200 rounded shadow-lg">
+                        @if(!empty($extensionReq) && ($extensionReq->ext_status == 1 || $extensionReq->ext_vendor_approval==1))
+                            <div x-data="flyout()" class="relative" >
+                                <!-- Trigger Link -->
+                                <a href="javascript:void(0)"
+                                @click="openPanel($event)"
+                                class="uiv2-js-openpanel flex justify-between items-center px-4 py-2 text-sm text-gray-700"
+                                >
+                                    <i class="fas fa-exclamation-circle text-red-500 text-xl"></i> 
+                                    <span class="mx-2">Pending Extension Request</span>
+                                    <span class="text-blue-500 font-semibold">View</span>
+                                </a>
+
+                                <!-- Flyout Overlay -->
+                                <div x-show="isOpen"
+                                    @click="closePanel"
+                                    class="fixed inset-0 bg-black bg-opacity-50 z-40"
+                                    x-transition></div>
+
+                                <!-- Flyout Panel -->
+                                <div x-show="isOpen"
+                                    @click.stop
+                                    class="fixed inset-y-0 right-0 w-[700px] bg-gray-100 shadow-lg overflow-y-auto z-50 pb-24 p-3"
+                                    x-transition>
+                                    <div class="text-right my-2">
+                                        <a @click="closePanel" class="text-gray-500 hover:text-gray-700 border p-1 rounded"><i class="fas fa-times"></i></a>
+                                    </div>
+                                    
+                                    @include('admin.contract.contract_workflow')
+                                    
+                                </div>
+                            </div>
+                        @endif
+                    </div>
+                </div>
+            @endif
+
         <div class="bg-white mx-4 my-8 rounded p-8">
             <div x-data="{ activePage: 'tab1' }" class="mb-4">
                 <ul class="grid grid-flow-col text-center text-gray-500 bg-gray-100 rounded-lg p-1">
@@ -282,6 +322,19 @@
 
             onSuccess(response) {
                 window.location.href = response.redirect_url;
+            }
+        }
+    }
+
+    function flyout() {
+        return {
+            isOpen: false,
+            openPanel(event) {
+                this.isOpen = true;
+                
+            },
+            closePanel() {
+                this.isOpen = false;
             }
         }
     }

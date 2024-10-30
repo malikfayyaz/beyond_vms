@@ -228,9 +228,10 @@ class CareerOpportunitiesContractController extends BaseController
      */
     public function show($id)
     {
-        $contract = CareerOpportunitiesContract::with('careerOpportunity')->findOrFail($id);
+        $contract = CareerOpportunitiesContract::with('careerOpportunity','ContractExtensionRequest')->findOrFail($id);
         $job = CareerOpportunitiesContract::with('careerOpportunity')->findOrFail($id);
-        return view('admin.contract.view', compact('contract','job'));
+        $extensionReq = $contract->contractExtensionRequest()->latest()->first();
+        return view('admin.contract.view', compact('contract','job','extensionReq'));
     }
     public function saveComments(Request $request) //SAVENOTES
     {
