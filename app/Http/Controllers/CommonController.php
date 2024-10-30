@@ -174,4 +174,13 @@ class CommonController extends Controller
         ]);
         
     }
+
+    public function jobFlyout($id)
+    {
+        $job = CareerOpportunity::with('hiringManager', 'workerType')
+        ->withCount('submissions')
+        ->findOrFail($id);
+
+        return response()->json($job);
+    }
 }
