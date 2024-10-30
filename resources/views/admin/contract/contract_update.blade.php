@@ -250,7 +250,7 @@
                                     <input type="text"
                                         class="w-full h-12 px-4 text-gray-500 border rounded-md shadow-sm focus:outline-none pl-7 required"
                                         placeholder="00.00" id="bill_rate" name="bill_rate" x-model="formFields.bill_rate"
-                                        @input="formatRate('bill_rate', $event)" onchange="calculateRates('bill_rate')" @blur="formatRate('bill_rate', $event)" />
+                                        @input="formatRate('bill_rate', $event)"  @blur="formatRate('bill_rate', $event)" />
                                     <p x-show="errors.bill_rate" x-text="errors.bill_rate" class="text-red-500 text-xs mt-1">
                                     </p>
                                 </div>
@@ -259,7 +259,7 @@
                                         class="block text-sm font-medium text-gray-700 mb-2">Client Over Time Rate <span class="text-red-500">*</span></label>
                                     <input type="text"
                                         class="w-full h-12 px-4 text-gray-500 border rounded-md shadow-sm focus:outline-none pl-7 required"
-                                        placeholder="00.00" id="client_overtime_bill_rate" name="client_overtime_bill_rate" x-model="formFields.client_overtime_bill_rate"
+                                        placeholder="00.00" id="client_overtime_bill_rate" disabled name="client_overtime_bill_rate" x-model="formFields.client_overtime_bill_rate"
                                         @input="formatRate('client_overtime_bill_rate', $event)" @blur="formatRate('client_overtime_bill_rate', $event)" />
                                     <p x-show="errors.client_overtime_bill_rate" x-text="errors.client_overtime_bill_rate" class="text-red-500 text-xs mt-1">
                                     </p>
@@ -269,7 +269,7 @@
                                         class="block text-sm font-medium text-gray-700 mb-2">Client Double Time Rate <span class="text-red-500">*</span></label>
                                     <input type="text"
                                         class="w-full h-12 px-4 text-gray-500 border rounded-md shadow-sm focus:outline-none pl-7"
-                                        placeholder="00.00" id="client_doubletime_bill_rate" name="client_doubletime_bill_rate" x-model="formFields.client_doubletime_bill_rate"
+                                        placeholder="00.00" id="client_doubletime_bill_rate" disabled name="client_doubletime_bill_rate" x-model="formFields.client_doubletime_bill_rate"
                                         @input="formatRate('client_doubletime_bill_rate', $event)" @blur="formatRate('client_doubletime_bill_rate', $event)" />
                                     <p x-show="errors.client_doubletime_bill_rate" x-text="errors.client_doubletime_bill_rate" class="text-red-500 text-xs mt-1">
                                     </p>
@@ -283,7 +283,7 @@
                                     <input type="text"
                                         class="w-full h-12 px-4 text-gray-500 border rounded-md shadow-sm focus:outline-none pl-7"
                                         placeholder="00.00" id="pay_rate" name="pay_rate" x-model="formFields.pay_rate"
-                                        @input="formatRate('pay_rate', $event)" onchange="calculateRates('pay_rate')" @blur="formatRate('pay_rate', $event)" />
+                                        @input="formatRate('pay_rate', $event)"  @blur="formatRate('pay_rate', $event)" />
                                     <p x-show="errors.pay_rate" x-text="errors.pay_rate" class="text-red-500 text-xs mt-1">
                                     </p>
                                 </div>
@@ -292,7 +292,7 @@
                                         class="block text-sm font-medium text-gray-700 mb-2">Contractor Over Time Rate <span class="text-red-500">*</span></label>
                                     <input type="text"
                                         class="w-full h-12 px-4 text-gray-500 border rounded-md shadow-sm focus:outline-none pl-7"
-                                        placeholder="00.00" id="contractor_overtime_pay_rate" name="contractor_overtime_pay_rate" x-model="formFields.contractor_overtime_pay_rate"
+                                        placeholder="00.00" id="contractor_overtime_pay_rate" disabled name="contractor_overtime_pay_rate" x-model="formFields.contractor_overtime_pay_rate"
                                         @input="formatRate('contractor_overtime_pay_rate', $event)" @blur="formatRate('contractor_overtime_pay_rate', $event)" />
                                     <p x-show="errors.contractor_overtime_pay_rate" x-text="errors.contractor_overtime_pay_rate" class="text-red-500 text-xs mt-1">
                                     </p>
@@ -302,7 +302,7 @@
                                         class="block text-sm font-medium text-gray-700 mb-2">Contractor Double Time Rate<span class="text-red-500">*</span></label>
                                     <input type="text"
                                         class="w-full h-12 px-4 text-gray-500 border rounded-md shadow-sm focus:outline-none pl-7"
-                                        placeholder="00.00" id="contractor_double_time_rate" name="contractor_double_time_rate" x-model="formFields.contractor_double_time_rate"
+                                        placeholder="00.00" id="contractor_double_time_rate" disabled name="contractor_double_time_rate" x-model="formFields.contractor_double_time_rate"
                                         @input="formatRate('contractor_double_time_rate', $event)" @blur="formatRate('contractor_double_time_rate', $event)" />
                                     <p x-show="errors.contractor_double_time_rate" x-text="errors.contractor_double_time_rate" class="text-red-500 text-xs mt-1">
                                     </p>
@@ -633,7 +633,9 @@ function formData({ id }) {
             }
             this[field] = parts.join(".");
             this.clearFieldError(field);
-            if(event == "bill_rate" || event == "pay_rate") {
+            console.log(field);
+            
+            if(field == "bill_rate" || field == "pay_rate") {
             this.calculateRates(field);
             }
         },
@@ -775,6 +777,8 @@ function formData({ id }) {
                     formRecord.append(field.name, field.value);
                     }
                 }
+                // console.log(formRecord); return false;
+                
 /*for (let [key, value] of formRecord.entries()) {
             console.log(`${key}: ${value}`);
         }
