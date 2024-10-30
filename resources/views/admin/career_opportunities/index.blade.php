@@ -195,18 +195,7 @@
          </div>
        </div>
 
-       <!-- Background Overlay -->
-        <div id="flyoutOverlay" class="hidden fixed inset-0 bg-black bg-opacity-50"></div>
-
-        <!-- Job Flyout -->
-        <div id="jobFlyout" class="hidden fixed right-0 top-0 w-1/3 h-full bg-white shadow-lg z-50 p-3">
-            <!-- Flyout content here -->
-            <button id="closeFlyout" class="absolute top-4 right-4 text-gray-500 hover:text-gray-700 bg-transparent">close</button>
-            <h3 class="text-xl font-semibold mb-4 mt-4">Job Details</h3>
-            <div id="flyoutContent">
-                <!-- Job details will be dynamically inserted here -->
-            </div>
-        </div>
+       @include('layouts.job-flyout')
 </div>
 
    <script>
@@ -228,44 +217,14 @@
                     ]);
 
                      // Open flyout on job detail click
-                    $('#example').on('click', '.job-detail-trigger', function() {
-                        const jobId = $(this).data('id');
-                        openJobFlyout(jobId);
-                        $('#jobFlyout').removeClass('hidden').addClass('show');
-                        $('#flyoutOverlay').removeClass('hidden').addClass('show');
-                    });
-
-                    // Close flyout
-                    $('#closeFlyout').on('click', function() {
-                        $('#jobFlyout').addClass('hidden');
-                        $('#flyoutOverlay').addClass('hidden');
+                    $(document).on('click', '.job-detail-trigger', function () {
+                        var jobId = $(this).data('id');
+                        openJobFlyout(jobId); // Call the function to open the flyout
                     });
                 }
-
       });
    </script>
     <script>
-        function openJobFlyout(jobId) {
-            // Fetch job data from the server
-            $.ajax({
-                url: `/job/${jobId}/flyout`,
-                method: 'GET',
-                success: function(response) {
-                    console.log(response); // Verify jQuery is available
-
-                    // Populate flyout content with job details
-                    $('#flyoutContent').html(`
-                        <p><strong>Job ID:</strong> ${response.id}</p>
-                        <p><strong>Title:</strong> ${response.title}</p>
-                        <p><strong>Hiring Manager:</strong> ${response.hiring_manager || 'N/A'}</p>
-                        
-                        <!-- Add other fields as needed -->
-                    `);
-                    // Show the flyout
-                    $('#jobFlyout').removeClass('hidden');
-                }
-            });
-        }
         function deleteItem(url) {
             console.log(window.$); // Verify jQuery is available
             if (confirm('Are you sure you want to delete this record?')) {
