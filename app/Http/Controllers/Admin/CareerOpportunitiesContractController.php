@@ -268,96 +268,83 @@ class CareerOpportunitiesContractController extends BaseController
      * Update the specified resource in storage.
      */
     public function update(Request $request, string $id)
-    {
-        $contractId = $request->contractId;
-        $contract = CareerOpportunitiesContract::with('careerOpportunity')->findOrFail($contractId);
+{
+    $contractId = $request->contractId;
+    $contract = CareerOpportunitiesContract::with('careerOpportunity')->findOrFail($contractId);
+    $postType = $request->selectedOption;
+    // Fetch related data only once
+    $workorder = CareerOpportunitiesWorkorder::findOrFail($contract->workorder_id);
+    $offer = CareerOpportunitiesOffer::findOrFail($contract->offer_id);
+    $job = CareerOpportunity::findOrFail($contract->career_opportunity_id);
+    $candidate = Consultant::findOrFail($contract->candidate_id);
+    // Fetch old data only once
+    $contractOld = CareerOpportunitiesContract::with('careerOpportunity')->findOrFail($contractId);
+    $workorderOld = CareerOpportunitiesWorkorder::findOrFail($contract->workorder_id);
+    $offerOld = CareerOpportunitiesOffer::findOrFail($contract->offer_id);
+    $jobOld = CareerOpportunity::findOrFail($contract->career_opportunity_id);
+    $candidateOld = Consultant::findOrFail($contract->candidate_id);
+    $successMessage = '';
+    switch ($postType) {
+        case '1': // Additional Budget Update
+            $notes = $request->additional_budget_notes;
+            $editHist = $this->createContractEditHistory($contract, $workorderOld, $candidateOld, $jobOld, $offerOld, $contractOld, $postType, $notes);
+            $this->additionBudgetUpdateData($contract, $workorder, $request, $editHist);
+            $successMessage = 'Contract Additional Budget updated successfully!';
+            break;
 
-        $workorder = CareerOpportunitiesWorkorder::findOrFail($contract->workorder_id);
-        $offer = CareerOpportunitiesOffer::findOrFail($contract->offer_id);
-        $job = CareerOpportunity::findOrFail($contract->career_opportunity_id);
-        $candidate = Consultant::findOrFail($contract->candidate_id);
-
-        if ($request->selectedOption == '1') {
-            $additionbudget = $this->additionBudgetUpdateData($contract,$request);
-            session()->flash('success', 'Contract Aditional Budget updated successfully!');
-            return response()->json([
-                'success' => true,
-                'message' => 'Contract Aditional Budget updated successfully!',
-                'redirect_url' => route('admin.contracts.show', $contractId)
-            ]);
-        }
-
-        if($request->selectedOption == '4') {
-            $nonfinancial = $this->nonFinancialupdateData($contract,$request);
-            session()->flash('success', 'Contract updated successfully!');
-            return response()->json([
-                'success' => true,
-                'message' => 'Contract updated successfully!',
-                'redirect_url' => route('admin.contracts.show', $contractId)
-            ]);
-        }
-
-        if($request->selectedOption =='5') {
-            $request->validate([
-                'new_start_date' => 'required|date_format:m/d/Y',
-            ]);
-            $startDate = Carbon::createFromFormat('m/d/Y', $request->start_date)->format('Y-m-d');
-
-            $contract->update([
-                'start_date' => $startDate,
-            ]);        
-        }
-
-        if ($request->selectedOption =='6') {
-            $termination = $this->ContractTermination($contract,$request); 
-            if ($termination !== true) {
-                // Return validation error if it's a JSON response
-                return $termination;
-            }
-            session()->flash('success', 'Contract updated successfully!');
-                return response()->json([
-                    'success' => true,
-                    'message' => 'Contract updated successfully!',
-                    'redirect_url' => route('admin.contracts.show', $contractId)
-                ]);
-        }
-
-        if($request->selectedOption =='2') {
+        case '2': // Contract Extension Request
             $notes = $request->extension_reason_notes;
-            $postType = $request->all();
-            
-            $contractOld = CareerOpportunitiesContract::with('careerOpportunity')->findOrFail($contractId);
-            $workorderOld = CareerOpportunitiesWorkorder::findOrFail($contract->workorder_id);
-            $offerOld = CareerOpportunitiesOffer::findOrFail($contract->offer_id);
-            $jobOld = CareerOpportunity::findOrFail($contract->career_opportunity_id);
-            $candidateOld = Consultant::findOrFail($contract->candidate_id);
+            $editHist = $this->createContractEditHistory($contract, $workorderOld, $candidateOld, $jobOld, $offerOld, $contractOld, $postType, $notes);
+            $this->ContractExtensionReq($request->all(), $workorder, $job, $contract, $editHist);
+            $successMessage = 'Contract Extension added successfully!';
+            break;
 
-            $editHist = $this->createContractEditHistory($contract,$workorderOld,$candidateOld,$jobOld,$offerOld,$contractOld,$request->selectedOption,$notes);
-            $this->ContractExtensionReq($request->all() , $workorder, $job, $contract, $editHist);
-        }
-        if($request->selectedOption == '3') {
-            $postType = $request->all();
-            
-            $contractOld = CareerOpportunitiesContract::with('careerOpportunity')->findOrFail($contractId);
-            $workorderOld = CareerOpportunitiesWorkorder::findOrFail($contract->workorder_id);
-            $offerOld = CareerOpportunitiesOffer::findOrFail($contract->offer_id);
-            $jobOld = CareerOpportunity::findOrFail($contract->career_opportunity_id);
-            $candidateOld = Consultant::findOrFail($contract->candidate_id);
-
-            $editHist=$this->createContractEditHistory($contract,$workorderOld,$candidateOld,$jobOld,$offerOld,$contractOld,$request->selectedOption,'');
+        case '3': // Contract Rate Change Request
+            $editHist = $this->createContractEditHistory($contract, $workorderOld, $candidateOld, $jobOld, $offerOld, $contractOld, $postType, '');
             $this->contractRateChangeRequest($request->all(), $workorder, $contract, $editHist);
-        }
-       
-    // If selectedOption is not '4', return an appropriate response
-    return response()->json(['message' => 'No update made'], 400);
+            $successMessage = 'Contract Rate Change Request processed successfully!';
+            break;
+
+        case '4': // Non-financial Contract Update
+            $notes = '';
+            $editHist = $this->createContractEditHistory($contract, $workorderOld, $candidateOld, $jobOld, $offerOld, $contractOld, $postType, $notes);
+            $this->nonFinancialupdateData($contract, $request);
+            $successMessage = 'Non-financial contract update processed successfully!';
+            break;
+
+        case '5': // Contract Date Update
+            $notes = '';
+            $editHist = $this->createContractEditHistory($contract, $workorderOld, $candidateOld, $jobOld, $offerOld, $contractOld, $postType, $notes);
+            $this->contractDateUpdate($contract, $request);
+            $successMessage = 'Contract Date updated successfully!';
+            break;
+
+        case '6': // Contract Termination
+            $termination = $this->ContractTermination($contract, $request);
+            if ($termination !== true) {
+                return $termination; // Validation error
+            }
+            $successMessage = 'Contract terminated successfully!';
+            break;
+
+        default:
+            return response()->json(['message' => 'No update made'], 400);
     }
+    session()->flash('success', $successMessage);
+    return response()->json([
+        'success' => true,
+        'message' => $successMessage,
+        'redirect_url' => route('admin.contracts.show', $contractId),
+    ]);
+}
+
 
     public function ContractTermination($contract,$request) {
         $validator = Validator::make($request->all(), [
             'termination_date' => 'required|date_format:m/d/Y',
             'termination_notes' => 'required|string',
             'termination_reason' => 'required',
-            'termination_can_feedback' => 'required',
+            'termination_feedback' => 'required',
         ]);
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 422);
@@ -369,7 +356,7 @@ class CareerOpportunitiesContractController extends BaseController
             'termination_date' => $terminationDate,
             'termination_reason' => $request->termination_reason,
             'termination_notes' => $request->termination_notes,
-            'termination_can_feedback' => $request->termination_can_feedback,
+            'termination_feedback' => $request->termination_feedback,
             'termination_status' => 2,
             'status' => 6,
             'termination_date' => now(),
@@ -480,7 +467,7 @@ class CareerOpportunitiesContractController extends BaseController
 
         return true;
     }
-    public function additionBudgetUpdateData($contract,$request)
+    public function additionBudgetUpdateData($contract,$workorder,$request,$editHist)
     {
             $validator = Validator::make($request->all(), [
             'additional_budget_reason' => ['required'],
@@ -504,10 +491,10 @@ class CareerOpportunitiesContractController extends BaseController
         if ($contractAdditionalBudget->save()) {
         contractHelper::createContractSpendWorkflowProcess($contractAdditionalBudget, $contract);
         return true;
-            }else{
+            }
+            else{
                 return false;
             }
-        
     }
     
 
@@ -591,8 +578,6 @@ class CareerOpportunitiesContractController extends BaseController
     public function ContractExtensionReq($post, $workorder, $job, $contract, $editHist){
 
         $model = new ContractExtensionRequest;
-        // dd($post);
-
         $billRate = str_replace(",", "",$post['bill_rate']);
         $clientOverTime = str_replace(",", "",$post['client_overtime_bill_rate']);
         $clientDoubleTime = str_replace(",", "",$post['client_doubletime_bill_rate']);
