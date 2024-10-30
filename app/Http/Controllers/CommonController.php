@@ -175,10 +175,9 @@ class CommonController extends Controller
         
     }
 
-    public function jobFlyout($id)
+    public function jobDetails($id)
     {
         $job = CareerOpportunity::findOrFail($id);
-
-        return response()->json($job);
+        return response()->json(['data' => $job]);
     }
 }

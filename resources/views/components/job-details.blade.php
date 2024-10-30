@@ -1,44 +1,29 @@
-<!-- Overlay -->
-<div x-data="{ selectedUser: null }" @click.away="selectedUser = null">
-  <div
-    x-show="selectedUser !== null"
-    @click="selectedUser = null"
-    x-transition:enter="transition ease-out duration-300"
-    x-transition:enter-start="opacity-0"
-    x-transition:enter-end="opacity-100"
-    x-transition:leave="transition ease-in duration-300"
-    x-transition:leave-start="opacity-100"
-    x-transition:leave-end="opacity-0"
-    class="fixed inset-0 bg-black bg-opacity-50"
-  ></div>
-
-  <!-- Slide-in Window -->
-  <div
-    x-show="selectedUser !== null"
-    @click.stop
-    x-transition:enter="transition ease-out duration-300"
-    x-transition:enter-start="transform translate-x-full"
-    x-transition:enter-end="transform translate-x-0"
-    x-transition:leave="transition ease-in duration-300"
-    x-transition:leave-start="transform translate-x-0"
-    x-transition:leave-end="transform translate-x-full"
-    class="fixed inset-y-0 right-0 w-[700px] bg-gray-100 shadow-lg overflow-y-auto z-50 pb-24"
-  >
-  <template x-if="selectedUser">
+<div
+                    x-show="selectedUser !== null"
+                    @click.stop
+                    x-transition:enter="transition ease-out duration-300"
+                    x-transition:enter-start="transform translate-x-full"
+                    x-transition:enter-end="transform translate-x-0"
+                    x-transition:leave="transition ease-in duration-300"
+                    x-transition:leave-start="transform translate-x-0"
+                    x-transition:leave-end="transform translate-x-full"
+                    class="fixed inset-y-0 right-0 w-[700px] bg-gray-100 shadow-lg overflow-y-auto z-50 pb-24"
+                  >
+                    <template x-if="selectedUser">
                       <div>
                         <div
                           class="flex justify-between items-center p-4 bg-gray-800 text-white"
                         >
                           <h2 class="text-lg font-semibold">
                             Job:
-                            <span x-text="selectedUser.title"></span> (<span
-                              x-text="selectedUser.id"
+                            <span x-text="selectedUser.data.title"></span> (<span
+                              x-text="selectedUser.data.id"
                             ></span
                             >)
                           </h2>
 
                           <button
-                            @click="selectedUser = null"
+                            @click="selectedUser.data = null"
                             class="text-gray-500 hover:text-gray-700"
                           >
                             <i class="fas fa-times"></i>
@@ -48,8 +33,8 @@
                         <div class="p-4 bg-gray-200">
                           <p>
                             Job Created by
-                            <span x-text="selectedUser.hiringManager"></span> on
-                            <span x-text="selectedUser.jobDuration"></span>
+                            <span x-text="selectedUser.data.hiringManager"></span> on
+                            <span x-text="selectedUser.data.jobDuration"></span>
                           </p>
                         </div>
                         <div class="p-4">
@@ -154,11 +139,11 @@
                                       <span
                                         class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full"
                                         :class="{
-                                                      'bg-green-100 text-green-800': selectedUser.status === 'Active',
-                                                      'bg-red-100 text-red-800': selectedUser.status === 'Inactive',
-                                                      'bg-yellow-100 text-yellow-800': selectedUser.status === 'Pending'
+                                                      'bg-green-100 text-green-800': selectedUser.data.status === 'Active',
+                                                      'bg-red-100 text-red-800': selectedUser.data.status === 'Inactive',
+                                                      'bg-yellow-100 text-yellow-800': selectedUser.data.status === 'Pending'
                                                   }"
-                                        x-text="selectedUser.status"
+                                        x-text="selectedUser.data.status"
                                       ></span>
                                     </td>
                                   </tr>
@@ -227,7 +212,7 @@
                                     </td>
                                     <td class="px-4 py-3 border-b">
                                       <span
-                                        x-text="selectedUser.jobDuration"
+                                        x-text="selectedUser.data.jobDuration"
                                       ></span>
                                     </td>
                                   </tr>
@@ -312,7 +297,11 @@
                         </div>
                       </div>
                     </template>
-  </div>
-</div>
-
-
+                    <!-- Add more user details here -->
+                    <button
+                      class="bg-gray-800 hover:bg-gray-900 text-white font-bold py-2 px-4 rounded fixed bottom-12 right-8"
+                    >
+                      View Full Job Details
+                      <i class="fa-solid fa-arrow-right ml-2"></i>
+                    </button>
+                  </div>
