@@ -107,6 +107,25 @@
                     </p>
                 </div>
             @endif
+
+            @if(!empty($extensionReq))
+                <div class="rounded mx-4 my-2 flex">
+                    <div class="flex items-center bg-white border border-gray-200 rounded shadow-lg">
+                        <i class="fas fa-exclamation-circle text-red-500 text-xl ml-2"></i>
+                        <ul class="w-64">
+                            @if(!empty($extensionReq) && ($extensionReq->ext_status == 1 || $extensionReq->ext_vendor_approval==1))
+                                <li class="border-b border-gray-100 hover:bg-gray-50">
+                                    <a href="#" class="flex justify-between items-center px-4 py-2 text-sm text-gray-700 uiv2-js-openpanel">
+                                        Pending Extension Request
+                                        <span class="text-blue-500 font-semibold">View</span>
+                                    </a>
+                                </li>
+                            @endif
+                        </ul>
+                    </div>
+                </div>
+            @endif
+
         <div class="bg-white mx-4 my-8 rounded p-8">
             <div x-data="{ activePage: 'tab1' }" class="mb-4">
                 <ul class="grid grid-flow-col text-center text-gray-500 bg-gray-100 rounded-lg p-1">
