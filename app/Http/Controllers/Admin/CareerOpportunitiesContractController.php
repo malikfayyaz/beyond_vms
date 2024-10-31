@@ -228,11 +228,22 @@ class CareerOpportunitiesContractController extends BaseController
      */
     public function show($id)
     {
-        $contract = CareerOpportunitiesContract::with('careerOpportunity','ContractExtensionRequest','ContractAdditionalBudgetRequest')->findOrFail($id);
-        $job = CareerOpportunitiesContract::with('careerOpportunity')->findOrFail($id);
+        $contract = CareerOpportunitiesContract::with([
+            'careerOpportunity',
+            'ContractExtensionRequest',
+        ])->findOrFail($id);
+        
+        // Fetch the latest pending ContractAdditionalBudgetRequest as a single object
+        $contract->latestPendingBudgetRequest = $contract->ContractAdditionalBudgetRequest()
+            ->where('status', 'pending')
+            ->latest()
+            ->first();
+        
+        
+     
         $extensionReq = $contract->contractExtensionRequest()->latest()->first();
-        $additionalBudget = $contract->contractAdditionalBudgetRequest()->latest()->first();
-        return view('admin.contract.view', compact('contract','job','extensionReq','additionalBudget'));
+       
+        return view('admin.contract.view', compact('contract','extensionReq'));
     }
     public function saveComments(Request $request) //SAVENOTES
     {
