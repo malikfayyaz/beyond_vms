@@ -1,5 +1,17 @@
 <div
                     x-show="selectedUser !== null"
+                    @click="selectedUser = null"
+                    x-transition:enter="transition ease-out duration-300"
+                    x-transition:enter-start="opacity-0"
+                    x-transition:enter-end="opacity-100"
+                    x-transition:leave="transition ease-in duration-300"
+                    x-transition:leave-start="opacity-100"
+                    x-transition:leave-end="opacity-0"
+                    class="fixed inset-0 bg-black bg-opacity-50 z-50"
+                  >
+</div>
+<div
+                    x-show="selectedUser !== null"
                     @click.stop
                     x-transition:enter="transition ease-out duration-300"
                     x-transition:enter-start="transform translate-x-full"
@@ -61,7 +73,7 @@
                               <div
                                 class="flex mt-2 w-full items-center justify-between"
                               >
-                                <span class="text-red-800 font-bold">0</span>
+                                <span class="text-red-800 font-bold" x-text="selectedUser.data.interview_count"></span>
                                 <i
                                   class="fa-solid fa-graduation-cap text-red-800"
                                 ></i>
@@ -74,7 +86,7 @@
                               <div
                                 class="flex mt-2 w-full items-center justify-between"
                               >
-                                <span class="text-yellow-800 font-bold">0</span>
+                                <span class="text-yellow-800 font-bold" x-text="selectedUser.data.offers_count"></span>
                                 <i
                                   class="fa-solid fa-graduation-cap text-yellow-800"
                                 ></i>
@@ -89,7 +101,7 @@
                               <div
                                 class="flex mt-2 w-full items-center justify-between"
                               >
-                                <span class="text-purple-800 font-bold">0</span>
+                                <span class="text-purple-800 font-bold" x-text="selectedUser.data.workorders_count"></span>
                                 <i
                                   class="fa-solid fa-graduation-cap text-purple-800"
                                 ></i>

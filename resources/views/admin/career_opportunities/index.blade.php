@@ -126,17 +126,7 @@
                      </li>
                  </ul>
              </div>
-             <div
-                    x-show="selectedUser !== null"
-                    @click="selectedUser = null"
-                    x-transition:enter="transition ease-out duration-300"
-                    x-transition:enter-start="opacity-0"
-                    x-transition:enter-end="opacity-100"
-                    x-transition:leave="transition ease-in duration-300"
-                    x-transition:leave-start="opacity-100"
-                    x-transition:leave-end="opacity-0"
-                    class="fixed inset-0 bg-black bg-opacity-50 z-50"
-                  ></div>
+             
              <x-job-details />
            <table class="min-w-full divide-y divide-gray-200" id="example">
                       <thead class="bg-gray-50">
