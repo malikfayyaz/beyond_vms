@@ -9,35 +9,77 @@
                 @include('admin.layouts.partials.alerts')
             </div>
             <div class="mx-2 my-4 rounded px-8 w-full flex justify-end items-center gap-4 ">
-                            @if($additionalBudget)
+        @if($contract->ContractAdditionalBudgetRequest)
             <!-- Additional Budget Flyout Button -->
-                <div x-data="flyout()" class="absolute left-20">
-                    <!-- Trigger Link -->
-                    <a href="javascript:void(0)"
-                        @click="openPanel($event)"
+             <div  x-data="{isOpen: false,
+                showModal: false,
+                modalType: null,
+                selectedUser: 'user',
+                comment: '',
+                approvers: [
+                    { 
+                        id: 1, 
+                        name: 'Donald Campbell', 
+                        initial: 'D', 
+                        status: null,
+                        approvedBy: null,
+                        dateTime: null 
+                    },
+                    { 
+                        id: 2, 
+                        name: 'Robert Allen', 
+                        initial: 'R', 
+                        status: null,
+                        approvedBy: null,
+                        dateTime: null 
+                    },
+                    { 
+                        id: 3, 
+                        name: 'Victoria Belyak', 
+                        initial: 'V', 
+                        status: 'pending',
+                        approvedBy: null,
+                        dateTime: null 
+                    },
+                    { 
+                        id: 4, 
+                        name: 'Mark Bloom', 
+                        initial: 'M', 
+                        status: 'pending',
+                        approvedBy: null,
+                        dateTime: null 
+                    },
+                    { 
+                        id: 5, 
+                        name: 'Richard Cary', 
+                        initial: 'R', 
+                        status: 'pending',
+                        approvedBy: null,
+                        dateTime: null,
+                        title: '(Backup Manager for Douglas Howell)'
+                    }
+                ]
+            }">
+            <a href="javascript:void(0)"
+                        @click="isOpen = true;"
                         class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
                     >
                         <i class="fas fa-exclamation-circle text-red-500 text-xl"></i> 
                         <span class="mx-2">Pending Additional Budget Request</span>
                         <span class="text-blue-500 font-semibold text-red-500 text-xl">View</span>
                     </a>
-
-                    <!-- Flyout Overlay -->
-                    <div x-show="isOpen"
-                        @click="closePanel"
-                        class="fixed inset-0 bg-black bg-opacity-50 z-40"
-                        x-transition></div>
-
-                    <!-- Flyout Panel -->
-                    <div x-show="isOpen"
-                        @click.stop
-                        class="fixed inset-y-0 right-0 w-[700px] bg-gray-100 shadow-lg overflow-y-auto z-50 pb-24 p-3"
-                        x-transition>
-                        <div class="text-right my-2">
-                            <a @click="closePanel" class="text-gray-500 hover:text-gray-700 border p-1 rounded"><i class="fas fa-times"></i></a>
-                        </div>                                    
-                    @include('components.contract_additionalBudget')
-                    </div>
+                <div
+                x-show="isOpen"
+                x-transition:enter="transition ease-out duration-300"
+                x-transition:enter-start="opacity-0"
+                x-transition:enter-end="opacity-100"
+                x-transition:leave="transition ease-in duration-300"
+                x-transition:leave-start="opacity-100"
+                x-transition:leave-end="opacity-0"
+                @click="isOpen = false"
+                class="fixed inset-0 bg-black bg-opacity-50 z-40"
+                ></div>
+                <x-contract-additional-budget :contract="$contract" />
                 </div>
                 @endif
 
@@ -139,7 +181,7 @@
                 </div>
             @endif
 
-@if(!empty($extensionReq) || !empty($additionalBudget))
+@if(!empty($extensionReq) )
     <div class="rounded mx-4 my-2 flex">
         <div class="flex items-center bg-white border border-gray-200 rounded shadow-lg">
 
