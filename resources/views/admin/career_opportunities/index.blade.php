@@ -3,9 +3,9 @@
 @section('content')
     <!-- Sidebar -->
     @include('admin.layouts.partials.dashboard_side_bar')
-<div class="ml-16">
+<div class="ml-16" >
     @include('admin.layouts.partials.header')
-       <div class="bg-white mx-4 my-8 rounded p-8">
+       <div class="bg-white mx-4 my-8 rounded p-8"  x-data="{ selectedUser: null}" @job-details-updated.window="selectedUser = $event.detail">
            @include('admin.layouts.partials.alerts')
            <div id="success-message" style="display: none;" class="alert alert-success"></div>
            <div >
@@ -126,6 +126,18 @@
                      </li>
                  </ul>
              </div>
+             <div
+                    x-show="selectedUser !== null"
+                    @click="selectedUser = null"
+                    x-transition:enter="transition ease-out duration-300"
+                    x-transition:enter-start="opacity-0"
+                    x-transition:enter-end="opacity-100"
+                    x-transition:leave="transition ease-in duration-300"
+                    x-transition:leave-start="opacity-100"
+                    x-transition:leave-end="opacity-0"
+                    class="fixed inset-0 bg-black bg-opacity-50"
+                  ></div>
+             <x-job-details />
            <table class="min-w-full divide-y divide-gray-200" id="example">
                       <thead class="bg-gray-50">
                         <tr>
@@ -191,11 +203,10 @@
                       </tbody>
                     </table>
 
-
+                   
          </div>
        </div>
 
-       @include('layouts.job-flyout')
 </div>
 
    <script>
@@ -216,11 +227,37 @@
                         {data: 'action', name: 'action', orderable: false, searchable: false}
                     ]);
 
-                     // Open flyout on job detail click
-                    $(document).on('click', '.job-detail-trigger', function () {
-                        var jobId = $(this).data('id');
-                        openJobFlyout(jobId); // Call the function to open the flyout
+                    function toggleSidebar() {
+                    // Assuming you want to toggle selectedUser state
+                    this.selectedUser = this.selectedUser ? 'user' : 'user';
+                }
+
+                    $(document).on('click', '.job-detail-trigger', function (e) {
+                        e.preventDefault();
+                        let jobId = $(this).data('id');
+                        openJobDetailsModal(jobId);
                     });
+
+                    function openJobDetailsModal(jobId) {
+                        
+                        fetch(`/job-details/${jobId}`)
+                                .then(response => response.json())
+                                .then(data => {
+                                    const event = new CustomEvent('job-details-updated', {
+                                            detail: data,
+                                            bubbles: true,
+                                            composed: true
+                                        });
+                                        console.log(event.detail.data);
+                                        
+                                        document.dispatchEvent(event);
+                                })
+                                .catch(error => console.error('Error:', error));
+
+                    }
+
+       
+                  
                 }
       });
    </script>
