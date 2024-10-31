@@ -23,7 +23,7 @@
                           </h2>
 
                           <button
-                            @click="selectedUser.data = null"
+                            @click="selectedUser = null"
                             class="text-gray-500 hover:text-gray-700"
                           >
                             <i class="fas fa-times"></i>
