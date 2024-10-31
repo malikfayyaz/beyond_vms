@@ -119,5 +119,8 @@ class CareerOpportunity extends Model
     {
         return $this->hasMany(VendorJobRelease::class, 'job_id', 'id');
     }
-
+    public function getCreatedAtFormattedAttribute()
+    {
+        return Carbon::parse($this->created_at)->format('m/d/Y');
+    }
 }

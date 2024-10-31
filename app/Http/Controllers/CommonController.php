@@ -177,7 +177,38 @@ class CommonController extends Controller
 
     public function jobDetails($id)
     {
-        $job = CareerOpportunity::findOrFail($id);
-        return response()->json(['data' => $job]);
+        // Retrieve the job with the count of submissions
+        $job = CareerOpportunity::withCount('submissions')
+        ->with(['careerOpportunitiesBu.buName']) // Eager load the relationship
+        ->findOrFail($id);
+   
+        // dd($job->careerOpportunitiesBu->buName);
+        $initialJobData = [
+            'id' => $job->id ?? null,
+            'title' => $job->title ?? 'Default Job Title',
+            'hiring_manager' => $job->hiringManager->full_name ?? 'No Client Name',
+            'created_at' => $job->created_at_formatted, 
+            'submission_count' => $job->submissions_count,
+            'jobstatus' => CareerOpportunity::getStatus($job->jobStatus), 
+            'location' => $job->location->location_details, 
+            'opening' => $job->num_openings, 
+            'category' => $job->category->title, 
+            'expense' => $job->expenses_allowed, 
+            'days' => $job->day_per_week, 
+            'hours' => $job->hours_per_day, 
+            'jobDuration' => $job->date_range, 
+            'ratetype' => $job->paymentType->title, 
+            'min_rate' => '$' . number_format($job->min_bill_rate, 2), 
+            'max_rate' => '$' . number_format($job->max_bill_rate, 2), 
+            'careerOpportunitiesBu' => $job->careerOpportunitiesBu->map(function ($bu) {
+                return [
+                    'id' => $bu->id,
+                    'bu_unit' => $bu->buName->name ?? 'Unknown BU', // Assuming 'name' is the column in GenericData
+                    'percentage' => $bu->percentage,
+                ];
+            }),
+            ];
+    
+        return response()->json(['data' => $initialJobData]);
     }
 }
