@@ -24,7 +24,7 @@
 
                           <button
                             @click="selectedUser = null"
-                            class="text-gray-500 hover:text-gray-700"
+                            class="text-white bg-transparent"
                           >
                             <i class="fas fa-times"></i>
                           </button>
@@ -33,8 +33,8 @@
                         <div class="p-4 bg-gray-200">
                           <p>
                             Job Created by
-                            <span x-text="selectedUser.data.hiringManager"></span> on
-                            <span x-text="selectedUser.data.jobDuration"></span>
+                            <span x-text="selectedUser.data.hiring_manager"></span> on
+                            <span x-text="selectedUser.data.created_at"></span>
                           </p>
                         </div>
                         <div class="p-4">
@@ -48,7 +48,7 @@
                               <div
                                 class="flex mt-2 w-full items-center justify-between"
                               >
-                                <span class="text-blue-800 font-bold">0</span>
+                                <span class="text-blue-800 font-bold" x-text="selectedUser.data.submission_count"></span>
                                 <i
                                   class="fa-solid fa-graduation-cap text-blue-800"
                                 ></i>
@@ -139,11 +139,11 @@
                                       <span
                                         class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full"
                                         :class="{
-                                                      'bg-green-100 text-green-800': selectedUser.data.status === 'Active',
-                                                      'bg-red-100 text-red-800': selectedUser.data.status === 'Inactive',
-                                                      'bg-yellow-100 text-yellow-800': selectedUser.data.status === 'Pending'
+                                                      'bg-green-100 text-green-800': selectedUser.data.jobstatus === 'Active',
+                                                      'bg-red-100 text-red-800': selectedUser.data.jobstatus === 'Inactive',
+                                                      'bg-yellow-100 text-yellow-800': selectedUser.data.jobstatus === 'Pending'
                                                   }"
-                                        x-text="selectedUser.data.status"
+                                        x-text="selectedUser.data.jobstatus"
                                       ></span>
                                     </td>
                                   </tr>
@@ -151,24 +151,22 @@
                                     <td class="px-4 py-3 border-b">
                                       Location:
                                     </td>
-                                    <td class="px-4 py-3 border-b">
-                                      US Saint Peters 300 St. Peters Centre
-                                      Blvd.
+                                    <td class="px-4 py-3 border-b" x-text="selectedUser.data.location">
                                     </td>
                                   </tr>
                                   <tr class="hover:bg-gray-100">
                                     <td class="px-4 py-3 border-b">
                                       Number of Opening(s):
                                     </td>
-                                    <td class="px-4 py-3 border-b">1</td>
+                                    <td class="px-4 py-3 border-b" x-text="selectedUser.data.opening"></td>
                                   </tr>
                                   <tr class="hover:bg-gray-100">
                                     <td class="px-4 py-3 border-b">Category</td>
-                                    <td class="px-4 py-3 border-b">Claims</td>
+                                    <td class="px-4 py-3 border-b" x-text="selectedUser.data.category"></td>
                                   </tr>
                                   <tr class="hover:bg-gray-100">
                                     <td class="px-4 py-3">Expenses Allowed?</td>
-                                    <td class="px-4 py-3">No</td>
+                                    <td class="px-4 py-3" x-text="selectedUser.data.expense"></td>
                                   </tr>
                                 </tbody>
                               </table>
@@ -198,13 +196,13 @@
                                 <tbody>
                                   <tr class="hover:bg-gray-100">
                                     <td class="px-4 py-3 border-b">Days:</td>
-                                    <td class="px-4 py-3 border-b">130</td>
+                                    <td class="px-4 py-3 border-b" x-text="selectedUser.data.days"></td>
                                   </tr>
                                   <tr class="hover:bg-gray-100">
                                     <td class="px-4 py-3 border-b">
                                       Total Hours:
                                     </td>
-                                    <td class="px-4 py-3 border-b">1040</td>
+                                    <td class="px-4 py-3 border-b" x-text="selectedUser.data.hours"></td>
                                   </tr>
                                   <tr class="hover:bg-gray-100">
                                     <td class="px-4 py-3 border-b">
@@ -246,19 +244,19 @@
                                     <td class="px-4 py-3 border-b">
                                       Rate Type:
                                     </td>
-                                    <td class="px-4 py-3 border-b">Per Hour</td>
+                                    <td class="px-4 py-3 border-b" x-text="selectedUser.data.ratetype"></td>
                                   </tr>
                                   <tr class="hover:bg-gray-100">
                                     <td class="px-4 py-3 border-b">
                                       Minimum Bill Rate:
                                     </td>
-                                    <td class="px-4 py-3 border-b">$20.00</td>
+                                    <td class="px-4 py-3 border-b" x-text="selectedUser.data.min_rate"></td>
                                   </tr>
                                   <tr class="hover:bg-gray-100">
                                     <td class="px-4 py-3 border-b">
                                       Maximum Bill Rate:
                                     </td>
-                                    <td class="px-4 py-3 border-b">$75.00</td>
+                                    <td class="px-4 py-3 border-b" x-text="selectedUser.data.max_rate"></td>
                                   </tr>
                                 </tbody>
                               </table>
@@ -285,10 +283,10 @@
                                 </thead>
                                 <tbody>
                                   <tr class="hover:bg-gray-100">
-                                    <td class="px-4 py-3 border-b">
-                                      708212 - 166 - St. Peters, MO - LPG
+                                    <td class="px-4 py-3 border-b" >
+                                    <span x-text="selectedUser.data.careerOpportunitiesBu.map(bu => bu.bu_unit)"></span>
                                     </td>
-                                    <td class="px-4 py-3 border-b">100%</td>
+                                    <td class="px-4 py-3 border-b"><span x-text="selectedUser.data.careerOpportunitiesBu.map(bu => bu.percentage)"></span>%</td>
                                   </tr>
                                 </tbody>
                               </table>
