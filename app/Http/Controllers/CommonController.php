@@ -178,17 +178,22 @@ class CommonController extends Controller
     public function jobDetails($id)
     {
         // Retrieve the job with the count of submissions
-        $job = CareerOpportunity::withCount('submissions')
+        $job = CareerOpportunity::withCount(['submissions', 'interviews', 'offers', 'workorders', 'hired'])
         ->with(['careerOpportunitiesBu.buName']) // Eager load the relationship
         ->findOrFail($id);
    
-        // dd($job->careerOpportunitiesBu->buName);
+        // dd($job->hired);
         $initialJobData = [
             'id' => $job->id ?? null,
             'title' => $job->title ?? 'Default Job Title',
             'hiring_manager' => $job->hiringManager->full_name ?? 'No Client Name',
             'created_at' => $job->created_at_formatted, 
             'submission_count' => $job->submissions_count,
+            'interview_count' => $job->interviews_count, 
+            'interview_count' => $job->interviews_count, 
+            'workorders_count' => $job->workorders_count, 
+            'hired_count' => $job->hired_count, 
+            'offers_count' => $job->offers_count, 
             'jobstatus' => CareerOpportunity::getStatus($job->jobStatus), 
             'location' => $job->location->location_details, 
             'opening' => $job->num_openings, 

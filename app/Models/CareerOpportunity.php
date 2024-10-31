@@ -119,8 +119,27 @@ class CareerOpportunity extends Model
     {
         return $this->hasMany(VendorJobRelease::class, 'job_id', 'id');
     }
+    
     public function getCreatedAtFormattedAttribute()
     {
         return Carbon::parse($this->created_at)->format('m/d/Y');
+    }
+
+    public function interviews() {
+        return $this->hasMany(CareerOpportunitiesInterview::class, 'career_opportunity_id', 'id');
+    }
+
+    public function offers() {
+        return $this->hasMany(CareerOpportunitiesOffer::class, 'career_opportunity_id', 'id');
+    }
+
+    public function workorders() {
+        return $this->hasMany(CareerOpportunitiesWorkorder::class, 'career_opportunity_id', 'id');
+    }
+
+    public function hired()
+    {
+        return $this->hasMany(CareerOpportunitySubmission::class, 'career_opportunity_id', 'id')
+                    ->where('resume_status', 9);
     }
 }
