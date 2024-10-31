@@ -230,7 +230,10 @@ class CareerOpportunitiesContractController extends BaseController
     {
         $contract = CareerOpportunitiesContract::with('careerOpportunity')->findOrFail($id);
         $job = CareerOpportunitiesContract::with('careerOpportunity')->findOrFail($id);
-        return view('admin.contract.view', compact('contract','job'));
+        $additionalBudget = ContractAdditionalBudget::find($id);
+        //$additionalBudget = $contract->contractAdditionalBudget;
+        //dd($additionalBudget);
+        return view('admin.contract.view', compact('contract','job','additionalBudget'));
     }
     public function saveComments(Request $request) //SAVENOTES
     {
