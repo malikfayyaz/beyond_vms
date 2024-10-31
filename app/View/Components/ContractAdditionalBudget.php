@@ -10,6 +10,7 @@ use App\Models\CareerOpportunitiesContract;
 class ContractAdditionalBudget extends Component
 {
     public $contract;
+    
     /**
      * Create a new component instance.
      */
