@@ -27,6 +27,15 @@ class CareerOpportunitiesController extends Controller
                 });
             return DataTables::of($data)
                 ->addIndexColumn()
+                ->addColumn('id', function ($row) {
+                    return '<span class="job-detail-trigger text-blue-500 cursor-pointer" data-id="' . $row->id . '">' . $row->id . '</span>';
+                })
+                ->addColumn('title', function ($row) {
+                    return '<span class="job-detail-trigger text-blue-500 cursor-pointer" data-id="' . $row->id . '">' . $row->title . '</span>';
+                })
+                ->addColumn('jobStatus', function ($row) {
+                    return (isset($row->jobStatus)) ? $row->getStatus($row->jobStatus) : 'N/A';
+                })
                 ->addColumn('hiring_manager', function($row) {
                     return $row->hiringManager->full_name ? $row->hiringManager->full_name : 'N/A';
                 })
@@ -52,7 +61,7 @@ class CareerOpportunitiesController extends Controller
 
                     return $btn;
                 })
-                ->rawColumns(['action'])
+                ->rawColumns(['action','id', 'title'])
                 ->make(true);
         }
         // Logic to get and display catalog items
