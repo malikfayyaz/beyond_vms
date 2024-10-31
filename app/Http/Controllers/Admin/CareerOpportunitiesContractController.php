@@ -273,7 +273,11 @@ class CareerOpportunitiesContractController extends BaseController
      */
     public function edit(string $id)
     {
-        $contract = CareerOpportunitiesContract::findOrFail($id);
+        $contract = CareerOpportunitiesContract::with([
+            'careerOpportunity',
+            'ContractExtensionRequest',
+            'ContractAdditionalBudgetRequest',
+        ])->findOrFail($id);
         return view('admin.contract.contract_update', compact('contract'));
     }
 
