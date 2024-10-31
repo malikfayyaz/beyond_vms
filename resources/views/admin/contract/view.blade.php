@@ -8,102 +8,39 @@
             <div class="rounded mx-4 my-2">
                 @include('admin.layouts.partials.alerts')
             </div>
-
-
-
-
-    <div x-data="{ showFlyout: false }">
-    <!-- Button to open flyout -->
-    <button
-        @click="showFlyout = true"
-        class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
-    >
-        Show Contract Details
-    </button>
-
-    <!-- Flyout Container -->
-    <div
-        x-show="showFlyout"
-        x-transition:enter="transition ease-in-out duration-300 transform"
-        x-transition:enter-start="-translate-x-full"
-        x-transition:enter-end="translate-x-0"
-        x-transition:leave="transition ease-in-out duration-300 transform"
-        x-transition:leave-start="translate-x-0"
-        x-transition:leave-end="-translate-x-full"
-        class="fixed inset-0 flex z-50"
-    >
-        <!-- Backdrop -->
-        <div
-            class="fixed inset-0 bg-gray-600 bg-opacity-50"
-            @click="showFlyout = false"
-            aria-hidden="true"
-        ></div>
-
-        <!-- Flyout Panel (Now slides from left to right) -->
-        <div class="relative w-120 bg-white shadow-xl p-6 ml-auto">
-            <div class="flex justify-between items-center mb-4">
-                <h3 class="text-lg font-semibold">Additional Budget Request {{'#'.$additionalBudget->id}}</h3>
-                <button
-                    @click="showFlyout = false"
-                    class="text-gray-500 hover:text-gray-700"
-                >
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-            
-            <!-- Contract Details Content -->
-            <div>
-                <div class="flex justify-between items-center p-4 bg-gray-800 text-white">
-                    <div>
-                        <h4 class="text-lg font-bold">{{ $contract->consultant->full_name }}</h4>
-                        <!-- Career Opportunity Name (Smaller Text) -->
-                        <div class="text-sm text-gray-300">{{ $contract->careerOpportunity->alternative_job_title }}</div>
-                    </div>
-                    <!-- Status -->
-                    <div>Status: {{ $additionalBudget->status }}</div>
-                </div>
-            </div>
-            @if($additionalBudget)
-                <div class="mt-4 bg-gray-100 p-4 rounded-lg">
-                    <h5 class="text-md font-semibold">Additional Budget Request Details</h5>
-                    <ul class="list-disc ml-4 mt-2 text-gray-600">
-                        <li>Requested Amount: ${{ $additionalBudget->amount }}</li>
-                        <li>Reason For Additional Budget: {{ getSettingTitleById($additionalBudget->additional_budget_reason) }}</li>
-                        <li>Effective Date: {{ \Carbon\Carbon::parse($additionalBudget->effective_date)->format('m/d/Y') }}</li>
-                        <li>Notes: {{ $additionalBudget->notes }}</li>
-                    </ul>
-                </div>
-            @endif
-                <p class="mt-2 text-gray-600">This contract is valid for the next 12 months and includes provisions for...</p>
-                <div class="mt-4">
-                    <h5 class="text-md font-semibold">Key Terms:</h5>
-                    <ul class="list-disc ml-4 mt-2 text-gray-600">
-                        <li>Payment schedule: Monthly</li>
-                        <li>Termination clause: 30 days notice</li>
-                        <li>Renewal option: Yes</li>
-                    </ul>
-                </div>
-                <div class="mt-4">
-                    <h5 class="text-md font-semibold">Parties Involved:</h5>
-                    <ul class="list-disc ml-4 mt-2 text-gray-600">
-                        <li>Client: ABC Corporation</li>
-                        <li>Contractor: XYZ Solutions</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </div>
-    </div>
-
-
-
-
-
-
-
-
-
             <div class="mx-2 my-4 rounded px-8 w-full flex justify-end items-center gap-4 ">
+                            @if($additionalBudget)
+            <!-- Additional Budget Flyout Button -->
+                <div x-data="flyout()" class="absolute left-20">
+                    <!-- Trigger Link -->
+                    <a href="javascript:void(0)"
+                        @click="openPanel($event)"
+                        class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
+                    >
+                        <i class="fas fa-exclamation-circle text-red-500 text-xl"></i> 
+                        <span class="mx-2">Pending Additional Budget Request</span>
+                        <span class="text-blue-500 font-semibold text-red-500 text-xl">View</span>
+                    </a>
+
+                    <!-- Flyout Overlay -->
+                    <div x-show="isOpen"
+                        @click="closePanel"
+                        class="fixed inset-0 bg-black bg-opacity-50 z-40"
+                        x-transition></div>
+
+                    <!-- Flyout Panel -->
+                    <div x-show="isOpen"
+                        @click.stop
+                        class="fixed inset-y-0 right-0 w-[700px] bg-gray-100 shadow-lg overflow-y-auto z-50 pb-24 p-3"
+                        x-transition>
+                        <div class="text-right my-2">
+                            <a @click="closePanel" class="text-gray-500 hover:text-gray-700 border p-1 rounded"><i class="fas fa-times"></i></a>
+                        </div>                                    
+                    @include('components.contract_additionalBudget')
+                    </div>
+                </div>
+                @endif
+
                 <div x-data="{ showModal: false, status: {{ json_encode($contract->termination_status) }} }">
                     <a href="javascript:void(0);" 
                         class="btn bg-red-600 text-white py-2 px-4 rounded hover:bg-red-500" 
@@ -237,37 +174,6 @@
                     </div>
                 </div>
             @endif
-            @if($additionalBudget)
-            <!-- Additional Budget Flyout Button -->
-                <div x-data="flyout()" class="relative">
-                    <!-- Trigger Link -->
-                    <a href="javascript:void(0)"
-                        @click="openPanel($event)"
-                        class="uiv2-js-openpanel flex justify-between items-center px-4 py-2 text-sm text-gray-700"
-                    >
-                        <i class="fas fa-exclamation-circle text-red-500 text-xl"></i> 
-                        <span class="mx-2">Pending Additional Budget Request</span>
-                        <span class="text-blue-500 font-semibold">View</span>
-                    </a>
-
-                    <!-- Flyout Overlay -->
-                    <div x-show="isOpen"
-                        @click="closePanel"
-                        class="fixed inset-0 bg-black bg-opacity-50 z-40"
-                        x-transition></div>
-
-                    <!-- Flyout Panel -->
-                    <div x-show="isOpen"
-                        @click.stop
-                        class="fixed inset-y-0 right-0 w-[700px] bg-gray-100 shadow-lg overflow-y-auto z-50 pb-24 p-3"
-                        x-transition>
-                        <div class="text-right my-2">
-                            <a @click="closePanel" class="text-gray-500 hover:text-gray-700 border p-1 rounded"><i class="fas fa-times"></i></a>
-                        </div>                                    
-                        @include('admin.contract.contract_additionalBudget')
-                    </div>
-                </div>
-                @endif
         </div>
     </div>
 @endif

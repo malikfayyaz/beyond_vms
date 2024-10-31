@@ -26,6 +26,18 @@
                             </tbody>
                             </table>
                          </div>
+                <div class="bg-gray-100 p-4 pt-0 rounded-lg">
+                    <h3 class="text-md font-semibold">Reason for Additional Budget Request</h3>
+                    <div class="ml-4 mt-2 text-gray-600">
+                        {{ getSettingTitleById($additionalBudget->additional_budget_reason) }}
+                    </div>
+                </div>
+                <div class="bg-gray-100 p-4 pt-0 rounded-lg">
+                    <h3 class="text-md font-semibold">Additional Budget Request Notes</h3>
+                    <div class="ml-4 mt-2 text-gray-600">
+                    {{ $additionalBudget->notes }}
+                    </div>
+                </div>
                 <div class="bg-gray-100 p-4 rounded-lg">
                     <h5 class="text-md font-semibold">Additional Budget Request Details</h5>
                     <ul class="list-disc ml-4 mt-2 text-gray-600">
