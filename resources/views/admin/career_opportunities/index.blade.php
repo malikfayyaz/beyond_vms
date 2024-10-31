@@ -127,7 +127,7 @@
                  </ul>
              </div>
              
-             <x-job-details />
+            <x-job-details />
            <table class="min-w-full divide-y divide-gray-200" id="example">
                       <thead class="bg-gray-50">
                         <tr>
@@ -218,9 +218,9 @@
                     ]);
 
                     function toggleSidebar() {
-                    // Assuming you want to toggle selectedUser state
-                    this.selectedUser = this.selectedUser ? 'user' : 'user';
-                }
+                        // Assuming you want to toggle selectedUser state
+                        this.selectedUser = this.selectedUser ? 'user' : 'user';
+                    }
 
                     $(document).on('click', '.job-detail-trigger', function (e) {
                         e.preventDefault();

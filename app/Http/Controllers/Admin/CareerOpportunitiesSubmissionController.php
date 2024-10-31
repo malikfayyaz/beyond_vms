@@ -40,8 +40,8 @@ class CareerOpportunitiesSubmissionController extends Controller
                 ->addColumn('vendor_name', function($row) {
                     return $row->vendor ? $row->vendor->full_name : 'N/A';
                 })
-                ->addColumn('career_opportunity_title', function($row) {
-                    return $row->careerOpportunity ? $row->careerOpportunity->title . '('.$row->careerOpportunity->id.')' : 'N/A';
+                ->addColumn('career_opportunity_title', function ($row) {
+                    return '<span class="job-detail-trigger text-blue-500 cursor-pointer" data-id="' . $row->careerOpportunity->id . '">' . $row->careerOpportunity->title . '('.$row->careerOpportunity->id.')' . '</span>';
                 })
                 ->addColumn('worker_type', function ($row) {
                     return $row->careerOpportunity && $row->careerOpportunity->workerType
@@ -54,6 +54,7 @@ class CareerOpportunitiesSubmissionController extends Controller
                                     <i class="fas fa-eye"></i>
                             </a>';
                 })
+                ->rawColumns(['career_opportunity_title','action'])
                 ->make(true);
         }
         return view('admin.submission.index');

@@ -37,6 +37,12 @@ class CareerOpportunitiesController extends Controller
                 })->orderby('id', 'desc');
 
             return DataTables::of($data)
+                ->addColumn('id', function ($row) {
+                    return '<span class="job-detail-trigger text-blue-500 cursor-pointer" data-id="' . $row->id . '">' . $row->id . '</span>';
+                })
+                ->addColumn('title', function ($row) {
+                    return '<span class="job-detail-trigger text-blue-500 cursor-pointer" data-id="' . $row->id . '">' . $row->title . '</span>';
+                })
                 ->addColumn('jobStatus', function ($row) {
                     return (isset($row->jobStatus)) ? $row->getStatus($row->jobStatus) : 'N/A';
                 })
@@ -76,7 +82,7 @@ class CareerOpportunitiesController extends Controller
 
                     return $btn .$deleteBtn;
                 })
-                ->rawColumns(['action'])
+                ->rawColumns(['action','id', 'title'])
                 ->make(true);
         }
 

@@ -12,22 +12,40 @@
             <h2 class="text-2xl font-bold mb-4">Contract Update</h2>
             <form id="rawdata" @submit.prevent="submitForm">
                 <div class="my-4">
-                    <div class="p-[30px] rounded border" :style="{'border-color': 'var(--primary-color)'}">
-                        <label for="select-option" class="block mb-2">Select Update Assignment Reason:
-                            <span class="text-red-500">*</span></label>
+                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+    <h5>Update Assignment Reason<span style="float: right;"></span></h5>
+    <div class="form-group m-t-20">
+        <div class="card card-margin card-padding">
+        <select name="update_contract_reason" id="update_contract_reason" 
+        x-model="selectedOption" class="form-control select2" 
+        @change="showOptions()" required>
+        <option value="">Select</option>
+        @php
+            $reasons = updateContractReason();
+            $Error = '';
+            if ($contract->contractAdditionalBudgetRequest->isNotEmpty()) {
+                $Error = "Additional budget request is pending.";
+                unset($reasons[1]);
+            }
+            if($contract->contractExtensionRequest->isNotEmpty()){
+                $Error = "Extension request is pending.";
+                unset($reasons[2]);
+            }
+            if($contract->status == '6'){
+                $Error = "Contract is Terminated.";
+                unset($reasons[6]);
+            }
+        @endphp
+        @foreach ($reasons as $key => $val)
+            <option value="{{ $key }}">{{ $val }}</option>
+        @endforeach
+            </select>
+        <div id="assignmentupdateerror" style="color: red; display: {{ empty($Error) ? 'none' : 'block' }};">
+            {{ $Error }}
+        </div>
+    </div>
+            </div>
 
-                        <select id="select-option" x-model="selectedOption" @change="updateFields()"
-                            class="w-full select2-single custom-style"
-                            :class="{'border-red-500': errors.selectedOption}">
-                            <option value="">Select...</option>
-                            @foreach (updateContractReason() as $key=>$val)
-                            <option value="{{$key}}">{{$val}}</option>
-                            @endforeach
-
-                        </select>
-                        <p x-show="errors.selectedOption" x-text="errors.selectedOption"
-                            class="text-red-500 text-xs mt-1"></p>
-                    </div>
                 </div>
 
                 <div class="my-4">

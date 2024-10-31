@@ -18,8 +18,8 @@ class CareerOpportunitiesWorkOrderController extends Controller
                 ->addColumn('hiring_manager', function ($row) {
                     return $row->hiringManager->full_name ? $row->hiringManager->full_name : 'N/A';
                 })
-                ->addColumn('career_opportunity', function($row) {
-                    return $row->careerOpportunity ? $row->careerOpportunity->title . '('.$row->careerOpportunity->id.')' : 'N/A';
+                ->addColumn('career_opportunity', function ($row) {
+                    return '<span class="job-detail-trigger text-blue-500 cursor-pointer" data-id="' . $row->careerOpportunity->id . '">' . $row->careerOpportunity->title . '('.$row->careerOpportunity->id.')' . '</span>';
                 })
                 ->addColumn('consultant_name', function($row) {
                     return $row->consultant ? $row->consultant->full_name : 'N/A';
@@ -50,7 +50,7 @@ class CareerOpportunitiesWorkOrderController extends Controller
 
                     return $btn;
                 })
-                ->rawColumns(['action'])
+                ->rawColumns(['career_opportunity','action'])
                 ->make(true);
         }
 
