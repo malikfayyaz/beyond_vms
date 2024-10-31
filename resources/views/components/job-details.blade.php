@@ -114,7 +114,7 @@
                               <div
                                 class="flex mt-2 w-full items-center justify-between"
                               >
-                                <span class="text-green-800 font-bold">0</span>
+                                <span class="text-green-800 font-bold" x-text="selectedUser.data.hired_count"></span>
                                 <i
                                   class="fa-solid fa-graduation-cap text-green-800"
                                 ></i>

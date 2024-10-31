@@ -136,4 +136,10 @@ class CareerOpportunity extends Model
     public function workorders() {
         return $this->hasMany(CareerOpportunitiesWorkorder::class, 'career_opportunity_id', 'id');
     }
+
+    public function hired()
+    {
+        return $this->hasMany(CareerOpportunitySubmission::class, 'career_opportunity_id', 'id')
+                    ->where('resume_status', 9);
+    }
 }
