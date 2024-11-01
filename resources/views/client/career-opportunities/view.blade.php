@@ -12,7 +12,7 @@
                     rejectionReason: '{{ $job->rejectionReason->title }}',
                     notes: '{{ $job->note_for_rejection }}',
                     rejectedBy: '{{ $job->rejectionUser->name }}',
-                    rejectionDate: '{{ $job->date_rejected }}'
+                    rejectionDate: '{{ formatDateTime($job->date_rejected) }}'
                 }">
                     <div class="alert alert-danger">
                         <span class="bold">Rejection Reason:</span> <span x-text="rejectionReason"></span><br>

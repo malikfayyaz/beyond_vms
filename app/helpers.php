@@ -263,7 +263,7 @@ if (!function_exists('numberOfWorkingDays')) {
     if (!function_exists('formatDateTime')) {
         function formatDateTime($date)
         {
-            return Carbon::parse($date)->format('m/d/Y');
+            return Carbon::parse($date)->format('m/d/Y h:i A');
         }
     }
 
