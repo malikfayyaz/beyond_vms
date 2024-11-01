@@ -216,4 +216,14 @@ class CommonController extends Controller
     
         return response()->json(['data' => $initialJobData]);
     }
+
+    public function submissionDetails($id)
+    {
+        $submission = CareerOpportunitySubmission::findOrFail($id);
+
+        // dd($submission);
+
+        return response()->json(['data' => $submission]);
+    }
+    
 }

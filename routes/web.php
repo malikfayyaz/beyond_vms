@@ -111,4 +111,6 @@ Route::middleware(['ensure_role_is_selected'])->group(function () {
 
     Route::get('job-details/{id}', [CommonController::class, 'jobDetails'])->name('job.job_details');
 
+    Route::get('submission-details/{id}', [CommonController::class, 'submissionDetails'])->name('submission_details');
+
 });
