@@ -260,6 +260,12 @@ if (!function_exists('numberOfWorkingDays')) {
             return Carbon::parse($date)->format('m/d/Y');
         }
     }
+    if (!function_exists('formatDateTime')) {
+        function formatDateTime($date)
+        {
+            return Carbon::parse($date)->format('m/d/Y');
+        }
+    }
 
 if (!function_exists('updateSubmission')) {
     function updateSubmission($model,$type){
