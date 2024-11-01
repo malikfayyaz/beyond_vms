@@ -44,29 +44,11 @@
                             class="w-full flex justify-center items-center gap-3 hover:bg-white hover:rounded-lg hover:shadow py-4 tab === 'activejobs'"
                         >
                             <i class="fa-regular fa-file-lines"></i>
-                            <span class="capitalize">active jobs</span>
-                            <div
-                                class="px-1 py-1 flex items-center justify-center bg-gray-500 text-white rounded-lg"
-                            >
-                                <span class="text-[10px]">156</span>
-                            </div>
+                            <span class="capitalize">Job Details</span>
+                           
                         </a>
                     </li>
-                    <li class="flex justify-center items-center">
-                        <a
-                            href="#page2"
-                            class="w-full flex justify-center items-center gap-3 bg-white rounded-lg shadow py-4"
-                            :style="{'color': 'var(--primary-color)'}"
-                        ><i class="fa-regular fa-registered"></i
-                            ><span class="capitalize">Pending Release Job</span>
-                            <div
-                                class="px-1 py-1 flex items-center justify-center text-white rounded-lg"
-                                :style="{'background-color': 'var(--primary-color)'}"
-                            >
-                                <span class="text-[10px]">56</span>
-                            </div>
-                        </a>
-                    </li>
+                   
                     <li class="flex justify-center">
                         <a
                         @click="tab = 'jobworkflow'"
@@ -75,83 +57,10 @@
                         >
                           <i class="fa-solid fa-fill"></i>
                           <span class="capitalize">Workflow</span>
-                          <div
-                            class="px-1 py-1 flex items-center justify-center bg-gray-500 text-white rounded-lg"
-                          >
-                            <span class="text-[10px]">20</span>
-                          </div>
+                          
                         </a>
                     </li>
-                    <li class="flex justify-center">
-                        <a
-                            href="#page1"
-                            class="flex justify-center items-center gap-3 py-4 w-full hover:bg-white hover:rounded-lg hover:shadow"
-                        >
-                            <i class="fa-solid fa-fill"></i>
-                            <span class="capitalize">filled jobs</span>
-                            <div
-                                class="px-1 py-1 flex items-center justify-center bg-gray-500 text-white rounded-lg"
-                            >
-                                <span class="text-[10px]">20</span>
-                            </div>
-                        </a>
-                    </li>
-                    <li class="flex justify-center">
-                        <a
-                            href="#page1"
-                            class="flex justify-center items-center gap-3 py-4 w-full hover:bg-white hover:rounded-lg hover:shadow"
-                        >
-                            <i class="fa-solid fa-lock"></i>
-                            <span class="capitalize">closed jobs</span>
-                            <div
-                                class="px-1 py-1 flex items-center justify-center bg-gray-500 text-white rounded-lg"
-                            >
-                                <span class="text-[10px]">2957</span>
-                            </div>
-                        </a>
-                    </li>
-                    <li class="flex justify-center">
-                        <a
-                            href="#page1"
-                            class="flex justify-center items-center gap-3 py-4 w-full hover:bg-white hover:rounded-lg hover:shadow"
-                        >
-                            <i class="fa-solid fa-spinner"></i>
-                            <span class="capitalize">pending - PMO</span>
-                            <div
-                                class="px-1 py-1 flex items-center justify-center bg-gray-500 text-white rounded-lg"
-                            >
-                                <span class="text-[10px]">0</span>
-                            </div>
-                        </a>
-                    </li>
-                    <li class="flex justify-center">
-                        <a
-                            href="#page1"
-                            class="flex justify-center items-center gap-3 py-4 w-full hover:bg-white hover:rounded-lg hover:shadow"
-                        >
-                            <i class="fas fa-drafting-compass"></i>
-                            <span class="capitalize">draft</span>
-                            <div
-                                class="px-1 py-1 flex items-center justify-center bg-gray-500 text-white rounded-lg"
-                            >
-                                <span class="text-[10px]">30</span>
-                            </div>
-                        </a>
-                    </li>
-                    <li class="flex justify-center">
-                        <a
-                            href="#page1"
-                            class="flex justify-center items-center gap-3 py-4 w-full hover:bg-white hover:rounded-lg hover:shadow"
-                        >
-                            <i class="fa-solid fa-briefcase"></i>
-                            <span class="capitalize">all jobs</span>
-                            <div
-                                class="px-1 py-1 flex items-center justify-center bg-gray-500 text-white rounded-lg"
-                            >
-                                <span class="text-[10px]">4320</span>
-                            </div>
-                        </a>
-                    </li>
+                  
                 </ul>
             </div>
             <div class="flex w-full gap-4" x-show="tab === 'activejobs'">
@@ -271,7 +180,7 @@
                         <p class="color-[#202124] font-light">Internal Notes</p>
                         <div class="mt-4">
                             <ul class="color-[#202124] font-light">
-                                {{ $job->internal_notes }}
+                                {!! $job->internal_notes !!}
                             </ul>
                         </div>
                     </div>
@@ -279,7 +188,7 @@
                         <p class="color-[#202124] font-light">Skills</p>
                         <div class="mt-4">
                             <ul class="color-[#202124] font-light">
-                                {{ $job->skills }}
+                            {!! $job->skills !!}
                             </ul>
                         </div>
                     </div>
@@ -295,14 +204,67 @@
                                 class="py-4 w-2/4 pl-4 rounded rounded-r-none"
                                 :style="{'background-color': 'var(--primary-color)'}"
                             >
-                    <span class="text-white font-light"
-                    >Pre-Identified Candidate?</span
-                    >
+                                <span class="text-white font-light"
+                                >Pre-Identified Candidate?</span
+                                >
                             </div>
                             <div class="w-2/4 pl-4">
                                 <span class="color-[#202124] font-light">{{$job->pre_candidate}}</span>
                             </div>
                         </div>
+                        @if($job->pre_candidate == 'Yes')
+              
+                            <div class="flex items-center justify-between py-4 border-t">
+                                    <div class="w-2/4">
+                                        <h4 class="font-medium">Candidate First Name:</h4>
+                                    </div>
+                                    <div class="w-2/4">
+                                        <p class="font-light">{{$job->pre_name}}</p>
+                                    </div>
+                                </div>
+                            <div class="flex items-center justify-between py-4 border-t">
+                                    <div class="w-2/4">
+                                        <h4 class="font-medium">Candidate middle Name:</h4>
+                                    </div>
+                                    <div class="w-2/4">
+                                        <p class="font-light">{{$job->pre_middle_name}}</p>
+                                    </div>
+                                </div>
+                            <div class="flex items-center justify-between py-4 border-t">
+                                    <div class="w-2/4">
+                                        <h4 class="font-medium">Candidate Last Name:</h4>
+                                    </div>
+                                    <div class="w-2/4">
+                                        <p class="font-light">{{$job->pre_last_name}}</p>
+                                    </div>
+                                </div>
+                            
+                            <div class="flex items-center justify-between py-4 border-t">
+                                    <div class="w-2/4">
+                                        <h4 class="font-medium">Candidate Phone:</h4>
+                                    </div>
+                                    <div class="w-2/4">
+                                        <p class="font-light">{{$job->candidate_phone}}</p>
+                                    </div>
+                                </div>
+                            
+                            <div class="flex items-center justify-between py-4 border-t">
+                                    <div class="w-2/4">
+                                        <h4 class="font-medium">Candidate Email:</h4>
+                                    </div>
+                                    <div class="w-2/4">
+                                        <p class="font-light">{{$job->candidate_email}}</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-center justify-between py-4 border-t">
+                                    <div class="w-2/4">
+                                        <h4 class="font-medium">Worker Pay Rate:</h4>
+                                    </div>
+                                    <div class="w-2/4">
+                                        <p class="font-light">{{$job->pre_current_rate}}</p>
+                                    </div>
+                                </div>
+                        @endif
                     </div>
                 </div>
                 <!-- Middle Column -->
@@ -434,6 +396,16 @@
                                 <p class="font-light">{{ $job->client_billable ?? 'N/A' }}</p>
                             </div>
                         </div>
+                        @if($job->client_billable == 'Yes')
+                            <div class="flex items-center justify-between py-4 border-t">
+                            <div class="w-2/4">
+                                <h4 class="font-medium">Client Name:</h4>
+                            </div>
+                            <div class="w-2/4">
+                                <p class="font-light">{{ $job->client_name ?? 'N/A' }}</p>
+                            </div>
+                            </div>
+                            @endif
                         <div class="flex items-center justify-between py-4 border-t">
                             <div class="w-2/4">
                                 <h4 class="font-medium">Expenses Allowed?</h4>
@@ -442,6 +414,16 @@
                                 <p class="font-light">{{ $job->expenses_allowed ?? 'N/A' }}</p>
                             </div>
                         </div>
+                        @if($job->expenses_allowed == 'Yes')
+                                <div class="flex items-center justify-between py-4 border-t">
+                                <div class="w-2/4">
+                                    <h4 class="font-medium">Estimated Expense</h4>
+                                </div>
+                                <div class="w-2/4">
+                                    <p class="font-light">{{ $job->expense_cost ?? 'N/A' }}</p>
+                                </div>
+                                </div>
+                        @endif
                         <div class="flex items-center justify-between py-4 border-t">
                             <div class="w-2/4">
                                 <h4 class="font-medium">Remote Candidate:</h4>
