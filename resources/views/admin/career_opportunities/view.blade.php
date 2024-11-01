@@ -41,21 +41,54 @@
                 </a>
               </li>
 
-              <!-- <li class="flex justify-center items-center">
+              <li class="flex justify-center">
                 <a
-                  href="#page2"
-                  class="w-full flex justify-center items-center gap-3 bg-white rounded-lg shadow py-4"
-                  :style="{'color': 'var(--primary-color)'}"
-                  ><i class="fa-regular fa-registered"></i
-                  ><span class="capitalize">Pending Release Job</span>
-                  <div
-                    class="px-1 py-1 flex items-center justify-center text-white rounded-lg"
-                    :style="{'background-color': 'var(--primary-color)'}"
-                  >
-                    <span class="text-[10px]">56</span>
-                  </div>
+                @click="tab = 'submission'"
+                :class="{ 'border-blue-500 text-blue-500': tab === 'submission' }"
+                class="w-full flex justify-center items-center gap-3 hover:bg-white hover:rounded-lg hover:shadow py-4"
+                >
+                  <i class="fa-regular fa-file-lines"></i>
+                  <span class="capitalize">Submission </span>
+                
                 </a>
-              </li> -->
+              </li>
+
+              <li class="flex justify-center">
+                <a
+                @click="tab = 'interview'"
+                :class="{ 'border-blue-500 text-blue-500': tab === 'interview' }"
+                class="w-full flex justify-center items-center gap-3 hover:bg-white hover:rounded-lg hover:shadow py-4"
+                >
+                  <i class="fa-regular fa-file-lines"></i>
+                  <span class="capitalize">Interviews</span>
+                
+                </a>
+              </li>
+
+              <li class="flex justify-center">
+                <a
+                @click="tab = 'offer'"
+                :class="{ 'border-blue-500 text-blue-500': tab === 'offer' }"
+                class="w-full flex justify-center items-center gap-3 hover:bg-white hover:rounded-lg hover:shadow py-4"
+                >
+                  <i class="fa-regular fa-file-lines"></i>
+                  <span class="capitalize">Offers</span>
+                
+                </a>
+              </li>
+
+              <li class="flex justify-center">
+                <a
+                @click="tab = 'workorder'"
+                :class="{ 'border-blue-500 text-blue-500': tab === 'workorder' }"
+                class="w-full flex justify-center items-center gap-3 hover:bg-white hover:rounded-lg hover:shadow py-4"
+                >
+                  <i class="fa-regular fa-file-lines"></i>
+                  <span class="capitalize">Workorders</span>
+                
+                </a>
+              </li>
+
               <li class="flex justify-center">
                 <a
                 @click="tab = 'jobworkflow'"
@@ -801,6 +834,22 @@
           </div>
         </div>
       </div>
+      <div x-show="tab === 'submission'">
+          @include('admin.career_opportunities.submission')
+      </div>
+
+      <div x-show="tab === 'interview'">
+          @include('admin.career_opportunities.interview')
+      </div>
+
+      <div x-show="tab === 'offer'">
+          @include('admin.career_opportunities.offer')
+      </div>
+
+      <div x-show="tab === 'workorder'">
+          @include('admin.career_opportunities.workorder')
+      </div>
+
 
       <div x-show="tab === 'jobworkflow'"   class="flex w-full gap-4">
          <div
