@@ -159,7 +159,10 @@ Route::middleware(['user_role:admin'])->group(function () {
         // contract
         Route::resource('contracts', CareerOpportunitiesContractController::class);
         Route::POST('contracts/save-comments', [CareerOpportunitiesContractController::class, 'saveComments'])->name('saveComments');
-         Route::get('/career-opportunities/{id}/vendorrelease', [CareerOpportunitiesController::class, 'vendorrelease'])->name('admin.career-opportunities.vendorrelease');
+        Route::get('/career-opportunities/{id}/vendorrelease', [CareerOpportunitiesController::class, 'vendorrelease'])->name('admin.career-opportunities.vendorrelease');
+
+        Route::get('/career-opportunities/{id}/submission', [CareerOpportunitiesController::class, 'jobSubmission'])->name('admin.career-opportunities.jobSubmission');
+
 
     });
 });

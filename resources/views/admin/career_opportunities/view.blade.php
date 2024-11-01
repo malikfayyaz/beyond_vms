@@ -45,13 +45,14 @@
                 </a>
               </li>
 
-              <li class="flex justify-center items-center">
+              <li class="flex justify-center ">
                 <a
-                  href="#page2"
-                  class="w-full flex justify-center items-center gap-3 bg-white rounded-lg shadow py-4"
-                  :style="{'color': 'var(--primary-color)'}"
-                  ><i class="fa-regular fa-registered"></i
-                  ><span class="capitalize">Pending Release Job</span>
+                  @click="tab = 'vendorrelease'"
+                  :class="{ 'border-blue-500 text-blue-500': tab === 'vendorrelease' }"
+                  class="flex justify-center items-center gap-3 py-4 w-full hover:bg-white hover:rounded-lg hover:shadow"
+                  >
+                  <i class="fa-regular fa-file-lines"></i>
+                  <span class="capitalize">Submissions</span>
                   <div
                     class="px-1 py-1 flex items-center justify-center text-white rounded-lg"
                     :style="{'background-color': 'var(--primary-color)'}"
@@ -60,6 +61,75 @@
                   </div>
                 </a>
               </li>
+
+              <li class="flex justify-center items-center">
+                <a
+                @click="tab = 'rankings'"
+                :class="{ 'border-blue-500 text-blue-500': tab === 'rankings' }"
+                class="w-full flex justify-center items-center gap-3 hover:bg-white hover:rounded-lg hover:shadow py-4"
+                >
+                  <i class="fa-regular fa-file-lines"></i>
+                  <span class="capitalize">Rankings</span>
+                  <div
+                    class="px-1 py-1 flex items-center justify-center text-white rounded-lg"
+                    :style="{'background-color': 'var(--primary-color)'}"
+                  >
+                    <span class="text-[10px]">56</span>
+                  </div>
+                </a>
+              </li>
+
+              <li class="flex justify-center items-center">
+                <a
+                @click="tab = 'interviews'"
+                :class="{ 'border-blue-500 text-blue-500': tab === 'interviews' }"
+                class="w-full flex justify-center items-center gap-3 hover:bg-white hover:rounded-lg hover:shadow py-4"
+                >
+                  <i class="fa-regular fa-file-lines"></i>
+                  <span class="capitalize">Interviews</span>
+                  <div
+                    class="px-1 py-1 flex items-center justify-center text-white rounded-lg"
+                    :style="{'background-color': 'var(--primary-color)'}"
+                  >
+                    <span class="text-[10px]">56</span>
+                  </div>
+                </a>
+              </li>
+
+              <li class="flex justify-center items-center">
+                <a
+                @click="tab = 'offers'"
+                :class="{ 'border-blue-500 text-blue-500': tab === 'offers' }"
+                class="w-full flex justify-center items-center gap-3 hover:bg-white hover:rounded-lg hover:shadow py-4"
+                >
+                  <i class="fa-regular fa-file-lines"></i>
+                  <span class="capitalize">Offers</span>
+                  <div
+                    class="px-1 py-1 flex items-center justify-center text-white rounded-lg"
+                    :style="{'background-color': 'var(--primary-color)'}"
+                  >
+                    <span class="text-[10px]">56</span>
+                  </div>
+                </a>
+              </li>
+
+              <li class="flex justify-center items-center">
+                <a
+                @click="tab = 'workorders'"
+                :class="{ 'border-blue-500 text-blue-500': tab === 'workorders' }"
+                class="w-full flex justify-center items-center gap-3 hover:bg-white hover:rounded-lg hover:shadow py-4"
+                >
+                  <i class="fa-regular fa-file-lines"></i>
+                  <span class="capitalize">Workorders</span>
+                  <div
+                    class="px-1 py-1 flex items-center justify-center text-white rounded-lg"
+                    :style="{'background-color': 'var(--primary-color)'}"
+                  >
+                    <span class="text-[10px]">56</span>
+                  </div>
+                </a>
+              </li>
+
               <li class="flex justify-center">
                 <a
                 @click="tab = 'jobworkflow'"
@@ -76,11 +146,11 @@
                 </a>
               </li>
                <li class="flex justify-center" x-data="{ status: {{ $job->jobStatus }} }" x-show="status === 3 || status === 5">
-                <a
-                @click="tab = 'vendorrelease'"
-                :class="{ 'border-blue-500 text-blue-500': tab === 'vendorrelease' }"
-                class="flex justify-center items-center gap-3 py-4 w-full hover:bg-white hover:rounded-lg hover:shadow"
-                >
+                  <a
+                  @click="tab = 'vendorrelease'"
+                  :class="{ 'border-blue-500 text-blue-500': tab === 'vendorrelease' }"
+                  class="flex justify-center items-center gap-3 py-4 w-full hover:bg-white hover:rounded-lg hover:shadow"
+                  >
                     <i class="fa-solid fa-fill"></i>
                     <span class="capitalize">Vendor Release</span>
                     <div
@@ -90,68 +160,9 @@
                     </div>
                 </a>
             </li>
-
-              <li class="flex justify-center">
-                <a
-                  href="#page1"
-                  class="flex justify-center items-center gap-3 py-4 w-full hover:bg-white hover:rounded-lg hover:shadow"
-                >
-                  <i class="fa-solid fa-lock"></i>
-                  <span class="capitalize">closed jobs</span>
-                  <div
-                    class="px-1 py-1 flex items-center justify-center bg-gray-500 text-white rounded-lg"
-                  >
-                    <span class="text-[10px]">2957</span>
-                  </div>
-                </a>
-              </li>
-              <li class="flex justify-center">
-                <a
-                  href="#page1"
-                  class="flex justify-center items-center gap-3 py-4 w-full hover:bg-white hover:rounded-lg hover:shadow"
-                >
-                  <i class="fa-solid fa-spinner"></i>
-                  <span class="capitalize">pending - PMO</span>
-                  <div
-                    class="px-1 py-1 flex items-center justify-center bg-gray-500 text-white rounded-lg"
-                  >
-                    <span class="text-[10px]">0</span>
-                  </div>
-                </a>
-              </li>
-              <li class="flex justify-center">
-                <a
-                  href="#page1"
-                  class="flex justify-center items-center gap-3 py-4 w-full hover:bg-white hover:rounded-lg hover:shadow"
-                >
-                  <i class="fas fa-drafting-compass"></i>
-                  <span class="capitalize">draft</span>
-                  <div
-                    class="px-1 py-1 flex items-center justify-center bg-gray-500 text-white rounded-lg"
-                  >
-                    <span class="text-[10px]">30</span>
-                  </div>
-                </a>
-              </li>
-              <li class="flex justify-center">
-                <a
-                  href="#page1"
-                  class="flex justify-center items-center gap-3 py-4 w-full hover:bg-white hover:rounded-lg hover:shadow"
-                >
-                  <i class="fa-solid fa-briefcase"></i>
-                  <span class="capitalize">all jobs</span>
-                  <div
-                    class="px-1 py-1 flex items-center justify-center bg-gray-500 text-white rounded-lg"
-                  >
-                    <span class="text-[10px]">4320</span>
-                  </div>
-                </a>
-              </li>
-            </ul>
-          </div>
+          </ul>
+        </div>
         <div x-show="tab === 'activejobs'" class="flex w-full gap-4">
-
-
           <div class="bg-white mx-4 my-8 rounded p-8 mt-0 pt-0">
               <div class="flex justify-between items-center mb-6">
                   <h2 class="text-2xl font-bold"></h2>
@@ -776,6 +787,23 @@
         </div>
       </div>
 
+      <div x-show="tab === 'submission'"   class="flex w-full gap-4">
+      </div>
+
+      <div x-show="tab === 'rankings'"   class="flex w-full gap-4">
+      </div>
+
+      <div x-show="tab === 'interviews'"   class="flex w-full gap-4">
+      </div>
+
+      <div x-show="tab === 'offers'"   class="flex w-full gap-4">
+      </div>
+
+      <div x-show="tab === 'workorders'"   class="flex w-full gap-4">
+      </div>
+
+
+
       <div x-show="tab === 'jobworkflow'"   class="flex w-full gap-4">
          <div
           class="w-100 p-[30px] rounded border"
@@ -886,9 +914,10 @@
               @endforeach
             </tbody>
           </table>
+        </div>
       </div>
-       </div>
-       <div x-show="tab === 'vendorrelease'"   class="w-full gap-4">
+      
+      <div x-show="tab === 'vendorrelease'"   class="w-full gap-4">
         <div x-data="{
         selectedVendor: '',
         vendor_id : '',

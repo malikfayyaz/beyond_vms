@@ -106,4 +106,9 @@ class CareerOpportunitiesSubmissionController extends Controller
             'message' => 'Submission Shortlisted successfully!'
         ]);
     }
+
+
+    public function jobSubmission(Request $request){
+        dd($request->all());
+    }
 }
