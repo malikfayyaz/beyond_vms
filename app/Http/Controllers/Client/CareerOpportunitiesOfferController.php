@@ -26,8 +26,8 @@ class CareerOpportunitiesOfferController extends Controller
                 ->addColumn('consultant_name', function($row) {
                     return $row->consultant ? $row->consultant->full_name : 'N/A';
                 })
-                ->addColumn('career_opportunity', function($row) {
-                    return $row->careerOpportunity ? $row->careerOpportunity->title . '('.$row->careerOpportunity->id.')' : 'N/A';
+                ->addColumn('career_opportunity', function ($row) {
+                    return '<span class="job-detail-trigger text-blue-500 cursor-pointer" data-id="' . $row->careerOpportunity->id . '">' . $row->careerOpportunity->title . '('.$row->careerOpportunity->id.')' . '</span>';
                 })
                 ->addColumn('hiring_manger', function($row) {
                     return $row->careerOpportunity->hiringManager ? $row->careerOpportunity->hiringManager->fullname : 'N/A';
@@ -54,6 +54,7 @@ class CareerOpportunitiesOfferController extends Controller
                                     <i class="fas fa-eye"></i>
                             </a>';
                 })
+                ->rawColumns(['career_opportunity','action'])
                 ->make(true);
             }
         return view('client.offer.index');

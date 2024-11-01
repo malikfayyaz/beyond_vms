@@ -5,12 +5,17 @@
     @include('admin.layouts.partials.dashboard_side_bar')
     <div class="ml-16">
         @include('admin.layouts.partials.header')
-        <div class="bg-white mx-4 my-8 rounded p-8">
+        <div class="bg-white mx-4 my-8 rounded p-8" x-data="{ selectedUser: null}" @job-details-updated.window="selectedUser = $event.detail" @submission-details-updated.window="selectedUser = $event.detail">
             <div id="success-message" style="display: none;" class="alert alert-success"></div>
             <div >
                 <div class="flex justify-between items-center mb-6">
                     <h2 class="text-2xl font-bold">Submission</h2>
                 </div>
+
+                <x-job-details />
+                
+                <x-submission-details />
+
                 <table class="min-w-full divide-y divide-gray-200" id="listing">
                     <thead class="bg-gray-50">
                     <tr>
@@ -109,6 +114,60 @@
                 { data: 'worker_type', name: 'worker_type' },
                 { data: 'action', name: 'action', orderable: false, searchable: false }
             ]);
+
+            function toggleSidebar() 
+            {
+                // Assuming you want to toggle selectedUser state
+                this.selectedUser = this.selectedUser ? 'user' : 'user';
+            }
+
+            $(document).on('click', '.job-detail-trigger', function (e) {
+                e.preventDefault();
+                let jobId = $(this).data('id');
+                openJobDetailsModal(jobId);
+            });
+
+            function openJobDetailsModal(jobId) {
+                
+                fetch(`/job-details/${jobId}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            const event = new CustomEvent('job-details-updated', {
+                                    detail: data,
+                                    bubbles: true,
+                                    composed: true
+                                });
+                                console.log(event.detail.data);
+                                
+                                document.dispatchEvent(event);
+                        })
+                        .catch(error => console.error('Error:', error));
+
+            }
+
+            $(document).on('click', '.submission-detail-trigger', function (e) {
+                e.preventDefault();
+                let submissionId = $(this).data('id');
+                openSubmissionDetailsModal(submissionId);
+            });
+
+            function openSubmissionDetailsModal(submissionId) {
+                console.log(submissionId);
+                fetch(`/submission-details/${submissionId}`)
+                    .then(response => {
+                        if (!response.ok) throw new Error('Network response was not ok');
+                        return response.json();
+                    })
+                    .then(data => {
+                        const event = new CustomEvent('submission-details-updated', {
+                            detail: data,
+                            bubbles: true,
+                            composed: true
+                        });
+                        document.dispatchEvent(event);
+                    })
+                    .catch(error => console.error('Error fetching submission details:', error));
+            }
         }
     });
 </script>

@@ -36,23 +36,18 @@
                 class="w-full flex justify-center items-center gap-3 hover:bg-white hover:rounded-lg hover:shadow py-4"
                 >
                   <i class="fa-regular fa-file-lines"></i>
-                  <span class="capitalize">active jobs</span>
-                  <div
-                    class="px-1 py-1 flex items-center justify-center bg-gray-500 text-white rounded-lg"
-                  >
-                    <span class="text-[10px]">156</span>
-                  </div>
+                  <span class="capitalize">Job Details</span>
+                
                 </a>
               </li>
 
-              <li class="flex justify-center ">
+              <!-- <li class="flex justify-center items-center">
                 <a
-                  @click="tab = 'vendorrelease'"
-                  :class="{ 'border-blue-500 text-blue-500': tab === 'vendorrelease' }"
-                  class="flex justify-center items-center gap-3 py-4 w-full hover:bg-white hover:rounded-lg hover:shadow"
-                  >
-                  <i class="fa-regular fa-file-lines"></i>
-                  <span class="capitalize">Submissions</span>
+                  href="#page2"
+                  class="w-full flex justify-center items-center gap-3 bg-white rounded-lg shadow py-4"
+                  :style="{'color': 'var(--primary-color)'}"
+                  ><i class="fa-regular fa-registered"></i
+                  ><span class="capitalize">Pending Release Job</span>
                   <div
                     class="px-1 py-1 flex items-center justify-center text-white rounded-lg"
                     :style="{'background-color': 'var(--primary-color)'}"
@@ -60,76 +55,7 @@
                     <span class="text-[10px]">56</span>
                   </div>
                 </a>
-              </li>
-
-              <li class="flex justify-center items-center">
-                <a
-                @click="tab = 'rankings'"
-                :class="{ 'border-blue-500 text-blue-500': tab === 'rankings' }"
-                class="w-full flex justify-center items-center gap-3 hover:bg-white hover:rounded-lg hover:shadow py-4"
-                >
-                  <i class="fa-regular fa-file-lines"></i>
-                  <span class="capitalize">Rankings</span>
-                  <div
-                    class="px-1 py-1 flex items-center justify-center text-white rounded-lg"
-                    :style="{'background-color': 'var(--primary-color)'}"
-                  >
-                    <span class="text-[10px]">56</span>
-                  </div>
-                </a>
-              </li>
-
-              <li class="flex justify-center items-center">
-                <a
-                @click="tab = 'interviews'"
-                :class="{ 'border-blue-500 text-blue-500': tab === 'interviews' }"
-                class="w-full flex justify-center items-center gap-3 hover:bg-white hover:rounded-lg hover:shadow py-4"
-                >
-                  <i class="fa-regular fa-file-lines"></i>
-                  <span class="capitalize">Interviews</span>
-                  <div
-                    class="px-1 py-1 flex items-center justify-center text-white rounded-lg"
-                    :style="{'background-color': 'var(--primary-color)'}"
-                  >
-                    <span class="text-[10px]">56</span>
-                  </div>
-                </a>
-              </li>
-
-              <li class="flex justify-center items-center">
-                <a
-                @click="tab = 'offers'"
-                :class="{ 'border-blue-500 text-blue-500': tab === 'offers' }"
-                class="w-full flex justify-center items-center gap-3 hover:bg-white hover:rounded-lg hover:shadow py-4"
-                >
-                  <i class="fa-regular fa-file-lines"></i>
-                  <span class="capitalize">Offers</span>
-                  <div
-                    class="px-1 py-1 flex items-center justify-center text-white rounded-lg"
-                    :style="{'background-color': 'var(--primary-color)'}"
-                  >
-                    <span class="text-[10px]">56</span>
-                  </div>
-                </a>
-              </li>
-
-              <li class="flex justify-center items-center">
-                <a
-                @click="tab = 'workorders'"
-                :class="{ 'border-blue-500 text-blue-500': tab === 'workorders' }"
-                class="w-full flex justify-center items-center gap-3 hover:bg-white hover:rounded-lg hover:shadow py-4"
-                >
-                  <i class="fa-regular fa-file-lines"></i>
-                  <span class="capitalize">Workorders</span>
-                  <div
-                    class="px-1 py-1 flex items-center justify-center text-white rounded-lg"
-                    :style="{'background-color': 'var(--primary-color)'}"
-                  >
-                    <span class="text-[10px]">56</span>
-                  </div>
-                </a>
-              </li>
-
+              </li> -->
               <li class="flex justify-center">
                 <a
                 @click="tab = 'jobworkflow'"
@@ -138,19 +64,15 @@
                 >
                   <i class="fa-solid fa-fill"></i>
                   <span class="capitalize">Workflow</span>
-                  <div
-                    class="px-1 py-1 flex items-center justify-center bg-gray-500 text-white rounded-lg"
-                  >
-                    <span class="text-[10px]">20</span>
-                  </div>
+                 
                 </a>
               </li>
                <li class="flex justify-center" x-data="{ status: {{ $job->jobStatus }} }" x-show="status === 3 || status === 5">
-                  <a
-                  @click="tab = 'vendorrelease'"
-                  :class="{ 'border-blue-500 text-blue-500': tab === 'vendorrelease' }"
-                  class="flex justify-center items-center gap-3 py-4 w-full hover:bg-white hover:rounded-lg hover:shadow"
-                  >
+                <a
+                @click="tab = 'vendorrelease'"
+                :class="{ 'border-blue-500 text-blue-500': tab === 'vendorrelease' }"
+                class="flex justify-center items-center gap-3 py-4 w-full hover:bg-white hover:rounded-lg hover:shadow"
+                >
                     <i class="fa-solid fa-fill"></i>
                     <span class="capitalize">Vendor Release</span>
                     <div
@@ -160,9 +82,29 @@
                     </div>
                 </a>
             </li>
-          </ul>
-        </div>
+
+           
+          
+           
+              <!-- <li class="flex justify-center">
+                <a
+                  href="#page1"
+                  class="flex justify-center items-center gap-3 py-4 w-full hover:bg-white hover:rounded-lg hover:shadow"
+                >
+                  <i class="fa-solid fa-briefcase"></i>
+                  <span class="capitalize">all jobs</span>
+                  <div
+                    class="px-1 py-1 flex items-center justify-center bg-gray-500 text-white rounded-lg"
+                  >
+                    <span class="text-[10px]">4320</span>
+                  </div>
+                </a>
+              </li> -->
+            </ul>
+          </div>
         <div x-show="tab === 'activejobs'" class="flex w-full gap-4">
+
+
           <div class="bg-white mx-4 my-8 rounded p-8 mt-0 pt-0">
               <div class="flex justify-between items-center mb-6">
                   <h2 class="text-2xl font-bold"></h2>
@@ -441,7 +383,7 @@
                 <p class="color-[#202124] font-light">Internal Notes</p>
                 <div class="mt-4">
                   <ul class="color-[#202124] font-light">
-                    {{-- $job->internal_notes --}}
+                    {!! $job->internal_notes !!}
                   </ul>
                 </div>
               </div>
@@ -449,7 +391,7 @@
                     <p class="color-[#202124] font-light">Skills</p>
                     <div class="mt-4">
                         <ul class="color-[#202124] font-light">
-                            {{-- $job->skills --}}
+                            {!! $job->skills !!}
                         </ul>
                     </div>
                 </div>
@@ -473,6 +415,59 @@
                     <span class="color-[#202124] font-light">{{$job->pre_candidate}}</span>
                   </div>
                 </div>
+                @if($job->pre_candidate == 'Yes')
+              
+                <div class="flex items-center justify-between py-4 border-t">
+                      <div class="w-2/4">
+                          <h4 class="font-medium">Candidate First Name:</h4>
+                      </div>
+                      <div class="w-2/4">
+                          <p class="font-light">{{$job->pre_name}}</p>
+                      </div>
+                  </div>
+                <div class="flex items-center justify-between py-4 border-t">
+                      <div class="w-2/4">
+                          <h4 class="font-medium">Candidate middle Name:</h4>
+                      </div>
+                      <div class="w-2/4">
+                          <p class="font-light">{{$job->pre_middle_name}}</p>
+                      </div>
+                  </div>
+                <div class="flex items-center justify-between py-4 border-t">
+                      <div class="w-2/4">
+                          <h4 class="font-medium">Candidate Last Name:</h4>
+                      </div>
+                      <div class="w-2/4">
+                          <p class="font-light">{{$job->pre_last_name}}</p>
+                      </div>
+                  </div>
+               
+                <div class="flex items-center justify-between py-4 border-t">
+                      <div class="w-2/4">
+                          <h4 class="font-medium">Candidate Phone:</h4>
+                      </div>
+                      <div class="w-2/4">
+                          <p class="font-light">{{$job->candidate_phone}}</p>
+                      </div>
+                  </div>
+               
+                <div class="flex items-center justify-between py-4 border-t">
+                      <div class="w-2/4">
+                          <h4 class="font-medium">Candidate Email:</h4>
+                      </div>
+                      <div class="w-2/4">
+                          <p class="font-light">{{$job->candidate_email}}</p>
+                      </div>
+                  </div>
+                  <div class="flex items-center justify-between py-4 border-t">
+                      <div class="w-2/4">
+                          <h4 class="font-medium">Worker Pay Rate:</h4>
+                      </div>
+                      <div class="w-2/4">
+                          <p class="font-light">{{$job->pre_current_rate}}</p>
+                      </div>
+                  </div>
+                @endif
               </div>
             </div>
             <!-- Middle Column -->
@@ -604,6 +599,16 @@
                       <p class="font-light">{{ $job->client_billable ?? 'N/A' }}</p>
                   </div>
                 </div>
+                @if($job->client_billable == 'Yes')
+                <div class="flex items-center justify-between py-4 border-t">
+                  <div class="w-2/4">
+                    <h4 class="font-medium">Client Name:</h4>
+                  </div>
+                  <div class="w-2/4">
+                      <p class="font-light">{{ $job->client_name ?? 'N/A' }}</p>
+                  </div>
+                </div>
+                @endif
                 <div class="flex items-center justify-between py-4 border-t">
                   <div class="w-2/4">
                     <h4 class="font-medium">Expenses Allowed?</h4>
@@ -612,6 +617,16 @@
                       <p class="font-light">{{ $job->expenses_allowed ?? 'N/A' }}</p>
                   </div>
                 </div>
+                @if($job->expenses_allowed == 'Yes')
+                <div class="flex items-center justify-between py-4 border-t">
+                  <div class="w-2/4">
+                    <h4 class="font-medium">Estimated Expense</h4>
+                  </div>
+                  <div class="w-2/4">
+                      <p class="font-light">{{ $job->expense_cost ?? 'N/A' }}</p>
+                  </div>
+                </div>
+                @endif
                 <div class="flex items-center justify-between py-4 border-t">
                   <div class="w-2/4">
                     <h4 class="font-medium">Remote Candidate:</h4>
@@ -787,23 +802,6 @@
         </div>
       </div>
 
-      <div x-show="tab === 'submission'"   class="flex w-full gap-4">
-      </div>
-
-      <div x-show="tab === 'rankings'"   class="flex w-full gap-4">
-      </div>
-
-      <div x-show="tab === 'interviews'"   class="flex w-full gap-4">
-      </div>
-
-      <div x-show="tab === 'offers'"   class="flex w-full gap-4">
-      </div>
-
-      <div x-show="tab === 'workorders'"   class="flex w-full gap-4">
-      </div>
-
-
-
       <div x-show="tab === 'jobworkflow'"   class="flex w-full gap-4">
          <div
           class="w-100 p-[30px] rounded border"
@@ -914,10 +912,9 @@
               @endforeach
             </tbody>
           </table>
-        </div>
       </div>
-      
-      <div x-show="tab === 'vendorrelease'"   class="w-full gap-4">
+       </div>
+       <div x-show="tab === 'vendorrelease'"   class="w-full gap-4">
         <div x-data="{
         selectedVendor: '',
         vendor_id : '',

@@ -2,10 +2,13 @@
 namespace App\Services;
 
 use App\Models\CareerOpportunitiesOffer;
+use App\Models\CareerOpportunitiesContract;
 use App\Models\CareerOpportunity;
 use App\Models\Setting;
 use App\Models\Workflow;
 use App\Models\ContractBudgetWorkflow;
+use App\Models\ContractRatesEditWorkflow;
+use App\Models\ContractExtensionWorkflow;
 use App\Models\Admin;
 use App\Models\Vendor;
 use App\Models\Client;
@@ -14,7 +17,7 @@ use App\Models\Consultant;
 
 class CareerOpportunitiesContractService
 {
-    public static function createContractSpendWorkflowProcess($contractAdditionalBudget,$contract)
+    public static function createContractBudgetWorkflow($contractAdditionalBudget,$contract)
     {
         // Fetch all workflows for the hiring manager of the offer
         $workflows = Workflow::where('client_id', $contract->workorder->hiring_manager_id)->get();
@@ -53,7 +56,7 @@ class CareerOpportunitiesContractService
         return true;
     }
 
-    public static function approveContractSpendWorkWorkFlow($request){
+    public static function approveContractBudgetWorkflow($request){
         $user = \Auth::user();
         $userid = \Auth::id();
 
@@ -87,7 +90,8 @@ class CareerOpportunitiesContractService
                 }
             }
         }else{
-            $offer = CareerOpportunitiesOffer::findOrFail($workflow->offer_id);
+            $contract = CareerOpportunitiesContract::findOrFail($request->contractId);
+            $offer = CareerOpportunitiesOffer::findOrFail($contract->offer_id);
             $offer->status = '4'; //offer status 4 is for pending vendor approval
             $offer->save();
         }
@@ -95,7 +99,7 @@ class CareerOpportunitiesContractService
 
     protected static function acceptContractBudgetWorkflow($workflowid, $userid, $role, $portal, $request){
 
-        $filename = handleFileUpload($request, 'jobAttachment', 'offer_workflow_attachments');
+        $filename = handleFileUpload($request, 'jobAttachment', 'contract_budget_workflow_attachments');
         $workflow = ContractBudgetWorkflow::findOrFail($workflowid);
         $workflow->status = 'Approved'; // Update the status to approved
         $workflow->approval_notes = $request->note;
@@ -163,5 +167,106 @@ class CareerOpportunitiesContractService
         $workflow->machine_user_name = gethostname();
         $workflow->save();
     }
+
+    // rate contract workflow 
+
+    public static function contractEditRatesWorkflowProcess($model,$contract)
+    {
+        // Fetch all workflows for the hiring manager of the offer
+        $workflows = Workflow::where('client_id', $contract->workorder->hiring_manager_id)->get();
+        // dd($workflows);
+        // If there are no workflows, return early
+        if ($workflows->isEmpty()) {
+            return false;
+        }
+        // Prepare the data to insert all at once
+        $workflowData = [];
+        $i = 0;
+        foreach ($workflows as $wf) {
+            $emailSentValue = 0;
+            if ($i == 0){
+                $emailSentValue = 1;
+            }
+            $workflowData[] = [
+                'contract_id' => $contract->id,
+                'client_id' => $wf->hiring_manager_id,
+                'workflow_id' => 0,
+                'request_id' => $model->id,
+                'approval_role_id' => $wf->approval_role_id,
+                'bulk_approval' => 0,
+                'approval_number' => $wf->approval_number,
+                'status' => 'Pending',
+                'status_time' => now(),
+                'approval_required' => $wf->approval_required == 'yes' ? 1 : 0,
+                'email_sent' => $emailSentValue,
+            ];
+            $i++;
+        }
+
+        // Insert all records at once using batch insert
+        ContractRatesEditWorkflow::insert($workflowData);
+
+        return true;
+    } 
+
+    // extension workflow
+
+
+     public static function contractExtensionWorkflowProcess($model,$contract)
+     {
+         // Fetch all workflows for the hiring manager of the offer
+         $workflows = Workflow::where('client_id', $contract->workorder->hiring_manager_id)->get();
+         // dd($workflows);
+         // If there are no workflows, return early
+         if ($workflows->isEmpty()) {
+             return false;
+         }
+         // Prepare the data to insert all at once
+         $workflowData = [];
+         $i = 0;
+         foreach ($workflows as $wf) {
+             $emailSentValue = 0;
+             if ($i == 0){
+                 $emailSentValue = 1;
+             }
+             $workflowData[] = [
+                 'contract_id' => $contract->id,
+                 'client_id' => $wf->hiring_manager_id,
+                 'workflow_id' => 0,
+                 'request_id' => $model->id,
+                 'approval_role_id' => $wf->approval_role_id,
+                 'bulk_approval' => 0,
+                 'approval_number' => $wf->approval_number,
+                 'status' => 'Pending',
+                 'status_time' => now(),
+                 'approval_required' => $wf->approval_required == 'yes' ? 1 : 0,
+                 'email_sent' => $emailSentValue,
+             ];
+             $i++;
+         }
+ 
+         // Insert all records at once using batch insert
+         ContractExtensionWorkflow::insert($workflowData);
+ 
+         return true;
+     }
+     /*public function updateAdditionalWorkflow($request){
+        if(isset($request)){
+            $contract = CareerOpportunitiesContract::with([
+            'careerOpportunity',
+            'contractAdditionalBudgetRequest',
+            ])->findOrFail($request->contractId);
+            $additionalBudgetRequest = $contract->contractAdditionalBudgetRequest()
+            ->where('id', $request->rowId)
+            ->firstOrFail();
+
+            WorkflowProcess::contractSpendWorkflowProcess($model, $model->id, $contract_id,$workorder->wo_hiring_manager);
+
+            Yii::app()->user->setFlash('success', '<div class="alert alert-success"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                               Workflow updated successfully.</div>');
+            $this->redirect(array('contractView','id'=>$contract_id));
+
+        }
+    }*/
 
 }

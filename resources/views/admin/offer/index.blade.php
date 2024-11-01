@@ -5,13 +5,14 @@
     @include('admin.layouts.partials.dashboard_side_bar')
     <div class="ml-16">
         @include('admin.layouts.partials.header')
-        <div class="bg-white mx-4 my-8 rounded p-8">
+        <div class="bg-white mx-4 my-8 rounded p-8" x-data="{ selectedUser: null}" @job-details-updated.window="selectedUser = $event.detail">
             @include('admin.layouts.partials.alerts')
             <div id="success-message" style="display: none;" class="alert alert-success"></div>
             <div >
                 <div class="flex justify-between items-center mb-6">
                     <h2 class="text-2xl font-bold">Offers</h2>
                 </div>
+                <x-job-details />
                 <table class="min-w-full divide-y divide-gray-200" id="listing">
                     <thead class="bg-gray-50">
                     <tr>
@@ -102,6 +103,35 @@
                 { data: 'action', name: 'action', orderable: false, searchable: false }
 
             ]);
+            function toggleSidebar() 
+            {
+                // Assuming you want to toggle selectedUser state
+                this.selectedUser = this.selectedUser ? 'user' : 'user';
+            }
+
+            $(document).on('click', '.job-detail-trigger', function (e) {
+                e.preventDefault();
+                let jobId = $(this).data('id');
+                openJobDetailsModal(jobId);
+            });
+
+            function openJobDetailsModal(jobId) {
+                
+                fetch(`/job-details/${jobId}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            const event = new CustomEvent('job-details-updated', {
+                                    detail: data,
+                                    bubbles: true,
+                                    composed: true
+                                });
+                                console.log(event.detail.data);
+                                
+                                document.dispatchEvent(event);
+                        })
+                        .catch(error => console.error('Error:', error));
+
+            }
         }
     });
 </script>

@@ -102,7 +102,7 @@ export default function wizardForm(careerOpportunity = null,businessUnitsData = 
         $('#jobLaborCategory').on('change', () => {
           var labour_type = $('#jobLaborCategory').val();
           var type = 10;
-          let url = `/admin/load-market-job-template/${labour_type}/${type}`;
+          let url = `/load-market-job-template/${labour_type}/${type}`;
 
           ajaxCall(url, 'GET', [[updateStatesDropdown, ['response', 'jobTitle']]]);
         });
@@ -130,7 +130,7 @@ export default function wizardForm(careerOpportunity = null,businessUnitsData = 
 
           $('#maxBillRate').val('');
           $('#billRate').val('');
-          let url = `/admin/load-job-template`;
+          let url = `/load-job-template`;
 
           if (level_id != '' && template_id != '') {
             let data = new FormData();
@@ -155,7 +155,7 @@ export default function wizardForm(careerOpportunity = null,businessUnitsData = 
         this.loadTemplate = () => {
           var template_id = $('#jobTitle').find(':selected').val();
 
-          let url = `/admin/load-job-template/`;
+          let url = `/load-job-template/`;
           let data = new FormData();
           data.append('template_id', template_id);
           const updates = {
@@ -281,7 +281,7 @@ export default function wizardForm(careerOpportunity = null,businessUnitsData = 
       });
       console.log(this.formData.businessUnits);
 
-      let url = `/admin/division-load`;
+      let url = `/division-load`;
       let data = new FormData();
                 data.append('bu_id', this.selectedBusinessUnit);
 
