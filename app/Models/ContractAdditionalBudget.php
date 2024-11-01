@@ -19,6 +19,6 @@ class ContractAdditionalBudget extends Model
     ];
 	public function contract()
     {
-        return $this->hasOne(CareerOpportunitiesContract::class, 'contract_id', 'id');
+        return $this->belongsTo(CareerOpportunitiesContract::class, 'contract_id');
     }
 }

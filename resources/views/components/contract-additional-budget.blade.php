@@ -23,26 +23,8 @@
                             <i class="fas fa-times"></i>
                           </button>
                         </div>
-                        <!-- User Details -->
-                        <div class="p-4 bg-gray-200 flex justify-between items-center">
-                            <div>
-                                <h2 x-text="selectedUser.userName" class="text-lg font-semibold"></h2>
-                                <a href="">Business Analyist (<span x-text="selectedUser.id"></span>)</a>
-                            </div>
-                            <div>
-                                <span
-                                        class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full"
-                                        :class="{
-                                                      'bg-green-100 text-green-800': selectedUser.status === 'Active',
-                                                      'bg-red-100 text-red-800': selectedUser.status === 'Inactive',
-                                                      'bg-yellow-100 text-yellow-800': selectedUser.status === 'Pending'
-                                                  }"
-                                        x-text="selectedUser.status"
-                                      ></span>
-                            </div>
-                        </div>
                         <!-- Additional budget request details -->
-                         <div class="p-4">
+                        <div class="p-4">
                             <table class="border w-full">
                                 <thead>
                                 <tr class="text-left border-b">
@@ -52,102 +34,235 @@
                             </thead>
                                 <tbody>
                                 <tr>
-                                    <td class="p-2">Request Amount	RT :</td>
-                                    <td class="p-2 text-green-800 font-bold"> $20,000,000.00</td>
+                                    <td class="p-2">Request Amount  RT :</td>
+                                    <td class="p-2 text-green-800 font-bold">${{
+                                    $contract->latestPendingBudgetRequest->amount }}</td>
                                 </tr>
                             </tbody>
                             </table>
                          </div>
                          <!-- Reason for Additional Budget Request & Notes -->
-                        <div class="p-4 mb-2">
-                          <div class="container mx-auto px-4">
-                            <!-- Table -->
-                            <div class="overflow-x-auto">
-                              <table
-                                class="w-full bg-white shadow-md rounded-lg overflow-hidden"
-                              >
-                                <thead class="bg-gray-800">
-                                  <tr>
-                                    <th class="px-4 py-2 text-left text-white">
-                                      Business Unit
-                                    </th>
-                                    <th class="px-4 py-2 text-left text-white">
-                                      Budget Percentage
-                                    </th>
-                                  </tr>
-                                </thead>
-                                <tbody>
-                                  <tr class="hover:bg-gray-100">
-                                    <td class="px-4 py-3 border-b">
-                                      708212 - 166 - St. Peters, MO - LPG
-                                    </td>
-                                    <td class="px-4 py-3 border-b">100%</td>
-                                  </tr>
-                                </tbody>
-                              </table>
-                            </div>
-                          </div>
+                    <div class="bg-gray-100 p-4 pt-0 rounded-lg">
+                        <h3 class="text-md font-semibold">Reason for Additional Budget Request</h3>
+                        <div class="ml-4 mt-2 text-gray-600">
+                            {{ getSettingTitleById($contract->latestPendingBudgetRequest->additional_budget_reason) }}
                         </div>
-
+                    </div>
+                    <div class="bg-gray-100 p-4 pt-0 rounded-lg">
+                        <h3 class="text-md font-semibold">Additional Budget Request Notes</h3>
+                        <div class="ml-4 mt-2 text-gray-600">
+                        {{ $contract->latestPendingBudgetRequest->notes }}
+                        </div>
+                    </div>
                         <!-- Table Data -->
+                                        <div x-data="{
+    openModal: false,
+    currentRowId: null,
+        actionType: '',
+        contractId: {{ $contract->id }},
+    reason: '',
+    note: '',
+    errors: {},
+    validateForm() {
+        this.errors = {};
+       if (this.actionType === 'Reject' && !this.reason) {
+            this.errors.reason = 'Please select a reason';
+        }
+        if (!this.note.trim()) this.errors.note = 'Please enter a note';
+        return Object.keys(this.errors).length === 0;
+    },
 
-                        <div class="container mx-auto p-6">
-                            <table class="min-w-full bg-white">
+    submitForm() {
+    console.log('Form submitted successfully');
+    const isValid = this.validateForm();
+    if (isValid) {
+        // Create FormData object
+        const formData = new FormData();
+        formData.append('rowId', this.currentRowId); // Use currentRowId for identification
+        formData.append('contractId', this.contractId);
+        formData.append('actionType', this.actionType); //for button
+        if (this.actionType === 'Reject') {
+                formData.append('reason', this.reason);
+            }
+        formData.append('note', this.note);
+        const fileInput = document.getElementById('jobAttachment');
+        if (fileInput.files.length > 0) {
+            formData.append('jobAttachment', fileInput.files[0]);
+        }
+        // Call the AJAX function
+                const url = '{{ route('admin.contract.contractBudgetWorkflow') }}';
+                ajaxCall(url,'POST', [[onSuccess, ['response']]], formData);
+    } else {
+        console.log('Form validation failed');
+    }
+},
+
+
+
+
+    clearError(field) {
+        delete this.errors[field];
+    }
+}"
+                     class="p-[30px] rounded border mt-4"
+                     :style="{'border-color': 'var(--primary-color)'}"
+                >
+                    <div class="mb-4 flex items-center gap-2">
+                        <i
+                            class="fa-regular fa-square-check"
+                            :style="{'color': 'var(--primary-color)'}"
+                        ></i>
+                        <h2
+                            class="text-xl font-bold"
+                            :style="{'color': 'var(--primary-color)'}"
+                        >
+                            Contract Workflow
+                        </h2>
+                    </div>
+                    <div class="bg-white shadow rounded-lg">
+                        <div class="overflow-hidden">
+                            <table class="w-full">
                                 <thead>
-                                    <tr class="bg-gray-100">
-                                        <th class="text-left p-4 font-semibold">Approver Name</th>
-                                        <th class="text-left p-4 font-semibold">Approved/Rejected By</th>
-                                        <th class="text-left p-4 font-semibold">Date & Time</th>
-                                        <th class="text-left p-4 font-semibold">Action</th>
-                                    </tr>
+                                <tr class="bg-gray-50 text-left">
+                                    <th class="py-4 px-4 text-center font-semibold text-sm text-gray-600">Approver Name</th>
+                                    <th class="py-4 px-4 text-center font-semibold text-sm text-gray-600">Approved/Rejected By</th>
+                                    <th class="py-4 px-4 text-center font-semibold text-sm text-gray-600">Approved/Rejected Date & Time</th>
+                                    <th class="py-4 px-4 text-center font-semibold text-sm text-gray-600">Action</th>
+                                </tr>
                                 </thead>
-                                <tbody>
-                                    <template x-for="approver in approvers" :key="approver.id">
-                                        <tr class="border-t">
-                                            <td class="p-4">
-                                                <div class="flex items-center">
-                                                    <div class="w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center text-white mr-3">
-                                                        <span x-text="approver.initial"></span>
-                                                    </div>
-                                                    <div>
-                                                        <span x-text="approver.name"></span>
-                                                        <span x-text="approver.title" class="text-gray-600 text-sm block"></span>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td class="p-4" x-text="approver.approvedBy || ''"></td>
-                                            <td class="p-4" x-text="approver.dateTime || ''"></td>
-                                            <td class="p-4">
-                                                <div class="flex gap-2">
-                                                    <template x-if="approver.status === 'pending'">
-                                                        <span class="px-3 py-1 bg-orange-400 text-white rounded">Pending</span>
-                                                    </template>
-                                                    <template x-if="approver.status === null">
-                                                        <div class="flex gap-2">
-                                                            <button 
-                                                                @click="showModal = true; modalType = 'approve'; selectedUser = approver"
-                                                                class="p-2 bg-green-400 text-white rounded hover:bg-green-500"
-                                                            >
-                                                                <i class="fas fa-check"></i>
-                                                            </button>
-                                                            <button 
-                                                                @click="showModal = true; modalType = 'reject'; selectedUser = approver"
-                                                                class="p-2 bg-red-400 text-white rounded hover:bg-red-500"
-                                                            >
-                                                                <i class="fas fa-times"></i>
-                                                            </button>
-                                                            <button class="p-2 bg-blue-400 text-white rounded hover:bg-blue-500">
-                                                                <i class="fas fa-envelope"></i>
-                                                            </button>
-                                                        </div>
-                                                    </template>
-                                                </div>
+                                <tbody class="divide-y divide-gray-200">
+                                @if($contract->ContractBudgetWorkflow->isEmpty())
+                                    <tr>
+                                        <td colspan="9" class="py-4 px-4 text-center text-sm text-gray-600">
+                                            No workflows available.
+                                        </td>
+                                    </tr>
+                                @else
+                                    @foreach($contract->ContractBudgetWorkflow as $workflow)
+                                        <tr>
+                                            <td class="py-4 px-4 text-center text-sm">{{ $workflow->hiringManager->full_name }}</td>
+                                            <td class="py-4 px-4 text-center text-sm">{{ $workflow->approver_type }}</td>
+                                            <td class="py-4 px-4 text-center text-sm">{{ $workflow->approved_datetime ?? 'N/A' }}</td>
+                                            <td class="py-4 px-4 text-center text-sm">
+                                                   <div class="flex space-x-2">
+    @if($workflow->hiringManager->user_id == auth()->user()->id && $workflow->status == 'Pending' && $workflow->email_sent == '1')
+    <button
+        @click="actionType = 'Accept'; openModal = true; currentRowId = {{ $workflow->id }}; submitForm(currentRowId, actionType);"
+        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded flex items-center"
+    >
+        <i class="fas fa-check-circle fa-2x mr-2"></i>
+    </button>
+
+    <button
+        @click="actionType = 'Reject'; openModal = true; currentRowId = {{ $workflow->id }}; submitForm(currentRowId, actionType);"
+        class="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded flex items-center"
+    >
+        <i class="fas fa-times-circle fa-2x mr-2"></i>
+    </button>
+    @endif
+</div>
+
+                                            
                                             </td>
                                         </tr>
-                                    </template>
+                                    @endforeach
+                                @endif
                                 </tbody>
                             </table>
                         </div>
+                    </div>
+
+                    <!-- Modal -->
+                    <div
+                        x-show="openModal"
+                        @click.away="openModal = false"
+                        class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full"
+                        x-transition:enter="transition ease-out duration-300"
+                        x-transition:enter-start="opacity-0"
+                        x-transition:enter-end="opacity-100"
+                        x-transition:leave="transition ease-in duration-300"
+                        x-transition:leave-start="opacity-100"
+                        x-transition:leave-end="opacity-0"
+                    >
+                        <div
+                            class="relative top-20 mx-auto p-5 border w-[600px] shadow-lg rounded-md bg-white"
+                            @click.stop
+                        >
+                            <!-- Header -->
+                            <div class="flex items-center justify-between border-b p-4">
+                                <h2 class="text-xl font-semibold"><!--Reject--> Accept Candidate</h2>
+                                <button
+                                    @click="openModal = false"
+                                    class="text-gray-400 hover:text-gray-600 bg-transparent hover:bg-transparent"
+                                >
+                                    &times;
+                                </button>
+                            </div>
+
+                            <!-- Content -->
+                            <div class="p-4">
+                        <form @submit.prevent="submitForm" id="generalformwizard">
+                                <div class="mb-4">
+                                    <div x-show="actionType === 'Reject'" class="mt-4">
+                                        <label for="reason" class="block text-sm font-medium text-gray-700 mb-1">
+                                            Reason for Rejection
+                                            <span class="text-red-500">*</span>
+                                        </label>
+                                        <select id="reason" x-model="reason" @input="clearError('reason')" class="w-full">
+                                            <option value="">Select</option>
+                                            @foreach ($rejectionReasons as $index => $reason)
+                <option value="{{ $index }}">{{ $reason }}</option> <!-- Use index as value -->
+            @endforeach
+                                        </select>
+                                        <p x-show="errors.reason" class="text-red-500 text-sm mt-1" x-text="errors.reason"></p>
+                                    </div>
+                                </div>
+                                <div class="mb-4">
+                                    <label for="note" class="block text-sm font-medium text-gray-700 mb-1">
+                                        Note <span class="text-red-500">*</span>
+                                    </label>
+                                    <textarea
+                                        id="note"
+                                        x-model="note"
+                                        @input="clearError('note')"
+                                        rows="4"
+                                        class="w-full border border-gray-300 rounded-md shadow-sm"
+                                    ></textarea>
+                                    <p x-show="errors.note" class="text-red-500 text-sm mt-1" x-text="errors.note"></p>
+                                </div>
+                                <div class="mb-4">
+                                    <label for="jobAttachment" class="block text-sm font-medium text-gray-700 mb-2">Job Attachment</label>
+                                    <input
+                                        type="file"
+                                        id="jobAttachment"
+                                        name="jobAttachment"
+                                        class="block w-full px-2 py-3 text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none"
+                                    />
+                                </div>
+                            </form>
+                            </div>
+
+                            <!-- Footer -->
+                            <div class="flex justify-end space-x-2 border-t p-4">
+                                <button
+                                    type="button"
+                                    @click="openModal = false"
+                                    class="rounded-md bg-gray-200 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-300"
+                                >
+                                    Close
+                                </button>
+                                <button
+                                    type="button"
+                                    @click="submitForm"
+                                    class="rounded-md bg-green-500 px-4 py-2 text-sm font-medium text-white hover:bg-green-600"
+                                >
+                                    Save
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                         
                         <!-- Modal -->
                         <div

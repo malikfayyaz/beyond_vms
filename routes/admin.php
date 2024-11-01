@@ -159,6 +159,7 @@ Route::middleware(['user_role:admin'])->group(function () {
         // contract
         Route::resource('contracts', CareerOpportunitiesContractController::class);
         Route::POST('contracts/save-comments', [CareerOpportunitiesContractController::class, 'saveComments'])->name('saveComments');
+        Route::POST('contracts/contractBudgetWorkflow', [CareerOpportunitiesContractController::class, 'contractBudgetWorkflow'])->name('contract.contractBudgetWorkflow');
          Route::get('/career-opportunities/{id}/vendorrelease', [CareerOpportunitiesController::class, 'vendorrelease'])->name('admin.career-opportunities.vendorrelease');
 
     });

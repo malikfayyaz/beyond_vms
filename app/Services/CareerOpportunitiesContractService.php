@@ -2,6 +2,7 @@
 namespace App\Services;
 
 use App\Models\CareerOpportunitiesOffer;
+use App\Models\CareerOpportunitiesContract;
 use App\Models\CareerOpportunity;
 use App\Models\Setting;
 use App\Models\Workflow;
@@ -16,7 +17,7 @@ use App\Models\Consultant;
 
 class CareerOpportunitiesContractService
 {
-    public static function createContractSpendWorkflowProcess($contractAdditionalBudget,$contract)
+    public static function createContractBudgetWorkflow($contractAdditionalBudget,$contract)
     {
         // Fetch all workflows for the hiring manager of the offer
         $workflows = Workflow::where('client_id', $contract->workorder->hiring_manager_id)->get();
@@ -55,7 +56,7 @@ class CareerOpportunitiesContractService
         return true;
     }
 
-    public static function approveContractSpendWorkWorkFlow($request){
+    public static function approveContractBudgetWorkflow($request){
         $user = \Auth::user();
         $userid = \Auth::id();
 
@@ -89,7 +90,8 @@ class CareerOpportunitiesContractService
                 }
             }
         }else{
-            $offer = CareerOpportunitiesOffer::findOrFail($workflow->offer_id);
+            $contract = CareerOpportunitiesContract::findOrFail($request->contractId);
+            $offer = CareerOpportunitiesOffer::findOrFail($contract->offer_id);
             $offer->status = '4'; //offer status 4 is for pending vendor approval
             $offer->save();
         }
@@ -248,5 +250,23 @@ class CareerOpportunitiesContractService
  
          return true;
      }
+     /*public function updateAdditionalWorkflow($request){
+        if(isset($request)){
+            $contract = CareerOpportunitiesContract::with([
+            'careerOpportunity',
+            'contractAdditionalBudgetRequest',
+            ])->findOrFail($request->contractId);
+            $additionalBudgetRequest = $contract->contractAdditionalBudgetRequest()
+            ->where('id', $request->rowId)
+            ->firstOrFail();
+
+            WorkflowProcess::contractSpendWorkflowProcess($model, $model->id, $contract_id,$workorder->wo_hiring_manager);
+
+            Yii::app()->user->setFlash('success', '<div class="alert alert-success"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                               Workflow updated successfully.</div>');
+            $this->redirect(array('contractView','id'=>$contract_id));
+
+        }
+    }*/
 
 }

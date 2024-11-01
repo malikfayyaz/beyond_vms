@@ -96,5 +96,9 @@ class CareerOpportunitiesContract extends Model
     public function contractAdditionalBudgetRequest() {
         return $this->hasMany(ContractAdditionalBudget::class, 'contract_id', 'id');
     }
+    public function ContractBudgetWorkflow()
+    {
+        return $this->hasMany(ContractBudgetWorkflow::class, 'contract_id', 'id');
+    }
 
 }

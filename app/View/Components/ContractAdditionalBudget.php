@@ -10,15 +10,15 @@ use App\Models\CareerOpportunitiesContract;
 class ContractAdditionalBudget extends Component
 {
     public $contract;
+    public $rejectionreason;
     
     /**
      * Create a new component instance.
      */
-    public function __construct(CareerOpportunitiesContract $contract)
+    public function __construct(CareerOpportunitiesContract $contract, array $rejectionreason)
     {
-        $this->contract = $contract->load('careerOpportunity', 'ContractExtensionRequest');
-        //
-         // Load only the latest pending ContractAdditionalBudgetRequest as a single object
+        $this->contract = $contract->load('careerOpportunity', 'ContractExtensionRequest','ContractBudgetWorkflow','hiringManager');
+        $this->rejectionreason = $rejectionreason;
         $this->contract->ContractAdditionalBudgetRequest = $contract->ContractAdditionalBudgetRequest()
         ->where('status', 'pending')
         ->latest()
@@ -30,6 +30,8 @@ class ContractAdditionalBudget extends Component
      */
     public function render(): View|Closure|string
     {
-        return view('components.contract-additional-budget');
-    }
+        return view('components.contract-additional-budget', [
+        'rejectionReasons' => $this->rejectionreason, // Pass the rejectionReasons to the view
+    ]);
+        }
 }
