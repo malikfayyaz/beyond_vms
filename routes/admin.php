@@ -97,9 +97,8 @@ Route::middleware(['user_role:admin'])->group(function () {
         Route::resource('job/catalog', CatalogController::class);
         Route::resource('career-opportunities', CareerOpportunitiesController::class);
         // ajax method routes
-        Route::get('load-market-job-template/{category}/{type}', [CatalogController::class, 'loadMarketJobTemplate']);
-        Route::post('load-job-template', [CatalogController::class, 'loadJobTemplate'])->name('load_job_template');
-        Route::post('division-load', [CatalogController::class, 'divisionLoad'])->name('division_load');
+        
+        
         Route::post('job-rates', [RatesController::class, 'jobRates'])->name('job_rates');
 
 

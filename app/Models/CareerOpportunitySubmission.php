@@ -92,4 +92,8 @@ class CareerOpportunitySubmission extends Model
         return $this->belongsTo(User::class, 'rejected_by', 'id');
     }
 
+    public function contracts() {
+        return $this->hasMany(CareerOpportunitiesContract::class, 'submission_id', 'id');
+    }
+
 }

@@ -16,6 +16,10 @@ class CareerOpportunitiesSubmissionController extends Controller
             $submissions = CareerOpportunitySubmission::with(['consultant','vendor','careerOpportunity.hiringManager','location'])->get();
 
             return DataTables::of($submissions)
+                ->addColumn('id', function ($row) {
+                    return '<span class="submission-detail-trigger text-blue-500 cursor-pointer" data-id="' 
+                        . $row->id . '">' . $row->id . '</span>';
+                })
                 ->addColumn('consultant_name', function($row) {
                     return $row->consultant ? $row->consultant->full_name : 'N/A';
                 })
@@ -52,7 +56,7 @@ class CareerOpportunitiesSubmissionController extends Controller
                                     <i class="fas fa-eye"></i>
                             </a>';
                 })
-                ->rawColumns(['action', 'career_opportunity_title'])
+                ->rawColumns(['id','action', 'career_opportunity_title'])
                 ->make(true);
         }
         return view('client.submission.index');

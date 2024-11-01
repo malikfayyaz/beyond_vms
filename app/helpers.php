@@ -228,6 +228,7 @@ if (!function_exists('numberOfWorkingDays')) {
 
         return round($workingDays); // Return the rounded number of working days
     }
+}
 
     if (!function_exists('handleFileUpload')) {
         function handleFileUpload($request, $fileKey, $directory)
@@ -259,7 +260,13 @@ if (!function_exists('numberOfWorkingDays')) {
             return Carbon::parse($date)->format('m/d/Y');
         }
     }
-}
+    if (!function_exists('formatDateTime')) {
+        function formatDateTime($date)
+        {
+            return Carbon::parse($date)->format('m/d/Y h:i A');
+        }
+    }
+
 if (!function_exists('updateSubmission')) {
     function updateSubmission($model,$type){
         
