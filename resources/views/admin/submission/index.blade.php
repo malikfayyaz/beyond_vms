@@ -13,6 +13,7 @@
                 </div>
 
                 <x-job-details />
+                
                 <x-submission-details />
 
                 <table class="min-w-full divide-y divide-gray-200" id="listing">

@@ -221,9 +221,34 @@ class CommonController extends Controller
     {
         $submission = CareerOpportunitySubmission::findOrFail($id);
 
-        // dd($submission);
+        $contract = $submission->contracts()->where('status', 1)->latest()->first();
+        // dd($contract->careerOpportunity->title);   
+        // dd(CareerOpportunitiesContract::getContractStatus($contract->status));
+        if ($contract) {
+            $contract_title = $contract->careerOpportunity->title;
+            $date_range = $contract->date_range;
+            $contract_status = CareerOpportunitiesContract::getContractStatus($contract->status);
+        }else{
+            $contract_title = null;
+            $date_range = null;
+            $contract_status = null;
+        }
 
-        return response()->json(['data' => $submission]);
+        $initialJobData = [
+            'id' => $submission->id ?? null,
+            'subStatus' => CareerOpportunitySubmission::getSubmissionStatus($submission->resume_status),
+            'vendor' => $submission->vendor->full_name,
+            'email' => $submission->consultant->user->email,
+            'location' => $submission->location->location_details, 
+            'vendor_rate' => '$' . number_format($submission->vendor_bill_rate, 2), 
+            'overtimer_rate' => '$' . number_format($submission->client_over_time_rate, 2), 
+            'client_rate' => '$' . number_format($submission->bill_rate, 2), 
+            'date_range' => $date_range, 
+            'contract_title' => $contract_title, 
+            'contract_status' => $contract_status, 
+         ];
+
+        return response()->json(['data' => $initialJobData]);
     }
     
 }
