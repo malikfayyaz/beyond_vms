@@ -158,8 +158,22 @@ Route::middleware(['user_role:admin'])->group(function () {
         // contract
         Route::resource('contracts', CareerOpportunitiesContractController::class);
         Route::POST('contracts/save-comments', [CareerOpportunitiesContractController::class, 'saveComments'])->name('saveComments');
+
+        Route::get('/career-opportunities/{id}/vendorrelease', [CareerOpportunitiesController::class, 'vendorrelease'])->name('admin.career-opportunities.vendorrelease');
+
+        Route::get('/career-opportunities/{id}/submission', [CareerOpportunitiesController::class, 'jobSubmission'])->name('jobSubmission');
+
+        Route::get('/career-opportunities/{id}/todayinterview', [CareerOpportunitiesController::class, 'jobTodayInterview'])->name('jobTodayInterview');
+        Route::get('/career-opportunities/{id}/otherinterview', [CareerOpportunitiesController::class, 'jobOtherInterview'])->name('jobOtherInterview');
+
+        Route::get('/career-opportunities/{id}/jobOffer', [CareerOpportunitiesController::class, 'jobOffer'])->name('jobOffer');
+
+        Route::get('/career-opportunities/{id}/jobWorkorder', [CareerOpportunitiesController::class, 'jobWorkorder'])->name('jobWorkorder');
+
+
         Route::POST('contracts/contractBudgetWorkflow', [CareerOpportunitiesContractController::class, 'contractBudgetWorkflow'])->name('contract.contractBudgetWorkflow');
-         Route::get('/career-opportunities/{id}/vendorrelease', [CareerOpportunitiesController::class, 'vendorrelease'])->name('admin.career-opportunities.vendorrelease');
+        
+
 
     });
 });

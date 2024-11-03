@@ -5,7 +5,7 @@
     @include('admin.layouts.partials.dashboard_side_bar')
     <div class="ml-16">
         @include('admin.layouts.partials.header')
-        <div class="bg-white mx-4 my-8 rounded p-8" x-data="{ selectedUser: null}" @job-details-updated.window="selectedUser = $event.detail">
+        <div class="bg-white mx-4 my-8 rounded p-8" x-data="{ jobDetails: null}" @job-details-updated.window="jobDetails = $event.detail">
                     @include('admin.layouts.partials.alerts')
             <div >
                 <div class="flex justify-between items-center mb-6">
@@ -92,12 +92,6 @@
                     { data: 'action', name: 'action', orderable: false, searchable: false }
 
                 ]);
-            }
-
-            function toggleSidebar() 
-            {
-                // Assuming you want to toggle selectedUser state
-                this.selectedUser = this.selectedUser ? 'user' : 'user';
             }
 
             $(document).on('click', '.job-detail-trigger', function (e) {
