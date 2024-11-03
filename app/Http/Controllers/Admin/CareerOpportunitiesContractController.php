@@ -768,7 +768,7 @@ $rejectionreason = checksetting(17)->toArray();
             $message = 'Contract Workflow Accepted successfully!';
             session()->flash('success', $message);
         } elseif ($actionType == 'Reject') {
-            offerHelper::rejectoffersWorkFlow($request);
+            contractHelper::rejectcontractsWorkFlow($request);
             $message = 'Contract Workflow Rejected successfully!';
             session()->flash('success', $message);
         }
