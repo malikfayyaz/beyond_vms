@@ -32,6 +32,21 @@ class CareerOpportunitiesController extends BaseController
      */
     public function index(Request $request)
     {
+    $counts = [
+        'all_jobs' => CareerOpportunity::count(),
+        'open' => CareerOpportunity::where('jobStatus', 3)->count(),
+        'filled' => CareerOpportunity::where('jobStatus', 4)->count(),
+        'new' => CareerOpportunity::where('jobStatus', 11)->count(),
+        'closed' => CareerOpportunity::where('jobStatus', 12)->count(),
+        'pending' => CareerOpportunity::where('jobStatus', 1)->count(),
+        'sourcing' => CareerOpportunity::where('jobStatus', 13)->count(),
+        'pending_pmo' => CareerOpportunity::where('jobStatus', 22)->count(),
+        'open_pending_release' => CareerOpportunity::whereIn('jobStatus', [3, 23])->count(),
+        'pending_hm' => CareerOpportunity::whereIn('jobStatus', [1, 23, 24])->count(),
+        'quick_create' => CareerOpportunity::whereIn('jobStatus', [1, 3, 13])->count(),
+        'draft' => CareerOpportunity::where('jobStatus', 2)->count(),
+        'active' => CareerOpportunity::whereIn('jobStatus', [1, 3, 6, 13, 23, 24])->count(),
+    ];
         if ($request->ajax()) {
         //    dd($request->input('type'));
             $adminId = Admin::getAdminIdByUserId(Auth::id());
@@ -138,8 +153,8 @@ class CareerOpportunitiesController extends BaseController
         }
 
         // Logic to get and display catalog items
-        return view('admin.career_opportunities.index'); // Assumes you have a corresponding Blade view
-    }
+        return view('admin.career_opportunities.index', compact('counts'));
+            }
 
 
     /**

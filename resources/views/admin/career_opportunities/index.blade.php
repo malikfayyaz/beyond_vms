@@ -5,6 +5,7 @@
     @include('admin.layouts.partials.dashboard_side_bar')
 <div class="ml-16" >
     @include('admin.layouts.partials.header')
+
        <div class="bg-white mx-4 my-8 rounded p-8"  x-data="{ jobDetails: null}" @job-details-updated.window="jobDetails = $event.detail">
            @include('admin.layouts.partials.alerts')
            <div id="success-message" style="display: none;" class="alert alert-success"></div>
@@ -35,7 +36,7 @@
                             <i class="fa-regular fa-file-lines"></i>
                             <span class="capitalize">Active Jobs</span>
                             <div class="px-1 py-1 flex items-center justify-center bg-gray-500 text-white rounded-lg">
-                                <span class="text-[10px]">156</span>
+                                <span class="text-[10px]">{{ $counts['active'] }}</span>
                             </div>
                         </a>
                     </li>
@@ -48,7 +49,7 @@
                             <i class="fa-regular fa-registered"></i>
                             <span class="capitalize">Pending Release Job</span>
                             <div class="px-1 py-1 flex items-center justify-center text-white rounded-lg bg-primary">
-                                <span class="text-[10px]">56</span>
+                                <span class="text-[10px]">{{ $counts['open'] }}</span>
                             </div>
                         </a>
                     </li>
@@ -61,7 +62,7 @@
                             <i class="fa-solid fa-fill"></i>
                             <span class="capitalize">Filled Jobs</span>
                             <div class="px-1 py-1 flex items-center justify-center bg-gray-500 text-white rounded-lg">
-                                <span class="text-[10px]">20</span>
+                                <span class="text-[10px]">{{ $counts['filled'] }}</span>
                             </div>
                         </a>
                     </li>
@@ -76,7 +77,7 @@
                             <i class="fa-solid fa-fill"></i>
                             <span class="capitalize">Closed Jobs</span>
                             <div class="px-1 py-1 flex items-center justify-center bg-gray-500 text-white rounded-lg">
-                                <span class="text-[10px]">20</span>
+                                <span class="text-[10px]">{{ $counts['closed'] }}</span>
                             </div>
                         </a>
                     </li>
@@ -89,7 +90,7 @@
                             <i class="fa-solid fa-fill"></i>
                             <span class="capitalize">Pending - PMO</span>
                             <div class="px-1 py-1 flex items-center justify-center bg-gray-500 text-white rounded-lg">
-                                <span class="text-[10px]">20</span>
+                                <span class="text-[10px]">{{ $counts['pending_pmo'] }}</span>
                             </div>
                         </a>
                     </li>
@@ -103,7 +104,7 @@
                             <i class="fa-solid fa-fill"></i>
                             <span class="capitalize">All Jobs</span>
                             <div class="px-1 py-1 flex items-center justify-center bg-gray-500 text-white rounded-lg">
-                                <span class="text-[10px]">20</span>
+                                <span class="text-[10px]">{{ $counts['all_jobs'] }}</span>
                             </div>
                         </a>
                     </li>
