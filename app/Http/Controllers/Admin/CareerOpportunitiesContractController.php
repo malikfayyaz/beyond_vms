@@ -239,7 +239,7 @@ class CareerOpportunitiesContractController extends BaseController
             ->where('status', 'pending')
             ->latest()
             ->first();
-$rejectionreason = checksetting(17)->toArray();
+$rejectionreason = checksetting(29)->toArray();
         $extensionReq = $contract->contractExtensionRequest()->latest()->first();
         $workflows = $contract->workflows;
         return view('admin.contract.view', compact('contract','extensionReq','workflows','rejectionreason'));
