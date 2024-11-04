@@ -9,56 +9,13 @@
                 @include('admin.layouts.partials.alerts')
             </div>
             <div class="mx-2 my-4 rounded px-8 w-full flex justify-end items-center gap-4 ">
-        @if($contract->ContractAdditionalBudgetRequest)
+        @if($contract->ContractAdditionalBudgetRequest->isNotEmpty())
             <!-- Additional Budget Flyout Button -->
              <div  x-data="{isOpen: false,
                 showModal: false,
                 modalType: null,
                 selectedUser: 'user',
-                comment: '',
-                approvers: [
-                    { 
-                        id: 1, 
-                        name: 'Donald Campbell', 
-                        initial: 'D', 
-                        status: null,
-                        approvedBy: null,
-                        dateTime: null 
-                    },
-                    { 
-                        id: 2, 
-                        name: 'Robert Allen', 
-                        initial: 'R', 
-                        status: null,
-                        approvedBy: null,
-                        dateTime: null 
-                    },
-                    { 
-                        id: 3, 
-                        name: 'Victoria Belyak', 
-                        initial: 'V', 
-                        status: 'pending',
-                        approvedBy: null,
-                        dateTime: null 
-                    },
-                    { 
-                        id: 4, 
-                        name: 'Mark Bloom', 
-                        initial: 'M', 
-                        status: 'pending',
-                        approvedBy: null,
-                        dateTime: null 
-                    },
-                    { 
-                        id: 5, 
-                        name: 'Richard Cary', 
-                        initial: 'R', 
-                        status: 'pending',
-                        approvedBy: null,
-                        dateTime: null,
-                        title: '(Backup Manager for Douglas Howell)'
-                    }
-                ]
+                comment: ''
             }">
             <a href="javascript:void(0)"
                         @click="isOpen = true;"
@@ -79,7 +36,7 @@
                 @click="isOpen = false"
                 class="fixed inset-0 bg-black bg-opacity-50 z-40"
                 ></div>
-                <x-contract-additional-budget :contract="$contract" />
+                <x-contract-additional-budget :contract="$contract" :rejectionreason="$rejectionreason" />
                 </div>
                 @endif
 

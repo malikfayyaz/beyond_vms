@@ -48,6 +48,10 @@ class CareerOpportunitiesOffer extends Model
     {
         return $this->attributes['end_date'] ? Carbon::parse($this->attributes['end_date'])->format('m/d/Y') : '';
     }
+    public function getOfferAcceptDateAttribute()
+    {
+        return $this->attributes['offer_accept_date'] ? Carbon::parse($this->attributes['offer_accept_date'])->format('m/d/Y') : '';
+    }
     public static function getOfferStatus($statusId)
     {
         switch ($statusId) {

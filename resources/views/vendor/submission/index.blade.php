@@ -5,7 +5,8 @@
     @include('vendor.layouts.partials.dashboard_side_bar')
     <div class="ml-16">
         @include('vendor.layouts.partials.header')
-        <div class="bg-white mx-4 my-8 rounded p-8" x-data="{ selectedUser: null}" @job-details-updated.window="selectedUser = $event.detail" @submission-details-updated.window="selectedUser = $event.detail">
+        <div class="bg-white mx-4 my-8 rounded p-8" x-data="{ jobDetails: null, submissionDetails: null }" @job-details-updated.window="jobDetails = $event.detail"
+        @submission-details-updated.window="submissionDetails = $event.detail">
             <div >
                 @include('vendor.layouts.partials.alerts')
                 <div class="flex justify-between items-center mb-6">

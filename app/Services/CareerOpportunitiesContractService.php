@@ -2,6 +2,7 @@
 namespace App\Services;
 
 use App\Models\CareerOpportunitiesOffer;
+use App\Models\CareerOpportunitiesContract;
 use App\Models\CareerOpportunity;
 use App\Models\Setting;
 use App\Models\Workflow;
@@ -16,7 +17,7 @@ use App\Models\Consultant;
 
 class CareerOpportunitiesContractService
 {
-    public static function createContractSpendWorkflowProcess($contractAdditionalBudget,$contract)
+    public static function createContractBudgetWorkflow($contractAdditionalBudget,$contract)
     {
         // Fetch all workflows for the hiring manager of the offer
         $workflows = Workflow::where('client_id', $contract->workorder->hiring_manager_id)->get();
@@ -55,7 +56,7 @@ class CareerOpportunitiesContractService
         return true;
     }
 
-    public static function approveContractSpendWorkWorkFlow($request){
+    public static function approveContractBudgetWorkflow($request){
         $user = \Auth::user();
         $userid = \Auth::id();
 
@@ -89,7 +90,8 @@ class CareerOpportunitiesContractService
                 }
             }
         }else{
-            $offer = CareerOpportunitiesOffer::findOrFail($workflow->offer_id);
+            $contract = CareerOpportunitiesContract::findOrFail($request->contractId);
+            $offer = CareerOpportunitiesOffer::findOrFail($contract->offer_id);
             $offer->status = '4'; //offer status 4 is for pending vendor approval
             $offer->save();
         }
@@ -111,7 +113,7 @@ class CareerOpportunitiesContractService
         $workflow->save();
 
     }
-    public static function rejectoffersWorkFlow($request) {
+    public static function rejectcontractsWorkFlow($request) {
 
         $user = \Auth::user();
         $userid = \Auth::id();
@@ -121,7 +123,7 @@ class CareerOpportunitiesContractService
 
         $portal = 'Portal';
         $workflow = ContractBudgetWorkflow::findOrFail($request->rowId);
-        self::rejectOfferWorkFlow($request->rowId, $userid, $sessionrole, $portal, $request);
+        self::rejectContractWorkFlow($request->rowId, $userid, $sessionrole, $portal, $request);
         $nextWorkflow = ContractBudgetWorkflow::where([
             ['contract_id', '=', $workflow->contract_id],
             ['status', '=', 'Pending'],
@@ -129,13 +131,11 @@ class CareerOpportunitiesContractService
         ])
             ->orderBy('id')
             ->get();
-        // write query to get all the pending records
-
         $count = 0;
         if(count($nextWorkflow)>0){
             foreach($nextWorkflow as $workflow){
                 if($count == 0){
-                    if($workflow->approval_required == 0 ){ // Just Approve this Record as no Approval Required
+                    if($workflow->approval_required == 0 ){ 
                         self::acceptContractBudgetWorkflow($workflow->id, $userid, $sessionrole, $portal,$request);
                     }else{
                         $workflow->email_sent = 1;
@@ -146,13 +146,14 @@ class CareerOpportunitiesContractService
                 }
             }
         }else{
-            $offer = CareerOpportunitiesOffer::findOrFail($workflow->offer_id);
+            $contract = CareerOpportunitiesContract::findOrFail($request->contractId);
+            $offer = CareerOpportunitiesOffer::findOrFail($contract->offer_id);
             $offer->status = '2'; //offer status 2 is for rejected
             $offer->save();
         }
     }
 
-    protected static function rejectOfferWorkFlow($workflowid, $userid, $role, $portal, $request) {
+    protected static function rejectContractWorkFlow($workflowid, $userid, $role, $portal, $request) {
         $workflow = ContractBudgetWorkflow::findOrFail($workflowid);
         $workflow->status = 'Rejected'; // Update the status to Rejected
         $workflow->rejection_reason = $request->reason;
@@ -248,5 +249,23 @@ class CareerOpportunitiesContractService
  
          return true;
      }
+     /*public function updateAdditionalWorkflow($request){
+        if(isset($request)){
+            $contract = CareerOpportunitiesContract::with([
+            'careerOpportunity',
+            'contractAdditionalBudgetRequest',
+            ])->findOrFail($request->contractId);
+            $additionalBudgetRequest = $contract->contractAdditionalBudgetRequest()
+            ->where('id', $request->rowId)
+            ->firstOrFail();
+
+            WorkflowProcess::contractSpendWorkflowProcess($model, $model->id, $contract_id,$workorder->wo_hiring_manager);
+
+            Yii::app()->user->setFlash('success', '<div class="alert alert-success"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                               Workflow updated successfully.</div>');
+            $this->redirect(array('contractView','id'=>$contract_id));
+
+        }
+    }*/
 
 }

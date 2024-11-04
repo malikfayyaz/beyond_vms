@@ -14,6 +14,7 @@ use App\Models\CareerOpportunitiesOffer;
 use App\Models\CareerOpportunity;
 use App\Models\ContractNote;
 use App\Models\OfferWorkFlow;
+use App\Models\ContractBudgetWorkflow;
 use App\Models\CareerOpportunitiesContract;
 use App\Models\contractAdditionalBudget;
 use Yajra\DataTables\Facades\DataTables;
@@ -231,19 +232,17 @@ class CareerOpportunitiesContractController extends BaseController
         $contract = CareerOpportunitiesContract::with([
             'careerOpportunity',
             'ContractExtensionRequest',
+            'ContractBudgetWorkflow',
+            'hiringManager',
         ])->findOrFail($id);
-        
-        // Fetch the latest pending ContractAdditionalBudgetRequest as a single object
         $contract->latestPendingBudgetRequest = $contract->ContractAdditionalBudgetRequest()
             ->where('status', 'pending')
             ->latest()
             ->first();
-        
-        
-     
+$rejectionreason = checksetting(17)->toArray();
         $extensionReq = $contract->contractExtensionRequest()->latest()->first();
-       
-        return view('admin.contract.view', compact('contract','extensionReq'));
+        $workflows = $contract->workflows;
+        return view('admin.contract.view', compact('contract','extensionReq','workflows','rejectionreason'));
     }
     public function saveComments(Request $request) //SAVENOTES
     {
@@ -527,7 +526,7 @@ class CareerOpportunitiesContractController extends BaseController
         $contractAdditionalBudget->status = 'Pending';
         $contractAdditionalBudget->save();
         if ($contractAdditionalBudget->save()) {
-        contractHelper::createContractSpendWorkflowProcess($contractAdditionalBudget, $contract);
+        contractHelper::createContractBudgetWorkflow($contractAdditionalBudget, $contract);
         return true;
             }
             else{
@@ -755,6 +754,31 @@ class CareerOpportunitiesContractController extends BaseController
             }
         }
         return true;
+    }
+    public function ContractBudgetWorkflow(Request $request)
+    {
+        $actionType = $request->input('actionType');
+        $validated = $request->validate([
+            'rowId' => 'required|integer',
+            'reason' => 'required_if:actionType,Reject|integer',
+        ]);
+        $contractworkflow = ContractAdditionalBudget::findOrFail($request->rowId);
+        if ($actionType == 'Accept') {
+            contractHelper::approveContractBudgetWorkflow($request);
+            $message = 'Contract Workflow Accepted successfully!';
+            session()->flash('success', $message);
+        } elseif ($actionType == 'Reject') {
+            contractHelper::rejectcontractsWorkFlow($request);
+            $message = 'Contract Workflow Rejected successfully!';
+            session()->flash('success', $message);
+        }
+        return response()->json([
+            'success' => true,
+            'message' => $message,
+            'redirect_url' => route('admin.contracts.show', ['contract' => $contractworkflow->contract_id]),
+        ]);
+
+
     }
 
 }
