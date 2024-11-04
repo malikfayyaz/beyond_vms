@@ -32,15 +32,16 @@
              @endif
               @if($submission->careerOpportunity->jobStatus != 5)
                 <div x-data="addSubWizarForm()" x-init="mounted()">
-                  <button
-                      type="button"
-                      @click="rejectCandidate({{ $submission->id }})"
-                      aria-label="Reject candidate {{ $submission->consultant->full_name }}"
-                      class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 capitalize"
-                  >
-                      Reject Candidate
-                  </button>
-                
+                  @if($submission->resume_status != 6)
+                    <button
+                          type="button"
+                          @click="rejectCandidate({{ $submission->id }})"
+                          aria-label="Reject candidate {{ $submission->consultant->full_name }}"
+                          class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 capitalize"
+                    >
+                        Reject Candidate
+                    </button>
+                  @endif
                   @if ( !in_array($submission->resume_status, array(8, 11, 6)))
                     @if (!in_array($submission->resume_status, array(3, 4, 5, 7, 9, 15)) && (!in_array($submission->careerOpportunity->jobStatus, array(4))))
                       <button
@@ -67,6 +68,24 @@
 
             </div>
           </div>
+          @if($submission->resume_status == 6)
+                <div class="rounded mx-4 my-2 p-4 bg-red-100 text-sm">
+                  @if(!empty($submission->reason_for_rejection))
+                    <p>
+                        <span class="font-bold m-b-10 text-red-800">Reason for Rejection: </span>
+                        <span class="text-red-800">  {{$submission->rejectionReason->title}} </span>
+                    </p>
+                  @endif
+                    <p>
+                        <span class="font-bold m-b-10 text-red-800">Rejected By: </span>
+                        <span class="text-red-800"> {{$submission->rejectedBy->name}} </span>
+                    </p>
+                    <p>
+                        <span class="font-bold m-b-10 text-red-800">Rejected Date & Time: </span>
+                        <span class="text-red-800">  {{$submission->formatted_date_rejected}} </span>
+                    </p>
+                </div>
+            @endif
           <div class="flex gap-8">
             <div class="w-2/4 bg-white mx-4 rounded p-8">
               <!-- Tabs -->
