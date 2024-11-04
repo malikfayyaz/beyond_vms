@@ -225,8 +225,8 @@
 
                     }
 
-                      // Handle Tab Click Events
-                      $(document).on('click', '.tab-link', function(e) {
+            // Handle Tab Click Events
+            $(document).on('click', '.tab-link', function(e) {
             e.preventDefault();
 
             // Remove active classes from all tabs

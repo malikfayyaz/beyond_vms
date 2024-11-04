@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use App\Models\JobTemplates;
 use App\Models\CareerOpportunity;
+use App\Models\CareerOpportunityNote;
 use App\Models\CareerOpportunitiesBu;
 use App\Models\JobWorkFlow;
 use Illuminate\Support\Carbon;
@@ -884,6 +885,27 @@ class CareerOpportunitiesController extends BaseController
             })
             ->rawColumns(['career_opportunity','id','action'])
             ->make(true);
+    }
+    public function saveNotes(Request $request) //SAVENOTES
+    {
+        $request->validate([
+            'note' => 'required|string',
+            'job_id' => 'required|integer'
+        ]);
+        $note = new CareerOpportunityNote();
+        $note->career_opportunity_id = $request->job_id;
+        $note->user_id = Auth::id();
+        $note->notes = $request->note;
+        $note->posted_by_type = Auth::user()->role == 'Client' ? 'Client' : 'Admin';
+        $note->save();
+        session()->flash('success', 'Notes Added Successfully');
+        return response()->json([
+            'success' => true,
+            'message' => 'Notes Added Successfully',
+            'posted_by' => Auth::user()->name,
+            'created_at' => $note->created_at->format('m/d/Y H:i A'),
+            'redirect_url' => route('admin.career-opportunities.show', $note->career_opportunity_id) // Redirect back URL for AJAX
+        ]);
     }
 
 

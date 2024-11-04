@@ -162,4 +162,8 @@ class CareerOpportunity extends Model
         return $this->hasMany(CareerOpportunitySubmission::class, 'career_opportunity_id', 'id')
                     ->where('resume_status', 9);
     }
+    public function jobNotes()
+    {
+        return $this->hasMany(CareerOpportunityNote::class, 'career_opportunity_id', 'id');
+    }
 }
