@@ -96,6 +96,7 @@ Route::middleware(['user_role:admin'])->group(function () {
             ->name('setting.store');
         Route::resource('job/catalog', CatalogController::class);
         Route::resource('career-opportunities', CareerOpportunitiesController::class);
+        
         // ajax method routes
         
         

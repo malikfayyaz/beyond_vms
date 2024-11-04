@@ -1,13 +1,24 @@
 // ajax-functions.js
 
-function initializeDataTable(tableId, ajaxUrl, columns) {
-    $(tableId).DataTable({
+function initializeDataTable(tableId, ajaxUrl, columns,getType) {
+    return $(tableId).DataTable({
       processing: true,
       serverSide: true,
-      ajax: ajaxUrl,
+     
+      ajax: {
+        url: ajaxUrl,
+       
+        data: function(d) {
+            if (getType) {
+                d.type = getType(); // Pass the currentType
+            }
+        }
+    },
+     
       columns: columns,
       order: [[1, 'desc']]
     });
+     
   }
 
   function ajaxCall(url, method, functionsOnSuccess = [], form = null) {

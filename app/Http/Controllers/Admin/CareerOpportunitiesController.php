@@ -33,10 +33,64 @@ class CareerOpportunitiesController extends BaseController
     public function index(Request $request)
     {
         if ($request->ajax()) {
+        //    dd($request->input('type'));
             $adminId = Admin::getAdminIdByUserId(Auth::id());
-            $data = CareerOpportunity::with('hiringManager', 'workerType')
-            ->withCount('submissions')->orderby('id', 'desc');
-            return DataTables::of($data)
+            $query = CareerOpportunity::with('hiringManager', 'workerType')
+            ->withCount('submissions')
+            ->orderby('id', 'desc');
+
+                // Get the action type from the request
+                if ($request->has('type')) {
+                    $type = $request->input('type');
+                    $status = ''; // Initialize status variable
+
+                    switch ($type) {
+                        case "All_jobs":
+                            $status = ''; // No additional filtering
+                            break;
+                        case "open":
+                            $query->where('jobStatus', 3);
+                            break;
+                        case "filled":
+                            $query->where('jobStatus', 4);
+                            break;
+                        case "New":
+                            $query->where('jobStatus', 11);
+                            break;
+                        case "closed":
+                            $query->where('jobStatus', 12);
+                            break;
+                        case "Pending":
+                            $query->where('jobStatus', 1);
+                            break;
+                        case "sourcing":
+                            $query->where('jobStatus', 13);
+                            break;
+                        case "pendingpmo":
+                            $query->where('jobStatus', 22);
+                            break;
+                        case "open-pending-release":
+                            $query->whereIn('jobStatus', [3, 23]);
+                            break;
+                        case "pending-hm":
+                            $query->whereIn('jobStatus', [1, 23, 24]);
+                            break;
+                        case "Quickcreate":
+                            $query->whereIn('jobStatus', [1, 3, 13]);
+                            break;
+                        case "draft":
+                            $query->where('jobStatus', 2);
+                            break;
+                        case 'active':
+                            $query->whereIn('jobStatus', [1, 3, 6, 13, 23, 24]);
+                            break;
+                       
+                        default:
+                            // No filtering for unknown actions
+                            break;
+                    }
+                }
+            return DataTables::of($query)
                 ->addIndexColumn()
                 ->addColumn('hiring_manager', function ($row) {
                     return (isset($row->hiringManager->full_name)) ? $row->hiringManager->full_name : 'N/A';
@@ -551,7 +605,7 @@ class CareerOpportunitiesController extends BaseController
 
 
         $job = CareerOpportunity::find($request->job_id);
-        $job->jobstatus = 2;
+        $job->jobstatus = 5;
         $job->rejected_by = $userid;
         $job->rejected_type = $sessionrole;
         $job->reason_for_rejection = $request->reason;
