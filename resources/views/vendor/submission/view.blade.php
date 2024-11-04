@@ -185,6 +185,24 @@
 
             </div>
           </div>
+          @if($submission->resume_status == 6)
+                <div class="rounded mx-4 my-2 p-4 bg-red-100 text-sm">
+                  @if(!empty($submission->reason_for_rejection))
+                    <p>
+                        <span class="font-bold m-b-10 text-red-800">Reason for Rejection: </span>
+                        <span class="text-red-800">  {{$submission->rejectionReason->title}} </span>
+                    </p>
+                  @endif
+                    <p>
+                        <span class="font-bold m-b-10 text-red-800">Rejected By: </span>
+                        <span class="text-red-800"> {{$submission->rejectedBy->name}} </span>
+                    </p>
+                    <p>
+                        <span class="font-bold m-b-10 text-red-800">Rejected Date & Time: </span>
+                        <span class="text-red-800">  {{$submission->formatted_date_rejected}} </span>
+                    </p>
+                </div>
+            @endif
           <div class="flex gap-8">
             <div class="w-2/4 bg-white mx-4 rounded p-8">
               <!-- Tabs -->
