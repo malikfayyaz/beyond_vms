@@ -30,7 +30,7 @@
                 create offer
               </a>
              @endif
-              @if($submission->careerOpportunity->jobStatus != 5)
+              @if($submission->careerOpportunity->jobStatus != 5 && $submission->resume_status != 12)
                 <div x-data="addSubWizarForm()" x-init="mounted()">
                   @if($submission->resume_status != 6)
                     <button
@@ -80,11 +80,38 @@
                         <span class="font-bold m-b-10 text-red-800">Rejected By: </span>
                         <span class="text-red-800"> {{$submission->rejectedBy->name}} </span>
                     </p>
+                  @if(!empty($submission->note_for_rejection))
+                    <p>
+                        <span class="font-bold m-b-10 text-red-800">Rejection Notes: </span>
+                        <span class="text-red-800"> {{$submission->note_for_rejection}} </span>
+                    </p>
+                  @endif
                     <p>
                         <span class="font-bold m-b-10 text-red-800">Rejected Date & Time: </span>
                         <span class="text-red-800">  {{$submission->formatted_date_rejected}} </span>
                     </p>
                 </div>
+            @endif
+            @if($submission->resume_status == 12)
+              <div class="rounded mx-4 my-2 p-4 bg-red-100 text-sm">
+                  <p>
+                    <span class="font-bold m-b-10 text-red-800">Reason for Withdrawn: </span>
+                    <span class="text-red-800">  {{$submission->rejectionReason->title}} </span>
+                  </p>
+                  <p>
+                      <span class="font-bold m-b-10 text-red-800">Withdrawn By: </span>
+                      <span class="text-red-800"> {{$submission->rejectedBy->name}} </span>
+                  </p>
+                  <p>
+                      <span class="font-bold m-b-10 text-red-800">Withdrawn Notes: </span>
+                      <span class="text-red-800"> {{$submission->note_for_rejection}} </span>
+                  </p>
+
+                  <p>
+                      <span class="font-bold m-b-10 text-red-800">Withdrawn Date & Time: </span>
+                      <span class="text-red-800">  {{$submission->formatted_date_rejected}} </span>
+                  </p>
+              </div>  
             @endif
           <div class="flex gap-8">
             <div class="w-2/4 bg-white mx-4 rounded p-8">

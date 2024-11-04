@@ -10,21 +10,7 @@
         <div>
           <div class="mx-4 rounded p-8">
               @include('vendor.layouts.partials.alerts')
-              @if($submission->resume_status == 12)
-                  <div x-data="{
-                    rejectionReason: '{{ $submission->rejectionReason ? $submission->rejectionReason->title : ' ' }}',
-                    notes: '{{ $submission->note_for_rejection }}',
-                    rejectedBy: '{{ $submission->rejectionUser ? $submission->rejectionUser->name : '' }}',
-                    rejectionDate: '{{ $submission->date_rejected }}'
-                }">
-                      <div class="alert alert-danger">
-                          <span class="bold">Rejection Reason:</span> <span x-text="rejectionReason"></span><br>
-                          <span class="bold">Notes:</span> <span x-text="notes"></span><br>
-                          <span class="bold">Rejected By:</span> <span x-text="rejectedBy"></span><br>
-                          <span class="bold">Rejection Date:</span> <span x-text="rejectionDate"></span>
-                      </div>
-                  </div>
-              @endif
+              
             <div class="w-full flex justify-end items-center gap-4">
                 @if (!in_array($submission->resume_status, [8, 11, 12, 6]))
                 <div x-data="{     //withdraw submission
@@ -185,6 +171,27 @@
 
             </div>
           </div>
+          @if($submission->resume_status == 12)
+              <div class="rounded mx-4 my-2 p-4 bg-red-100 text-sm">
+                  <p>
+                    <span class="font-bold m-b-10 text-red-800">Reason for Withdrawn: </span>
+                    <span class="text-red-800">  {{$submission->rejectionReason->title}} </span>
+                  </p>
+                  <p>
+                      <span class="font-bold m-b-10 text-red-800">Withdrawn By: </span>
+                      <span class="text-red-800"> {{$submission->rejectedBy->name}} </span>
+                  </p>
+                  <p>
+                      <span class="font-bold m-b-10 text-red-800">Withdrawn Notes: </span>
+                      <span class="text-red-800"> {{$submission->note_for_rejection}} </span>
+                  </p>
+
+                  <p>
+                      <span class="font-bold m-b-10 text-red-800">Withdrawn Date & Time: </span>
+                      <span class="text-red-800">  {{$submission->formatted_date_rejected}} </span>
+                  </p>
+              </div>  
+            @endif
           @if($submission->resume_status == 6)
                 <div class="rounded mx-4 my-2 p-4 bg-red-100 text-sm">
                   @if(!empty($submission->reason_for_rejection))
@@ -197,6 +204,12 @@
                         <span class="font-bold m-b-10 text-red-800">Rejected By: </span>
                         <span class="text-red-800"> {{$submission->rejectedBy->name}} </span>
                     </p>
+                  @if(!empty($submission->note_for_rejection))
+                    <p>
+                        <span class="font-bold m-b-10 text-red-800">Rejection Notes: </span>
+                        <span class="text-red-800"> {{$submission->note_for_rejection}} </span>
+                    </p>
+                  @endif
                     <p>
                         <span class="font-bold m-b-10 text-red-800">Rejected Date & Time: </span>
                         <span class="text-red-800">  {{$submission->formatted_date_rejected}} </span>
