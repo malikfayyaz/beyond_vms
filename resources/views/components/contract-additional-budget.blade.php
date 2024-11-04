@@ -329,11 +329,4 @@
                         </div>
                       </div>
                     </template>
-                    <!-- Add more user details here -->
-                    <button
-                      class="bg-gray-800 hover:bg-gray-900 text-white font-bold py-2 px-4 rounded fixed bottom-12 right-8"
-                    >
-                      View Full Job Details
-                      <i class="fa-solid fa-arrow-right ml-2"></i>
-                    </button>
                   </div>
