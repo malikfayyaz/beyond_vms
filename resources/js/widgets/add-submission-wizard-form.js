@@ -42,17 +42,17 @@ export default function addSubWizarForm() {
         return this.formData[id] && this.formData[id].trim() !== "";
       } else if (id === "candidateEmail") {
         return this.isValidEmail(this.formData.candidateEmail);
-      }else if (id === "candidateFirstName") {
+      } else if (id === "candidateFirstName") {
         return this.formData.candidateFirstName !== "";
-      }else if (id === "lastFourNationalId") {
+      } else if (id === "lastFourNationalId") {
         return this.isValidNationalId(this.formData.lastFourNationalId);
-      }else if (id === "dobDate") {
+      } else if (id === "dobDate") {
         return this.formData.dobDate !== "";
-      }else if (id === "candidateLastName") {
+      } else if (id === "candidateLastName") {
         return this.formData.candidateLastName !== "";
       } else if (id === "phoneNumber") {
         return (
-          this.formData.phoneNumber === "" ||
+          this.formData.phoneNumber !== "" ||
           this.isValidPhone(this.formData.phoneNumber)
         );
       } else if (id === "resumeUpload") {
@@ -100,15 +100,15 @@ export default function addSubWizarForm() {
       preferredName: "",
       gender: "",
       race: "",
-      candidateHomeCity:"",
-      adjustedMarkup:"0.00",
-      jobId : "",
-      vendorMarkup:"0.00",
+      candidateHomeCity: "",
+      adjustedMarkup: "0.00",
+      jobId: "",
+      vendorMarkup: "0.00",
       workLocation: "",
       preferredLanguage: "",
       candidateEmail: "",
-      candidateFirstName:"",
-      candidateLastName:"",
+      candidateFirstName: "",
+      candidateLastName: "",
       phoneNumber: "",
       supplierAccountManager: "",
       resumeUpload: null,
@@ -126,11 +126,11 @@ export default function addSubWizarForm() {
       virtualState: "",
       availToInterviewNotes: "",
       comment: "",
-      over_time:"0.00",
-      double_time_rate:"0.00",
-      client_over_time_rate:"0.00",
-      client_double_time_rate:"0.00",
-      vendor_bill_rate:"0.00",
+      over_time: "0.00",
+      double_time_rate: "0.00",
+      client_over_time_rate: "0.00",
+      client_double_time_rate: "0.00",
+      vendor_bill_rate: "0.00",
 
 
 
@@ -151,7 +151,7 @@ export default function addSubWizarForm() {
     // removeSkill(skill) {
     //   this.formData.skills = this.formData.skills.filter((s) => s !== skill);
     // },
-      // Add your rejectCandidate method here
+    // Add your rejectCandidate method here
 
     handleResumeUpload(event) {
       const file = event.target.files[0];
@@ -197,7 +197,7 @@ export default function addSubWizarForm() {
 
     formatBillRate(value) {
       this.formData.billRate = this.formatRateValue(value);
-      console.log(this.formData.billRate );
+      console.log(this.formData.billRate);
 
       this.validateAllRates();
     },
@@ -231,16 +231,16 @@ export default function addSubWizarForm() {
     },
 
     validateBillRate() {
-      this.errors.billRate =  "";
+      this.errors.billRate = "";
       const exceedBillRate = parseFloat(this.formData.exceedBillRate);
       const payRate = parseFloat(this.formData.payRate);
       const billRate = parseFloat(this.formData.billRate);
-      console.log(billRate+"dsfsdfsdf");
-      console.log(payRate+"payRate");
+      console.log(billRate + "dsfsdfsdf");
+      console.log(payRate + "payRate");
       // if (billRate > payRate) {
       //   this.errors.billRate = `Bill Rate must be at least ${this.formData.payRate}`;
       // } else
-       if (billRate > exceedBillRate) {
+      if (billRate > exceedBillRate) {
         this.errors.billRate = `Bill Rate cannot exceed ${this.formData.exceedBillRate}`;
       } else if (billRate <= 0) {
         this.errors.billRate = "Bill Rate must be greater than 0.00";
@@ -390,11 +390,11 @@ export default function addSubWizarForm() {
             console.log(this.formData);
 
 
-          // Empty the input values and clear formData
-          if (!disable) {
-            console.log(disable);
-            $('#candidateSelection').val('').trigger("change.select2");
-            this.formData.candidateSelection = '';
+            // Empty the input values and clear formData
+            if (!disable) {
+              console.log(disable);
+              $('#candidateSelection').val('').trigger("change.select2");
+              this.formData.candidateSelection = '';
               $('#candidateFirstName').val('');
               $('#candidateMiddleName').val('');
               $('#candidateLastName').val('');
@@ -406,34 +406,34 @@ export default function addSubWizarForm() {
               this.formData.candidateFirstName = '';
               this.formData.candidateMiddleName = '';
               this.formData.candidateLastName = '';
-              this.formData.dobDate = this.flatpickrInstance.setDate( new Date(), true);;
+              this.formData.dobDate = this.flatpickrInstance.setDate(new Date(), true);;
               this.formData.lastFourNationalId = '';
               this.formData.candidateEmail = '';
-          }
+            }
 
-          // Disable or enable the fields based on the parameter
-          $('#candidateFirstName').prop('disabled', disable);
-          $('#candidateMiddleName').prop('disabled', disable);
-          $('#candidateLastName').prop('disabled', disable);
-          $('#dobDate').prop('disabled', disable);
-          $('#lastFourNationalId').prop('disabled', disable);
-          $('#candidateEmail').prop('disabled', disable);
-         if (disable) {
-          this.flatpickrInstance.altInput.setAttribute('disabled', 'disabled');
-         }else {
-            this.flatpickrInstance.altInput.removeAttribute('disabled');
-          }
-         
-          
-      }
-      };
+            // Disable or enable the fields based on the parameter
+            $('#candidateFirstName').prop('disabled', disable);
+            $('#candidateMiddleName').prop('disabled', disable);
+            $('#candidateLastName').prop('disabled', disable);
+            $('#dobDate').prop('disabled', disable);
+            $('#lastFourNationalId').prop('disabled', disable);
+            $('#candidateEmail').prop('disabled', disable);
+            if (disable) {
+              this.flatpickrInstance.altInput.setAttribute('disabled', 'disabled');
+            } else {
+              this.flatpickrInstance.altInput.removeAttribute('disabled');
+            }
 
-      $('#candidateType').on('change', function() {
-        $(".submitbuttonerror").prop('disabled', false);
-        if($(this).val() == 1) {
-          myObject.disabledFields(false);
-        }
-    });
+
+          }
+        };
+
+        $('#candidateType').on('change', function () {
+          $(".submitbuttonerror").prop('disabled', false);
+          if ($(this).val() == 1) {
+            myObject.disabledFields(false);
+          }
+        });
 
         this.loadExistingCandidate = () => {
           var candidate_id = $('#candidateSelection').find(':selected').val();
@@ -464,46 +464,46 @@ export default function addSubWizarForm() {
               const dobDate = $('#dobDate').val();
               const lastFourNationalId = $('#lastFourNationalId').val();
               const candidateEmail = $('#candidateEmail').val();
-                myObject.disabledFields(true);
+              myObject.disabledFields(true);
               // Only set formData when all the required fields have been populated
               if (candidateFirstName && candidateLastName && dobDate && lastFourNationalId) {
-                  this.formData.candidateFirstName = candidateFirstName;
-                  this.formData.candidateMiddleName = candidateMiddleName;
-                  this.formData.candidateLastName = candidateLastName;
-                  this.formData.dobDate = dobDate;
-                  this.formData.lastFourNationalId = lastFourNationalId;
-                  this.formData.candidateEmail = candidateEmail;
-                  // Enable the fields or do further processing
+                this.formData.candidateFirstName = candidateFirstName;
+                this.formData.candidateMiddleName = candidateMiddleName;
+                this.formData.candidateLastName = candidateLastName;
+                this.formData.dobDate = dobDate;
+                this.formData.lastFourNationalId = lastFourNationalId;
+                this.formData.candidateEmail = candidateEmail;
+                // Enable the fields or do further processing
 
-                  // Clear the interval
-                  clearInterval(intervalId);
+                // Clear the interval
+                clearInterval(intervalId);
               }
-          }, 100); // Check every 100ms if the fields have been updated
+            }, 100); // Check every 100ms if the fields have been updated
           }
         };
-          this.rejectCandidate = (submissionId) => {
-              let formData = new FormData();
-              formData.append('submissionId', submissionId);
-              ajaxCall('/admin/reject-candidate', 'POST', [[onSuccess, ['response']]], formData);
-          };
-          this.shortlistCandidate = (submissionId) => {
-            let formData = new FormData();
-            formData.append('submissionId', submissionId);
-            ajaxCall('/admin/shortlist-candidate', 'POST', [[onSuccess, ['response']]], formData);
+        this.rejectCandidate = (submissionId) => {
+          let formData = new FormData();
+          formData.append('submissionId', submissionId);
+          ajaxCall('/admin/reject-candidate', 'POST', [[onSuccess, ['response']]], formData);
+        };
+        this.shortlistCandidate = (submissionId) => {
+          let formData = new FormData();
+          formData.append('submissionId', submissionId);
+          ajaxCall('/admin/shortlist-candidate', 'POST', [[onSuccess, ['response']]], formData);
         };
         $('#billRate, #payRate').on('change', (event) => {
           this.vendorMarkup(event);
-      });
+        });
 
 
 
-      this.vendorMarkup = (event) => {
-        // let formData = this.formData || {};
+        this.vendorMarkup = (event) => {
+          // let formData = this.formData || {};
 
           // Get values from form fields or fallback to formData
           let payRate = this.formData.payRate || $('#payRate').val();
           let billRate = this.formData.billRate || $('#billRate').val();
-          let adjustedMarkup =  $('#adjustedMarkup').val();
+          let adjustedMarkup = $('#adjustedMarkup').val();
           let markup = this.formData.vendorMarkup || $('#vendorMarkup').val();
           let jobid = this.formData.jobId || $('#jobid').val();
           let url = `/show-vendor-markup`;
@@ -519,23 +519,23 @@ export default function addSubWizarForm() {
           // Determine which field was changed
           let rateField = '';
           if ($(event.target).attr('id') == 'billRate') {
-              rateField = 'bill_rate_changed';
+            rateField = 'bill_rate_changed';
           }
           if ($(event.target).attr('id') == 'VendorJobSubmission_adjusted_makrup') {
-              rateField = 'adjusted_markup_changed';
+            rateField = 'adjusted_markup_changed';
           }
           data.append('rateField', rateField);
 
           // Map field updates to specific DOM elements
           const updates = {
             '#over_time': { type: 'value', field: 'over_time' },
-              '#adjustedMarkup': { type: 'value', field: 'adjustedMarkup' },
-              '#double_time_rate': { type: 'value', field: 'double_time_rate' },
-              '#client_over_time_rate': { type: 'value', field: 'client_over_time_rate' },
-              '#client_double_time_rate': { type: 'value', field: 'client_double_time_rate' },
-              '#vendor_bill_rate': { type: 'value', field: 'vendor_bill_rate' },
+            '#adjustedMarkup': { type: 'value', field: 'adjustedMarkup' },
+            '#double_time_rate': { type: 'value', field: 'double_time_rate' },
+            '#client_over_time_rate': { type: 'value', field: 'client_over_time_rate' },
+            '#client_double_time_rate': { type: 'value', field: 'client_double_time_rate' },
+            '#vendor_bill_rate': { type: 'value', field: 'vendor_bill_rate' },
 
-              // Add more mappings if needed
+            // Add more mappings if needed
           };
 
           // AJAX call to update fields based on pay rate or bill rate change
@@ -551,10 +551,10 @@ export default function addSubWizarForm() {
             this.formData.vendor_bill_rate = $('#vendor_bill_rate').val();
 
             console.log(this.formData);
-          // Clear the interval
-          clearInterval(intervalId);
-        }, 100);
-      }
+            // Clear the interval
+            clearInterval(intervalId);
+          }, 100);
+        }
       }
     },
     initSelect2() {
@@ -694,9 +694,9 @@ export default function addSubWizarForm() {
             this.formData.candidateType !== "" &&
             (this.formData.candidateType !== "2" ||
               this.formData.candidateSelection !== "") &&
-            this.isFieldValid("candidateEmail")  &&
-            this.formData.dobDate.trim() !== "" && 
-            this.formData.candidateFirstName !== ""  &&
+            this.isFieldValid("candidateEmail") &&
+            this.formData.dobDate.trim() !== "" &&
+            this.formData.candidateFirstName !== "" &&
             this.isValidNationalId(this.formData.lastFourNationalId)
           );
         case 2:
@@ -779,10 +779,10 @@ export default function addSubWizarForm() {
         });
         if (this.formData.additionalDocUpload) {
           formData.append('additionaldoc', this.formData.additionalDocUpload);
-      }
+        }
         formData.append("resume", this.formData.resumeUpload);
         const url = "/vendor/submission/store";
-        ajaxCall(url,'POST', [[onSuccess, ['response']]], formData);
+        ajaxCall(url, 'POST', [[onSuccess, ['response']]], formData);
         // this.showSuccessMessage = true;
 
         // this.showSuccessMessage = true;
@@ -809,7 +809,7 @@ export default function addSubWizarForm() {
         billRate: "0.00",
         preferredName: "",
         // skills: [],
-        candidateFirstName:"",
+        candidateFirstName: "",
         candidateEmail: "",
         phoneNumber: "",
         supplierAccountManager: "",
@@ -826,11 +826,11 @@ export default function addSubWizarForm() {
         virtualState: "",
         availToInterviewNotes: "",
         comment: "",
-        over_time:"0.00",
-        double_time_rate:"0.00",
-        client_over_time_rate:"0.00",
-        client_double_time_rate:"0.00",
-        vendor_bill_rate:"0.00",
+        over_time: "0.00",
+        double_time_rate: "0.00",
+        client_over_time_rate: "0.00",
+        client_double_time_rate: "0.00",
+        vendor_bill_rate: "0.00",
 
       };
       if (document.getElementById("resumeUpload")) {
