@@ -48,7 +48,7 @@
                         >
                             <i class="fa-regular fa-registered"></i>
                             <span class="capitalize">Pending Release Job</span>
-                            <div class="px-1 py-1 flex items-center justify-center text-white rounded-lg bg-primary">
+                            <div class="px-1 py-1 flex items-center justify-center bg-gray-500 text-white rounded-lg">
                                 <span class="text-[10px]">{{ $counts['open'] }}</span>
                             </div>
                         </a>
@@ -225,33 +225,15 @@
 
                     }
 
-            // Handle Tab Click Events
             $(document).on('click', '.tab-link', function(e) {
             e.preventDefault();
-
-            // Remove active classes from all tabs
             $('.tab-link').removeClass('active-tab');
-
-            // Add active class to the clicked tab
+            $(this).addClass('px-1 py-1 flex items-center justify-center text-white rounded-lg bg-primary');
             $(this).addClass('active-tab');
-
-            // Update currentType based on clicked tab's data-type
             currentType = $(this).data('type');
-            // console.log(currentType);
-            
-            // Optionally, update the URL fragment
             window.location.hash = $(this).attr('href');
-
-            // Reload the DataTable with the new type
-            // table.ajax.reload();
             table.ajax.reload(null, false);
         });
-
-        // Optionally, trigger click on the default tab to load initial data
-        // $('.tab-link[data-type="active"]').trigger('click');
-
-       
-                  
                 }
       });
    </script>
