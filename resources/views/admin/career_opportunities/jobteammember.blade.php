@@ -2,24 +2,21 @@
   <div
     class="w-100 p-[30px] rounded border"
     :style="{'border-color': 'var(--primary-color)'}">
-    <table class="min-w-full divide-y divide-gray-200" id="workorderTable">
+    <table class="min-w-full divide-y divide-gray-200" id="teamMemberTable">
       <thead class="bg-gray-50">
         <tr>
           <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-            Status
+            Sr. #
           </th>
           <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-            Offer ID
+            Name
           </th>
           <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-            Contractor Name
-          </th>
-          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-            Offer Date
+            Email Address
           </th>
 
           <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-            Bill Rate
+            Role
           </th>
 
           <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -31,24 +28,5 @@
        
       </tbody>
     </table>
+  </div>
 </div>
-	
-
-
-</div>
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    if (window.$) {
-        initializeDataTable('#workorderTable', `{{ route('admin.jobWorkorder' ,  $job->id ) }}`, [
-		    { data: 'status', name: 'status' },
-		    { data: 'id', name: 'id' },
-		    { data: 'consultant_name', name: 'consultant_name' },
-		    { data: 'bill_rate', name: 'bill_rate' },
-		    { data: 'location', name: 'location' },
-		    { data: 'action', name: 'action', orderable: false, searchable: false }
-		]);
-    }
-});
-
-
-    </script>

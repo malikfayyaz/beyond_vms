@@ -170,6 +170,11 @@ Route::middleware(['user_role:admin'])->group(function () {
 
         Route::get('/career-opportunities/{id}/jobWorkorder', [CareerOpportunitiesController::class, 'jobWorkorder'])->name('jobWorkorder');
 
+        Route::get('/career-opportunities/{id}/jobRanking', [CareerOpportunitiesController::class, 'jobRanking'])->name('jobRanking');
+
+        Route::match(['get', 'post'], '/career-opportunities/{id}/jobteammember', [CareerOpportunitiesController::class, 'jobteammember'])->name('jobteammember');
+        Route::match(['get', 'post'], '/career-opportunities/{id}/pmoteammember', [CareerOpportunitiesController::class, 'pmoteammember'])->name('pmoteammember');
+
 
         Route::POST('contracts/contractBudgetWorkflow', [CareerOpportunitiesContractController::class, 'contractBudgetWorkflow'])->name('contract.contractBudgetWorkflow');
         

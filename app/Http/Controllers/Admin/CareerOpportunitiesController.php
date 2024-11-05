@@ -23,6 +23,8 @@ use App\Models\CareerOpportunitySubmission;
 use App\Models\CareerOpportunitiesInterview;
 use App\Models\CareerOpportunitiesOffer;
 use App\Models\CareerOpportunitiesWorkorder;
+use App\Models\User;
+use App\Models\AdminTeamJob;
 use App\Facades\Rateshelper as Rateshelper;
 
 class CareerOpportunitiesController extends BaseController
@@ -171,12 +173,13 @@ class CareerOpportunitiesController extends BaseController
         $rejectReasons =  Setting::where('category_id', 9)->get();
         $vendors = Vendor::all();
         $vendorRelease = VendorJobRelease::with('vendorName')->where('job_id', $id)->get();
-
+        $admins = Admin::all();
+        
         // Optionally, you can dump the data for debugging purposes
         // dd($job); // Uncomment to check the data structure
 
         // Return the view and pass the job data to it
-        return view('admin.career_opportunities.view', compact('job','jobWorkFlow','rejectReasons','vendors','vendorRelease'));
+        return view('admin.career_opportunities.view', compact('job','jobWorkFlow','rejectReasons','vendors','vendorRelease','admins'));
     }
 
     /**
@@ -758,7 +761,7 @@ class CareerOpportunitiesController extends BaseController
     }
 
      public function jobOffer($id){
-         $offers = CareerOpportunitiesOffer::with(['consultant','careerOpportunity','hiringManager','vendor'])->where('career_opportunity_id',$id);
+         $offers = CareerOpportunitiesOffer::with(['consultant','careerOpportunity','hiringManager','vendor'])->where('career_opportunity_id',$id)->orderBy('id', 'desc');
             return DataTables::of($offers)
                 ->addColumn('consultant_name', function($row) {
                     return $row->consultant ? $row->consultant->full_name : 'N/A';
@@ -786,7 +789,7 @@ class CareerOpportunitiesController extends BaseController
     }
 
     public function jobWorkorder($id){
-        $data = CareerOpportunitiesWorkorder::with('hiringManager','vendor','careerOpportunity','location')->where('career_opportunity_id', $id);
+        $data = CareerOpportunitiesWorkorder::with('hiringManager','vendor','careerOpportunity','location')->where('career_opportunity_id', $id)->orderBy('id', 'desc');
         return DataTables::of($data)
             ->addIndexColumn()
             ->addColumn('status', function($row) {
@@ -815,6 +818,87 @@ class CareerOpportunitiesController extends BaseController
             })
             ->rawColumns(['career_opportunity','id','action'])
             ->make(true);
+    }
+
+    public function jobRanking($id){
+        $query = CareerOpportunitySubmission::where('career_opportunity_id', $id)
+            ->whereNotIn('resume_status', [1, 2, 6, 11, 15])
+            ->orderByRaw('CASE WHEN bill_rate = 0 THEN 1 ELSE -1 END DESC')
+            ->orderByDesc('bill_rate')
+            ->orderByDesc('vendor_bill_rate')
+            ->get();
+        $jobmodel = CareerOpportunity::find($id);
+        $workingDays = Rateshelper::number_of_working_days($jobmodel->job_po_duration,$jobmodel->job_po_duration_endDate);
+        $hoursPerDay = $jobmodel->hours_per_day;
+        $hours = $workingDays * $hoursPerDay;
+
+
+        return DataTables::of($query)
+            ->addIndexColumn()
+            ->addColumn('candidateName', function($row) {
+                return $row->consultant ? $row->consultant->full_name : 'N/A';
+            })
+            ->addColumn('startDate', function($row) {
+                return $row->estimate_start_date ? $row->estimate_start_date  : 'N/A';
+            })
+            ->addColumn('billRate', function ($row) {
+                return $row->bill_rate ? $row->bill_rate : 'N/A';
+            })
+            ->addColumn('submissionCost', function ($row) {
+                $jobmodel = CareerOpportunity::find($row->career_opportunity_id);
+                $workingDays = Rateshelper::number_of_working_days($jobmodel->job_po_duration,$jobmodel->job_po_duration_endDate);
+                $hoursPerDay = $jobmodel->hours_per_day;
+                $hours = $workingDays * $hoursPerDay;
+
+                return number_format($row->bill_rate * $hours,2);
+            })
+
+            ->addColumn('action', function ($row) {
+                $btn = ' <a href="' . route('admin.workorder.show', $row->id) . '"
+                   class="text-blue-500 hover:text-blue-700 mr-2 bg-transparent hover:bg-transparent"
+                 >
+                   <i class="fas fa-eye"></i>
+                 </a>';
+
+                return $btn;
+            })
+            ->rawColumns(['career_opportunity','id','action'])
+            ->make(true);
+    }
+
+    public function pmoteammember(Request $request, $id){
+        if(isset($request->user_id)){
+            $data = new AdminTeamJob;
+            $data->career_opportunity_id = $id;
+            $data->user_id = $request->user_id;
+            $data->save();
+        }
+        $query = AdminTeamJob::where('career_opportunity_id', $id)->get();
+        return DataTables::of($query)
+            ->addIndexColumn()
+            ->addColumn('name', function($row) {
+                return $row->user ? $row->user->first_name.' '. $row->user->last_name : 'N/A';
+            })
+            ->addColumn('email', function($row) {
+                return $row->user ? $row->user->email  : 'N/A';
+            })
+            ->addColumn('action', function ($row) {
+                $btn = ' <a href="' . route('admin.workorder.show', $row->id) . '"
+                   class="text-blue-500 hover:text-blue-700 mr-2 bg-transparent hover:bg-transparent"
+                 >
+                   <i class="fas fa-eye"></i>
+                 </a>';
+
+                return $btn;
+            })
+            ->rawColumns(['action'])
+            ->make(true);
+
+        
+    }
+
+    public function jobteammember(Request $request){
+        dd($request->all());
     }
 
 
