@@ -7,6 +7,7 @@ use App\Models\Admin;
 use App\Models\Setting;
 use Illuminate\Http\Request;
 use App\Models\CareerOpportunitySubmission;
+use App\Models\CareerOpportunity;
 use App\Models\CareerOpportunitiesOffer;
 use Illuminate\Support\Facades\Auth;
 use Yajra\DataTables\Facades\DataTables;
@@ -15,6 +16,21 @@ class CareerOpportunitiesSubmissionController extends Controller
 {
     public function index(Request $request)
     {
+        $counts = [
+        'all_subs' => CareerOpportunitySubmission::count(),
+        'submitted' => CareerOpportunitySubmission::where('resume_status', 1)->count(),
+        'review' => CareerOpportunitySubmission::where('resume_status', 4)->count(),
+        'shortlisted' => CareerOpportunitySubmission::where('resume_status', 3)->count(),
+        'review' => CareerOpportunitySubmission::where('resume_status', 12)->count(),
+        'pending' => CareerOpportunitySubmission::where('resume_status', 1)->count(),
+        'rejected' => CareerOpportunitySubmission::where('resume_status', 13)->count(),
+        'pending_pmo' => CareerOpportunitySubmission::where('resume_status', 22)->count(),
+        'open_pending_release' => CareerOpportunitySubmission::whereIn('resume_status', [3, 23])->count(),
+        'pending_hm' => CareerOpportunitySubmission::whereIn('resume_status', [1, 23, 24])->count(),
+        'quick_create' => CareerOpportunitySubmission::whereIn('resume_status', [1, 3, 13])->count(),
+        'draft' => CareerOpportunitySubmission::where('resume_status', 2)->count(),
+        'active' => CareerOpportunitySubmission::whereIn('resume_status', [1, 3, 6, 13, 23, 24])->count(),
+    ];
         if ($request->ajax()) {
             $submissions = CareerOpportunitySubmission::with(['consultant','vendor','careerOpportunity.hiringManager','location'])
                 ->get();
@@ -61,7 +77,7 @@ class CareerOpportunitiesSubmissionController extends Controller
                 ->rawColumns(['id','career_opportunity_title','action'])
                 ->make(true);
         }
-        return view('admin.submission.index');
+        return view('admin.submission.index', compact('counts'));
     }
     public function show($id)
     {
