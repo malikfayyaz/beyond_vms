@@ -45,7 +45,7 @@
                         >
                             <i class="fa-regular fa-registered"></i>
                             <span class="capitalize">Pending Release Job</span>
-                            <div class="px-1 py-1 flex items-center justify-center text-white rounded-lg bg-primary">
+                            <div class="px-1 py-1 flex items-center justify-center bg-gray-500 text-white rounded-lg">
                                 <span class="text-[10px]">{{ $counts['open'] }}</span>
                             </div>
                         </a>
@@ -226,12 +226,15 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Tab click event handler
         $(document).on('click', '.tab-link', function(e) {
-            e.preventDefault();
-            $('.tab-link').removeClass('active-tab');
-            $(this).addClass('active-tab');
-            currentType = $(this).data('type');
-            window.location.hash = $(this).attr('href');
-            table.ajax.reload(); // Reload the table with the updated currentType
+        e.preventDefault();
+        $('.tab-link').removeClass('active-tab');
+        $('.tab-link').removeClass('px-1 py-1 flex items-center justify-center text-white rounded-lg bg-primary');
+        $('.tab-link').addClass('w-full flex justify-center items-center gap-3 py-4 hover:bg-white hover:rounded-lg hover:shadow');
+        $(this).addClass('px-1 py-1 flex items-center justify-center text-white rounded-lg bg-primary');
+        $(this).addClass('active-tab');
+        currentType = $(this).data('type');
+        window.location.hash = $(this).attr('href');
+        table.ajax.reload(); // Reload the table with the updated currentType
         });
     }
 });
