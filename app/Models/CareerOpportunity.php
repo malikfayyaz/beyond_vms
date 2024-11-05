@@ -18,20 +18,40 @@ class CareerOpportunity extends Model
     public static function getStatus($statusId)
     {
         switch ($statusId) {
-            case 0:
-                return 'Draft';
             case 1:
                 return 'Pending Approval';
             case 2:
-                return 'Rejected';
+                return 'Draft';
             case 3:
                 return 'Open - Pending Release';
             case 4:
-                return 'Pending - PMO';
+                return 'Filled';
+            case 5:
+                return 'Rejected';
+            case 6:
+                return 'Re-open';
+            case 10:
+                return 'Hold';
+            case 11:
+                return 'Release to Vendor';
+            case 12:
+                return 'Closed';
             case 13:
                 return 'Sourcing';
+            case 14:
+                return 'Hold – Reviewing Submissions';
+            case 20:
+                return 'Quick-Create';
+            case 21:
+                return 'Pending hiring manager approval';
+            case 22:
+                return 'Pending - PMO';
+            case 23:
+                return 'Pending Approval - Open';
+            case 24:
+                return 'Pending Approval - Sourcing';
             default:
-                return 'danger'; 
+                return 'Unknown Status';
         }
     }
     public function workFlow()
@@ -141,5 +161,9 @@ class CareerOpportunity extends Model
     {
         return $this->hasMany(CareerOpportunitySubmission::class, 'career_opportunity_id', 'id')
                     ->where('resume_status', 9);
+    }
+    public function jobNotes()
+    {
+        return $this->hasMany(CareerOpportunityNote::class, 'career_opportunity_id', 'id');
     }
 }

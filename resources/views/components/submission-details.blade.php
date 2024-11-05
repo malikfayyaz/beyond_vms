@@ -1,6 +1,6 @@
 <div
-                    x-show="selectedUser !== null"
-                    @click="selectedUser = null"
+                    x-show="submissionDetails !== null"
+                    @click="submissionDetails = null"
                     x-transition:enter="transition ease-out duration-300"
                     x-transition:enter-start="opacity-0"
                     x-transition:enter-end="opacity-100"
@@ -11,7 +11,7 @@
                   >
 </div>
 <div
-                    x-show="selectedUser !== null"
+                    x-show="submissionDetails !== null"
                     @click.stop
                     x-transition:enter="transition ease-out duration-300"
                     x-transition:enter-start="transform translate-x-full"
@@ -21,21 +21,21 @@
                     x-transition:leave-end="transform translate-x-full"
                     class="fixed inset-y-0 right-0 w-[700px] bg-gray-100 shadow-lg overflow-y-auto z-50 pb-24"
                   >
-                    <template x-if="selectedUser">
+                    <template x-if="submissionDetails">
                       <div>
                         <div
                           class="flex justify-between items-center p-4 bg-gray-800 text-white"
                         >
                           <h2 class="text-lg font-semibold">
                           Submission:
-                            <span x-text="selectedUser.data.title"></span> (<span
-                              x-text="selectedUser.data.id"
+                            <span x-text="submissionDetails.data.title"></span> (<span
+                              x-text="submissionDetails.data.id"
                             ></span
                             >)
                           </h2>
 
                           <button
-                            @click="selectedUser = null"
+                            @click="submissionDetails = null"
                             class="text-white bg-transparent"
                           >
                             <i class="fas fa-times"></i>
@@ -70,12 +70,12 @@
                                       <span
                                         class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full"
                                         :class="{
-                                                      'bg-green-100 text-green-800': selectedUser.data.subStatus === 'Active',
-                                                      'bg-red-100 text-red-800': selectedUser.data.subStatus === 'Inactive',
-                                                      'bg-red-100 text-red-800': selectedUser.data.subStatus === 'Rejected',
-                                                      'bg-yellow-100 text-yellow-800': selectedUser.data.subStatus === 'Pending'
+                                                      'bg-green-100 text-green-800': submissionDetails.data.subStatus === 'Active',
+                                                      'bg-red-100 text-red-800': submissionDetails.data.subStatus === 'Inactive',
+                                                      'bg-red-100 text-red-800': submissionDetails.data.subStatus === 'Rejected',
+                                                      'bg-yellow-100 text-yellow-800': submissionDetails.data.subStatus === 'Pending'
                                                   }"
-                                        x-text="selectedUser.data.subStatus"
+                                        x-text="submissionDetails.data.subStatus"
                                       ></span>
                                     </td>
                                   </tr>
@@ -83,19 +83,19 @@
                                     <td class="px-4 py-3 border-b">
                                       Vendor:
                                     </td>
-                                    <td class="px-4 py-3 border-b" x-text="selectedUser.data.vendor"></td>
+                                    <td class="px-4 py-3 border-b" x-text="submissionDetails.data.vendor"></td>
                                   </tr>
                                   <tr class="hover:bg-gray-100">
                                     <td class="px-4 py-3 border-b">
                                       Email:
                                     </td>
-                                    <td class="px-4 py-3 border-b" x-text="selectedUser.data.email"></td>
+                                    <td class="px-4 py-3 border-b" x-text="submissionDetails.data.email"></td>
                                   </tr>
                                   <tr class="hover:bg-gray-100">
                                     <td class="px-4 py-3 border-b">
                                       Location:
                                     </td>
-                                    <td class="px-4 py-3 border-b" x-text="selectedUser.data.location">
+                                    <td class="px-4 py-3 border-b" x-text="submissionDetails.data.location">
                                     </td>
                                   </tr>
                                 </tbody>
@@ -129,13 +129,13 @@
                                     <td class="px-4 py-3 border-b">
                                       Bill Rate:
                                     </td>
-                                    <td class="px-4 py-3 border-b" x-text="selectedUser.data.vendor_rate"></td>
+                                    <td class="px-4 py-3 border-b" x-text="submissionDetails.data.vendor_rate"></td>
                                   </tr>
                                   <tr class="hover:bg-gray-100">
                                     <td class="px-4 py-3 border-b">
                                         Over Time Rate:
                                     </td>
-                                    <td class="px-4 py-3 border-b" x-text="selectedUser.data.overtimer_rate"></td>
+                                    <td class="px-4 py-3 border-b" x-text="submissionDetails.data.overtimer_rate"></td>
                                   </tr>
                                 </tbody>
                               </table>
@@ -168,13 +168,13 @@
                                     <td class="px-4 py-3 border-b">
                                         Bill Rate:
                                     </td>
-                                    <td class="px-4 py-3 border-b" x-text="selectedUser.data.client_rate"></td>
+                                    <td class="px-4 py-3 border-b" x-text="submissionDetails.data.client_rate"></td>
                                   </tr>
                                   <tr class="hover:bg-gray-100">
                                     <td class="px-4 py-3 border-b">
                                     Over Time Rate:
                                     </td>
-                                    <td class="px-4 py-3 border-b" x-text="selectedUser.data.overtimer_rate"></td>
+                                    <td class="px-4 py-3 border-b" x-text="submissionDetails.data.overtimer_rate"></td>
                                   </tr>
                                 </tbody>
                               </table>
@@ -205,9 +205,9 @@
                                 <tbody>
                                   <tr class="hover:bg-gray-100">
                                     
-                                    <td class="px-4 py-3 border-b" x-text="selectedUser.data.contract_title"></td>
-                                    <td class="px-4 py-3 border-b" x-text="selectedUser.data.date_range"></td>
-                                    <td class="px-4 py-3 border-b" x-text="selectedUser.data.contract_status"></td>
+                                    <td class="px-4 py-3 border-b" x-text="submissionDetails.data.contract_title"></td>
+                                    <td class="px-4 py-3 border-b" x-text="submissionDetails.data.date_range"></td>
+                                    <td class="px-4 py-3 border-b" x-text="submissionDetails.data.contract_status"></td>
                                   </tr>
                                 </tbody>
                               </table>

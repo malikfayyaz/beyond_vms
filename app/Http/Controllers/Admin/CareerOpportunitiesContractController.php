@@ -229,20 +229,9 @@ class CareerOpportunitiesContractController extends BaseController
      */
     public function show($id)
     {
-        $contract = CareerOpportunitiesContract::with([
-            'careerOpportunity',
-            'ContractExtensionRequest',
-            'ContractBudgetWorkflow',
-            'hiringManager',
-        ])->findOrFail($id);
-        $contract->latestPendingBudgetRequest = $contract->ContractAdditionalBudgetRequest()
-            ->where('status', 'pending')
-            ->latest()
-            ->first();
-$rejectionreason = checksetting(17)->toArray();
-        $extensionReq = $contract->contractExtensionRequest()->latest()->first();
-        $workflows = $contract->workflows;
-        return view('admin.contract.view', compact('contract','extensionReq','workflows','rejectionreason'));
+        // dd($id);
+        $contract = CareerOpportunitiesContract::findOrFail($id);
+        return view('admin.contract.view', compact('contract'));
     }
     public function saveComments(Request $request) //SAVENOTES
     {
@@ -768,7 +757,7 @@ $rejectionreason = checksetting(17)->toArray();
             $message = 'Contract Workflow Accepted successfully!';
             session()->flash('success', $message);
         } elseif ($actionType == 'Reject') {
-            offerHelper::rejectoffersWorkFlow($request);
+            contractHelper::rejectcontractsWorkFlow($request);
             $message = 'Contract Workflow Rejected successfully!';
             session()->flash('success', $message);
         }

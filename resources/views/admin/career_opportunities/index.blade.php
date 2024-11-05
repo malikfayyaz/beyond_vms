@@ -5,7 +5,8 @@
     @include('admin.layouts.partials.dashboard_side_bar')
 <div class="ml-16" >
     @include('admin.layouts.partials.header')
-       <div class="bg-white mx-4 my-8 rounded p-8"  x-data="{ selectedUser: null}" @job-details-updated.window="selectedUser = $event.detail">
+
+       <div class="bg-white mx-4 my-8 rounded p-8"  x-data="{ jobDetails: null}" @job-details-updated.window="jobDetails = $event.detail">
            @include('admin.layouts.partials.alerts')
            <div id="success-message" style="display: none;" class="alert alert-success"></div>
            <div >
@@ -25,105 +26,88 @@
                  <ul
                      class="grid grid-flow-col text-center text-gray-500 bg-gray-100 rounded-lg p-1"
                  >
-                     <li class="flex justify-center">
-                         <a
-                             href="#page1"
-                             class="w-full flex justify-center items-center gap-3 hover:bg-white hover:rounded-lg hover:shadow py-4"
-                         >
-                             <i class="fa-regular fa-file-lines"></i>
-                             <span class="capitalize">active jobs</span>
-                             <div
-                                 class="px-1 py-1 flex items-center justify-center bg-gray-500 text-white rounded-lg"
-                             >
-                                 <span class="text-[10px]">156</span>
-                             </div>
-                         </a>
-                     </li>
-                     <li class="flex justify-center items-center">
-                         <a
-                             href="#page2"
-                             class="w-full flex justify-center items-center gap-3 bg-white rounded-lg shadow py-4"
-                             :style="{'color': 'var(--primary-color)'}"
-                         ><i class="fa-regular fa-registered"></i
-                             ><span class="capitalize">Pending Release Job</span>
-                             <div
-                                 class="px-1 py-1 flex items-center justify-center text-white rounded-lg"
-                                 :style="{'background-color': 'var(--primary-color)'}"
-                             >
-                                 <span class="text-[10px]">56</span>
-                             </div>
-                         </a>
-                     </li>
-                     <li class="flex justify-center">
-                         <a
-                             href="#page1"
-                             class="flex justify-center items-center gap-3 py-4 w-full hover:bg-white hover:rounded-lg hover:shadow"
-                         >
-                             <i class="fa-solid fa-fill"></i>
-                             <span class="capitalize">filled jobs</span>
-                             <div
-                                 class="px-1 py-1 flex items-center justify-center bg-gray-500 text-white rounded-lg"
-                             >
-                                 <span class="text-[10px]">20</span>
-                             </div>
-                         </a>
-                     </li>
-                     <li class="flex justify-center">
-                         <a
-                             href="#page1"
-                             class="flex justify-center items-center gap-3 py-4 w-full hover:bg-white hover:rounded-lg hover:shadow"
-                         >
-                             <i class="fa-solid fa-lock"></i>
-                             <span class="capitalize">closed jobs</span>
-                             <div
-                                 class="px-1 py-1 flex items-center justify-center bg-gray-500 text-white rounded-lg"
-                             >
-                                 <span class="text-[10px]">2957</span>
-                             </div>
-                         </a>
-                     </li>
-                     <li class="flex justify-center">
-                         <a
-                             href="#page1"
-                             class="flex justify-center items-center gap-3 py-4 w-full hover:bg-white hover:rounded-lg hover:shadow"
-                         >
-                             <i class="fa-solid fa-spinner"></i>
-                             <span class="capitalize">pending - PMO</span>
-                             <div
-                                 class="px-1 py-1 flex items-center justify-center bg-gray-500 text-white rounded-lg"
-                             >
-                                 <span class="text-[10px]">0</span>
-                             </div>
-                         </a>
-                     </li>
-                     <li class="flex justify-center">
-                         <a
-                             href="#page1"
-                             class="flex justify-center items-center gap-3 py-4 w-full hover:bg-white hover:rounded-lg hover:shadow"
-                         >
-                             <i class="fas fa-drafting-compass"></i>
-                             <span class="capitalize">draft</span>
-                             <div
-                                 class="px-1 py-1 flex items-center justify-center bg-gray-500 text-white rounded-lg"
-                             >
-                                 <span class="text-[10px]">30</span>
-                             </div>
-                         </a>
-                     </li>
-                     <li class="flex justify-center">
-                         <a
-                             href="#page1"
-                             class="flex justify-center items-center gap-3 py-4 w-full hover:bg-white hover:rounded-lg hover:shadow"
-                         >
-                             <i class="fa-solid fa-briefcase"></i>
-                             <span class="capitalize">all jobs</span>
-                             <div
-                                 class="px-1 py-1 flex items-center justify-center bg-gray-500 text-white rounded-lg"
-                             >
-                                 <span class="text-[10px]">4320</span>
-                             </div>
-                         </a>
-                     </li>
+                
+                    <li class="flex justify-center">
+                        <a
+                            href="#active"
+                            class="tab-link w-full flex justify-center items-center gap-3 hover:bg-white hover:rounded-lg hover:shadow py-4"
+                            data-type="active"
+                        >
+                            <i class="fa-regular fa-file-lines"></i>
+                            <span class="capitalize">Active Jobs</span>
+                            <div class="px-1 py-1 flex items-center justify-center bg-gray-500 text-white rounded-lg">
+                                <span class="text-[10px]">{{ $counts['active'] }}</span>
+                            </div>
+                        </a>
+                    </li>
+                    <li class="flex justify-center">
+                        <a
+                            href="#open"
+                            class="tab-link w-full flex justify-center items-center gap-3 py-4 hover:bg-white hover:rounded-lg hover:shadow"
+                            data-type="open"
+                        >
+                            <i class="fa-regular fa-registered"></i>
+                            <span class="capitalize">Pending Release Job</span>
+                            <div class="px-1 py-1 flex items-center justify-center bg-gray-500 text-white rounded-lg">
+                                <span class="text-[10px]">{{ $counts['open'] }}</span>
+                            </div>
+                        </a>
+                    </li>
+                    <li class="flex justify-center">
+                        <a
+                            href="#filled"
+                            class="tab-link w-full flex justify-center items-center gap-3 py-4 hover:bg-white hover:rounded-lg hover:shadow"
+                            data-type="filled"
+                        >
+                            <i class="fa-solid fa-fill"></i>
+                            <span class="capitalize">Filled Jobs</span>
+                            <div class="px-1 py-1 flex items-center justify-center bg-gray-500 text-white rounded-lg">
+                                <span class="text-[10px]">{{ $counts['filled'] }}</span>
+                            </div>
+                        </a>
+                    </li>
+
+
+                    <li class="flex justify-center">
+                        <a
+                            href="#closed"
+                            class="tab-link w-full flex justify-center items-center gap-3 py-4 hover:bg-white hover:rounded-lg hover:shadow"
+                            data-type="closed"
+                        >
+                            <i class="fa-solid fa-fill"></i>
+                            <span class="capitalize">Closed Jobs</span>
+                            <div class="px-1 py-1 flex items-center justify-center bg-gray-500 text-white rounded-lg">
+                                <span class="text-[10px]">{{ $counts['closed'] }}</span>
+                            </div>
+                        </a>
+                    </li>
+                    <li class="flex justify-center">
+                        <a
+                            href="#pendingpmo"
+                            class="tab-link w-full flex justify-center items-center gap-3 py-4 hover:bg-white hover:rounded-lg hover:shadow"
+                            data-type="pendingpmo"
+                        >
+                            <i class="fa-solid fa-fill"></i>
+                            <span class="capitalize">Pending - PMO</span>
+                            <div class="px-1 py-1 flex items-center justify-center bg-gray-500 text-white rounded-lg">
+                                <span class="text-[10px]">{{ $counts['pending_pmo'] }}</span>
+                            </div>
+                        </a>
+                    </li>
+                    
+                    <li class="flex justify-center">
+                        <a
+                            href="#all_jobs"
+                            class="tab-link w-full flex justify-center items-center gap-3 py-4 hover:bg-white hover:rounded-lg hover:shadow"
+                            data-type="all_jobs"
+                        >
+                            <i class="fa-solid fa-fill"></i>
+                            <span class="capitalize">All Jobs</span>
+                            <div class="px-1 py-1 flex items-center justify-center bg-gray-500 text-white rounded-lg">
+                                <span class="text-[10px]">{{ $counts['all_jobs'] }}</span>
+                            </div>
+                        </a>
+                    </li>
                  </ul>
              </div>
              
@@ -203,8 +187,8 @@
       document.addEventListener('DOMContentLoaded', function() {
                  console.log(window.$); // Verify jQuery is available
                 if (window.$) {
-
-                    initializeDataTable('#example', '/admin/career-opportunities', [
+                    let currentType = 'active';
+                    let table =initializeDataTable('#example', '/admin/career-opportunities', [
                         { data: 'jobStatus', name: 'jobStatus' },
                         { data: 'id', name: 'id' },
                         { data: 'title', name: 'title' },
@@ -215,12 +199,7 @@
                         { data: 'num_openings', name: 'num_openings' },
                         { data: 'worker_type', name: 'worker_type' },
                         {data: 'action', name: 'action', orderable: false, searchable: false}
-                    ]);
-
-                    function toggleSidebar() {
-                        // Assuming you want to toggle selectedUser state
-                        this.selectedUser = this.selectedUser ? 'user' : 'user';
-                    }
+                    ],  () => currentType);
 
                     $(document).on('click', '.job-detail-trigger', function (e) {
                         e.preventDefault();
@@ -246,12 +225,22 @@
 
                     }
 
-       
-                  
+            $(document).on('click', '.tab-link', function(e) {
+            e.preventDefault();
+    $('.tab-link').removeClass('active-tab');
+    $('.tab-link').removeClass('px-1 py-1 flex items-center justify-center text-white rounded-lg bg-primary');
+    $('.tab-link').addClass('w-full flex justify-center items-center gap-3 py-4 hover:bg-white hover:rounded-lg hover:shadow');
+    $(this).addClass('px-1 py-1 flex items-center justify-center text-white rounded-lg bg-primary');
+    $(this).addClass('active-tab');
+    currentType = $(this).data('type');
+    window.location.hash = $(this).attr('href');
+    table.ajax.reload(null, false);
+        });
                 }
       });
    </script>
     <script>
+      
         function deleteItem(url) {
             console.log(window.$); // Verify jQuery is available
             if (confirm('Are you sure you want to delete this record?')) {

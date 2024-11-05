@@ -1,6 +1,6 @@
 <div
-                    x-show="selectedUser !== null"
-                    @click="selectedUser = null"
+                    x-show="jobDetails !== null"
+                    @click="jobDetails = null"
                     x-transition:enter="transition ease-out duration-300"
                     x-transition:enter-start="opacity-0"
                     x-transition:enter-end="opacity-100"
@@ -11,7 +11,7 @@
                   >
 </div>
 <div
-                    x-show="selectedUser !== null"
+                    x-show="jobDetails !== null"
                     @click.stop
                     x-transition:enter="transition ease-out duration-300"
                     x-transition:enter-start="transform translate-x-full"
@@ -21,21 +21,21 @@
                     x-transition:leave-end="transform translate-x-full"
                     class="fixed inset-y-0 right-0 w-[700px] bg-gray-100 shadow-lg overflow-y-auto z-50 pb-24"
                   >
-                    <template x-if="selectedUser">
+                    <template x-if="jobDetails">
                       <div>
                         <div
                           class="flex justify-between items-center p-4 bg-gray-800 text-white"
                         >
                           <h2 class="text-lg font-semibold">
                             Job:
-                            <span x-text="selectedUser.data.title"></span> (<span
-                              x-text="selectedUser.data.id"
+                            <span x-text="jobDetails.data.title"></span> (<span
+                              x-text="jobDetails.data.id"
                             ></span
                             >)
                           </h2>
 
                           <button
-                            @click="selectedUser = null"
+                            @click="jobDetails = null"
                             class="text-white bg-transparent"
                           >
                             <i class="fas fa-times"></i>
@@ -45,8 +45,8 @@
                         <div class="p-4 bg-gray-200">
                           <p>
                             Job Created by
-                            <span x-text="selectedUser.data.hiring_manager"></span> on
-                            <span x-text="selectedUser.data.created_at"></span>
+                            <span x-text="jobDetails.data.hiring_manager"></span> on
+                            <span x-text="jobDetails.data.created_at"></span>
                           </p>
                         </div>
                         <div class="p-4">
@@ -60,7 +60,7 @@
                               <div
                                 class="flex mt-2 w-full items-center justify-between"
                               >
-                                <span class="text-blue-800 font-bold" x-text="selectedUser.data.submission_count"></span>
+                                <span class="text-blue-800 font-bold" x-text="jobDetails.data.submission_count"></span>
                                 <i
                                   class="fa-solid fa-graduation-cap text-blue-800"
                                 ></i>
@@ -73,7 +73,7 @@
                               <div
                                 class="flex mt-2 w-full items-center justify-between"
                               >
-                                <span class="text-red-800 font-bold" x-text="selectedUser.data.interview_count"></span>
+                                <span class="text-red-800 font-bold" x-text="jobDetails.data.interview_count"></span>
                                 <i
                                   class="fa-solid fa-graduation-cap text-red-800"
                                 ></i>
@@ -86,7 +86,7 @@
                               <div
                                 class="flex mt-2 w-full items-center justify-between"
                               >
-                                <span class="text-yellow-800 font-bold" x-text="selectedUser.data.offers_count"></span>
+                                <span class="text-yellow-800 font-bold" x-text="jobDetails.data.offers_count"></span>
                                 <i
                                   class="fa-solid fa-graduation-cap text-yellow-800"
                                 ></i>
@@ -101,7 +101,7 @@
                               <div
                                 class="flex mt-2 w-full items-center justify-between"
                               >
-                                <span class="text-purple-800 font-bold" x-text="selectedUser.data.workorders_count"></span>
+                                <span class="text-purple-800 font-bold" x-text="jobDetails.data.workorders_count"></span>
                                 <i
                                   class="fa-solid fa-graduation-cap text-purple-800"
                                 ></i>
@@ -114,7 +114,7 @@
                               <div
                                 class="flex mt-2 w-full items-center justify-between"
                               >
-                                <span class="text-green-800 font-bold" x-text="selectedUser.data.hired_count"></span>
+                                <span class="text-green-800 font-bold" x-text="jobDetails.data.hired_count"></span>
                                 <i
                                   class="fa-solid fa-graduation-cap text-green-800"
                                 ></i>
@@ -151,11 +151,11 @@
                                       <span
                                         class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full"
                                         :class="{
-                                                      'bg-green-100 text-green-800': selectedUser.data.jobstatus === 'Active',
-                                                      'bg-red-100 text-red-800': selectedUser.data.jobstatus === 'Inactive',
-                                                      'bg-yellow-100 text-yellow-800': selectedUser.data.jobstatus === 'Pending'
+                                                      'bg-green-100 text-green-800': jobDetails.data.jobstatus === 'Active',
+                                                      'bg-red-100 text-red-800': jobDetails.data.jobstatus === 'Inactive',
+                                                      'bg-yellow-100 text-yellow-800': jobDetails.data.jobstatus === 'Pending'
                                                   }"
-                                        x-text="selectedUser.data.jobstatus"
+                                        x-text="jobDetails.data.jobstatus"
                                       ></span>
                                     </td>
                                   </tr>
@@ -163,22 +163,22 @@
                                     <td class="px-4 py-3 border-b">
                                       Location:
                                     </td>
-                                    <td class="px-4 py-3 border-b" x-text="selectedUser.data.location">
+                                    <td class="px-4 py-3 border-b" x-text="jobDetails.data.location">
                                     </td>
                                   </tr>
                                   <tr class="hover:bg-gray-100">
                                     <td class="px-4 py-3 border-b">
                                       Number of Opening(s):
                                     </td>
-                                    <td class="px-4 py-3 border-b" x-text="selectedUser.data.opening"></td>
+                                    <td class="px-4 py-3 border-b" x-text="jobDetails.data.opening"></td>
                                   </tr>
                                   <tr class="hover:bg-gray-100">
                                     <td class="px-4 py-3 border-b">Category</td>
-                                    <td class="px-4 py-3 border-b" x-text="selectedUser.data.category"></td>
+                                    <td class="px-4 py-3 border-b" x-text="jobDetails.data.category"></td>
                                   </tr>
                                   <tr class="hover:bg-gray-100">
                                     <td class="px-4 py-3">Expenses Allowed?</td>
-                                    <td class="px-4 py-3" x-text="selectedUser.data.expense"></td>
+                                    <td class="px-4 py-3" x-text="jobDetails.data.expense"></td>
                                   </tr>
                                 </tbody>
                               </table>
@@ -208,13 +208,13 @@
                                 <tbody>
                                   <tr class="hover:bg-gray-100">
                                     <td class="px-4 py-3 border-b">Days:</td>
-                                    <td class="px-4 py-3 border-b" x-text="selectedUser.data.days"></td>
+                                    <td class="px-4 py-3 border-b" x-text="jobDetails.data.days"></td>
                                   </tr>
                                   <tr class="hover:bg-gray-100">
                                     <td class="px-4 py-3 border-b">
                                       Total Hours:
                                     </td>
-                                    <td class="px-4 py-3 border-b" x-text="selectedUser.data.hours"></td>
+                                    <td class="px-4 py-3 border-b" x-text="jobDetails.data.hours"></td>
                                   </tr>
                                   <tr class="hover:bg-gray-100">
                                     <td class="px-4 py-3 border-b">
@@ -222,7 +222,7 @@
                                     </td>
                                     <td class="px-4 py-3 border-b">
                                       <span
-                                        x-text="selectedUser.data.jobDuration"
+                                        x-text="jobDetails.data.jobDuration"
                                       ></span>
                                     </td>
                                   </tr>
@@ -256,19 +256,19 @@
                                     <td class="px-4 py-3 border-b">
                                       Rate Type:
                                     </td>
-                                    <td class="px-4 py-3 border-b" x-text="selectedUser.data.ratetype"></td>
+                                    <td class="px-4 py-3 border-b" x-text="jobDetails.data.ratetype"></td>
                                   </tr>
                                   <tr class="hover:bg-gray-100">
                                     <td class="px-4 py-3 border-b">
                                       Minimum Bill Rate:
                                     </td>
-                                    <td class="px-4 py-3 border-b" x-text="selectedUser.data.min_rate"></td>
+                                    <td class="px-4 py-3 border-b" x-text="jobDetails.data.min_rate"></td>
                                   </tr>
                                   <tr class="hover:bg-gray-100">
                                     <td class="px-4 py-3 border-b">
                                       Maximum Bill Rate:
                                     </td>
-                                    <td class="px-4 py-3 border-b" x-text="selectedUser.data.max_rate"></td>
+                                    <td class="px-4 py-3 border-b" x-text="jobDetails.data.max_rate"></td>
                                   </tr>
                                 </tbody>
                               </table>
@@ -296,9 +296,9 @@
                                 <tbody>
                                   <tr class="hover:bg-gray-100">
                                     <td class="px-4 py-3 border-b" >
-                                    <span x-text="selectedUser.data.careerOpportunitiesBu.map(bu => bu.bu_unit)"></span>
+                                    <span x-text="jobDetails.data.careerOpportunitiesBu.map(bu => bu.bu_unit)"></span>
                                     </td>
-                                    <td class="px-4 py-3 border-b"><span x-text="selectedUser.data.careerOpportunitiesBu.map(bu => bu.percentage)"></span>%</td>
+                                    <td class="px-4 py-3 border-b"><span x-text="jobDetails.data.careerOpportunitiesBu.map(bu => bu.percentage)"></span>%</td>
                                   </tr>
                                 </tbody>
                               </table>

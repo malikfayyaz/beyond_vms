@@ -88,12 +88,19 @@ class CareerOpportunitySubmission extends Model
         return $this->belongsTo(Setting::class, 'reason_for_rejection', 'id');
     }
 
-    public function rejectionUser(){
+    public function rejectedBy(){
         return $this->belongsTo(User::class, 'rejected_by', 'id');
     }
 
     public function contracts() {
         return $this->hasMany(CareerOpportunitiesContract::class, 'submission_id', 'id');
+    }
+
+    public function getFormattedDateRejectedAttribute()
+    {
+        return $this->attributes['date_rejected'] 
+        ? Carbon::parse($this->attributes['date_rejected'])->format('m/d/Y g:i A') 
+        : '';
     }
 
 }

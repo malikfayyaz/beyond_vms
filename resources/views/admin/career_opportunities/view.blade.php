@@ -5,7 +5,8 @@
     @include('admin.layouts.partials.dashboard_side_bar')
       <div class="ml-16">
           @include('admin.layouts.partials.header')
-          <div  x-data="{ tab: 'activejobs' }" class="bg-white mx-4 my-8 rounded p-8">
+          <div  x-data="{ tab: 'activejobs',jobDetails: null, submissionDetails: null }" @job-details-updated.window="jobDetails = $event.detail"
+          @submission-details-updated.window="submissionDetails = $event.detail" class="bg-white mx-4 my-8 rounded p-8">
               @include('admin.layouts.partials.alerts')
 
           @if($job->jobStatus == 2)
@@ -14,7 +15,9 @@
                     notes: '{{ $job->note_for_rejection }}',
                     rejectedBy: '{{ $job->rejectionUser ? $job->rejectionUser->name : '' }}',
                     rejectionDate: '{{ $job->date_rejected }}'
-                }">
+                    
+                }"
+                >
                     <div class="alert alert-danger">
                         <span class="bold">Rejection Reason:</span> <span x-text="rejectionReason"></span><br>
                         <span class="bold">Notes:</span> <span x-text="notes"></span><br>
@@ -23,7 +26,9 @@
                     </div>
                 </div>
               @endif
-
+              <x-job-details />
+                
+                <x-submission-details />
 
           <div class="mb-4">
             <ul
@@ -97,6 +102,17 @@
                 >
                   <i class="fa-regular fa-file-lines"></i>
                   <span class="capitalize">Workorders</span>
+                
+                </a>
+              </li>
+              <li class="flex justify-center">
+                <a
+                @click="tab = 'notes'"
+                :class="{ 'border-blue-500 text-blue-500': tab === 'notes' }"
+                class="w-full flex justify-center items-center gap-3 hover:bg-white hover:rounded-lg hover:shadow py-4"
+                >
+                  <i class="fa-regular fa-file-lines"></i>
+                  <span class="capitalize">Add notes</span>
                 
                 </a>
               </li>
@@ -898,6 +914,74 @@
       <div x-show="tab === 'workorder'">
           @include('admin.career_opportunities.workorder')
       </div>
+      <div x-show="tab === 'notes'" x-data="{
+      note: '',
+      jobId: '{{ $job->id }}',
+      submitForm() {
+          console.log('Submitting form with note:', this.note);
+          let formData = new FormData();
+          formData.append('note', this.note);
+          formData.append('job_id', this.jobId);
+          const url = '{{ route('admin.saveNotes') }}';
+          // Make sure ajaxCall is defined
+          ajaxCall(url, 'POST', [[onSuccess, ['response']]], formData);
+      }
+  }">
+      <div class="row padding_cls">
+        <div class="col-12">
+            <div class="alert alert-success alert-dismissible show_hd_message" style="display: none;">
+                <button type="button" class="close" data-dismiss="alert" aria-label="close">&times;</button>
+                <strong>Message!</strong> <span class="insert_message"></span>.
+            </div>
+
+            <div id="notesmessagewarning"></div>
+
+            <div class="col-12">
+                <div class="interview-notes-comments p-t-0">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="media">
+                                <form @submit.prevent="submitForm" method="POST" enctype="multipart/form-data">
+                                    @csrf
+                                    <div class="media-body">
+                                        <label for="comment">Add Notes</label>
+                                        <input type="hidden" id="hidden_job_id" value="{{ $job->id }}">
+                                        <textarea id="comment" x-model="note" required class="form-control " placeholder="Enter text ..." style="width: 100%; min-height: 100px"></textarea>
+                                        <button type="submit" class="btn btn-success mt-3">Submit</button>
+                                        <button type="button" class="btn btn-success wait_comment mt-3" style="display: none;">
+                                            <i class="fa fa-spinner fa-spin"></i>
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                            @foreach ($job->jobNotes as $note)
+                                <div class="uiv2-note-wrapper">
+                                    <div class="dialogbox">
+                                        <div class="body">
+                                            <span class="tip tip-up"></span>
+                                            <div class="message">
+                                                <p><strong>{{ $note->notes }}</strong></p>
+                                            </div>
+                                            <p class="postedby meta-inner pull-left">
+                                                Posted By: {{ $note->posted_by_type }}
+                                            </p>
+                                            <p class="postedby meta-inner pull-left">
+                                                Name: {{ Auth::user()->name }}
+                                            </p>
+                                            <p class="meta-inner pull-left" style="color: #8b92ca;">
+                                                {{ $note->created_at->format('m/d/Y') }} at {{ $note->created_at->format('H:i A') }}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+      </div>
 
 
       <div x-show="tab === 'jobworkflow'"   class="flex w-full gap-4">
@@ -1464,7 +1548,61 @@ function initSelect2() {
 // Initialize Select2 on page load
 document.addEventListener('DOMContentLoaded', function() {
     initSelect2();
+    function toggleSidebar() 
+            {
+                // Assuming you want to toggle selectedUser state
+                this.selectedUser = this.selectedUser ? 'user' : 'user';
+            }
+    $(document).on('click', '.job-detail-trigger', function (e) {
+                e.preventDefault();
+                let jobId = $(this).data('id');
+                openJobDetailsModal(jobId);
+            });
+
+            function openJobDetailsModal(jobId) {
+                
+                fetch(`/job-details/${jobId}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            const event = new CustomEvent('job-details-updated', {
+                                    detail: data,
+                                    bubbles: true,
+                                    composed: true
+                                });
+                                console.log(event.detail.data);
+                                
+                                document.dispatchEvent(event);
+                        })
+                        .catch(error => console.error('Error:', error));
+
+            }
+
+            $(document).on('click', '.submission-detail-trigger', function (e) {
+                e.preventDefault();
+                let submissionId = $(this).data('id');
+                openSubmissionDetailsModal(submissionId);
+            });
+
+            function openSubmissionDetailsModal(submissionId) {
+                console.log(submissionId);
+                fetch(`/submission-details/${submissionId}`)
+                    .then(response => {
+                        if (!response.ok) throw new Error('Network response was not ok');
+                        return response.json();
+                    })
+                    .then(data => {
+                        const event = new CustomEvent('submission-details-updated', {
+                            detail: data,
+                            bubbles: true,
+                            composed: true
+                        });
+                        document.dispatchEvent(event);
+                    })
+                    .catch(error => console.error('Error fetching submission details:', error));
+            }
 });
+
+
   
 </script>
 

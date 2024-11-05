@@ -7,7 +7,7 @@ use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 use App\Models\CareerOpportunitiesContract;
 
-class ContractAdditionalBudget extends Component
+class ContractExtension extends Component
 {
     public $contract;
     

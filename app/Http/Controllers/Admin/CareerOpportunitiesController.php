@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use App\Models\JobTemplates;
 use App\Models\CareerOpportunity;
+use App\Models\CareerOpportunityNote;
 use App\Models\CareerOpportunitiesBu;
 use App\Models\JobWorkFlow;
 use Illuminate\Support\Carbon;
@@ -34,11 +35,80 @@ class CareerOpportunitiesController extends BaseController
      */
     public function index(Request $request)
     {
+    $counts = [
+        'all_jobs' => CareerOpportunity::count(),
+        'open' => CareerOpportunity::where('jobStatus', 3)->count(),
+        'filled' => CareerOpportunity::where('jobStatus', 4)->count(),
+        'new' => CareerOpportunity::where('jobStatus', 11)->count(),
+        'closed' => CareerOpportunity::where('jobStatus', 12)->count(),
+        'pending' => CareerOpportunity::where('jobStatus', 1)->count(),
+        'sourcing' => CareerOpportunity::where('jobStatus', 13)->count(),
+        'pending_pmo' => CareerOpportunity::where('jobStatus', 22)->count(),
+        'open_pending_release' => CareerOpportunity::whereIn('jobStatus', [3, 23])->count(),
+        'pending_hm' => CareerOpportunity::whereIn('jobStatus', [1, 23, 24])->count(),
+        'quick_create' => CareerOpportunity::whereIn('jobStatus', [1, 3, 13])->count(),
+        'draft' => CareerOpportunity::where('jobStatus', 2)->count(),
+        'active' => CareerOpportunity::whereIn('jobStatus', [1, 3, 6, 13, 23, 24])->count(),
+    ];
         if ($request->ajax()) {
+        //    dd($request->input('type'));
             $adminId = Admin::getAdminIdByUserId(Auth::id());
-            $data = CareerOpportunity::with('hiringManager', 'workerType')
-            ->withCount('submissions')->orderby('id', 'desc');
-            return DataTables::of($data)
+            $query = CareerOpportunity::with('hiringManager', 'workerType')
+            ->withCount('submissions')
+            ->orderby('id', 'desc');
+
+                // Get the action type from the request
+                if ($request->has('type')) {
+                    $type = $request->input('type');
+                    $status = ''; // Initialize status variable
+
+                    switch ($type) {
+                        case "All_jobs":
+                            $status = ''; // No additional filtering
+                            break;
+                        case "open":
+                            $query->where('jobStatus', 3);
+                            break;
+                        case "filled":
+                            $query->where('jobStatus', 4);
+                            break;
+                        case "New":
+                            $query->where('jobStatus', 11);
+                            break;
+                        case "closed":
+                            $query->where('jobStatus', 12);
+                            break;
+                        case "Pending":
+                            $query->where('jobStatus', 1);
+                            break;
+                        case "sourcing":
+                            $query->where('jobStatus', 13);
+                            break;
+                        case "pendingpmo":
+                            $query->where('jobStatus', 22);
+                            break;
+                        case "open-pending-release":
+                            $query->whereIn('jobStatus', [3, 23]);
+                            break;
+                        case "pending-hm":
+                            $query->whereIn('jobStatus', [1, 23, 24]);
+                            break;
+                        case "Quickcreate":
+                            $query->whereIn('jobStatus', [1, 3, 13]);
+                            break;
+                        case "draft":
+                            $query->where('jobStatus', 2);
+                            break;
+                        case 'active':
+                            $query->whereIn('jobStatus', [1, 3, 6, 13, 23, 24]);
+                            break;
+                       
+                        default:
+                            // No filtering for unknown actions
+                            break;
+                    }
+                }
+            return DataTables::of($query)
                 ->addIndexColumn()
                 ->addColumn('hiring_manager', function ($row) {
                     return (isset($row->hiringManager->full_name)) ? $row->hiringManager->full_name : 'N/A';
@@ -86,8 +156,8 @@ class CareerOpportunitiesController extends BaseController
         }
 
         // Logic to get and display catalog items
-        return view('admin.career_opportunities.index'); // Assumes you have a corresponding Blade view
-    }
+        return view('admin.career_opportunities.index', compact('counts'));
+            }
 
 
     /**
@@ -554,7 +624,7 @@ class CareerOpportunitiesController extends BaseController
 
 
         $job = CareerOpportunity::find($request->job_id);
-        $job->jobstatus = 2;
+        $job->jobstatus = 5;
         $job->rejected_by = $userid;
         $job->rejected_type = $sessionrole;
         $job->reason_for_rejection = $request->reason;
@@ -818,6 +888,27 @@ class CareerOpportunitiesController extends BaseController
             })
             ->rawColumns(['career_opportunity','id','action'])
             ->make(true);
+    }
+    public function saveNotes(Request $request) //SAVENOTES
+    {
+        $request->validate([
+            'note' => 'required|string',
+            'job_id' => 'required|integer'
+        ]);
+        $note = new CareerOpportunityNote();
+        $note->career_opportunity_id = $request->job_id;
+        $note->user_id = Auth::id();
+        $note->notes = $request->note;
+        $note->posted_by_type = Auth::user()->role == 'Client' ? 'Client' : 'Admin';
+        $note->save();
+        session()->flash('success', 'Notes Added Successfully');
+        return response()->json([
+            'success' => true,
+            'message' => 'Notes Added Successfully',
+            'posted_by' => Auth::user()->name,
+            'created_at' => $note->created_at->format('m/d/Y H:i A'),
+            'redirect_url' => route('admin.career-opportunities.show', $note->career_opportunity_id) // Redirect back URL for AJAX
+        ]);
     }
 
     public function jobRanking($id){

@@ -24,19 +24,118 @@ class CareerOpportunitiesController extends Controller
      */
     public function index(Request $request)
     {
+    $clientid = Client::getClientIdByUserId(Auth::id());
+$counts = [
+    'all_jobs' => CareerOpportunity::whereHas('workFlow', function ($query) use ($clientid) {
+        $query->where('user_id', $clientid);
+    })->count(),
+
+    'open' => CareerOpportunity::whereHas('workFlow', function ($query) use ($clientid) {
+        $query->where('user_id', $clientid);
+    })->where('jobStatus', 3)->count(),
+
+    'filled' => CareerOpportunity::whereHas('workFlow', function ($query) use ($clientid) {
+        $query->where('user_id', $clientid);
+    })->where('jobStatus', 4)->count(),
+
+    'new' => CareerOpportunity::whereHas('workFlow', function ($query) use ($clientid) {
+        $query->where('user_id', $clientid);
+    })->where('jobStatus', 11)->count(),
+
+    'closed' => CareerOpportunity::whereHas('workFlow', function ($query) use ($clientid) {
+        $query->where('user_id', $clientid);
+    })->where('jobStatus', 12)->count(),
+
+    'pending' => CareerOpportunity::whereHas('workFlow', function ($query) use ($clientid) {
+        $query->where('user_id', $clientid);
+    })->where('jobStatus', 1)->count(),
+
+    'sourcing' => CareerOpportunity::whereHas('workFlow', function ($query) use ($clientid) {
+        $query->where('user_id', $clientid);
+    })->where('jobStatus', 13)->count(),
+
+    'pendingpmo' => CareerOpportunity::whereHas('workFlow', function ($query) use ($clientid) {
+        $query->where('user_id', $clientid);
+    })->where('jobStatus', 22)->count(),
+
+    'open_pending_release' => CareerOpportunity::whereHas('workFlow', function ($query) use ($clientid) {
+        $query->where('user_id', $clientid);
+    })->whereIn('jobStatus', [3, 23])->count(),
+
+    'pending_hm' => CareerOpportunity::whereHas('workFlow', function ($query) use ($clientid) {
+        $query->where('user_id', $clientid);
+    })->whereIn('jobStatus', [1, 23, 24])->count(),
+
+    'quick_create' => CareerOpportunity::whereHas('workFlow', function ($query) use ($clientid) {
+        $query->where('user_id', $clientid);
+    })->whereIn('jobStatus', [1, 3, 13])->count(),
+
+    'draft' => CareerOpportunity::whereHas('workFlow', function ($query) use ($clientid) {
+        $query->where('user_id', $clientid);
+    })->where('jobStatus', 2)->count(),
+
+    'active' => CareerOpportunity::whereHas('workFlow', function ($query) use ($clientid) {
+        $query->where('user_id', $clientid);
+    })->whereIn('jobStatus', [1, 3, 6, 13, 23, 24])->count(),
+];
+
         if ($request->ajax()) {
-
             $clientid = Client::getClientIdByUserId(Auth::id());
-            $data = CareerOpportunity::with(['hiringManager', 'workerType'])
-                ->withCount([
-                    'submissions',
-                ])
-                ->where('user_id', $clientid)
-                ->orWhereHas('workFlow', function ($query) use ($clientid) {
-                    $query->where('client_id', $clientid);
-                })->orderby('id', 'desc');
+            $query = CareerOpportunity::with('hiringManager', 'workerType')
+            ->withCount('submissions')
+            ->orWhereHas('workFlow', function ($data) use ($clientid) {
+            $data->where('user_id', $clientid);
+            })
+            ->orderby('id', 'desc');
+                if ($request->has('type')) {
+                    $type = $request->input('type');
+                    $status = ''; 
+                    switch ($type) {
+                        case "All_jobs":
+                            $status = ''; // No additional filtering
+                            break;
+                        case "open":
+                            $query->where('jobStatus', 3);
+                            break;
+                        case "filled":
+                            $query->where('jobStatus', 4);
+                            break;
+                        case "New":
+                            $query->where('jobStatus', 11);
+                            break;
+                        case "closed":
+                            $query->where('jobStatus', 12);
+                            break;
+                        case "Pending":
+                            $query->where('jobStatus', 1);
+                            break;
+                        case "sourcing":
+                            $query->where('jobStatus', 13);
+                            break;
+                        case "pendingpmo":
+                            $query->where('jobStatus', 22);
+                            break;
+                        case "open-pending-release":
+                            $query->whereIn('jobStatus', [3, 23]);
+                            break;
+                        case "pending-hm":
+                            $query->whereIn('jobStatus', [1, 23, 24]);
+                            break;
+                        case "Quickcreate":
+                            $query->whereIn('jobStatus', [1, 3, 13]);
+                            break;
+                        case "draft":
+                            $query->where('jobStatus', 2);
+                            break;
+                        case 'active':
+                            $query->whereIn('jobStatus', [1, 3, 6, 13, 23, 24]);
+                            break;
+                        default:
+                            break;
+                    }
+                }
 
-            return DataTables::of($data)
+            return DataTables::of($query)
                 ->addColumn('id', function ($row) {
                     return '<span class="job-detail-trigger text-blue-500 cursor-pointer" data-id="' . $row->id . '">' . $row->id . '</span>';
                 })
@@ -58,9 +157,6 @@ class CareerOpportunitiesController extends Controller
                 ->addColumn('worker_type', function($row) {
                     return $row->workerType ? $row->workerType->title : 'N/A';
                 })
-                /*            $data = CareerOpportunity::query();
-                            return Datatables::of($data)
-                                    ->addIndexColumn()*/
                 ->addColumn('action', function($row){
 
                     $btn = ' <a href="' . route('client.career-opportunities.show', $row->id) . '"
@@ -86,7 +182,7 @@ class CareerOpportunitiesController extends Controller
                 ->make(true);
         }
 
-        return view('client.career-opportunities.index');
+        return view('client.career-opportunities.index', compact('counts'));
         //
     }
 
