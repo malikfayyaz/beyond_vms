@@ -5,7 +5,8 @@
     @include('admin.layouts.partials.dashboard_side_bar')
       <div class="ml-16">
           @include('admin.layouts.partials.header')
-          <div  x-data="{ tab: 'activejobs' }" class="bg-white mx-4 my-8 rounded p-8">
+          <div  x-data="{ tab: 'activejobs',jobDetails: null, submissionDetails: null }" @job-details-updated.window="jobDetails = $event.detail"
+          @submission-details-updated.window="submissionDetails = $event.detail" class="bg-white mx-4 my-8 rounded p-8">
               @include('admin.layouts.partials.alerts')
 
           @if($job->jobStatus == 2)
@@ -14,7 +15,9 @@
                     notes: '{{ $job->note_for_rejection }}',
                     rejectedBy: '{{ $job->rejectionUser ? $job->rejectionUser->name : '' }}',
                     rejectionDate: '{{ $job->date_rejected }}'
-                }">
+                    
+                }"
+                >
                     <div class="alert alert-danger">
                         <span class="bold">Rejection Reason:</span> <span x-text="rejectionReason"></span><br>
                         <span class="bold">Notes:</span> <span x-text="notes"></span><br>
@@ -23,7 +26,9 @@
                     </div>
                 </div>
               @endif
-
+              <x-job-details />
+                
+                <x-submission-details />
 
           <div class="mb-4">
             <ul
@@ -1494,7 +1499,61 @@ function initSelect2() {
 // Initialize Select2 on page load
 document.addEventListener('DOMContentLoaded', function() {
     initSelect2();
+    function toggleSidebar() 
+            {
+                // Assuming you want to toggle selectedUser state
+                this.selectedUser = this.selectedUser ? 'user' : 'user';
+            }
+    $(document).on('click', '.job-detail-trigger', function (e) {
+                e.preventDefault();
+                let jobId = $(this).data('id');
+                openJobDetailsModal(jobId);
+            });
+
+            function openJobDetailsModal(jobId) {
+                
+                fetch(`/job-details/${jobId}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            const event = new CustomEvent('job-details-updated', {
+                                    detail: data,
+                                    bubbles: true,
+                                    composed: true
+                                });
+                                console.log(event.detail.data);
+                                
+                                document.dispatchEvent(event);
+                        })
+                        .catch(error => console.error('Error:', error));
+
+            }
+
+            $(document).on('click', '.submission-detail-trigger', function (e) {
+                e.preventDefault();
+                let submissionId = $(this).data('id');
+                openSubmissionDetailsModal(submissionId);
+            });
+
+            function openSubmissionDetailsModal(submissionId) {
+                console.log(submissionId);
+                fetch(`/submission-details/${submissionId}`)
+                    .then(response => {
+                        if (!response.ok) throw new Error('Network response was not ok');
+                        return response.json();
+                    })
+                    .then(data => {
+                        const event = new CustomEvent('submission-details-updated', {
+                            detail: data,
+                            bubbles: true,
+                            composed: true
+                        });
+                        document.dispatchEvent(event);
+                    })
+                    .catch(error => console.error('Error fetching submission details:', error));
+            }
 });
+
+
   
 </script>
 

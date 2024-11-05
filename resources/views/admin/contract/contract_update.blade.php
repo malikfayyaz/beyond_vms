@@ -18,22 +18,30 @@
         <div class="card card-margin card-padding">
         <select name="update_contract_reason" id="update_contract_reason" 
         x-model="selectedOption" class="form-control select2" 
-        @change="showOptions()" required>
+         required>
         <option value="">Select</option>
         @php
             $reasons = updateContractReason();
             $Error = '';
+            $keysToUnset = [1, 2, 3, 5, 6];
             if ($contract->contractAdditionalBudgetRequest->isNotEmpty()) {
                 $Error = "Additional budget request is pending.";
-                unset($reasons[1]);
+               
+                foreach ($keysToUnset as $key){
+                    unset($reasons[$key]);
+                }
             }
             if($contract->contractExtensionRequest->isNotEmpty()){
                 $Error = "Extension request is pending.";
-                unset($reasons[2]);
+                foreach ($keysToUnset as $key){
+                    unset($reasons[$key]);
+                }
             }
             if($contract->status == '6'){
                 $Error = "Contract is Terminated.";
-                unset($reasons[6]);
+                foreach ($keysToUnset as $key){
+                    unset($reasons[$key]);
+                }
             }
         @endphp
         @foreach ($reasons as $key => $val)
