@@ -281,6 +281,16 @@ class CareerOpportunitiesContractService
         $workflow->ip_address = $request->ip();
         $workflow->machine_user_name = gethostname();
         $workflow->save();
+        $otherMembers = ContractExtensionWorkflow::where([
+            ['request_id', '=', $workflow->request_id],
+            ['status', '=', 'Pending']
+        ])
+            ->orderBy('id')
+            ->get();
+        foreach ($otherMembers as $otherMember){
+            $otherMember->status = 'Rejected';
+            $otherMember->save();
+        }
     }
 
      /*public function updateAdditionalWorkflow($request){

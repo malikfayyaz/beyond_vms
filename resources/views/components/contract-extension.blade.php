@@ -9,13 +9,13 @@
                                   @click.outside="isOpen = false"
                                   class="fixed inset-y-0 right-0 w-[700px] bg-gray-100 shadow-lg overflow-y-auto z-50 pb-24"
                       >
-                      
+                            
                             <!-- Extension Request Content -->
                             <template x-if="selectedUser">
                                 <div class="space-y-4">
                             <!-- Top Bar -->
                             <div class="flex justify-between items-center p-4 bg-gray-800 text-white">
-                            <h2 class="text-lg font-semibold">Contract Extension Request ({{$contractExtensionRequest->id}})</h2>
+                            <h2 class="text-lg font-semibold">Contract Extension Request ({{$contract->contractExtensionRequest->id}})</h2>
                               <button
                                 @click="isOpen = false"
                                 class="text-gray-500 hover:text-gray-700">
@@ -33,11 +33,11 @@
                                             <div class="grid grid-cols-2 gap-6">
                                                 <div>
                                                     <div class="text-gray-600 mb-2">Start Date</div>
-                                                    <div class="line-through text-red-500">{{ $contract->start_date }}</div>
+                                                    <div class="line-through text-red-500">{{ formatDate($contract->start_date) }}</div>
                                                 </div>
                                                 <div>
                                                     <div class="text-gray-600 mb-2">New End Date</div>
-                                                    <div class="text-green-500">{{ $contractExtensionRequest->new_contract_start_date }}</div>
+                                                    <div class="text-green-500">{{ formatDate($contract->contractExtensionRequest->new_contract_start_date) }}</div>
                                                 </div>
                                             </div>
                                         </div>
@@ -45,11 +45,11 @@
                                             <div class="grid grid-cols-2 gap-6">
                                                 <div>
                                                     <div class="text-gray-600 mb-2">End Date</div>
-                                                    <div class="line-through text-red-500">{{ $contract->end_date }}</div>
+                                                    <div class="line-through text-red-500">{{ formatDate($contract->end_date) }}</div>
                                                 </div>
                                                 <div>
                                                     <div class="text-gray-600 mb-2">New End Date</div>
-                                                    <div class="text-green-500">{{ $contractExtensionRequest->new_contract_end_date }}</div>
+                                                    <div class="text-green-500">{{ formatDate($contract->contractExtensionRequest->new_contract_end_date) }}</div>
                                                 </div>
                                             </div>
                                         </div>
@@ -73,13 +73,13 @@
                                                 <div>
                                                     <div class="text-gray-600 mb-2">New Rates (Extension)</div>
                                                     <div class="space-y-1">
-                                                        <div class="text-green-500">Bill Rate: {{ $contractExtensionRequest->bill_rate }}</div>
-                                                        <div class="text-green-500">Overtime Bill Rate: {{ $contractExtensionRequest->overtime_billrate }}</div>
-                                                        <div class="text-green-500">Doubletime Bill Rate: {{ $contractExtensionRequest->doubletime_billrate }}</div>
-                                                        <div class="text-green-500">Pay Rate: {{ $contractExtensionRequest->pay_rate }}</div>
-                                                        <div class="text-green-500">Overtime Pay Rate: {{ $contractExtensionRequest->overtime_payrate }}</div>
-                                                        <div class="text-green-500">Contractor Doubletime Rate: {{ $contractExtensionRequest->doubletime_payrate }}</div>
-                                                        <div class="text-green-500">Budget: {{ $contractExtensionRequest->new_estimate_cost }}</div>
+                                                        <div class="text-green-500">Bill Rate: {{ $contract->contractExtensionRequest->bill_rate }}</div>
+                                                        <div class="text-green-500">Overtime Bill Rate: {{ $contract->contractExtensionRequest->overtime_billrate }}</div>
+                                                        <div class="text-green-500">Doubletime Bill Rate: {{ $contract->contractExtensionRequest->doubletime_billrate }}</div>
+                                                        <div class="text-green-500">Pay Rate: {{ $contract->contractExtensionRequest->pay_rate }}</div>
+                                                        <div class="text-green-500">Overtime Pay Rate: {{ $contract->contractExtensionRequest->overtime_payrate }}</div>
+                                                        <div class="text-green-500">Contractor Doubletime Rate: {{ $contract->contractExtensionRequest->doubletime_payrate }}</div>
+                                                        <div class="text-green-500">Budget: {{ $contract->contractExtensionRequest->new_estimate_cost }}</div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -98,7 +98,7 @@
                                             </svg>
                                             <div>
                                                 <div class="text-gray-600 font-medium">Approval Amount</div>
-                                                <div class="text-gray-700">{{ $contractExtensionRequest->new_estimate_cost }}</div>
+                                                <div class="text-gray-700">{{ $contract->contractExtensionRequest->new_estimate_cost }}</div>
                                             </div>
                                         </div>
                                     </div>
@@ -114,7 +114,7 @@
                                             </svg>
                                             <div>
                                                 <div class="text-gray-600 font-medium">Extension Reason</div>
-                                                <div class="text-gray-700">{{getSettingTitleById($contractExtensionRequest->reason_of_extension)}}</div>
+                                                <div class="text-gray-700">{{getSettingTitleById($contract->contractExtensionRequest->reason_of_extension)}}</div>
                                             </div>
                                         </div>
                                     </div>
@@ -130,7 +130,7 @@
                                             </svg>
                                             <div>
                                                 <div class="text-gray-600 font-medium">Notes</div>
-                                                <div class="text-gray-700">{{$contractExtensionRequest->note_of_extension}}</div>
+                                                <div class="text-gray-700">{{$contract->contractExtensionRequest->note_of_extension}}</div>
                                             </div>
                                         </div>
                                     </div>
@@ -378,7 +378,7 @@
             currentRowId: null,
             actionType: '',
             contractId: {{ $contract->id }},
-            extId: {{ $contractExtensionRequest->id }},
+            extId: "{{ $contract->contractExtensionRequest->id }}",
             reason: '',
             note: '',
             errors: {},
@@ -398,7 +398,7 @@
                 if (isValid) {
                     // Create FormData object
                     const formData = new FormData();
-                    formData.append('rowId', this.currentRowId); // Use currentRowId for identification
+                    formData.append('rowId', this.currentRowId);
                     formData.append('contractId', this.contractId);
                     formData.append('extId', this.extId);
                     formData.append('actionType', this.actionType); //for button
@@ -410,7 +410,6 @@
                     if (fileInput.files.length > 0) {
                         formData.append('contractAttachment', fileInput.files[0]);
                     }
-                    // Call the AJAX function
                     const url = '{{ route('admin.contract.contractExtensionWorkflow') }}';
                     ajaxCall(url, 'POST', [[onSuccess, ['response']]], formData);
                 } else {

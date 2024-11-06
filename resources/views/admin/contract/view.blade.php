@@ -39,8 +39,8 @@
                 ></div>
                 <x-contract-additional-budget :contract="$contract"  />
                 </div>
-                @endif
-        @if($contract->contractExtensionRequest->isNotEmpty())
+        @endif
+        @if($contract->contractExtensionRequest)
             <!-- contractExtensionRequest Flyout Button -->
              <div  x-data="{isOpen: false,
                 showModal: false,
@@ -69,8 +69,7 @@
                 ></div>
                 <x-contract-extension :contract="$contract"  />
                 </div>
-                @endif
-
+        @endif
                 <div x-data="{ showModal: false, status: {{ json_encode($contract->termination_status) }} }">
                     <a href="javascript:void(0);" 
                         class="btn bg-red-600 text-white py-2 px-4 rounded hover:bg-red-500" 

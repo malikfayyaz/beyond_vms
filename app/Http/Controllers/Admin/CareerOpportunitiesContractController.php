@@ -784,6 +784,9 @@ class CareerOpportunitiesContractController extends BaseController
             session()->flash('success', $message);
         } elseif ($actionType == 'Reject') {
             contractHelper::contractExtensionWorkflowProcess($request);
+            $contractext->ext_status = 3;
+            $contractext->approval_rejection_date = now();
+            $contractext->save();
             $message = 'Contract Workflow Rejected successfully!';
             session()->flash('success', $message);
         }

@@ -90,8 +90,11 @@ class CareerOpportunitiesContract extends Model
         return Carbon::parse($this->termination_date)->format('m/d/Y');
     }
 
-    public function contractExtensionRequest() {
+    public function extensionRequest() {
         return $this->hasMany(ContractExtensionRequest::class, 'contract_id', 'id');
+    }
+    public function contractRateEditRequest() {
+        return $this->hasMany(ContractRateEditRequest::class, 'contract_id', 'id');
     }
     public function contractAdditionalBudgetRequest() {
         return $this->hasMany(ContractAdditionalBudget::class, 'contract_id', 'id');

@@ -9,17 +9,23 @@ use App\Models\CareerOpportunitiesContract;
 
 class ContractExtension extends Component
 {
-    public $contract;
-    public $contractExtensionRequest;
-    
+    public $contract;    
     
     /**
      * Create a new component instance.
      */
     public function __construct(CareerOpportunitiesContract $contract)
     {
-        $this->contract = $contract->load('careerOpportunity', 'ContractBudgetWorkflow','hiringManager','ContractExtensionRequest','ContractExtensionWorkflow');
-        $this->contractExtensionRequest = $contract->ContractExtensionRequest->first();
+        $this->contract = $contract;
+        $this->contract->contractExtensionRequest = $contract->extensionRequest()
+        ->where('ext_status', 1)
+        ->first();
+        dd($this->contract->contractExtensionRequest);
+/*        $this->contract->latestPendingWorkflowExtRequest = $contract->ContractExtensionWorkflow()
+        ->where('status', 'Pending')
+        ->latest()
+        ->first();
+*/
     }
 
     /**

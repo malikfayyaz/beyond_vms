@@ -12,4 +12,8 @@ class ContractExtensionRequest extends Model
     {
         return $this->belongsTo(CareerOpportunitiesContract::class, 'contract_id');
     }
+    public function ContractExtensionWorkflow()
+    {
+        return $this->hasMany(ContractExtensionWorkflow::class, 'request_id', 'id');
+    }
 }
