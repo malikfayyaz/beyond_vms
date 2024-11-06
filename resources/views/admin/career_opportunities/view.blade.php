@@ -60,6 +60,18 @@
 
               <li class="flex justify-center">
                 <a
+                @click="tab = 'ranking'"
+                :class="{ 'border-blue-500 text-blue-500': tab === 'ranking' }"
+                class="w-full flex justify-center items-center gap-3 hover:bg-white hover:rounded-lg hover:shadow py-4"
+                >
+                  <i class="fa-regular fa-file-lines"></i>
+                  <span class="capitalize">Ranking</span>
+                
+                </a>
+              </li>
+
+              <li class="flex justify-center">
+                <a
                 @click="tab = 'interview'"
                 :class="{ 'border-blue-500 text-blue-500': tab === 'interview' }"
                 class="w-full flex justify-center items-center gap-3 hover:bg-white hover:rounded-lg hover:shadow py-4"
@@ -131,6 +143,31 @@
                     </div>
                 </a>
             </li>
+
+            <li class="flex justify-center">
+                <a
+                @click="tab = 'jobteammember'"
+                :class="{ 'border-blue-500 text-blue-500': tab === 'jobteammember' }"
+                class="w-full flex justify-center items-center gap-3 hover:bg-white hover:rounded-lg hover:shadow py-4"
+                >
+                  <i class="fa-regular fa-file-lines"></i>
+                  <span class="capitalize">Job Team Member</span>
+                
+                </a>
+              </li>
+
+            <li class="flex justify-center">
+              <a
+                @click="tab = 'pmoteammember'"
+                :class="{ 'border-blue-500 text-blue-500': tab === 'pmoteammember' }"
+                class="w-full flex justify-center items-center gap-3 hover:bg-white hover:rounded-lg hover:shadow py-4"
+              >
+                <i class="fa-regular fa-file-lines"></i>
+                <span class="capitalize">PMO Specialist</span>
+              </a>
+            </li>
+
+
 
            
           
@@ -854,6 +891,18 @@
           @include('admin.career_opportunities.submission')
       </div>
 
+      <div x-show="tab === 'ranking'">
+          @include('admin.career_opportunities.ranking')
+      </div>
+
+      <div x-show="tab === 'jobteammember'">
+          @include('admin.career_opportunities.jobteammember')
+      </div>
+
+      <div x-show="tab === 'pmoteammember'">
+          @include('admin.career_opportunities.pmoteammember')
+      </div>
+      
       <div x-show="tab === 'interview'">
           @include('admin.career_opportunities.interview')
       </div>

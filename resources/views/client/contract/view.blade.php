@@ -32,7 +32,6 @@
                         <!-- Modal Body -->
                         <div class="p-4">
                             <form x-data="closeAssignmentTemp()" @submit.prevent="submitData()" class="reject-form space-y-4">
-                            @csrf
                                 <div class="mb-4">
                                     <label class="block text-sm font-medium text-gray-700">Reason for Closing <i class="fa fa-asterisk text-red-600"></i>:</label>
                                     <select 
@@ -73,8 +72,6 @@
             
             @if($contract->termination_status == 2)
             <form x-data="openContract()" @submit.prevent="submitData()">
-                @csrf
-
                 <button type="submit"
                     class="px-4 py-2 capitalize bg-green-500 text-white rounded hover:bg-green-600"
                 >
@@ -256,13 +253,9 @@
                 const url = '{{ route("contract.reject_contract", $contract->id) }}';
 
                 // Send AJAX request using ajaxCall function
-                ajaxCall(url, 'POST', [[this.onSuccess, ['response']]], formData);
+                ajaxCall(url, 'POST', [[onSuccess, ['response']]], formData);
             }
         },
-
-        onSuccess(response) {
-            window.location.href = response.redirect_url;
-        }
         }
     }
 
@@ -270,12 +263,8 @@
         return {
             submitData() {
                 const url = "{{ route('contract.open_contract', $contract->id) }}";
-                ajaxCall(url, 'POST', [[this.onSuccess, ['response']]]);
+                ajaxCall(url, 'POST', [[onSuccess, ['response']]]);
             },
-
-            onSuccess(response) {
-                window.location.href = response.redirect_url;
-            }
         }
     }
 </script>
