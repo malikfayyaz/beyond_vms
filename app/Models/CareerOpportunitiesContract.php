@@ -103,8 +103,13 @@ class CareerOpportunitiesContract extends Model
     {
         return $this->hasMany(ContractBudgetWorkflow::class, 'contract_id', 'id');
     }
-    public function ContractExtensionWorkflow()
+    
+
+    public function latestApprovedExtensionRequest()
     {
-        return $this->hasMany(ContractExtensionWorkflow::class, 'contract_id', 'id');
+        return $this->hasMany(ContractExtensionRequest::class, 'contract_id', 'id')
+                    ->where('ext_status', 1)
+                    ->latest()
+                    ->first();
     }
 }

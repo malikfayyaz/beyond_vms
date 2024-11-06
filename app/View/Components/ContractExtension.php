@@ -17,15 +17,8 @@ class ContractExtension extends Component
     public function __construct(CareerOpportunitiesContract $contract)
     {
         $this->contract = $contract;
-        $this->contract->contractExtensionRequest = $contract->extensionRequest()
-        ->where('ext_status', 1)
-        ->first();
-        dd($this->contract->contractExtensionRequest);
-/*        $this->contract->latestPendingWorkflowExtRequest = $contract->ContractExtensionWorkflow()
-        ->where('status', 'Pending')
-        ->latest()
-        ->first();
-*/
+        $this->contract->contractExtensionRequest = $contract->latestApprovedExtensionRequest();
+ 
     }
 
     /**
