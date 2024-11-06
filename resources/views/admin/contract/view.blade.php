@@ -40,6 +40,36 @@
                 <x-contract-additional-budget :contract="$contract"  />
                 </div>
                 @endif
+        @if($contract->contractExtensionRequest->isNotEmpty())
+            <!-- contractExtensionRequest Flyout Button -->
+             <div  x-data="{isOpen: false,
+                showModal: false,
+                modalType: null,
+                selectedUser: 'user',
+                comment: ''
+            }">
+            <a href="javascript:void(0)"
+                        @click="isOpen = true;"
+                        class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
+                    >
+                        <i class="fas fa-exclamation-circle text-red-500 text-xl"></i> 
+                        <span class="mx-2">Contract Extension Request</span>
+                        <span class="text-blue-500 font-semibold text-red-500 text-xl">View</span>
+                    </a>
+                <div
+                x-show="isOpen"
+                x-transition:enter="transition ease-out duration-300"
+                x-transition:enter-start="opacity-0"
+                x-transition:enter-end="opacity-100"
+                x-transition:leave="transition ease-in duration-300"
+                x-transition:leave-start="opacity-100"
+                x-transition:leave-end="opacity-0"
+                @click="isOpen = false"
+                class="fixed inset-0 bg-black bg-opacity-50 z-40"
+                ></div>
+                <x-contract-extension :contract="$contract"  />
+                </div>
+                @endif
 
                 <div x-data="{ showModal: false, status: {{ json_encode($contract->termination_status) }} }">
                     <a href="javascript:void(0);" 
@@ -62,7 +92,6 @@
                             <!-- Modal Body -->
                             <div class="p-4">
                                 <form x-data="closeAssignmentTemp()" @submit.prevent="submitData()" class="reject-form space-y-4">
-                                @csrf
                                     <div class="mb-4">
                                         <label class="block text-sm font-medium text-gray-700">Reason for Closing <i class="fa fa-asterisk text-red-600"></i>:</label>
                                         <select 
@@ -103,8 +132,6 @@
                 
                 @if($contract->termination_status == 2)
                 <form x-data="openContract()" @submit.prevent="submitData()">
-                    @csrf
-
                     <button type="submit"
                         class="px-4 py-2 capitalize bg-green-500 text-white rounded hover:bg-green-600"
                     >
@@ -270,41 +297,38 @@
         },
         errors: {},
 
-        validateFields() {
-            this.errors = {}; // Reset errors
+            validateFields() {
+                this.errors = {}; // Reset errors
 
-            let errorCount = 0;
+                let errorCount = 0;
 
-            if (this.formData.close_contr_reason === "") {
-                this.errors.close_contr_reason = "Close assignment reason is required";
-                errorCount++;
-            }
+                if (this.formData.close_contr_reason === "") {
+                    this.errors.close_contr_reason = "Close assignment reason is required";
+                    errorCount++;
+                }
 
-            if (this.formData.close_contr_note.trim() === "") {
-                this.errors.close_contr_note = "Close assignment note is required";
-                errorCount++;
-            }
+                if (this.formData.close_contr_note.trim() === "") {
+                    this.errors.close_contr_note = "Close assignment note is required";
+                    errorCount++;
+                }
 
-            return errorCount === 0; // Returns true if no errors
-        },
+                return errorCount === 0; // Returns true if no errors
+            },
 
-        submitData() {
-            if (this.validateFields()) {
-                const formData = new FormData();
-                formData.append('close_contr_reason', this.formData.close_contr_reason);
-                formData.append('close_contr_note', this.formData.close_contr_note);
+            submitData() {
+                if (this.validateFields()) {
+                    const formData = new FormData();
+                    formData.append('close_contr_reason', this.formData.close_contr_reason);
+                    formData.append('close_contr_note', this.formData.close_contr_note);
 
-                // Specify your form submission URL
-                const url = '{{ route("contract.reject_contract", $contract->id) }}';
+                    // Specify your form submission URL
+                    const url = '{{ route("contract.reject_contract", $contract->id) }}';
 
-                // Send AJAX request using ajaxCall function
-                ajaxCall(url, 'POST', [[this.onSuccess, ['response']]], formData);
-            }
-        },
+                    // Send AJAX request using ajaxCall function
+                    ajaxCall(url, 'POST', [[onSuccess, ['response']]], formData);
+                }
+            },
 
-        onSuccess(response) {
-            window.location.href = response.redirect_url;
-        }
         }
     }
 
@@ -312,12 +336,9 @@
         return {
             submitData() {
                 const url = "{{ route('contract.open_contract', $contract->id) }}";
-                ajaxCall(url, 'POST', [[this.onSuccess, ['response']]]);
+                ajaxCall(url, 'POST', [[onSuccess, ['response']]]);
             },
 
-            onSuccess(response) {
-                window.location.href = response.redirect_url;
-            }
         }
     }
 
