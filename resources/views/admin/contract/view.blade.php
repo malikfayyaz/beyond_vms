@@ -40,7 +40,7 @@
                 <x-contract-additional-budget :contract="$contract"  />
                 </div>
         @endif
-        @if($contract->contractExtensionRequest)
+        @if($contract->latestApprovedExtensionRequest())
             <!-- contractExtensionRequest Flyout Button -->
              <div  x-data="{isOpen: false,
                 showModal: false,

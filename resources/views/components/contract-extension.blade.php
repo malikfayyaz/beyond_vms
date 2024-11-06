@@ -164,14 +164,14 @@
                                 </tr>
                                 </thead>
                                 <tbody class="divide-y divide-gray-200">
-                                @if($contract->ContractExtensionWorkflow->isEmpty())
+                                @if($contract->contractExtensionRequest->contractExtensionWorkflow->isEmpty())
                                     <tr>
                                         <td colspan="9" class="py-4 px-4 text-center text-sm text-gray-600">
                                             No workflows available.
                                         </td>
                                     </tr>
                                 @else
-                                    @foreach($contract->ContractExtensionWorkflow as $workflow)
+                                    @foreach($contract->contractExtensionRequest->contractExtensionWorkflow as $workflow)
                                         <tr>
                                             <td class="py-4 px-4 text-center text-sm">{{ $workflow->hiringManager->full_name }}</td>
                                             <td class="py-4 px-4 text-center text-sm">{{ $workflow->approver_type}}</td>
