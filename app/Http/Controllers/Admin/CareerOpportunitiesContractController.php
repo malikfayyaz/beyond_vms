@@ -264,7 +264,7 @@ class CareerOpportunitiesContractController extends BaseController
     {
         $contract = CareerOpportunitiesContract::with([
             'careerOpportunity',
-            'ContractExtensionRequest',
+            'extensionRequest',
             'ContractAdditionalBudgetRequest',
         ])->findOrFail($id);
         return view('admin.contract.contract_update', compact('contract'));
@@ -275,7 +275,6 @@ class CareerOpportunitiesContractController extends BaseController
      */
     public function update(Request $request, string $id)
     {
-        // dd($request);
         $contractId = $request->contractId;
         $contract = CareerOpportunitiesContract::with('careerOpportunity')->findOrFail($contractId);
         $postType = $request->selectedOption;
@@ -307,6 +306,7 @@ class CareerOpportunitiesContractController extends BaseController
                 $notes = $request->extension_reason_notes;
                 $editHist = $this->createContractEditHistory($contract, $workorderOld, $candidateOld, $jobOld, $offerOld, $contractOld, $postType, $notes);
                 $extension = $this->ContractExtensionReq($request->all(), $workorder, $job, $contract, $editHist);
+
                 if ($extension !== true) {
                     // Return validation error if it's a JSON response
                     return $extension;
@@ -603,7 +603,6 @@ class CareerOpportunitiesContractController extends BaseController
     }
 
     public function ContractExtensionReq($post, $workorder, $job, $contract, $editHist){
-
         $model = new ContractExtensionRequest;
         $billRate = str_replace(",", "",$post['bill_rate']);
         $clientOverTime = str_replace(",", "",$post['client_overtime_bill_rate']);
@@ -779,11 +778,11 @@ class CareerOpportunitiesContractController extends BaseController
         ]);
         $contractext = ContractExtensionRequest::findOrFail($request->extId);
         if ($actionType == 'Accept') {
-            contractHelper::contractExtensionWorkflowProcess($request);
+            contractHelper::contractExtensionWorkflowApprove($request);  //for approve
             $message = 'Contract Extension Workflow Accepted successfully!';
             session()->flash('success', $message);
         } elseif ($actionType == 'Reject') {
-            contractHelper::contractExtensionWorkflowProcess($request);
+            contractHelper::contractExtensionWorkflowApprove($request); // for reject
             $contractext->ext_status = 3;
             $contractext->approval_rejection_date = now();
             $contractext->save();

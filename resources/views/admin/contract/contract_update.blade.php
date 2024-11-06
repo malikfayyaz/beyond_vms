@@ -31,7 +31,7 @@
                     unset($reasons[$key]);
                 }
             }
-            if($contract->contractExtensionRequest->isNotEmpty()){
+            if($contract->contractExtensionRequest){
                 $Error = "Extension request is pending.";
                 foreach ($keysToUnset as $key){
                     unset($reasons[$key]);
