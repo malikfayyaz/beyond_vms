@@ -149,21 +149,29 @@
                                             <td class="py-4 px-4 text-center text-sm">{{ $workflow->approved_datetime ?? 'N/A' }}</td>
                                             <td class="py-4 px-4 text-center text-sm">
                                                    <div class="flex space-x-2">
-    @if($workflow->hiringManager->user_id == auth()->user()->id && $workflow->status == 'Pending' && $workflow->email_sent == '1')
-    <button
-        @click="actionType = 'Accept'; openModal = true; currentRowId = {{ $workflow->id }}; submitForm(currentRowId, actionType);"
-        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded flex items-center"
-    >
-        <i class="fas fa-check-circle fa-2x mr-2"></i>
-    </button>
+        @if ($workflow->status == 'Approved')
+            <span class="block w-full bg-green-500 text-white py-2 px-4 rounded text-center font-bold">
+                {{$workflow->status}}
+            </span>
+        @elseif ($workflow->status == 'Rejected')
+            <span class="block w-full bg-red-500 text-white py-2 px-4 rounded text-center font-bold">
+                {{$workflow->status}}
+            </span>
+        @else
+            <button
+                @click="actionType = 'Accept'; openModal = true; currentRowId = {{ $workflow->id }}; submitForm(currentRowId, actionType);"
+                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded flex items-center"
+            >
+                <i class="fas fa-check-circle fa-2x mr-2"></i>
+            </button>
 
-    <button
-        @click="actionType = 'Reject'; openModal = true; currentRowId = {{ $workflow->id }}; submitForm(currentRowId, actionType);"
-        class="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded flex items-center"
-    >
-        <i class="fas fa-times-circle fa-2x mr-2"></i>
-    </button>
-    @endif
+            <button
+                @click="actionType = 'Reject'; openModal = true; currentRowId = {{ $workflow->id }}; submitForm(currentRowId, actionType);"
+                class="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded flex items-center"
+            >
+                <i class="fas fa-times-circle fa-2x mr-2"></i>
+            </button>
+        @endif
 </div>
 
                                             

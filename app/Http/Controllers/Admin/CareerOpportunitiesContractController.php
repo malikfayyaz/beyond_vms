@@ -15,6 +15,7 @@ use App\Models\CareerOpportunity;
 use App\Models\ContractNote;
 use App\Models\OfferWorkFlow;
 use App\Models\ContractBudgetWorkflow;
+use App\Models\ContractExtensionWorkflow;
 use App\Models\CareerOpportunitiesContract;
 use App\Models\contractAdditionalBudget;
 use Yajra\DataTables\Facades\DataTables;
@@ -765,6 +766,31 @@ class CareerOpportunitiesContractController extends BaseController
             'success' => true,
             'message' => $message,
             'redirect_url' => route('admin.contracts.show', ['contract' => $contractworkflow->contract_id]),
+        ]);
+
+
+    }
+    public function ContractExtensionWorkflow(Request $request)
+    {
+        $actionType = $request->input('actionType');
+        $validated = $request->validate([
+            'rowId' => 'required|integer',
+            'reason' => 'required_if:actionType,Reject|integer',
+        ]);
+        $contractext = ContractExtensionRequest::findOrFail($request->extId);
+        if ($actionType == 'Accept') {
+            contractHelper::contractExtensionWorkflowProcess($request);
+            $message = 'Contract Extension Workflow Accepted successfully!';
+            session()->flash('success', $message);
+        } elseif ($actionType == 'Reject') {
+            contractHelper::contractExtensionWorkflowProcess($request);
+            $message = 'Contract Workflow Rejected successfully!';
+            session()->flash('success', $message);
+        }
+        return response()->json([
+            'success' => true,
+            'message' => $message,
+            'redirect_url' => route('admin.contracts.show', ['contract' => $contractext->contract_id]),
         ]);
 
 

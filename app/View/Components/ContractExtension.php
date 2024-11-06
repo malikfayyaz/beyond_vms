@@ -10,6 +10,7 @@ use App\Models\CareerOpportunitiesContract;
 class ContractExtension extends Component
 {
     public $contract;
+    public $contractExtensionRequest;
     
     
     /**
@@ -17,12 +18,8 @@ class ContractExtension extends Component
      */
     public function __construct(CareerOpportunitiesContract $contract)
     {
-        $this->contract = $contract->load('careerOpportunity', 'ContractBudgetWorkflow','hiringManager');
-       
-        $this->contract->latestPendingBudgetRequest = $contract->ContractAdditionalBudgetRequest()
-        ->where('status', 'pending')
-        ->latest()
-        ->first();
+        $this->contract = $contract->load('careerOpportunity', 'ContractBudgetWorkflow','hiringManager','ContractExtensionRequest','ContractExtensionWorkflow');
+        $this->contractExtensionRequest = $contract->ContractExtensionRequest->first();
     }
 
     /**
@@ -30,6 +27,6 @@ class ContractExtension extends Component
      */
     public function render(): View|Closure|string
     {
-        return view('components.contract-additional-budget');
+        return view('components.contract-extension');
         }
 }

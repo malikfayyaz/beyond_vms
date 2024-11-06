@@ -64,7 +64,6 @@ class CareerOpportunitiesContractService
         $userid =  checkUserId($userid,$sessionrole);
         $portal = 'Portal';
         $workflow = ContractBudgetWorkflow::findOrFail($request->rowId);
-
         self::acceptContractBudgetWorkflow($request->rowId, $userid, $sessionrole, $portal,$request);
         $nextWorkflow = ContractBudgetWorkflow::where([
             ['contract_id', '=', $workflow->contract_id],
@@ -211,44 +210,79 @@ class CareerOpportunitiesContractService
     // extension workflow
 
 
-     public static function contractExtensionWorkflowProcess($model,$contract)
+     public static function contractExtensionWorkflowProcess($request)
      {
-         // Fetch all workflows for the hiring manager of the offer
-         $workflows = Workflow::where('client_id', $contract->workorder->hiring_manager_id)->get();
-         // dd($workflows);
-         // If there are no workflows, return early
-         if ($workflows->isEmpty()) {
-             return false;
-         }
-         // Prepare the data to insert all at once
-         $workflowData = [];
-         $i = 0;
-         foreach ($workflows as $wf) {
-             $emailSentValue = 0;
-             if ($i == 0){
-                 $emailSentValue = 1;
-             }
-             $workflowData[] = [
-                 'contract_id' => $contract->id,
-                 'client_id' => $wf->hiring_manager_id,
-                 'workflow_id' => 0,
-                 'request_id' => $model->id,
-                 'approval_role_id' => $wf->approval_role_id,
-                 'bulk_approval' => 0,
-                 'approval_number' => $wf->approval_number,
-                 'status' => 'Pending',
-                 'status_time' => now(),
-                 'approval_required' => $wf->approval_required == 'yes' ? 1 : 0,
-                 'email_sent' => $emailSentValue,
-             ];
-             $i++;
-         }
- 
-         // Insert all records at once using batch insert
-         ContractExtensionWorkflow::insert($workflowData);
- 
+        $user = \Auth::user();
+        $userid = \Auth::id();
+        $sessionrole = session('selected_role');
+        $userid =  checkUserId($userid,$sessionrole);
+        $portal = 'Portal';
+        $contract = CareerOpportunitiesContract::findOrFail($request->contractId);
+        $workflow = ContractExtensionWorkflow::findOrFail($request->rowId);
+        if($request->actionType == 'Accept'){
+        self::acceptContractExtWorkflow($request->rowId, $userid, $sessionrole, $portal,$request);
+        }
+        if($request->actionType == 'Reject'){
+        self::rejectContractExtWorkflow($request->rowId, $userid, $sessionrole, $portal,$request);
+        }
+        $nextWorkflow = ContractExtensionWorkflow::where([
+            ['contract_id', '=', $workflow->contract_id],
+            ['status', '=', 'Pending'],
+            ['email_sent', '=', 0]
+        ])
+            ->orderBy('id')
+            ->get();
+        $count = 0;
+        if(count($nextWorkflow)>0){
+            foreach($nextWorkflow as $workflow){
+                if($count == 0){
+                    if($workflow->approval_required == 0 ){
+                      if ($request->actionType == 'Accept') {
+                        self::acceptContractExtWorkflow($workflow->id, $userid, $sessionrole, $portal, $request);
+                    } else {
+                        self::rejectContractExtWorkflow($workflow->id, $userid, $sessionrole, $portal, $request);
+                            }
+                    }else{
+                        $workflow->email_sent = 1;
+                        $workflow->save();
+                        $count++;
+                    }
+                }
+            }
+        } 
          return true;
      }
+    protected static function acceptContractExtWorkflow($workflowid, $userid, $role, $portal, $request){
+        $workflow = ContractExtensionWorkflow::findOrFail($request->rowId);
+        $filename = handleFileUpload($request, 'contractAttachment', 'contract_extensio_workflow_attachments');
+        $workflow->status = 'Approved';
+        $workflow->approval_notes = $request->note;
+        $workflow->approval_doc = $filename;
+        $workflow->approve_reject_by = $userid;
+        $workflow->approve_reject_type = $role;
+        $workflow->approved_datetime = now();
+        $workflow->approve_reject_from = $portal;
+        $workflow->ip_address = $request->ip();
+        $workflow->machine_user_name = gethostname();
+        $workflow->save();
+    }
+    protected static function rejectContractExtWorkflow($workflowid, $userid, $role, $portal, $request){
+        $workflow = ContractExtensionWorkflow::findOrFail($request->rowId);
+        $filename = handleFileUpload($request, 'contractAttachment', 'contract_extensio_workflow_attachments');
+        $workflow->status = 'Rejected';
+        $workflow->rejection_id = $request->reason;
+        $workflow->rejection_reason = $request->note;
+        $workflow->approval_notes = $request->note;
+        $workflow->approval_doc = $filename;
+        $workflow->approve_reject_by = $userid;
+        $workflow->approve_reject_type = $role;
+        $workflow->approved_datetime = now();
+        $workflow->approve_reject_from = $portal;
+        $workflow->ip_address = $request->ip();
+        $workflow->machine_user_name = gethostname();
+        $workflow->save();
+    }
+
      /*public function updateAdditionalWorkflow($request){
         if(isset($request)){
             $contract = CareerOpportunitiesContract::with([

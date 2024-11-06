@@ -58,7 +58,6 @@ if (!function_exists('getSettingTitleById')) {
         $setting = \App\Models\Setting::where('id', $id)
             ->where('status', 'active') // Check for active status
             ->first(); // Use first() to get a single record
-
         return $setting ? $setting->title : 'N/A';
     }
 }
