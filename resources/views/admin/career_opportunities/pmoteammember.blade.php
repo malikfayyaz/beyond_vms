@@ -6,12 +6,13 @@
     <div class="container mx-auto p-4">
       <div class="flex flex-wrap mb-4">
           <div class="w-1/2 pr-2">
-            <label for="user_id" class="block mb-2">Job Team Member <span class="text-red-500">*</span></label>
+            <label for="user_id" class="block mb-2">PMO Team Member <span class="text-red-500">*</span></label>
             <select
                 id="user_id"
                 name="user_id"
                 class="w-full p-2 border rounded h-10 bg-white"
                 x-model="formData.user_id"
+                x-ref="user_id"
             >
                 <option value="" disabled>Select Team Member</option>
                 @foreach($admins as $data)
@@ -34,9 +35,9 @@
     <table class="min-w-full divide-y divide-gray-200" id="dataTable">
       <thead class="bg-gray-50">
         <tr>
-          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+          <!-- <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
             Sr. #
-          </th>
+          </th> -->
           <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
             Name
           </th>
@@ -58,19 +59,16 @@
 
 document.addEventListener('DOMContentLoaded', function() {
     if (window.$) {
-        initializeDataTable('#dataTable', `{{ route('admin.pmoteammember',$job->id) }}`, [
-       { data: '' },
+      table = initializeDataTable('#dataTable', `{{ route('admin.pmoteammember',$job->id) }}`, [
+       
        { data: 'name', name: 'name' },
        { data: 'email', name: 'email' },
        { data: 'action', name: 'action', orderable: false, searchable: false }
    ]);
   }
 });
-
-    </script>
-
-     <script>
-   function accountManager(editIndex) {
+  function accountManager(editIndex) {
+    
     return {
       formData: {
           user_id: "", 
@@ -105,11 +103,9 @@ document.addEventListener('DOMContentLoaded', function() {
                   formData.append('_method', 'PUT'); 
               }
               
-              ajaxCall(url, 'POST', [[this.onSuccess, ['response']]], formData);
+              ajaxCall(url, 'POST', [[onSuccess, ['response']]], formData);
+              table.ajax.reload();
           }
-      },
-      onSuccess(){
-        alert('testtesttest');
       }
   };
 }

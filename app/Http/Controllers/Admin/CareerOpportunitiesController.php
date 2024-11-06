@@ -26,6 +26,8 @@ use App\Models\CareerOpportunitiesOffer;
 use App\Models\CareerOpportunitiesWorkorder;
 use App\Models\User;
 use App\Models\AdminTeamJob;
+use App\Models\JobTeamMember;
+use App\Models\Client;
 use App\Facades\Rateshelper as Rateshelper;
 
 class CareerOpportunitiesController extends BaseController
@@ -244,12 +246,13 @@ class CareerOpportunitiesController extends BaseController
         $vendors = Vendor::all();
         $vendorRelease = VendorJobRelease::with('vendorName')->where('job_id', $id)->get();
         $admins = Admin::all();
+        $clients = Client::all();
         
         // Optionally, you can dump the data for debugging purposes
         // dd($job); // Uncomment to check the data structure
 
         // Return the view and pass the job data to it
-        return view('admin.career_opportunities.view', compact('job','jobWorkFlow','rejectReasons','vendors','vendorRelease','admins'));
+        return view('admin.career_opportunities.view', compact('job','jobWorkFlow','rejectReasons','vendors','vendorRelease','admins','clients'));
     }
 
     /**
@@ -964,32 +967,119 @@ class CareerOpportunitiesController extends BaseController
             $data->user_id = $request->user_id;
             $data->save();
         }
-        $query = AdminTeamJob::where('career_opportunity_id', $id)->get();
+        $query = AdminTeamJob::where('career_opportunity_id', $id)->where('status','!=',2)->get();
         return DataTables::of($query)
-            ->addIndexColumn()
+            //->addIndexColumn()
             ->addColumn('name', function($row) {
-                return $row->user ? $row->user->first_name.' '. $row->user->last_name : 'N/A';
+                return $row->user ? $row->user->name: 'N/A';
             })
             ->addColumn('email', function($row) {
                 return $row->user ? $row->user->email  : 'N/A';
             })
             ->addColumn('action', function ($row) {
-                $btn = ' <a href="' . route('admin.workorder.show', $row->id) . '"
-                   class="text-blue-500 hover:text-blue-700 mr-2 bg-transparent hover:bg-transparent"
-                 >
-                   <i class="fas fa-eye"></i>
-                 </a>';
+               $btn = "<div x-data=\"{
+                    deleteRecord(id) {
+                        if (confirm('Are you sure?')) {
+                            fetch('" . route('admin.pmoteammemberDelete', $row->id) . "', {
+                                method: 'POST',
+                                headers: {
+                                    'X-CSRF-TOKEN': '" . csrf_token() . "',
+                                    'Content-Type': 'application/json'
+                                }
+                            })
+                            .then(response => {
+                                $('#dataTable').DataTable().ajax.reload();
+                            })
+                            .catch(error => {
+                                console.error('Error:', error);
+                            });
+                        }
+                    }
+                }\">
+                    <button @click=\"deleteRecord(" . $row->id . ")\" class=\"text-red-500 hover:text-red-700 bg-transparent hover:bg-transparent\">
+                        <i class=\"fas fa-trash\"></i>
+                    </button>
+                </div>";
+                return $btn;
+            })
+            ->rawColumns(['action'])
+            ->make(true);
+    }
+
+    public function jobteammember(Request $request, $id){
+
+        if(isset($request->user_id)){
+            $data = new JobTeamMember;
+            $data->career_opportunity_id = $id;
+            $data->user_id = $request->user_id;
+            $data->status = 0;
+            $data->save();
+            
+            return response()->json([
+                    'success' => true,
+                    'message' => 'Data saved successfully!',
+                ]);
+        }
+        $query = JobTeamMember::where('career_opportunity_id', $id)->where('status', '!=',2)->get();
+        return DataTables::of($query)
+           // ->addIndexColumn()
+            ->addColumn('name', function($row) {
+                return $row->user ? $row->user->name: 'N/A';
+            })
+            ->addColumn('email', function($row) {
+                return $row->user ? $row->user->email  : 'N/A';
+            })
+            ->addColumn('action', function ($row) {
+                $btn = "<div x-data=\"{
+                    deleteRecord(id) {
+                        if (confirm('Are you sure?')) {
+                            fetch('" . route('admin.jobteammemberDelete', $row->id) . "', {
+                                method: 'POST',
+                                headers: {
+                                    'X-CSRF-TOKEN': '" . csrf_token() . "',
+                                    'Content-Type': 'application/json'
+                                }
+                            })
+                            .then(response => {
+                                $('#dataTable1').DataTable().ajax.reload();
+                            })
+                            .catch(error => {
+                                console.error('Error:', error);
+                            });
+                        }
+                    }
+                }\">
+                    <button @click=\"deleteRecord(" . $row->id . ")\" class=\"text-red-500 hover:text-red-700 bg-transparent hover:bg-transparent\">
+                        <i class=\"fas fa-trash\"></i>
+                    </button>
+                </div>";
 
                 return $btn;
             })
             ->rawColumns(['action'])
             ->make(true);
-
-        
     }
 
-    public function jobteammember(Request $request){
-        dd($request->all());
+    public function jobteammemberDelete($id){
+        $data =  JobTeamMember::find($id);
+        $data->status = 2;
+        $data->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Data saved successfully!',
+        ]);
+    }
+
+    public function pmoteammemberDelete($id){
+        $data =  AdminTeamJob::find($id);
+        $data->status = 2;
+        $data->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Data saved successfully!',
+        ]);
     }
 
 
