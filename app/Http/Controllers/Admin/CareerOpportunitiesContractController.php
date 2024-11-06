@@ -734,7 +734,7 @@ class CareerOpportunitiesContractController extends BaseController
 
             
             $currentRates = Rateshelper::returnContractEffectiveRate($workorder->id);
-            if($billRate <= $currentRates['bill_rate'] ||  !ListingUtility::checkSowStatus($workorder->id)){
+            if($billRate <= $currentRates['bill_rate'] /*||  !ListingUtility::checkSowStatus($workorder->id)*/){
                 $model->status = 3;
                 $model->save();
                 
@@ -780,6 +780,9 @@ class CareerOpportunitiesContractController extends BaseController
         if ($actionType == 'Accept') {
             contractHelper::contractExtensionWorkflowApprove($request);  //for approve
             $message = 'Contract Extension Workflow Accepted successfully!';
+            $contractext->ext_status = 2;
+            $contractext->approval_rejection_date = now();
+            $contractext->save();
             session()->flash('success', $message);
         } elseif ($actionType == 'Reject') {
             contractHelper::contractExtensionWorkflowApprove($request); // for reject
