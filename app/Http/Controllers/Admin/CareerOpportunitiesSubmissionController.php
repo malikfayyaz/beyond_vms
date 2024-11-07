@@ -21,19 +21,52 @@ class CareerOpportunitiesSubmissionController extends Controller
         'submitted' => CareerOpportunitySubmission::where('resume_status', 1)->count(),
         'review' => CareerOpportunitySubmission::where('resume_status', 4)->count(),
         'shortlisted' => CareerOpportunitySubmission::where('resume_status', 3)->count(),
-        'review' => CareerOpportunitySubmission::where('resume_status', 12)->count(),
-        'pending' => CareerOpportunitySubmission::where('resume_status', 1)->count(),
-        'rejected' => CareerOpportunitySubmission::where('resume_status', 13)->count(),
+        'interview' => CareerOpportunitySubmission::where('resume_status', 5)->count(),
+        'rejected' => CareerOpportunitySubmission::where('resume_status', 6)->count(),
+        'offer' => CareerOpportunitySubmission::where('resume_status', 7)->count(),
+        'hired' => CareerOpportunitySubmission::where('resume_status', 9)->count(),
         'pending_pmo' => CareerOpportunitySubmission::where('resume_status', 22)->count(),
         'open_pending_release' => CareerOpportunitySubmission::whereIn('resume_status', [3, 23])->count(),
         'pending_hm' => CareerOpportunitySubmission::whereIn('resume_status', [1, 23, 24])->count(),
-        'quick_create' => CareerOpportunitySubmission::whereIn('resume_status', [1, 3, 13])->count(),
-        'draft' => CareerOpportunitySubmission::where('resume_status', 2)->count(),
-        'active' => CareerOpportunitySubmission::whereIn('resume_status', [1, 3, 6, 13, 23, 24])->count(),
+        
+        
     ];
         if ($request->ajax()) {
-            $submissions = CareerOpportunitySubmission::with(['consultant','vendor','careerOpportunity.hiringManager','location'])
-                ->get();
+
+            $submissions = CareerOpportunitySubmission::with(['consultant','vendor','careerOpportunity.hiringManager','location']);
+                
+                if ($request->has('type')) {
+                    $type = $request->input('type');
+                    switch ($type) {
+                        case 'all_subs':
+                            break;
+                        case 'submitted':
+                            $submissions->where('resume_status', 1);
+                            break;
+                        case 'shortlisted':
+                            $submissions->where('resume_status', 3);
+                            break;
+                        case 'review':
+                            $submissions->where('resume_status', 4);
+                            break;
+                        case 'interview':
+                            $submissions->where('resume_status', 5);
+                            break;    
+                        case 'rejected':
+                            $submissions->where('resume_status', 6);
+                            break;
+                        case 'offer':
+                            $submissions->where('resume_status', 7);
+                            break;
+                        case 'hired':
+                            $submissions->where('resume_status', 9);
+                            break;
+                        // Add additional cases as needed
+                        default:
+                            break; // Show all submissions if no type is specified
+                    }
+                }
+                
             return DataTables::of($submissions)
                 ->addColumn('id', function ($row) {
                     return '<span class="submission-detail-trigger text-blue-500 cursor-pointer" data-id="' 
