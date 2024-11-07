@@ -17,22 +17,17 @@ class CareerOpportunitiesSubmissionController extends Controller
     public function index(Request $request)
     {
         $counts = [
-        'all_subs' => CareerOpportunitySubmission::count(),
-        'submitted' => CareerOpportunitySubmission::where('resume_status', 1)->count(),
-        'review' => CareerOpportunitySubmission::where('resume_status', 4)->count(),
-        'shortlisted' => CareerOpportunitySubmission::where('resume_status', 3)->count(),
-        'interview' => CareerOpportunitySubmission::where('resume_status', 5)->count(),
-        'rejected' => CareerOpportunitySubmission::where('resume_status', 6)->count(),
-        'offer' => CareerOpportunitySubmission::where('resume_status', 7)->count(),
-        'hired' => CareerOpportunitySubmission::where('resume_status', 9)->count(),
-        'workorder' => CareerOpportunitySubmission::where('resume_status', 11)->count(),
-        'withdraw' => CareerOpportunitySubmission::where('resume_status', 11)->count(),
-        'pending_pmo' => CareerOpportunitySubmission::where('resume_status', 12)->count(),
-        'open_pending_release' => CareerOpportunitySubmission::whereIn('resume_status', [3, 23])->count(),
-        'pending_hm' => CareerOpportunitySubmission::whereIn('resume_status', [1, 23, 24])->count(),
-        
-        
-    ];
+            'all_subs' => CareerOpportunitySubmission::count(),
+            'submitted' => CareerOpportunitySubmission::where('resume_status', 1)->count(),
+            'review' => CareerOpportunitySubmission::where('resume_status', 4)->count(),
+            'shortlisted' => CareerOpportunitySubmission::where('resume_status', 3)->count(),
+            'interview' => CareerOpportunitySubmission::where('resume_status', 5)->count(),
+            'rejected' => CareerOpportunitySubmission::where('resume_status', 6)->count(),
+            'offer' => CareerOpportunitySubmission::where('resume_status', 7)->count(),
+            'hired' => CareerOpportunitySubmission::where('resume_status', 9)->count(),
+            'workorder' => CareerOpportunitySubmission::where('resume_status', 11)->count(),
+            'withdraw' => CareerOpportunitySubmission::where('resume_status', 12)->count(),
+        ];
         if ($request->ajax()) {
 
             $submissions = CareerOpportunitySubmission::with(['consultant','vendor','careerOpportunity.hiringManager','location']);

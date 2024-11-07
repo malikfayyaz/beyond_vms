@@ -12,8 +12,52 @@ class CareerOpportunitiesSubmissionController extends Controller
 {
     public function index(Request $request)
     {
+        $counts = [
+            'all_subs' => CareerOpportunitySubmission::count(),
+            'review' => CareerOpportunitySubmission::where('resume_status', 4)->count(),
+            'interview' => CareerOpportunitySubmission::where('resume_status', 5)->count(),
+            'rejected' => CareerOpportunitySubmission::where('resume_status', 6)->count(),
+            'offer' => CareerOpportunitySubmission::where('resume_status', 7)->count(),
+            'hired' => CareerOpportunitySubmission::where('resume_status', 9)->count(),
+            'workorder' => CareerOpportunitySubmission::where('resume_status', 11)->count(),
+            'withdraw' => CareerOpportunitySubmission::where('resume_status', 12)->count(),
+        ];
+
         if ($request->ajax()) {
-            $submissions = CareerOpportunitySubmission::with(['consultant','vendor','careerOpportunity.hiringManager','location'])->get();
+            $submissions = CareerOpportunitySubmission::with(['consultant','vendor','careerOpportunity.hiringManager','location']);
+
+            if ($request->has('type')) {
+                $type = $request->input('type');
+                switch ($type) {
+                    case 'all_subs':
+                        break;
+                    case 'review':
+                        $submissions->where('resume_status', 4);
+                        break;
+                    case 'interview':
+                        $submissions->where('resume_status', 5);
+                        break;    
+                    case 'rejected':
+                        $submissions->where('resume_status', 6);
+                        break;
+                    case 'offer':
+                        $submissions->where('resume_status', 7);
+                        break;
+                    case 'hired':
+                        $submissions->where('resume_status', 9);
+                        break;
+                    case 'workorder':
+                        $submissions->where('resume_status', 11);
+                        break;
+                    case 'withdraw':
+                        $submissions->where('resume_status', 12);
+                        break;
+
+                    // Add additional cases as needed
+                    default:
+                        break; // Show all submissions if no type is specified
+                }
+            }
 
             return DataTables::of($submissions)
                 ->addColumn('id', function ($row) {
@@ -59,7 +103,7 @@ class CareerOpportunitiesSubmissionController extends Controller
                 ->rawColumns(['id','action', 'career_opportunity_title'])
                 ->make(true);
         }
-        return view('client.submission.index');
+        return view('client.submission.index', compact('counts'));
     }
 
     public function show($id)
