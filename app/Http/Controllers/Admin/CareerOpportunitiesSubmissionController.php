@@ -25,7 +25,9 @@ class CareerOpportunitiesSubmissionController extends Controller
         'rejected' => CareerOpportunitySubmission::where('resume_status', 6)->count(),
         'offer' => CareerOpportunitySubmission::where('resume_status', 7)->count(),
         'hired' => CareerOpportunitySubmission::where('resume_status', 9)->count(),
-        'pending_pmo' => CareerOpportunitySubmission::where('resume_status', 22)->count(),
+        'workorder' => CareerOpportunitySubmission::where('resume_status', 11)->count(),
+        'withdraw' => CareerOpportunitySubmission::where('resume_status', 11)->count(),
+        'pending_pmo' => CareerOpportunitySubmission::where('resume_status', 12)->count(),
         'open_pending_release' => CareerOpportunitySubmission::whereIn('resume_status', [3, 23])->count(),
         'pending_hm' => CareerOpportunitySubmission::whereIn('resume_status', [1, 23, 24])->count(),
         
@@ -61,6 +63,14 @@ class CareerOpportunitiesSubmissionController extends Controller
                         case 'hired':
                             $submissions->where('resume_status', 9);
                             break;
+                            
+                        case 'workorder':
+                            $submissions->where('resume_status', 11);
+                            break;
+                        case 'withdraw':
+                            $submissions->where('resume_status', 12);
+                            break;
+
                         // Add additional cases as needed
                         default:
                             break; // Show all submissions if no type is specified

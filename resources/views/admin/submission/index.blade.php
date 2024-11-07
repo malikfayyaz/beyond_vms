@@ -125,6 +125,32 @@
                             </div>
                         </a>
                     </li>
+                    <li class="flex justify-center">
+                        <a
+                            href="#workorder"
+                            class="tab-link w-full flex justify-center items-center gap-3 py-4 hover:bg-white hover:rounded-lg hover:shadow"
+                            data-type="workorder"
+                        >
+                            <i class="fa-solid fa-fill"></i>
+                            <span class="capitalize">WorkOrder Release</span>
+                            <div class="px-1 py-1 flex items-center justify-center bg-gray-500 text-white rounded-lg">
+                                <span class="text-[10px]">{{ $counts['workorder'] }}</span>
+                            </div>
+                        </a>
+                    </li>
+                    <li class="flex justify-center">
+                        <a
+                            href="#withdraw"
+                            class="tab-link w-full flex justify-center items-center gap-3 py-4 hover:bg-white hover:rounded-lg hover:shadow"
+                            data-type="withdraw"
+                        >
+                            <i class="fa-solid fa-fill"></i>
+                            <span class="capitalize">Withdrawn</span>
+                            <div class="px-1 py-1 flex items-center justify-center bg-gray-500 text-white rounded-lg">
+                                <span class="text-[10px]">{{ $counts['withdraw'] }}</span>
+                            </div>
+                        </a>
+                    </li>
                     
                     
                  </ul>
