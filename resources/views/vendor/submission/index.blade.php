@@ -13,6 +13,134 @@
                     <h2 class="text-2xl font-bold">Submission</h2>
                 </div>
 
+                <div class="mb-4">
+                 <ul
+                     class="grid grid-flow-col text-center text-gray-500 bg-gray-100 rounded-lg p-1"
+                 >
+                
+                    <li class="flex justify-center">
+                        <a
+                            href="#all_subs"
+                            class="tab-link w-full flex justify-center items-center gap-3 py-4 hover:bg-white hover:rounded-lg hover:shadow"
+                            data-type="all_subs"
+                        >
+                            <i class="fa-solid fa-fill"></i>
+                            <span class="capitalize">All</span>
+                            <div class="px-1 py-1 flex items-center justify-center bg-gray-500 text-white rounded-lg">
+                                <span class="text-[10px]">{{ $counts['all_subs'] }}</span>
+                            </div>
+                        </a>
+                    </li>
+                    <li class="flex justify-center">
+                        <a
+                            href="#submitted"
+                            class="tab-link w-full flex justify-center items-center gap-3 py-4 hover:bg-white hover:rounded-lg hover:shadow"
+                            data-type="submitted"
+                        >
+                            <i class="fa-regular fa-registered"></i>
+                            <span class="capitalize">Submitted</span>
+                            <div class="px-1 py-1 flex items-center justify-center bg-gray-500 text-white rounded-lg">
+                                <span class="text-[10px]">{{ $counts['submitted'] }}</span>
+                            </div>
+                        </a>
+                    </li>
+                    <li class="flex justify-center">
+                        <a
+                            href="#msp_review"
+                            class="tab-link w-full flex justify-center items-center gap-3 py-4 hover:bg-white hover:rounded-lg hover:shadow"
+                            data-type="msp_review"
+                        >
+                            <i class="fa-regular fa-registered"></i>
+                            <span class="capitalize">MSP Reviewed</span>
+                            <div class="px-1 py-1 flex items-center justify-center bg-gray-500 text-white rounded-lg">
+                                <span class="text-[10px]">{{ $counts['msp_review'] }}</span>
+                            </div>
+                        </a>
+                    </li>
+                    <li class="flex justify-center">
+                        <a
+                            href="#shortlisted"
+                            class="tab-link w-full flex justify-center items-center gap-3 py-4 hover:bg-white hover:rounded-lg hover:shadow"
+                            data-type="shortlisted"
+                        >
+                            <i class="fa-solid fa-fill"></i>
+                            <span class="capitalize">Shortlisted</span>
+                            <div class="px-1 py-1 flex items-center justify-center bg-gray-500 text-white rounded-lg">
+                                <span class="text-[10px]">{{ $counts['shortlisted'] }}</span>
+                            </div>
+                        </a>
+                    </li>
+                    <li class="flex justify-center">
+                        <a
+                            href="#review"
+                            class="tab-link w-full flex justify-center items-center gap-3 py-4 hover:bg-white hover:rounded-lg hover:shadow"
+                            data-type="review"
+                        >
+                            <i class="fa-solid fa-fill"></i>
+                            <span class="capitalize">Client Review</span>
+                            <div class="px-1 py-1 flex items-center justify-center bg-gray-500 text-white rounded-lg">
+                                <span class="text-[10px]">{{ $counts['review'] }}</span>
+                            </div>
+                        </a>
+                    </li>
+                    
+                    <li class="flex justify-center">
+                        <a
+                            href="#interview"
+                            class="tab-link w-full flex justify-center items-center gap-3 py-4 hover:bg-white hover:rounded-lg hover:shadow"
+                            data-type="interview"
+                        >
+                            <i class="fa-solid fa-fill"></i>
+                            <span class="capitalize">interview Process</span>
+                            <div class="px-1 py-1 flex items-center justify-center bg-gray-500 text-white rounded-lg">
+                                <span class="text-[10px]">{{ $counts['interview'] }}</span>
+                            </div>
+                        </a>
+                    </li>
+
+
+                    <li class="flex justify-center">
+                        <a
+                            href="#rejected"
+                            class="tab-link w-full flex justify-center items-center gap-3 py-4 hover:bg-white hover:rounded-lg hover:shadow"
+                            data-type="rejected"
+                        >
+                            <i class="fa-solid fa-fill"></i>
+                            <span class="capitalize">Rejected</span>
+                            <div class="px-1 py-1 flex items-center justify-center bg-gray-500 text-white rounded-lg">
+                                <span class="text-[10px]">{{ $counts['rejected'] }}</span>
+                            </div>
+                        </a>
+                    </li>
+                    <li class="flex justify-center">
+                        <a
+                            href="#offer"
+                            class="tab-link w-full flex justify-center items-center gap-3 py-4 hover:bg-white hover:rounded-lg hover:shadow"
+                            data-type="offer"
+                        >
+                            <i class="fa-solid fa-fill"></i>
+                            <span class="capitalize">Offer</span>
+                            <div class="px-1 py-1 flex items-center justify-center bg-gray-500 text-white rounded-lg">
+                                <span class="text-[10px]">{{ $counts['offer'] }}</span>
+                            </div>
+                        </a>
+                    </li>
+                    <li class="flex justify-center">
+                        <a
+                            href="#hired"
+                            class="tab-link w-full flex justify-center items-center gap-3 py-4 hover:bg-white hover:rounded-lg hover:shadow"
+                            data-type="hired"
+                        >
+                            <i class="fa-solid fa-fill"></i>
+                            <span class="capitalize">Hired</span>
+                            <div class="px-1 py-1 flex items-center justify-center bg-gray-500 text-white rounded-lg">
+                                <span class="text-[10px]">{{ $counts['hired'] }}</span>
+                            </div>
+                        </a>
+                    </li>
+                 </ul>
+             </div>
+
                 <x-job-details />
 
                 <x-submission-details />
@@ -101,7 +229,8 @@
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         if (window.$) {
-            initializeDataTable('#listing', '/vendor/submission/index', [
+            let currentType = 'all_subs';
+            let table = initializeDataTable('#listing', '/vendor/submission/index', [
                 { data: 'resume_status', name: 'resume_status' },
                 { data: 'id', name: 'id' },
                 { data: 'consultant_name', name: 'consultant_name' }, // Consultant name
@@ -114,13 +243,7 @@
                 { data: 'location_name', name: 'location_name' }, // Location name
                 { data: 'worker_type', name: 'worker_type' },
                 { data: 'action', name: 'action', orderable: false, searchable: false }
-            ]);
-
-            function toggleSidebar() 
-            {
-                // Assuming you want to toggle selectedUser state
-                this.selectedUser = this.selectedUser ? 'user' : 'user';
-            }
+            ], () => currentType);
 
             $(document).on('click', '.job-detail-trigger', function (e) {
                 e.preventDefault();
@@ -169,6 +292,23 @@
                     })
                     .catch(error => console.error('Error fetching submission details:', error));
             }
+
+            $(document).on('click', '.tab-link', function(e) {
+                e.preventDefault();
+
+                $('.tab-link').removeClass('active-tab');
+                $('.tab-link').removeClass('px-1 py-1 flex items-center justify-center text-white rounded-lg bg-primary');
+                $('.tab-link').addClass('w-full flex justify-center items-center gap-3 py-4 hover:bg-white hover:rounded-lg hover:shadow');
+                $(this).addClass('px-1 py-1 flex items-center justify-center text-white rounded-lg bg-primary');
+                $(this).addClass('active-tab');
+                // Update currentType variable if needed
+                currentType = $(this).data('type');
+                console.log(currentType);
+                
+                window.location.hash = $(this).attr('href');
+                table.ajax.reload();
+                
+            });
         }
     });
 </script>

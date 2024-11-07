@@ -260,12 +260,6 @@
                 { data: 'action', name: 'action', orderable: false, searchable: false }
             ], () => currentType);
 
-            function toggleSidebar() 
-            {
-                // Assuming you want to toggle selectedUser state
-                this.selectedUser = this.selectedUser ? 'user' : 'user';
-            }
-
             $(document).on('click', '.job-detail-trigger', function (e) {
                 e.preventDefault();
                 let jobId = $(this).data('id');
