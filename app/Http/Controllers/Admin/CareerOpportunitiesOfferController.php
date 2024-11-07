@@ -21,8 +21,39 @@ class CareerOpportunitiesOfferController extends BaseController
     // Display a listing of career opportunities
     public function index(Request $request)
     {
+        $counts = [
+            'all_offers' => CareerOpportunitiesOffer::count(),
+            'draft' => CareerOpportunitiesOffer::where('status', 0)->count(),
+            'pending' => CareerOpportunitiesOffer::where('status', 1)->count(),
+            'rejected' => CareerOpportunitiesOffer::where('status', 2)->count(),
+            'approved' => CareerOpportunitiesOffer::where('status', 3)->count(),
+            'waiting_for_supplier_approval' => CareerOpportunitiesOffer::where('status', 4)->count(),
+            'withdrawn' => CareerOpportunitiesOffer::where('status', 13)->count(),
+        ];
         if ($request->ajax()) {
-            $offers = CareerOpportunitiesOffer::with(['consultant','careerOpportunity','hiringManager','vendor'])->get();
+            $offers = CareerOpportunitiesOffer::with(['consultant','careerOpportunity','hiringManager','vendor']);
+            if ($request->has('type')) {
+                $type = $request->input('type');
+                switch ($type) {
+                    case 'all_offers':
+                        break;
+                    case 'pending':
+                        $offers->where('status', 1);
+                        break;
+                    case 'approved':
+                        $offers->where('status', 3);
+                        break;
+                    case 'rejected':
+                        $offers->where('status', 2);
+                        break;
+                    
+
+                    // Add additional cases as needed
+                    default:
+                        break; // Show all submissions if no type is specified
+                }
+            }
+            
             return DataTables::of($offers)
                 ->addColumn('consultant_name', function($row) {
                     return $row->consultant ? $row->consultant->full_name : 'N/A';
@@ -58,7 +89,7 @@ class CareerOpportunitiesOfferController extends BaseController
                 ->rawColumns(['career_opportunity','action'])
                 ->make(true);
             }
-        return view('admin.offer.index');
+        return view('admin.offer.index' , compact('counts'));
     }
 
     // Show the form for creating a new career opportunity offer
