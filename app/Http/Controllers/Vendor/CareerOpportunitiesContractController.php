@@ -13,9 +13,32 @@ class CareerOpportunitiesContractController extends Controller
 {
     public function index(Request $request)
     {
+
+        $counts = [
+            'active' => CareerOpportunitiesContract::where('status', 1)->count(),
+            'cancelled' => CareerOpportunitiesContract::whereIn('status', [2, 6])->count(),
+        ];
+
+
         if ($request->ajax()) {
             $clientId = Client::getClientIdByUserId(Auth::id());
             $data = CareerOpportunitiesContract::with('hiringManager','careerOpportunity','workOrder.vendor','location');
+            
+            if ($request->has('type')) {
+                $type = $request->input('type');
+                switch ($type) {
+                    case 'active':
+                        $data->where('status', 1);
+                        break;
+                    case 'cancelled':
+                        $data->whereIn('status', [2, 6]);
+                        break;
+                    // Add additional cases as needed
+                    default:
+                        break; // Show all submissions if no type is specified
+                }
+            }
+            
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('status', function ($row) {
@@ -57,7 +80,7 @@ class CareerOpportunitiesContractController extends Controller
                 ->rawColumns(['career_opportunity','action'])
                 ->make(true);
         }
-        return view('vendor.contract.index'); // Assumes you have a corresponding Blade view
+        return view('vendor.contract.index', compact('counts')); // Assumes you have a corresponding Blade view
     }
     public function show($id)
     {

@@ -12,6 +12,39 @@
                     <h2 class="text-2xl font-bold">Contract</h2>
                 </div>
 
+                <div class="mb-4">
+                 <ul
+                     class="grid grid-flow-col text-center text-gray-500 bg-gray-100 rounded-lg p-1"
+                 >
+                    <li class="flex justify-center">
+                        <a
+                            href="#active"
+                            class="tab-link w-full flex justify-center items-center gap-3 py-4 hover:bg-white hover:rounded-lg hover:shadow"
+                            data-type="active"
+                        >
+                            <i class="fa-solid fa-fill"></i>
+                            <span class="capitalize">Active</span>
+                            <div class="px-1 py-1 flex items-center justify-center bg-gray-500 text-white rounded-lg">
+                                <span class="text-[10px]">{{ $counts['active'] }}</span>
+                            </div>
+                        </a>
+                    </li>
+                    <li class="flex justify-center">
+                        <a
+                            href="#cancelled"
+                            class="tab-link w-full flex justify-center items-center gap-3 py-4 hover:bg-white hover:rounded-lg hover:shadow"
+                            data-type="cancelled"
+                        >
+                            <i class="fa-solid fa-fill"></i>
+                            <span class="capitalize">Expired</span>
+                            <div class="px-1 py-1 flex items-center justify-center bg-gray-500 text-white rounded-lg">
+                                <span class="text-[10px]">{{ $counts['cancelled'] }}</span>
+                            </div>
+                        </a>
+                    </li>
+                 </ul>
+                </div>
+
                 <x-job-details />
 
                 <table class="min-w-full divide-y divide-gray-200" id="listing">
@@ -54,7 +87,8 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             if (window.$) {
-                initializeDataTable('#listing', '{{ route("admin.contracts.index") }}', [
+                let currentType = 'active';
+                let table = initializeDataTable('#listing', '{{ route("admin.contracts.index") }}', [
                     { data: 'status', name: 'status' },
                     { data: 'id', name: 'id' },
                     { data: 'consultant_name', name: 'consultant_name' },
@@ -65,7 +99,7 @@
                     { data: 'worker_type', name: 'worker_type' },
                     { data: 'location', name: 'location' },
                     { data: 'action', name: 'action', orderable: false, searchable: false }
-                ]);
+                ], () => currentType);
 
                 $(document).on('click', '.job-detail-trigger', function (e) {
                     e.preventDefault();
@@ -90,6 +124,23 @@
                             .catch(error => console.error('Error:', error));
 
                 }
+
+                $(document).on('click', '.tab-link', function(e) {
+                    e.preventDefault();
+
+                    $('.tab-link').removeClass('active-tab');
+                    $('.tab-link').removeClass('px-1 py-1 flex items-center justify-center text-white rounded-lg bg-primary');
+                    $('.tab-link').addClass('w-full flex justify-center items-center gap-3 py-4 hover:bg-white hover:rounded-lg hover:shadow');
+                    $(this).addClass('px-1 py-1 flex items-center justify-center text-white rounded-lg bg-primary');
+                    $(this).addClass('active-tab');
+                    // Update currentType variable if needed
+                    currentType = $(this).data('type');
+                    console.log(currentType);
+                    
+                    window.location.hash = $(this).attr('href');
+                    table.ajax.reload();
+                    
+                });
             }
         });
     </script>

@@ -135,7 +135,7 @@ class CommonController extends Controller
         $contract = CareerOpportunitiesContract::findOrFail($id);
         $CareerOpportunity = CareerOpportunity::findOrFail($contract->career_opportunity_id);
 
-        $contract->status = 3;
+        $contract->status = 2;
         $contract->termination_status = 2;
         $contract->termination_reason = $validateData['close_contr_reason'];
         $contract->termination_notes = $validateData['close_contr_note'];
