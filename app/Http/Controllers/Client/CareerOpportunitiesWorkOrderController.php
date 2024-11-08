@@ -11,8 +11,60 @@ class CareerOpportunitiesWorkOrderController extends Controller
 {
     public function index(Request $request)
     {
+        $counts = [
+            'all_wo' => CareerOpportunitiesWorkorder::count(),
+            'pending' => CareerOpportunitiesWorkorder::where('status', 0)->count(),
+            'approved' => CareerOpportunitiesWorkorder::where('status', 1)->count(),
+            'rejected' => CareerOpportunitiesWorkorder::where('status', 2)->count(),
+            'closed' => CareerOpportunitiesWorkorder::where('status', 3)->count(),
+            'expired' => CareerOpportunitiesWorkorder::where('status', 4)->count(),
+            'rehire' => CareerOpportunitiesWorkorder::where('status', 5)->count(),
+            'withdrawn' => CareerOpportunitiesWorkorder::where('status', 6)->count(),
+            'pending_approval' => CareerOpportunitiesWorkorder::where('status', 7)->count(),
+            'cancelled' => CareerOpportunitiesWorkorder::where('status', 14)->count(),
+        ];
+
         if ($request->ajax()) {
+            
             $data = CareerOpportunitiesWorkorder::with('hiringManager','vendor','careerOpportunity');
+            
+            if ($request->has('type')) {
+                $type = $request->input('type');
+                switch ($type) {
+                    case 'all_wo':
+                        break;
+                    case 'pending':
+                        $data->where('status', 0);
+                        break;
+                    case 'approved':
+                        $data->where('status', 1);
+                        break;
+                    case 'rejected':
+                        $data->where('status', 2);
+                        break;
+                    case 'closed':
+                        $data->where('status', 3);
+                        break;
+                    case 'expired':
+                        $data->where('status', 4);
+                        break;
+                    case 'rehire':
+                        $data->where('status', 5);
+                        break;
+                    case 'withdrawn':
+                        $data->where('status', 6);
+                        break;
+                    case 'pending_approval':
+                        $data->where('status', 7);
+                        break;
+                    
+
+                    // Add additional cases as needed
+                    default:
+                        break; // Show all submissions if no type is specified
+                }
+            }
+
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('hiring_manager', function ($row) {
@@ -55,7 +107,7 @@ class CareerOpportunitiesWorkOrderController extends Controller
         }
 
         // Logic to get and display catalog items
-        return view('client.workorder.index'); // Assumes you have a corresponding Blade view
+        return view('client.workorder.index', compact('counts')); // Assumes you have a corresponding Blade view
     }
     public function show($id)
     {
