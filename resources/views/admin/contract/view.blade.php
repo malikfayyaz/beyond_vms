@@ -70,7 +70,7 @@
                 <x-contract-extension :contract="$contract"  />
                 </div>
         @endif
-        @if($contract->ContractRatechange->isNotEmpty())
+        @if($contract)
             <!-- Additional Budget Flyout Button -->
              <div  x-data="{isOpen: false,
                 showModal: false,
@@ -83,7 +83,7 @@
                         class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
                     >
                         <i class="fas fa-exclamation-circle text-red-500 text-xl"></i> 
-                        <span class="mx-2">Pending Additional Budget Request</span>
+                        <span class="mx-2">Pending Rate Change Request</span>
                         <span class="text-blue-500 font-semibold text-red-500 text-xl">View</span>
                     </a>
                 <div
@@ -97,7 +97,7 @@
                 @click="isOpen = false"
                 class="fixed inset-0 bg-black bg-opacity-50 z-40"
                 ></div>
-                <x-contract-ratechange :contract="$contract"  />
+                <x-contract-rate-change :contract="$contract"  />
                 </div>
         @endif
                 <div x-data="{ showModal: false, status: {{ json_encode($contract->termination_status) }} }">

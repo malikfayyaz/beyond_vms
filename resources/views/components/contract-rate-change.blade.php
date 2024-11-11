@@ -10,8 +10,17 @@
                                   class="fixed inset-y-0 right-0 w-[700px] bg-gray-100 shadow-lg overflow-y-auto z-50 pb-24"
                       >
                             <!-- Rate Change Content -->
-                            <template x-if="selectedItem?.title === 'Rate Change'">
+                            <template x-if="selectedUser">
                                 <div class="space-y-4">
+                                <!-- Top Bar -->
+                            <div class="flex justify-between items-center p-4 bg-gray-800 text-white">
+                            <h2 class="text-lg font-semibold">Contract Extension Request ()</h2>
+                              <button
+                                @click="isOpen = false"
+                                class="text-gray-500 hover:text-gray-700">
+                                <i class="fas fa-times"></i>
+                                </button>
+                                </div>
                                     <!-- Assignment Information -->
                                     <div class="bg-white border rounded-lg">
                                         <div class="border-b p-4">
