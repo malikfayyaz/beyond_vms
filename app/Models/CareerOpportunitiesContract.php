@@ -96,6 +96,10 @@ class CareerOpportunitiesContract extends Model
     public function contractRateEditRequest() {
         return $this->hasMany(ContractRateEditRequest::class, 'contract_id', 'id');
     }
+    public function RateChangeWorkflow()
+    {
+        return $this->hasMany(ContractRatesEditWorkflow::class, 'contract_id', 'id');
+    }
     public function contractAdditionalBudgetRequest() {
         return $this->hasMany(ContractAdditionalBudget::class, 'contract_id', 'id');
     }
@@ -112,4 +116,11 @@ class CareerOpportunitiesContract extends Model
                     ->latest()
                     ->first();
     }
+public function latestRateEditRequest()
+{
+    return $this->hasMany(ContractRateEditRequest::class, 'contract_id', 'id')
+                ->where('status', 0)
+                ->latest(); // Return the query builder, don't call first here
+}
+
 }

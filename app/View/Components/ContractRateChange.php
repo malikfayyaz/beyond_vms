@@ -7,7 +7,7 @@ use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 use App\Models\CareerOpportunitiesContract;
 
-class ContractExtension extends Component
+class ContractRateChange extends Component
 {
     public $contract;    
     
@@ -16,9 +16,9 @@ class ContractExtension extends Component
      */
     public function __construct(CareerOpportunitiesContract $contract)
     {
-        $this->contract = $contract;
-        $this->contract->contractExtensionRequest = $contract->latestApprovedExtensionRequest();
- 
+        dd('here');
+    $this->contract = $contract;
+    $this->contract->latestRateEditRequest = $contract->latestRateEditRequest();
     }
 
     /**
@@ -26,6 +26,6 @@ class ContractExtension extends Component
      */
     public function render(): View|Closure|string
     {
-        return view('components.contract-extension');
+        return view('components.contract-rate-change');
         }
 }
