@@ -12,4 +12,8 @@ public function createdBy()
     {
         return $this->belongsTo(User::class, 'causer_id', 'id');
     }
+public function careerOpportunity()
+    {
+        return $this->belongsTo(CareerOpportunity::class, 'subject_id' , 'id');
+    }
 }

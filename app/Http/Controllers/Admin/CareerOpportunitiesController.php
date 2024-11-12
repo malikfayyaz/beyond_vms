@@ -250,15 +250,7 @@ class CareerOpportunitiesController extends BaseController
         $vendorRelease = VendorJobRelease::with('vendorName')->where('job_id', $id)->get();
         $admins = Admin::all();
         $clients = Client::all();
-    $activityLogs = $job->activities()->with('createdBy')->get()->map(function($log) {
-    return [
-        'date' => $log->created_at,
-        'title' => $log->title,
-        'description' => $log->description,
-        'author' => $log->createdBy ? $log->createdBy->name : 'No user available',
-        'causer_id' => $log->causer_id,
-    ];
-    });
+        $activityLogs = $job->activities()->with('createdBy')->get();
         return view('admin.career_opportunities.view', compact('job','jobWorkFlow','rejectReasons','vendors','vendorRelease','admins','clients', 'activityLogs'));
     }
 
