@@ -16,7 +16,6 @@ class ContractRateChange extends Component
      */
     public function __construct(CareerOpportunitiesContract $contract)
     {
-        dd('here');
     $this->contract = $contract;
     $this->contract->latestRateEditRequest = $contract->latestRateEditRequest();
     }

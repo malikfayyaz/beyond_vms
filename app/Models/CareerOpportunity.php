@@ -6,15 +6,24 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Carbon\Carbon;
+use Spatie\Activitylog\Traits\LogsActivity;
+use Spatie\Activitylog\LogOptions;
 
 class CareerOpportunity extends Model
 {
-    use SoftDeletes;
-    protected $guarded = [
-        // List attributes you want to guard from mass assignment
-        // e.g., 'id', 'created_at', 'updated_at'
-    ];
-
+    use SoftDeletes, LogsActivity;
+    protected $guarded = [];
+    protected static $logAttributes = ['*']; // Logs all attributes by default
+    protected static $logOnlyDirty = true;     // Logchanged attributes
+    protected static $logName = 'career_opportunity';
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->logAll()
+//            ->logOnlyDirty()
+            ->useLogName('career_opportunity')
+            ->dontLogIfAttributesChangedOnly(['updated_at']);;
+    }
     public static function getStatus($statusId)
     {
         switch ($statusId) {
@@ -165,5 +174,9 @@ class CareerOpportunity extends Model
     public function jobNotes()
     {
         return $this->hasMany(CareerOpportunityNote::class, 'career_opportunity_id', 'id');
+    }
+    public function activities()
+    {
+        return $this->hasMany(Activity::class, 'subject_id', 'id');
     }
 }
