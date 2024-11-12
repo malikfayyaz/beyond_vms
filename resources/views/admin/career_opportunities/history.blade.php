@@ -25,10 +25,32 @@
                         <div class="text-sm text-gray-500 mb-1" x-text="formatDate(item.date)"></div>
                         <div class="flex items-center gap-2 mb-1">
                         <div class="font-medium text-gray-900">Job History</div>                            <div class="font-medium text-gray-900" x-text="item.title"></div>
-                            <button @click="openSidebar(item)"
-                                class="bg-blue-100 text-blue-800 text-xs px-2.5 py-0.5 rounded hidden group-hover:inline-block">
-                                View
-                            </button>
+                <div  x-data="{isOpen: false,
+                showModal: false,
+                modalType: null,
+                selectedUser: 'user',
+                comment: ''
+            }">
+            <a href="javascript:void(0)"
+                @click="isOpen = true;"
+                class="bg-blue-100 text-blue-800 text-xs px-2.5 py-0.5 rounded hidden group-hover:inline-block"
+            >
+                <span class="text-blue-800 font-semibold text-xs">View</span>
+            </a>
+
+                <div
+                x-show="isOpen"
+                x-transition:enter="transition ease-out duration-300"
+                x-transition:enter-start="opacity-0"
+                x-transition:enter-end="opacity-100"
+                x-transition:leave="transition ease-in duration-300"
+                x-transition:leave-start="opacity-100"
+                x-transition:leave-end="opacity-0"
+                @click="isOpen = false"
+                class="fixed inset-0 bg-black bg-opacity-50 z-40"
+                ></div>
+                <x-job-history :job="$job"  />
+                </div>
                         </div>
                         <div class="text-sm text-gray-600">
                             <span x-text="item.description"></span>

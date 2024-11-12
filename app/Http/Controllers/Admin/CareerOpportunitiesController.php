@@ -250,7 +250,7 @@ class CareerOpportunitiesController extends BaseController
         $vendorRelease = VendorJobRelease::with('vendorName')->where('job_id', $id)->get();
         $admins = Admin::all();
         $clients = Client::all();
-$activityLogs = $job->activities()->with('createdBy')->get()->map(function($log) {
+    $activityLogs = $job->activities()->with('createdBy')->get()->map(function($log) {
     return [
         'date' => $log->created_at,
         'title' => $log->title,
@@ -258,8 +258,7 @@ $activityLogs = $job->activities()->with('createdBy')->get()->map(function($log)
         'author' => $log->createdBy ? $log->createdBy->name : 'No user available',
         'causer_id' => $log->causer_id,
     ];
-});        // Optionally, you can dump the data for debugging purposes
-        // dd($activityLogs); // Uncomment to check the data structure
+    });
         return view('admin.career_opportunities.view', compact('job','jobWorkFlow','rejectReasons','vendors','vendorRelease','admins','clients', 'activityLogs'));
     }
 
