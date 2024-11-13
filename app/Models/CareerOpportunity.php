@@ -20,7 +20,7 @@ class CareerOpportunity extends Model
     {
         return LogOptions::defaults()
             ->logAll()
-//            ->logOnlyDirty()
+            ->logOnlyDirty()
             ->useLogName('career_opportunity')
             ->dontLogIfAttributesChangedOnly(['updated_at']);;
     }

@@ -323,7 +323,7 @@ class CareerOpportunitiesController extends BaseController
 
             $job = CareerOpportunity::findOrFail($id);
             $jobTemplate = JobTemplates::findOrFail($validatedData['jobTitle']);
-            $filename = handleFileUpload($request, 'attachment', 'career_opportunities', $job->attachment); // Keep existing if no new file
+            $filename = handleFileUpload($request, 'attachment', 'career_opportunities', $job->attachment);
             if($filename == null || $filename == "") {
                 $filename = $job->attachment;
             }

@@ -9,24 +9,21 @@
     @click.outside="isOpen = false"
     class="fixed inset-y-0 right-0 w-[700px] bg-gray-100 shadow-lg overflow-y-auto z-50 pb-24"
 >
-                            <!-- Top Bar -->
+    <!-- Top Bar -->
     <div class="flex justify-between items-center p-4 bg-gray-800 text-white">
-    <h2 class="text-lg font-semibold">Activity Log ID ({{$log->id}})</h2>
+        <h2 class="text-lg font-semibold">Activity Log ID ({{$log->id}})</h2>
         <button
-        @click="isOpen = false"
-        class="text-gray-500 hover:text-gray-700">
-        <i class="fas fa-times"></i>
+            @click="isOpen = false"
+            class="text-gray-500 hover:text-gray-700">
+            <i class="fas fa-times"></i>
         </button>
+    </div>    
+    <!-- job Details -->
+    <div class="bg-white border rounded-lg">
+        <div class="border-b p-4">
+            <h3 class="text-gray-700 font-medium">{{$log->careerOpportunity->title}} ({{$log->careerOpportunity->id}})</h3>
         </div>
-                                    <!-- Extension Details -->
-                                    <div class="bg-white border rounded-lg">
-                                        <div class="border-b p-4">
-                                            <h3 class="text-gray-700 font-medium">{{$log->careerOpportunity->title}}
-                                            ({{$log->careerOpportunity->id}})
-                                            </h3>
-                                        </div>
-                                    </div>
-
+    </div>
     @php
         $logProperties = json_decode($log->properties, true);
         $oldValues = $logProperties['old'] ?? [];
@@ -41,27 +38,43 @@
             </tr>
         </thead>
         <tbody>
-            @foreach($oldValues as $field => $oldValue)
-                @if(array_key_exists($field, $newValues) && $newValues[$field] !== $oldValue)
+            @if(empty($oldValues))
+                @foreach($newValues as $field => $newValue)
                     <tr>
                         <td class="border px-4 py-2">{{ $field }}</td>
+                        <td class="border px-4 py-2">N/A</td>
                         <td class="border px-4 py-2">
-                            @if(is_array($oldValue) || is_object($oldValue))
-                                <pre>{{ json_encode($oldValue, JSON_PRETTY_PRINT) }}</pre>
+                            @if(is_array($newValue) || is_object($newValue))
+                                <pre>{{ json_encode($newValue, JSON_PRETTY_PRINT) }}</pre>
                             @else
-                                {{ $oldValue }}
-                            @endif
-                        </td>
-                        <td class="border px-4 py-2">
-                            @if(is_array($newValues[$field]) || is_object($newValues[$field]))
-                                <pre>{{ json_encode($newValues[$field], JSON_PRETTY_PRINT) }}</pre>
-                            @else
-                                {{ $newValues[$field] }}
+                                {{ $newValue }}
                             @endif
                         </td>
                     </tr>
-                @endif
-            @endforeach
+                @endforeach
+            @else
+                @foreach($oldValues as $field => $oldValue)
+                    @if(array_key_exists($field, $newValues) && $newValues[$field] !== $oldValue)
+                        <tr>
+                            <td class="border px-4 py-2">{{ $field }}</td>
+                            <td class="border px-4 py-2">
+                                @if(is_array($oldValue) || is_object($oldValue))
+                                    <pre>{{ json_encode($oldValue, JSON_PRETTY_PRINT) }}</pre>
+                                @else
+                                    {{ $oldValue }}
+                                @endif
+                            </td>
+                            <td class="border px-4 py-2">
+                                @if(is_array($newValues[$field]) || is_object($newValues[$field]))
+                                    <pre>{{ json_encode($newValues[$field], JSON_PRETTY_PRINT) }}</pre>
+                                @else
+                                    {{ $newValues[$field] }}
+                                @endif
+                            </td>
+                        </tr>
+                    @endif
+                @endforeach
+            @endif
         </tbody>
     </table>
 </div>
