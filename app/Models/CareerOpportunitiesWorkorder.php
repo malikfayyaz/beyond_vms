@@ -5,14 +5,31 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
+use Spatie\Activitylog\Traits\LogsActivity;
+use Spatie\Activitylog\LogOptions;
 
 class CareerOpportunitiesWorkorder extends Model
 {
+    use HasFactory, LogsActivity;
     protected $table = 'career_opportunities_workorder';
     protected $guarded = [
         // List attributes you want to guard from mass assignment
         // e.g., 'id', 'created_at', 'updated_at'
     ];
+
+    protected static $logAttributes = ['*']; // Logs all attributes by default
+    protected static $logOnlyDirty = true;     // Logchanged attributes
+    protected static $logName = 'workorder';
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->logAll()
+            // ->logOnlyDirty()
+            ->useLogName('workorder')
+            ->dontLogIfAttributesChangedOnly(['updated_at']);
+    }
+
+    
     public function hiringManager()
     {
         return $this->belongsTo(Client::class, 'hiring_manager_id', 'id');

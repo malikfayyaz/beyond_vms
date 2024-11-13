@@ -5,14 +5,29 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
+use Spatie\Activitylog\Traits\LogsActivity;
+use Spatie\Activitylog\LogOptions;
 
 class CareerOpportunitiesOffer extends Model
 {
+    use HasFactory, LogsActivity;
     protected $table = 'career_opportunities_offer';
     protected $guarded = [
         // List attributes you want to guard from mass assignment
         // e.g., 'id', 'created_at', 'updated_at'
     ];
+
+    protected static $logAttributes = ['*']; // Logs all attributes by default
+    protected static $logOnlyDirty = true;     // Logchanged attributes
+    protected static $logName = 'offer';
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->logAll()
+            // ->logOnlyDirty()
+            ->useLogName('offer')
+            ->dontLogIfAttributesChangedOnly(['updated_at']);
+    }
 
     public function consultant()
     {

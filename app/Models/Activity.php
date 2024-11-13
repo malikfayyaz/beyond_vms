@@ -16,4 +16,25 @@ public function careerOpportunity()
     {
         return $this->belongsTo(CareerOpportunity::class, 'subject_id' , 'id');
     }
+
+    public function submission()
+    {
+        return $this->belongsTo(CareerOpportunitySubmission::class, 'subject_id' , 'id');
+    }
+    public function interview()
+    {
+        return $this->belongsTo(CareerOpportunitiesInterview::class, 'subject_id' , 'id');
+    }
+    public function offer()
+    {
+        return $this->belongsTo(CareerOpportunitiesOffer::class, 'subject_id' , 'id');
+    }
+    public function workorder()
+    {
+        return $this->belongsTo(CareerOpportunitiesWorkorder::class, 'subject_id' , 'id');
+    }
+    public function contract()
+    {
+        return $this->belongsTo(CareerOpportunitiesContract::class, 'subject_id' , 'id');
+    }
 }

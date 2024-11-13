@@ -5,17 +5,31 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Spatie\Activitylog\Traits\LogsActivity;
+use Spatie\Activitylog\LogOptions;
 use Carbon\Carbon;
 
 
 class CareerOpportunitySubmission extends Model
 {
-    use SoftDeletes;
+    use SoftDeletes,LogsActivity;
     protected $table = 'career_opportunities_submission';
     protected $guarded = [
         // List attributes you want to guard from mass assignment
         // e.g., 'id', 'created_at', 'updated_at'
     ];
+
+    protected static $logAttributes = ['*']; // Logs all attributes by default
+    protected static $logOnlyDirty = true;     // Logchanged attributes
+    protected static $logName = 'submission';
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->logAll()
+            // ->logOnlyDirty()
+            ->useLogName('submission')
+            ->dontLogIfAttributesChangedOnly(['updated_at']);
+    }
 
     public function consultant()
     {
