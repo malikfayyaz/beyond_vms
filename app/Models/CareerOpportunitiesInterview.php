@@ -4,15 +4,29 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Spatie\Activitylog\Traits\LogsActivity;
+use Spatie\Activitylog\LogOptions;
 
 class CareerOpportunitiesInterview extends Model
 {
-    use HasFactory;
+    use HasFactory, LogsActivity;
 
     protected $guarded = [
         // List attributes you want to guard from mass assignment
         // e.g., 'id', 'created_at', 'updated_at'
     ];
+
+    protected static $logAttributes = ['*']; // Logs all attributes by default
+    protected static $logOnlyDirty = true;     // Logchanged attributes
+    protected static $logName = 'interview';
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->logAll()
+            // ->logOnlyDirty()
+            ->useLogName('interview')
+            ->dontLogIfAttributesChangedOnly(['updated_at']);
+    }
 
     public function consultant()
     {

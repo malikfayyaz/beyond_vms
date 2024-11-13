@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Models\Admin;
+use App\Models\Activity;
 use App\Models\GenericData;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Http\Request;
@@ -156,7 +157,8 @@ class CareerOpportunitiesController extends BaseController
                 ->rawColumns(['action','id', 'title'])
                 ->make(true);
         }
-
+    $logs = Activity::where('log_name', 'career_opportunity')->get();
+//    dd($logs);
         // Logic to get and display catalog items
         return view('admin.career_opportunities.index', compact('counts'));
             }
@@ -240,6 +242,7 @@ class CareerOpportunitiesController extends BaseController
             'currency.symbol',
             'createdBy',
             'glCode',
+            'activities.createdBy',
             'category')->findOrFail($id);
         $jobWorkFlow = JobWorkFlow::where('job_id', $id)->orderby('approval_number', 'ASC')->get();
         $rejectReasons =  Setting::where('category_id', 9)->get();
@@ -247,12 +250,8 @@ class CareerOpportunitiesController extends BaseController
         $vendorRelease = VendorJobRelease::with('vendorName')->where('job_id', $id)->get();
         $admins = Admin::all();
         $clients = Client::all();
-        
-        // Optionally, you can dump the data for debugging purposes
-        // dd($job); // Uncomment to check the data structure
-
-        // Return the view and pass the job data to it
-        return view('admin.career_opportunities.view', compact('job','jobWorkFlow','rejectReasons','vendors','vendorRelease','admins','clients'));
+        $activityLogs = $job->activities()->with('createdBy')->get();
+        return view('admin.career_opportunities.view', compact('job','jobWorkFlow','rejectReasons','vendors','vendorRelease','admins','clients', 'activityLogs'));
     }
 
     /**
@@ -324,7 +323,7 @@ class CareerOpportunitiesController extends BaseController
 
             $job = CareerOpportunity::findOrFail($id);
             $jobTemplate = JobTemplates::findOrFail($validatedData['jobTitle']);
-            $filename = handleFileUpload($request, 'attachment', 'career_opportunities', $job->attachment); // Keep existing if no new file
+            $filename = handleFileUpload($request, 'attachment', 'career_opportunities', $job->attachment);
             if($filename == null || $filename == "") {
                 $filename = $job->attachment;
             }

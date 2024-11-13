@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Blade;
 use App\Services\CareerOpportunitiesOfferService;
 use App\Services\CareerOpportunitiesContractService;
 use App\Services\RateshelpersService;
+use Illuminate\Support\Facades\Schema;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -31,6 +32,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        Schema::defaultStringLength(191);
         //
         // app('router')->pushMiddlewareToGroup('web', \App\Http\Middleware\EnsureRoleIsSelected::class);
     }

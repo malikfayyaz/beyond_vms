@@ -166,6 +166,16 @@
                 <span class="capitalize">PMO Specialist</span>
               </a>
             </li>
+            <li class="flex justify-center">
+              <a
+                @click="tab = 'history'"
+                :class="{ 'border-blue-500 text-blue-500': tab === 'history' }"
+                class="w-full flex justify-center items-center gap-3 hover:bg-white hover:rounded-lg hover:shadow py-4"
+              >
+                <i class="fa-regular fa-file-lines"></i>
+                <span class="capitalize">history</span>
+              </a>
+            </li>
 
 
 
@@ -913,6 +923,9 @@
 
       <div x-show="tab === 'workorder'">
           @include('admin.career_opportunities.workorder')
+      </div>
+      <div x-show="tab === 'history'">
+          @include('admin.career_opportunities.history')
       </div>
       <div x-show="tab === 'notes'" x-data="{
       note: '',
