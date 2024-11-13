@@ -20,5 +20,7 @@ class ContractRatesEditWorkflow extends Model
             default:
                 return 'N/A';
         }
-}
+    }
+
+   
 }

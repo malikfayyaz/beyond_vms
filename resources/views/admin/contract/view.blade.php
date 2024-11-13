@@ -97,7 +97,7 @@
                 @click="isOpen = false"
                 class="fixed inset-0 bg-black bg-opacity-50 z-40"
                 ></div>
-                <x-contract-rate-change :contract="$contract"  />
+                <x-contract-rate-change :rateEditRequest="$contract->latestRateEditRequest()"  />
                 </div>
         @endif
                 <div x-data="{ showModal: false, status: {{ json_encode($contract->termination_status) }} }">

@@ -330,23 +330,77 @@ class CareerOpportunitiesContractService
         }
     }
 
-     /*public function updateAdditionalWorkflow($request){
-        if(isset($request)){
-            $contract = CareerOpportunitiesContract::with([
-            'careerOpportunity',
-            'contractAdditionalBudgetRequest',
-            ])->findOrFail($request->contractId);
-            $additionalBudgetRequest = $contract->contractAdditionalBudgetRequest()
-            ->where('id', $request->rowId)
-            ->firstOrFail();
+    public static function approveCRateWorkflow($workflow,$request_record,$request,$portal,$approved_by,$appRejType){
+      
+        self::acceptCRateWorkflow($workflow, $approved_by, $appRejType, $portal,$request);
+        $nextWorkflow = ContractBudgetWorkflow::where([
+            ['contract_id', '=', $workflow->contract_id],
+            ['status', '=', 'Pending'],
+            ['email_sent', '=', 0]
+        ])
+            ->orderBy('id')
+            ->get();
+        // write query to get all the pending records
 
-            WorkflowProcess::contractSpendWorkflowProcess($model, $model->id, $contract_id,$workorder->wo_hiring_manager);
-
-            Yii::app()->user->setFlash('success', '<div class="alert alert-success"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                               Workflow updated successfully.</div>');
-            $this->redirect(array('contractView','id'=>$contract_id));
-
+        $count = 0;
+        if(count($nextWorkflow)>0){
+            foreach($nextWorkflow as $workflow){
+                if($count == 0){
+                    if($workflow->approval_required == 0 ){ // Just Approve this Record as no Approval Required
+                        self::acceptCRateWorkflow($workflow, $approved_by, $appRejType, $portal,$request);
+                    }else{
+                        $workflow->email_sent = 1;
+                        $workflow->save();
+                        // Mail send code will be added here
+                        $count++;
+                    }
+                }
+            }
+        }else{
+            $request_record->status = 3;
+            $request_record->save(); 
         }
-    }*/
+    }
+
+    protected static function acceptCRateWorkflow($workflow, $userid, $role, $portal, $request){
+
+        $filename = handleFileUpload($request, 'jobAttachment', 'contract_budget_workflow_attachments');
+        $workflow->status = 'Approved'; // Update the status to approved
+        $workflow->approval_notes = $request->note;
+        $workflow->approve_reject_by = $userid;
+        $workflow->approve_reject_type = $role;
+        $workflow->approval_doc = $filename;
+        $workflow->approved_datetime = now();
+        $workflow->approve_reject_from = $portal;
+        $workflow->ip_address = $request->ip();
+        $workflow->machine_user_name = gethostname();
+        $workflow->save();
+
+    }
+
+    public static function RejectCRateWorkflow($approval,$request,$portal,$approved_by,$appRejType){
+        $approval->status = 'Rejected';
+        $approval->approved_by = $approved_by;
+        $approval->rejection_dropdown = $request->reason;
+        $approval->ip_address =$request->ip();
+        $approval->status_time = now();
+        $approval->app_rej_type = $appRejType;
+        $approval->app_rej_from = $portal;
+        $approval->save();
+
+        //other persons record also will be rejected.
+        $otherApproval = ContractRatesEditWorkflow::where([
+            ['request_id', '=', $approval->request_id],
+            ['status', '=', 'Pending']
+        ])
+            ->orderBy('id')
+            ->get();
+        if(!empty($otherApproval)){
+            foreach ($otherApproval as $item){
+                $item->status = 'Rejected';
+                $item->save();
+            }
+        }
+    }
 
 }

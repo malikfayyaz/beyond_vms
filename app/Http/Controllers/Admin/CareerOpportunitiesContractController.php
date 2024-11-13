@@ -298,6 +298,7 @@ class CareerOpportunitiesContractController extends BaseController
      */
     public function update(Request $request, string $id)
     {
+        // dd($request);
         $contractId = $request->contractId;
         $contract = CareerOpportunitiesContract::with('careerOpportunity')->findOrFail($contractId);
         $postType = $request->selectedOption;
@@ -531,7 +532,8 @@ class CareerOpportunitiesContractController extends BaseController
         $contractAdditionalBudget = new ContractAdditionalBudget();
         $contractAdditionalBudget->user_id = Admin::getAdminIdByUserId(auth()->id());
         $contractAdditionalBudget->created_by = 1;
-        $contractAdditionalBudget->created_by_type = 1;
+        $contractAdditionalBudget->created_by_type = 1; 
+        $contractAdditionalBudget->history_id = $editHist->id; 
         $contractAdditionalBudget->contract_id = $contract->id;
         $contractAdditionalBudget->amount = $validatedData['amount'];
         $contractAdditionalBudget->notes = $validatedData['additional_budget_notes'];
@@ -756,7 +758,7 @@ class CareerOpportunitiesContractController extends BaseController
         if($model->save()) {
 
             
-            $currentRates = Rateshelper::returnContractEffectiveRate($workorder->id);
+            $currentRates = Rateshelper::returnContractEffectiveRate($contract->id);
             if($billRate <= $currentRates['bill_rate'] /*||  !ListingUtility::checkSowStatus($workorder->id)*/){
                 $model->status = 3;
                 $model->save();
@@ -814,6 +816,51 @@ class CareerOpportunitiesContractController extends BaseController
             $contractext->save();
             $message = 'Contract Workflow Rejected successfully!';
             session()->flash('success', $message);
+        }
+        return response()->json([
+            'success' => true,
+            'message' => $message,
+            'redirect_url' => route('admin.contracts.show', ['contract' => $contractext->contract_id]),
+        ]);
+
+
+    }
+
+    // ratechange 
+    public function contractRateChangeWorkflow(Request $request)
+    {
+        $actionType = $request->input('actionType');
+        $validated = $request->validate([
+            'rowId' => 'required|integer',
+            'request_id'=>'required|integer',
+            'reason' => 'required_if:actionType,Reject|integer',
+        ]);
+
+        $userid = \Auth::id();
+        $sessionrole = session('selected_role');
+        $appRejdFrom = 'Portal';
+        $appRejBy = checkUserId($userid,$sessionrole);
+        $contractext = ContractRatesEditWorkflow::findOrFail($request->rowId);
+        $request_record = ContractRateEditRequest::findOrFail($request->request_id);
+        if ($actionType == 'Accept') {
+            
+            
+        	contractHelper::contractRateSendEmail($contractext,$request_record,$request,$appRejdFrom,$appRejBy,1);
+            session()->flash('success', $message);
+        } elseif ($actionType == 'Reject') {
+            // $approval = ContractRatesEditApproval::model()->findByPk($request->rowId);
+            if($approval){
+            	contractHelper::RejectCRateWorkflow($contractext,$request_record,$request,$appRejdFrom,$appRejBy,1);
+                $request_record->status = 2;
+                $request_record->rejection_reason = $_POST['reason'];
+                if($request_record->save()){
+                    
+
+                    $message = 'Contract Workflow Rejected successfully!';
+                    session()->flash('success', $message);
+                }
+            }
+            
         }
         return response()->json([
             'success' => true,

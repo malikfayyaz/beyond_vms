@@ -15,7 +15,7 @@
                                 <!-- Top Bar -->
                             <div class="flex justify-between items-center p-4 bg-gray-800 text-white">
 <h2 class="text-lg font-semibold">
-    Contract Rate Change Request ({{ $contract->latestRateEditRequest}})
+    Contract Rate Change Request ({{ $rateEditRequest->id}})
 </h2>
                               <button
                                 @click="isOpen = false"
@@ -35,28 +35,29 @@
                                                 <div class="text-gray-600 mb-3">RATES</div>
                                                 <div class="grid grid-cols-2 gap-6">
                                                     <div class="space-y-2">
-                                                        <div class="line-through text-red-500">RT: $87.50</div>
-                                                        <div class="line-through text-red-500">OT: $86.25</div>
-                                                        <div class="line-through text-red-500">P-RT: $80.00</div>
-                                                        <div class="line-through text-red-500">P-OT: $75.00</div>
-                                                        <div class="text-gray-500">Markup: 0.00</div>
+                                                        <div class="<?= $rateEditRequest->contractEditHistory->bill_rate != $rateEditRequest->bill_rate ? 'line-through' : '' ?> text-red-500">RT: ${{$rateEditRequest->contractEditHistory->bill_rate}}</div>
+                                                        <div class="<?= $rateEditRequest->contractEditHistory->client_overtimerate != $rateEditRequest->client_overtime_payrate ? 'line-through' : '' ?> text-red-500">OT: ${{$rateEditRequest->contractEditHistory->client_overtimerate}}</div>
+                                                        <div class="<?= $rateEditRequest->contractEditHistory->pay_rate != $rateEditRequest->pay_rate ? 'line-through' : '' ?> text-red-500">P-RT: ${{$rateEditRequest->contractEditHistory->pay_rate}}</div>
+                                                        <div class="<?= $rateEditRequest->contractEditHistory->contractor_overtimerate != $rateEditRequest->candidate_overtime_payrate ? 'line-through' : '' ?> text-red-500">P-OT: ${{$rateEditRequest->contractEditHistory->contractor_overtimerate}}</div>
+                                                        <div class="<?= $rateEditRequest->contractEditHistory->markup != $rateEditRequest->markup ? 'line-through' : '' ?> text-red-500">Markup: {{$rateEditRequest->contractEditHistory->markup}}</div>
                                                     </div>
                                                     <div class="space-y-2">
-                                                        <div class="text-green-500">RT: $30.00</div>
-                                                        <div class="text-green-500">OT: $45.00</div>
-                                                        <div class="text-green-500">P-RT: $30.00</div>
-                                                        <div class="text-green-500">P-OT: $45.00</div>
-                                                        <div class="text-gray-500">Markup: 0.00</div>
+                                                        <div class="text-green-500">RT: ${{$rateEditRequest->bill_rate}}</div>
+                                                        <div class="text-green-500">OT: ${{$rateEditRequest->client_overtime_payrate}}</div>
+                                                        <div class="text-green-500">P-RT: ${{$rateEditRequest->pay_rate}}</div>
+                                                        <div class="text-green-500">P-OT: ${{$rateEditRequest->candidate_overtime_payrate}}</div>
+                                                        <div class="text-gray-500">Markup: {{$rateEditRequest->markup}}</div>
                                                     </div>
                                                 </div>
                                             </div>
-
+                                            @php $oldBudget = App\Facades\Rateshelper::budgetAmountWithAddBudgetTillDate($rateEditRequest->contractEditHistory->total_estimated_cost,$rateEditRequest->contract->id,$rateEditRequest->contractEditHistory->id);
+                                                $newBudget = App\Facades\Rateshelper::budgetAmountWithAddBudgetTillDate($rateEditRequest->total_estimated_cost,$rateEditRequest->contract->id,$rateEditRequest->id)  @endphp
                                             <!-- Budget -->
                                             <div class="p-4">
                                                 <div class="text-gray-600 mb-2">BUDGET</div>
                                                 <div class="grid grid-cols-2 gap-6">
-                                                    <div class="line-through text-red-500">$108,500.00</div>
-                                                    <div class="text-green-500">$73,200.00</div>
+                                                    <div class="<?= $oldBudget != $newBudget ? 'line-through' : '' ?> text-red-500">${{$oldBudget}}</div>
+                                                    <div class="text-green-500">${{$newBudget}}</div>
                                                 </div>
                                             </div>
 
@@ -64,23 +65,23 @@
                                             <div class="p-4">
                                                 <div class="grid grid-cols-[120px,1fr,1fr] gap-4">
                                                     <div class="text-gray-600">START DATE</div>
-                                                    <div class="text-gray-700">09/18/2023</div>
-                                                    <div class="text-gray-700">09/18/2023</div>
+                                                    <div class="text-gray-700">{{formatDate($rateEditRequest->contractEditHistory->start_date)}}</div>
+                                                    <div class="text-gray-700">{{formatDate($rateEditRequest->start_date)}}</div>
                                                 </div>
                                             </div>
 
                                             <div class="p-4">
                                                 <div class="grid grid-cols-[120px,1fr,1fr] gap-4">
                                                     <div class="text-gray-600">END DATE</div>
-                                                    <div class="text-gray-700">11/17/2024</div>
-                                                    <div class="text-gray-700">11/17/2024</div>
+                                                    <div class="text-gray-700">{{formatDate($rateEditRequest->contractEditHistory->end_date)}}</div>
+                                                    <div class="text-gray-700">{{formatDate($rateEditRequest->end_date)}}</div>
                                                 </div>
                                             </div>
 
                                             <div class="p-4">
                                                 <div class="grid grid-cols-[120px,1fr] gap-4">
                                                     <div class="text-gray-600">REQUESTED DATE</div>
-                                                    <div class="text-gray-700">07/24/2024</div>
+                                                    <div class="text-gray-700">{{formatDate($rateEditRequest->date_created)}}</div>
                                                 </div>
                                             </div>
                                         </div>
@@ -96,7 +97,7 @@
                                             </svg>
                                             <div>
                                                 <div class="text-gray-600 font-medium">Effective Date</div>
-                                                <div class="text-gray-700">07/24/2024</div>
+                                                <div class="text-gray-700">{{formatDate($rateEditRequest->effective_date)}}</div>
                                             </div>
                                         </div>
                                     </div>
@@ -110,7 +111,7 @@
 
                                     <!-- Approvers Table -->
                         <!-- Table Data -->
-<div x-data="contractWorkflowData({{ $contract->id }})" class="p-[30px] rounded border mt-4">                    <div class="mb-4 flex items-center gap-2">
+<div x-data="contractWorkflowData({{ $rateEditRequest->id }})" class="p-[30px] rounded border mt-4">                    <div class="mb-4 flex items-center gap-2">
                         <i
                             class="fa-regular fa-square-check"
                             :style="{'color': 'var(--primary-color)'}"
@@ -134,14 +135,14 @@
                                 </tr>
                                 </thead>
                                 <tbody class="divide-y divide-gray-200">
-                                @if($contract->RateChangeWorkflow->isEmpty())
+                                @if($rateEditRequest->workflow->isEmpty())
                                     <tr>
                                         <td colspan="9" class="py-4 px-4 text-center text-sm text-gray-600">
                                             No workflows available.
                                         </td>
                                     </tr>
                                 @else
-                @foreach($contract->RateChangeWorkflow as $workflow)
+                @foreach($rateEditRequest->workflow as $workflow)
                     <tr>
                         <td class="py-4 px-4 text-center text-sm">{{ $workflow->hiringManager->full_name }}</td>
                         <td class="py-4 px-4 text-center text-sm">{{ $workflow->approver_type }}</td>
@@ -350,6 +351,7 @@
             currentRowId: null,
             actionType: '',
             contractId: contractId,
+            request_id: "{{ $rateEditRequest->id }}",
             reason: '',
             note: '',
             errors: {},
@@ -374,6 +376,7 @@
                     formData.append('rowId', this.currentRowId);
                     formData.append('contractId', this.contractId);
                     formData.append('actionType', this.actionType);
+                    formData.append('request_id', this.request_id);
 
                     if (this.actionType === 'Reject') {
                         formData.append('reason', this.reason);
@@ -387,7 +390,7 @@
                     }
 
                     // Call the AJAX function (replace ajaxCall with your actual AJAX implementation)
-                    const url = '{{ route('admin.contract.contractBudgetWorkflow') }}';
+                    const url = '{{ route('admin.contract.contractRateChangeWorkflow') }}';
                     ajaxCall(url, 'POST', [[onSuccess, ['response']]], formData);
                 } else {
                     console.log('Form validation failed');

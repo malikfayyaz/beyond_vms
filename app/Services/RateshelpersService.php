@@ -5,6 +5,8 @@ use Illuminate\Support\Facades\DB;
 use App\Models\CareerOpportunitiesContract;
 use App\Models\ContractRate;
 use App\Models\Workorder;
+use App\Models\ContractAdditionalBudget;
+use App\Models\CareerOpportunitiesOffer;
 
 class RateshelpersService
 {
@@ -226,6 +228,37 @@ class RateshelpersService
 
     public static function checkSowStatus($workorder_id) {
             return true;
+    }
+
+    public static function budgetAmountWithAddBudgetTillDate($oldBudget, $contractID, $historyID)
+    {
+        // Retrieve the approved budget sum from ContractAdditionalBudget model
+        $approvedBudget = ContractAdditionalBudget::where('contract_id', $contractID)
+                        ->where('status', 'Approved')
+                        ->where('history_id', '<=', $historyID)
+                        ->sum('amount');
+
+        // Retrieve the contract using Eloquent
+        $contract = CareerOpportunitiesContract::find($contractID);
+
+        // Retrieve the offer related to the contract
+        $offerOtherAmount = $contract ? CareerOpportunitiesOffer::find($contract->offer_id) : null;
+
+        // Calculate the additional budget
+        $additional_budget = $approvedBudget ?? 0;
+
+        // Calculate the final budget
+        $finalBudget = $oldBudget + $additional_budget;
+
+        // If offer and job_other_amount exist, include them in the budget calculation
+        if ($offerOtherAmount) {
+            $finalBudget += $offerOtherAmount->overtime_hours_cost ?? 0;
+            $finalBudget += $offerOtherAmount->expense_cost ?? 0;
+        } elseif ($contract && $contract->job_other_amount) {
+            $finalBudget += $contract->job_other_amount;
+        }
+
+        return $finalBudget;
     }
 
 

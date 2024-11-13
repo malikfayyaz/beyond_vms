@@ -118,9 +118,10 @@ class CareerOpportunitiesContract extends Model
     }
 public function latestRateEditRequest()
 {
-    return $this->hasMany(ContractRateEditRequest::class, 'contract_id', 'id')
-                ->where('status', 0)
-                ->latest(); // Return the query builder, don't call first here
+    return  $this->hasOne(ContractRateEditRequest::class, 'contract_id', 'id')
+            ->whereIn('status', [0, 3])
+            ->latest()
+            ->first();
 }
 
 }

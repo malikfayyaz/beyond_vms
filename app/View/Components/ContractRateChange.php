@@ -5,20 +5,26 @@ namespace App\View\Components;
 use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
-use App\Models\CareerOpportunitiesContract;
+use App\Models\ContractRateEditRequest;
 
 class ContractRateChange extends Component
 {
-    public $contract;    
+    public $rateEditRequest;    
     
     /**
      * Create a new component instance.
      */
-    public function __construct(CareerOpportunitiesContract $contract)
+    public function __construct(ContractRateEditRequest $rateEditRequest)
     {
-        dd('here');
-    $this->contract = $contract;
-    $this->contract->latestRateEditRequest = $contract->latestRateEditRequest();
+        
+    $this->rateEditRequest = $rateEditRequest;
+    
+    $this->rateEditRequest->contract = $rateEditRequest->contract;
+    $this->rateEditRequest->history = $rateEditRequest->contractEditHistory;
+    $this->rateEditRequest->workflow = $rateEditRequest->contractRatesEditWorkflow;
+    
+    // dd($this->rateEditRequest);
+   
     }
 
     /**
