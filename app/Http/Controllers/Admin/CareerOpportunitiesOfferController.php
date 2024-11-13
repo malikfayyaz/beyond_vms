@@ -198,7 +198,7 @@ class CareerOpportunitiesOfferController extends BaseController
     // Show a specific career opportunity offer
     public function show($id)
     { 
-        $logs = Activity::where('subject_id', $id)->where('log_name', 'offer')->orderBy('created_at', 'desc')->get();
+        $logs = Activity::where('subject_id', $id)->where('log_name', 'offer')->latest()->get();
         $candidateIds = $logs->pluck('properties.attributes.candidate_id')->unique();
         $hiringManagerIds = $logs->pluck('properties.attributes.hiring_manager_id')->unique();
         $vendorIds = $logs->pluck('properties.attributes.vendor_id')->unique();

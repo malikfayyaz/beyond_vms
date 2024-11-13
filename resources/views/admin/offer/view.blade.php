@@ -555,9 +555,9 @@
                     Offer History
                   </h2>
                 </div>
-                <div x-data="catalogTable()">
+                <div x-data="catalogTable()" style="overflow: scroll;">
                   <table
-                    class="min-w-full bg-white shadow-md rounded-lg overflow-hidden"
+                    class="min-w-full bg-white shadow-md rounded-lg overflow-hidden" style="width: max-content;"
                   >
                     <thead class="bg-gray-200 text-gray-700">
                       <tr>
@@ -712,30 +712,7 @@
                       </template>
                     </tbody>
                   </table>
-                  <div class="flex justify-center items-center space-x-2 mt-4">
-                    <!-- Previous Button -->
-                    <button 
-                      @click="currentPage = Math.max(1, currentPage - 1)" 
-                      :disabled="currentPage === 1"
-                      class="px-3 py-2 bg-gray-200 text-gray-600 rounded-md hover:bg-gray-300 disabled:opacity-50"
-                    >
-                      <i class="fas fa-chevron-left"></i> <!-- Font Awesome icon for left arrow -->
-                    </button>
-
-                    <!-- Page Indicator -->
-                    <span class="text-lg font-medium">
-                      Page <span x-text="currentPage"></span> of <span x-text="Math.ceil(items.length / itemsPerPage)"></span>
-                    </span>
-
-                    <!-- Next Button -->
-                    <button 
-                      @click="currentPage = Math.min(Math.ceil(items.length / itemsPerPage), currentPage + 1)" 
-                      :disabled="currentPage === Math.ceil(items.length / itemsPerPage)"
-                      class="px-3 py-2 bg-gray-200 text-gray-600 rounded-md hover:bg-gray-300 disabled:opacity-50"
-                    >
-                      <i class="fas fa-chevron-right"></i> <!-- Font Awesome icon for right arrow -->
-                    </button>
-                  </div>
+                  
                 </div>
               </div>
             </div>
@@ -745,7 +722,7 @@
     <script>
       function catalogTable() {
         const logs = @json($logs);
-        console.log(logs);
+        
         return {
             items: logs.map(log => ({
                 id: log.id,  // Log ID
