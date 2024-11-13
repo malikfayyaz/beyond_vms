@@ -30,7 +30,7 @@ class CareerOpportunitiesSubmissionController extends Controller
         ];
         if ($request->ajax()) {
 
-            $submissions = CareerOpportunitySubmission::with(['consultant','vendor','careerOpportunity.hiringManager','location']);
+            $submissions = CareerOpportunitySubmission::with(['consultant','vendor','careerOpportunity.hiringManager','location']) ->latest();
                 
                 if ($request->has('type')) {
                     $type = $request->input('type');
