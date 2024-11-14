@@ -395,7 +395,7 @@ class CareerOpportunitiesContractService
             $contractRate->effective_date = $request_record->effective_date;
             $contractRate->request_type = 1;
             $contractRate->history_id = $request_record->history_id;
-            $contractRate->date_created = now();
+            // $contractRate->date_created = now();
             $contractRate->save();
         }
     }
