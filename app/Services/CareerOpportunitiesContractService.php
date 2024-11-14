@@ -418,12 +418,13 @@ class CareerOpportunitiesContractService
 
     public static function RejectCRateWorkflow($approval,$request,$portal,$approved_by,$appRejType){
         $approval->status = 'Rejected';
-        $approval->approved_by = $approved_by;
-        $approval->rejection_dropdown = $request->reason;
+        $approval->approve_reject_by = $approved_by;
+        $approval->rejection_id = $request->reason;
         $approval->ip_address =$request->ip();
         $approval->status_time = now();
-        $approval->app_rej_type = $appRejType;
-        $approval->app_rej_from = $portal;
+        $approval->approve_reject_type = $appRejType;
+        $approval->approve_reject_from = $portal;
+        $approval->machine_user_name = gethostname();
         $approval->save();
 
         //other persons record also will be rejected.

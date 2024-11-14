@@ -852,9 +852,9 @@ class CareerOpportunitiesContractController extends BaseController
         } elseif ($actionType == 'Reject') {
             // $approval = ContractRatesEditApproval::model()->findByPk($request->rowId);
             if($contractext){
-            	contractHelper::RejectCRateWorkflow($contractext,$request_record,$request,$appRejdFrom,$appRejBy,1);
+            	contractHelper::RejectCRateWorkflow($contractext,$request,$appRejdFrom,$appRejBy,1);
                 $request_record->status = 2;
-                $request_record->rejection_reason = $_POST['reason'];
+                $request_record->rejection_reason = $request->reason;
                 if($request_record->save()){
                     
 
