@@ -27,6 +27,7 @@ use App\Models\ContractEditHistory;
 use App\Models\TimesheetProject;
 use App\Models\ContractRateEditRequest;
 use App\Models\CareerOpportunitiesBu;
+use App\Models\ContractRatesEditWorkflow;
 
 
 class CareerOpportunitiesContractController extends BaseController
@@ -845,7 +846,8 @@ class CareerOpportunitiesContractController extends BaseController
         if ($actionType == 'Accept') {
             
             
-        	contractHelper::contractRateSendEmail($contractext,$request_record,$request,$appRejdFrom,$appRejBy,1);
+        	contractHelper::approveCRateWorkflow($contractext,$request_record,$request,$appRejdFrom,$appRejBy,1);
+            $message = 'Contract Workflow Approved successfully!';
             session()->flash('success', $message);
         } elseif ($actionType == 'Reject') {
             // $approval = ContractRatesEditApproval::model()->findByPk($request->rowId);

@@ -11,6 +11,15 @@ class ContractRateEditRequest extends Model
         // List attributes you want to guard from mass assignment
         // e.g., 'id', 'created_at', 'updated_at'
     ];
+
+    public static function getContractRateUpdateStatus() {
+        return array(
+            '0' => 'Pending',
+            '1' => 'Approved',
+            '2' => 'Rejected',
+            '3' => 'Vendor Approval',
+        );
+    }
     
 
     public function contract()

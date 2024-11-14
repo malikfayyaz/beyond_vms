@@ -27,6 +27,8 @@
                                     <div class="bg-white border rounded-lg">
                                         <div class="border-b p-4">
                                             <h3 class="text-gray-700 font-medium">Assignment Information</h3>
+                                            @php $currentstatus = $rateEditRequest->getContractRateUpdateStatus(); @endphp
+                                            <p>{{$currentstatus[$rateEditRequest->status]}}</p>
                                         </div>
 
                                         <!-- Rates Section -->
@@ -146,7 +148,7 @@
                     <tr>
                         <td class="py-4 px-4 text-center text-sm">{{ $workflow->hiringManager->full_name }}</td>
                         <td class="py-4 px-4 text-center text-sm">{{ $workflow->approver_type }}</td>
-                        <td class="py-4 px-4 text-center text-sm">{{ $workflow->approved_datetime ?? 'N/A' }}</td>
+                        <td class="py-4 px-4 text-center text-sm">{{ formatDateTime($workflow->approved_datetime)}}</td>
                         <td class="py-4 px-4 text-center text-sm">
                             <div class="flex space-x-2">
                                 @if ($workflow->status == 'Approved')
