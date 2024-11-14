@@ -579,7 +579,7 @@
                           </span>
                         </th>
                         <th
-                          @click="sort('category')"
+                          @click="sort('candidate')"
                           class="py-3 px-4 text-left cursor-pointer"
                         >
                           Contractor Name
@@ -595,7 +595,7 @@
                           </span>
                         </th>
                         <th
-                          @click="sort('profileWorkerType')"
+                          @click="sort('jobID')"
                           class="py-3 px-4 text-left cursor-pointer"
                         >
                           Job ID
@@ -611,7 +611,7 @@
                           </span>
                         </th>
                         <th
-                          @click="sort('status')"
+                          @click="sort('hiringManager')"
                           class="py-3 px-4 text-left cursor-pointer"
                         >
                           Hiring Manager
@@ -627,7 +627,7 @@
                           </span>
                         </th>
                         <th
-                          @click="sort('status')"
+                          @click="sort('vendor')"
                           class="py-3 px-4 text-left cursor-pointer"
                         >
                           Vendor
@@ -643,7 +643,7 @@
                           </span>
                         </th>
                         <th
-                          @click="sort('status')"
+                          @click="sort('date')"
                           class="py-3 px-4 text-left cursor-pointer"
                         >
                           Offer Date
@@ -659,7 +659,7 @@
                           </span>
                         </th>
                         <th
-                          @click="sort('status')"
+                          @click="sort('offerBillRate')"
                           class="py-3 px-4 text-left cursor-pointer"
                         >
                           Bill Rate

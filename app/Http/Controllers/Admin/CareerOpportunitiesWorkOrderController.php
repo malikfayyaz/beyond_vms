@@ -9,9 +9,14 @@ use App\Models\CareerOpportunitySubmission;
 use App\Models\CareerOpportunity;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Admin;
+use App\Models\Client;
+use App\Models\Vendor;
+use App\Models\Consultant;
 use App\Models\Setting;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
+use Spatie\Activitylog\Models\Activity;
+
 
 class CareerOpportunitiesWorkOrderController extends Controller
 {
@@ -119,9 +124,58 @@ class CareerOpportunitiesWorkOrderController extends Controller
     }    //
     public function show($id)
     {
+        $logs = Activity::where('subject_id', $id)->where('log_name', 'workorder')->latest()->get();
+        $candidateIds = $logs->pluck('properties.attributes.candidate_id')->unique();
+        $hiringManagerIds = $logs->pluck('properties.attributes.hiring_manager_id')->unique();
+        $vendorIds = $logs->pluck('properties.attributes.vendor_id')->unique();
+    
+        // Load all relevant consultants, clients, and vendors
+        $candidates = Consultant::whereIn('id', $candidateIds)->get()->keyBy('id');
+        $hiringManagers = Client::whereIn('id', $hiringManagerIds)->get()->keyBy('id');
+        $vendors = Vendor::whereIn('id', $vendorIds)->get()->keyBy('id');
+
+        foreach ($logs as $log)
+        {
+           $attributes = $log->properties['attributes'];
+
+            // Candidate Name
+            $candidateId = $attributes['candidate_id'];
+            if (isset($candidates[$candidateId])) {
+                $attributes['candidate_name'] = $candidates[$candidateId]->full_name;
+            }
+
+            // Hiring Manager Name
+            $hiring_mID = $attributes['hiring_manager_id'];
+            if (isset($hiringManagers[$hiring_mID])) {
+                $attributes['hiring_manager_name'] = $hiringManagers[$hiring_mID]->full_name;
+            }
+
+            // Vendor Name
+            $vendorID = $attributes['vendor_id'];
+            if (isset($vendors[$vendorID])) {
+                $attributes['vendor_name'] = $vendors[$vendorID]->full_name;
+            }
+
+            // Status Name
+            $statusID = $attributes['status'];
+            $status_name = CareerOpportunitiesWorkorder::getWorkorderStatus($statusID);
+            if ($status_name) {
+                $attributes['status_name'] = $status_name;
+            }
+
+            // Job Type Title
+            $jobTypeID = $attributes['job_type'];
+            $jobType = CareerOpportunitiesWorkorder::find($jobTypeID)?->jobType;
+            if ($jobType) {
+                $attributes['job_type_title'] = $jobType->title;
+            }
+            
+            $log->properties = array_merge($log->properties->toArray(), ['attributes' => $attributes]); // Update properties
+            // dd($log->properties['attributes']);
+        }
         $workorder = CareerOpportunitiesWorkorder::findOrFail($id);
         $rejectReasons =  Setting::where('category_id', 27)->get();        
-        return view('admin.workorder.view', compact('workorder','rejectReasons'));
+        return view('admin.workorder.view', compact('workorder','rejectReasons','logs'));
     }
 public function withdrawWorkorder(Request $request)
 {

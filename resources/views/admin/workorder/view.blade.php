@@ -971,154 +971,139 @@
                 Workorder History
               </h2>
             </div>
-            <div x-data="workOrderHistory()">
+            <div x-data="workOrderHistory()" style="overflow: scroll;">
               <table
-                class="min-w-full bg-white shadow-md rounded-lg overflow-hidden"
+                class="min-w-full bg-white shadow-md rounded-lg overflow-hidden" style="width: max-content;"
               >
                 <thead class="bg-gray-200 text-gray-700">
                   <tr>
                     <th class="py-3 px-4 text-left">Status</th>
                     <th
-                      @click="sort('catalogName')"
+                      @click="sort('offerID')"
                       class="py-3 px-4 text-left cursor-pointer"
                     >
                       Offer ID
                       <span class="ml-1">
                         <i
                           class="fas fa-sort-up"
-                          :class="{'text-blue-500': sortColumn === 'catalogName' && sortDirection === 'asc'}"
+                          :class="{'text-blue-500': sortColumn === 'offerID' && sortDirection === 'asc'}"
                         ></i>
                         <i
                           class="fas fa-sort-down"
-                          :class="{'text-blue-500': sortColumn === 'catalogName' && sortDirection === 'desc'}"
+                          :class="{'text-blue-500': sortColumn === 'offerID' && sortDirection === 'desc'}"
                         ></i>
                       </span>
                     </th>
                     <th
-                      @click="sort('category')"
+                      @click="sort('candidate')"
                       class="py-3 px-4 text-left cursor-pointer"
                     >
                       Contractor Name
                       <span class="ml-1">
                         <i
                           class="fas fa-sort-up"
-                          :class="{'text-blue-500': sortColumn === 'category' && sortDirection === 'asc'}"
+                          :class="{'text-blue-500': sortColumn === 'candidate' && sortDirection === 'asc'}"
                         ></i>
                         <i
                           class="fas fa-sort-down"
-                          :class="{'text-blue-500': sortColumn === 'category' && sortDirection === 'desc'}"
+                          :class="{'text-blue-500': sortColumn === 'candidate' && sortDirection === 'desc'}"
                         ></i>
                       </span>
                     </th>
                     <th
-                      @click="sort('profileWorkerType')"
+                      @click="sort('jobID')"
                       class="py-3 px-4 text-left cursor-pointer"
                     >
                       Job ID
                       <span class="ml-1">
                         <i
                           class="fas fa-sort-up"
-                          :class="{'text-blue-500': sortColumn === 'profileWorkerType' && sortDirection === 'asc'}"
+                          :class="{'text-blue-500': sortColumn === 'jobID' && sortDirection === 'asc'}"
                         ></i>
                         <i
                           class="fas fa-sort-down"
-                          :class="{'text-blue-500': sortColumn === 'profileWorkerType' && sortDirection === 'desc'}"
+                          :class="{'text-blue-500': sortColumn === 'jobID' && sortDirection === 'desc'}"
                         ></i>
                       </span>
                     </th>
                     <th
-                      @click="sort('status')"
+                      @click="sort('hiringManager')"
                       class="py-3 px-4 text-left cursor-pointer"
                     >
                       Hiring Manager
                       <span class="ml-1">
                         <i
                           class="fas fa-sort-up"
-                          :class="{'text-blue-500': sortColumn === 'status' && sortDirection === 'asc'}"
+                          :class="{'text-blue-500': sortColumn === 'hiringManager' && sortDirection === 'asc'}"
                         ></i>
                         <i
                           class="fas fa-sort-down"
-                          :class="{'text-blue-500': sortColumn === 'status' && sortDirection === 'desc'}"
+                          :class="{'text-blue-500': sortColumn === 'hiringManager' && sortDirection === 'desc'}"
                         ></i>
                       </span>
                     </th>
                     <th
-                      @click="sort('status')"
+                      @click="sort('vendor')"
                       class="py-3 px-4 text-left cursor-pointer"
                     >
                       Vendor
                       <span class="ml-1">
                         <i
                           class="fas fa-sort-up"
-                          :class="{'text-blue-500': sortColumn === 'status' && sortDirection === 'asc'}"
+                          :class="{'text-blue-500': sortColumn === 'vendor' && sortDirection === 'asc'}"
                         ></i>
                         <i
                           class="fas fa-sort-down"
-                          :class="{'text-blue-500': sortColumn === 'status' && sortDirection === 'desc'}"
+                          :class="{'text-blue-500': sortColumn === 'vendor' && sortDirection === 'desc'}"
                         ></i>
                       </span>
                     </th>
                     <th
-                      @click="sort('status')"
+                      @click="sort('date')"
                       class="py-3 px-4 text-left cursor-pointer"
                     >
-                      Offer Date
+                      Start Date
                       <span class="ml-1">
                         <i
                           class="fas fa-sort-up"
-                          :class="{'text-blue-500': sortColumn === 'status' && sortDirection === 'asc'}"
+                          :class="{'text-blue-500': sortColumn === 'date' && sortDirection === 'asc'}"
                         ></i>
                         <i
                           class="fas fa-sort-down"
-                          :class="{'text-blue-500': sortColumn === 'status' && sortDirection === 'desc'}"
+                          :class="{'text-blue-500': sortColumn === 'date' && sortDirection === 'desc'}"
                         ></i>
                       </span>
                     </th>
                     <th
-                      @click="sort('status')"
+                      @click="sort('billRate')"
                       class="py-3 px-4 text-left cursor-pointer"
                     >
                       Bill Rate
                       <span class="ml-1">
                         <i
                           class="fas fa-sort-up"
-                          :class="{'text-blue-500': sortColumn === 'status' && sortDirection === 'asc'}"
+                          :class="{'text-blue-500': sortColumn === 'billRate' && sortDirection === 'asc'}"
                         ></i>
                         <i
                           class="fas fa-sort-down"
-                          :class="{'text-blue-500': sortColumn === 'status' && sortDirection === 'desc'}"
+                          :class="{'text-blue-500': sortColumn === 'billRate' && sortDirection === 'desc'}"
                         ></i>
                       </span>
                     </th>
+
                     <th
-                      @click="sort('status')"
-                      class="py-3 px-4 text-left cursor-pointer"
-                    >
-                      Workorder Status
-                      <span class="ml-1">
-                        <i
-                          class="fas fa-sort-up"
-                          :class="{'text-blue-500': sortColumn === 'status' && sortDirection === 'asc'}"
-                        ></i>
-                        <i
-                          class="fas fa-sort-down"
-                          :class="{'text-blue-500': sortColumn === 'status' && sortDirection === 'desc'}"
-                        ></i>
-                      </span>
-                    </th>
-                    <th
-                      @click="sort('status')"
+                      @click="sort('jobType')"
                       class="py-3 px-4 text-left cursor-pointer"
                     >
                       Worker Type
                       <span class="ml-1">
                         <i
                           class="fas fa-sort-up"
-                          :class="{'text-blue-500': sortColumn === 'status' && sortDirection === 'asc'}"
+                          :class="{'text-blue-500': sortColumn === 'jobType' && sortDirection === 'asc'}"
                         ></i>
                         <i
                           class="fas fa-sort-down"
-                          :class="{'text-blue-500': sortColumn === 'status' && sortDirection === 'desc'}"
+                          :class="{'text-blue-500': sortColumn === 'jobType' && sortDirection === 'desc'}"
                         ></i>
                       </span>
                     </th>
@@ -1128,19 +1113,15 @@
                 <tbody>
                   <template x-for="item in paginatedItems" :key="item.id">
                     <tr class="border-b border-gray-200 hover:bg-gray-100">
-                      <td class="py-3 px-4" x-text="item.id"></td>
-                      <td class="py-3 px-4" x-text="item.catalogName"></td>
-                      <td class="py-3 px-4" x-text="item.category"></td>
-                      <td class="py-3 px-4" x-text="item.category"></td>
-                      <td class="py-3 px-4" x-text="item.category"></td>
-                      <td class="py-3 px-4" x-text="item.category"></td>
-                      <td class="py-3 px-4" x-text="item.category"></td>
-                      <td class="py-3 px-4" x-text="item.category"></td>
-                      <td
-                        class="py-3 px-4"
-                        x-text="item.profileWorkerType"
-                      ></td>
-                      <td class="py-3 px-4" x-text="item.status"></td>
+                          <td class="py-3 px-4" x-text="item.status"></td>
+                          <td class="py-3 px-4" x-text="item.offerID"></td>
+                          <td class="py-3 px-4" x-text="item.candidate"></td>
+                          <td class="py-3 px-4" x-text="item.jobID"></td>
+                          <td class="py-3 px-4" x-text="item.hiringManager"></td>
+                          <td class="py-3 px-4" x-text="item.vendor"></td>
+                          <td class="py-3 px-4" x-text="item.date"></td>
+                          <td class="py-3 px-4" x-text="item.billRate"></td>
+                        <td class="py-3 px-4" x-text="item.jobType"></td>
                       <td class="py-3 px-4">
                         <button
                           class="text-blue-500 hover:text-blue-700 mr-2 bg-transparent hover:bg-transparent"
@@ -1348,132 +1329,45 @@
       });
 
       function workOrderHistory() {
+        const logs = @json($logs);
         return {
-          items: Array.from({ length: 200 }, (_, i) => ({
-            id: i + 1,
-            catalogName: `Catalog ${String.fromCharCode(65 + (i % 26))}`,
-            category: ["Electronics", "Books", "Clothing", "Home", "Sports"][
-              i % 5
-            ],
-            profileWorkerType: ["Full-time", "Part-time", "Contract"][i % 3],
-            status: i % 2 === 0 ? "Active" : "Inactive",
-          })),
-          sortColumn: "id",
-          sortDirection: "asc",
-          itemsPerPage: 10,
-          customItemsPerPage: 10,
-          currentPage: 1,
-          itemsPerPageControl() {
-            return `
-                          <div class="flex items-center gap-4">
-                              <label for="itemsPerPage" class="mr-2">Items per page:</label>
-                              <select id="itemsPerPage" x-model="itemsPerPage" @change="updatePagination()" class="border rounded px-2 py-1 mr-2">
-                                  <option>10</option>
-                                  <option>20</option>
-                                  <option>30</option>
-                                  <option>40</option>
-                                  <option>50</option>
-                                  <option>100</option>
-                                  <option value="custom">Custom</option>
-                              </select>
-                              <div x-show="itemsPerPage === 'custom'" class="flex items-center">
-                                  <input
-                                      type="number"
-                                      x-model.number="customItemsPerPage"
-                                      @input="updateCustomPagination()"
-                                      min="1"
-                                      class="border rounded px-2 py-1 w-20"
-                                      placeholder="Enter"
-                                  >
-                              </div>
-                          <div>
-                      `;
-          },
-          sort(column) {
-            if (this.sortColumn === column) {
-              this.sortDirection =
-                this.sortDirection === "asc" ? "desc" : "asc";
-            } else {
-              this.sortColumn = column;
-              this.sortDirection = "asc";
-            }
-          },
-          getItemsPerPage() {
-            return this.itemsPerPage === "custom"
-              ? this.customItemsPerPage
-              : parseInt(this.itemsPerPage);
-          },
-          get sortedItems() {
-            return [...this.items].sort((a, b) => {
-              let modifier = this.sortDirection === "asc" ? 1 : -1;
-              if (a[this.sortColumn] < b[this.sortColumn]) return -1 * modifier;
-              if (a[this.sortColumn] > b[this.sortColumn]) return 1 * modifier;
-              return 0;
-            });
-          },
-          get paginatedItems() {
-            const startIndex = (this.currentPage - 1) * this.getItemsPerPage();
-            return this.sortedItems.slice(
-              startIndex,
-              startIndex + this.getItemsPerPage()
-            );
-          },
-          get totalPages() {
-            return Math.ceil(this.items.length / this.getItemsPerPage());
-          },
-          get visiblePageNumbers() {
-            const totalPageCount = this.totalPages;
-            const current = this.currentPage;
-            let start = Math.max(1, current - 3);
-            let end = Math.min(totalPageCount, start + 7);
+          items: logs.map(log => ({
+                id: log.id,  // Log ID
+                status: log.properties.attributes.status_name,
+                offerID: log.properties.attributes.offer_id, // Example usage of status for catalog name
+                candidate: log.properties.attributes.candidate_name, 
+                jobID: log.properties.attributes.career_opportunity_id, 
+                hiringManager: log.properties.attributes.hiring_manager_name, 
+                vendor: log.properties.attributes.vendor_name, 
+                date: log.properties.attributes.start_date, 
+                billRate: log.properties.attributes.wo_bill_rate, 
+                jobType: log.properties.attributes.job_type_title, 
+                
+                  // Using status from the logs
+            })),
+            sortColumn: "id",
+            sortDirection: "asc",
+            itemsPerPage: 10,
+            currentPage: 1,
+            get paginatedItems() {
+              const start = (this.currentPage - 1) * this.itemsPerPage;
+              const end = start + this.itemsPerPage;
+              return this.items.slice(start, end);
+            },
+            
+            deleteItem(id) {
+            //  alert(id);
+            },
 
-            if (end - start < 7) {
-              start = Math.max(1, end - 7);
-            }
-
-            return Array.from({ length: end - start + 1 }, (_, i) => start + i);
-          },
-          get showBackwardIcon() {
-            return this.currentPage > 4;
-          },
-
-          get showForwardIcon() {
-            return this.currentPage < this.totalPages - 3;
-          },
-
-          movePages(direction) {
-            const newPage = this.currentPage + direction * 1;
-            this.goToPage(Math.max(1, Math.min(newPage, this.totalPages)));
-          },
-          prevPage() {
-            if (this.currentPage > 1) {
-              this.currentPage--;
-            }
-          },
-          nextPage() {
-            if (this.currentPage < this.totalPages) {
-              this.currentPage++;
-            }
-          },
-          goToPage(page) {
-            this.currentPage = page;
-          },
-          deleteItem(id) {
-            this.items = this.items.filter((item) => item.id !== id);
-            this.updatePagination();
-          },
-          updatePagination() {
-            this.currentPage = 1;
-          },
-          updateCustomPagination() {
-            if (this.customItemsPerPage < 1) {
-              this.customItemsPerPage = 1;
-            }
-          },
-          applyCustomPagination() {
-            this.itemsPerPage = "custom";
-            this.updatePagination();
-          },
+            sort(column) {
+              if (this.sortColumn === column) {
+                this.sortDirection =
+                  this.sortDirection === "asc" ? "desc" : "asc";
+              } else {
+                this.sortColumn = column;
+                this.sortDirection = "asc";
+              }
+            },
         };
       }
     </script>
