@@ -6,7 +6,7 @@
 
     <div class="ml-16">
         @include('vendor.layouts.partials.header')
-        <div class="ml-16">
+        <div class="">
 
             <div class="bg-white mx-4 my-8 rounded p-8">
             @include('vendor.layouts.partials.alerts')
@@ -499,7 +499,214 @@
                         </div>
                     </div>
                 </div>
+                <div
+                    class="p-[30px] rounded border mt-4"
+                    :style="{'border-color': 'var(--primary-color)'}"
+                    >
+                    <div class="mb-4 flex items-center gap-2">
+                    <i
+                        class="fa-solid fa-clock-rotate-left"
+                        :style="{'color': 'var(--primary-color)'}"
+                    ></i>
+                    <h2
+                        class="text-xl font-bold"
+                        :style="{'color': 'var(--primary-color)'}"
+                    >
+                        Workorder History
+                    </h2>
+                    </div>
+                    <div x-data="workOrderHistory()" style="overflow: scroll;">
+                    <table
+                        class="min-w-full bg-white shadow-md rounded-lg overflow-hidden" style="width: max-content;"
+                    >
+                        <thead class="bg-gray-200 text-gray-700">
+                        <tr>
+                            <th class="py-3 px-4 text-left">Status</th>
+                            <th
+                            @click="sort('workOrID')"
+                            class="py-3 px-4 text-left cursor-pointer"
+                            >
+                            Workorder ID
+                            <span class="ml-1">
+                                <i
+                                class="fas fa-sort-up"
+                                :class="{'text-blue-500': sortColumn === 'workOrID' && sortDirection === 'asc'}"
+                                ></i>
+                                <i
+                                class="fas fa-sort-down"
+                                :class="{'text-blue-500': sortColumn === 'workOrID' && sortDirection === 'desc'}"
+                                ></i>
+                            </span>
+                            </th>
+                            <th
+                            @click="sort('candidate')"
+                            class="py-3 px-4 text-left cursor-pointer"
+                            >
+                            Contractor Name
+                            <span class="ml-1">
+                                <i
+                                class="fas fa-sort-up"
+                                :class="{'text-blue-500': sortColumn === 'candidate' && sortDirection === 'asc'}"
+                                ></i>
+                                <i
+                                class="fas fa-sort-down"
+                                :class="{'text-blue-500': sortColumn === 'candidate' && sortDirection === 'desc'}"
+                                ></i>
+                            </span>
+                            </th>
+                            <th
+                            @click="sort('jobID')"
+                            class="py-3 px-4 text-left cursor-pointer"
+                            >
+                            Job ID
+                            <span class="ml-1">
+                                <i
+                                class="fas fa-sort-up"
+                                :class="{'text-blue-500': sortColumn === 'jobID' && sortDirection === 'asc'}"
+                                ></i>
+                                <i
+                                class="fas fa-sort-down"
+                                :class="{'text-blue-500': sortColumn === 'jobID' && sortDirection === 'desc'}"
+                                ></i>
+                            </span>
+                            </th>
+                            <th
+                            @click="sort('hiringManager')"
+                            class="py-3 px-4 text-left cursor-pointer"
+                            >
+                            Hiring Manager
+                            <span class="ml-1">
+                                <i
+                                class="fas fa-sort-up"
+                                :class="{'text-blue-500': sortColumn === 'hiringManager' && sortDirection === 'asc'}"
+                                ></i>
+                                <i
+                                class="fas fa-sort-down"
+                                :class="{'text-blue-500': sortColumn === 'hiringManager' && sortDirection === 'desc'}"
+                                ></i>
+                            </span>
+                            </th>
+                            <th
+                            @click="sort('vendor')"
+                            class="py-3 px-4 text-left cursor-pointer"
+                            >
+                            Vendor
+                            <span class="ml-1">
+                                <i
+                                class="fas fa-sort-up"
+                                :class="{'text-blue-500': sortColumn === 'vendor' && sortDirection === 'asc'}"
+                                ></i>
+                                <i
+                                class="fas fa-sort-down"
+                                :class="{'text-blue-500': sortColumn === 'vendor' && sortDirection === 'desc'}"
+                                ></i>
+                            </span>
+                            </th>
+                            <th
+                            @click="sort('date')"
+                            class="py-3 px-4 text-left cursor-pointer"
+                            >
+                            Start Date
+                            <span class="ml-1">
+                                <i
+                                class="fas fa-sort-up"
+                                :class="{'text-blue-500': sortColumn === 'date' && sortDirection === 'asc'}"
+                                ></i>
+                                <i
+                                class="fas fa-sort-down"
+                                :class="{'text-blue-500': sortColumn === 'date' && sortDirection === 'desc'}"
+                                ></i>
+                            </span>
+                            </th>
+                            <th
+                            @click="sort('endDate')"
+                            class="py-3 px-4 text-left cursor-pointer"
+                            >
+                            End Date
+                            <span class="ml-1">
+                                <i
+                                class="fas fa-sort-up"
+                                :class="{'text-blue-500': sortColumn === 'endDate' && sortDirection === 'asc'}"
+                                ></i>
+                                <i
+                                class="fas fa-sort-down"
+                                :class="{'text-blue-500': sortColumn === 'endDate' && sortDirection === 'desc'}"
+                                ></i>
+                            </span>
+                            </th>
+                            <th
+                            @click="sort('billRate')"
+                            class="py-3 px-4 text-left cursor-pointer"
+                            >
+                            Bill Rate
+                            <span class="ml-1">
+                                <i
+                                class="fas fa-sort-up"
+                                :class="{'text-blue-500': sortColumn === 'billRate' && sortDirection === 'asc'}"
+                                ></i>
+                                <i
+                                class="fas fa-sort-down"
+                                :class="{'text-blue-500': sortColumn === 'billRate' && sortDirection === 'desc'}"
+                                ></i>
+                            </span>
+                            </th>
 
+                            <th
+                            @click="sort('jobType')"
+                            class="py-3 px-4 text-left cursor-pointer"
+                            >
+                            Worker Type
+                            <span class="ml-1">
+                                <i
+                                class="fas fa-sort-up"
+                                :class="{'text-blue-500': sortColumn === 'jobType' && sortDirection === 'asc'}"
+                                ></i>
+                                <i
+                                class="fas fa-sort-down"
+                                :class="{'text-blue-500': sortColumn === 'jobType' && sortDirection === 'desc'}"
+                                ></i>
+                            </span>
+                            </th>
+                            <th class="py-3 px-4 text-left">Action</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <template x-for="item in paginatedItems" :key="item.id">
+                            <tr class="border-b border-gray-200 hover:bg-gray-100">
+                                <td class="py-3 px-4" x-text="item.status"></td>
+                                <td class="py-3 px-4" x-text="item.workOrID"></td>
+                                <td class="py-3 px-4" x-text="item.candidate"></td>
+                                <td class="py-3 px-4" x-text="item.jobID"></td>
+                                <td class="py-3 px-4" x-text="item.hiringManager"></td>
+                                <td class="py-3 px-4" x-text="item.vendor"></td>
+                                <td class="py-3 px-4" x-text="item.date"></td>
+                                <td class="py-3 px-4" x-text="item.endDate"></td>
+                                <td class="py-3 px-4" x-text="item.billRate"></td>
+                                <td class="py-3 px-4" x-text="item.jobType"></td>
+                            <td class="py-3 px-4">
+                                <button
+                                class="text-blue-500 hover:text-blue-700 mr-2 bg-transparent hover:bg-transparent"
+                                >
+                                <i class="fas fa-eye"></i>
+                                </button>
+                                <button
+                                class="text-green-500 hover:text-green-700 mr-2 bg-transparent hover:bg-transparent"
+                                >
+                                <i class="fas fa-edit"></i>
+                                </button>
+                                <button
+                                @click="deleteItem(item.id)"
+                                class="text-red-500 hover:text-red-700 bg-transparent hover:bg-transparent"
+                                >
+                                <i class="fas fa-trash"></i>
+                                </button>
+                            </td>
+                            </tr>
+                        </template>
+                        </tbody>
+                    </table>
+                    </div>
+                </div>
 
             </div>
         </div>
@@ -706,4 +913,46 @@
           },
         }));
       });
+      function workOrderHistory() {
+        const logs = @json($logs);
+        return {
+          items: logs.map(log => ({
+                id: log.id,  // Log ID
+                status: log.properties.attributes.status_name,
+                workOrID: log.properties.attributes.id, 
+                candidate: log.properties.attributes.candidate_name, 
+                jobID: log.properties.attributes.career_opportunity_id, 
+                hiringManager: log.properties.attributes.hiring_manager_name, 
+                vendor: log.properties.attributes.vendor_name, 
+                date: log.properties.attributes.start_date_formatted, 
+                endDate: log.properties.attributes.end_date_formatted, 
+                billRate: log.properties.attributes.wo_bill_rate, 
+                jobType: log.properties.attributes.job_type_title, 
+            })),
+
+            sortColumn: "id",
+            sortDirection: "asc",
+            itemsPerPage: 10,
+            currentPage: 1,
+            get paginatedItems() {
+              const start = (this.currentPage - 1) * this.itemsPerPage;
+              const end = start + this.itemsPerPage;
+              return this.items.slice(start, end);
+            },
+            
+            deleteItem(id) {
+            //  alert(id);
+            },
+
+            sort(column) {
+              if (this.sortColumn === column) {
+                this.sortDirection =
+                  this.sortDirection === "asc" ? "desc" : "asc";
+              } else {
+                this.sortColumn = column;
+                this.sortDirection = "asc";
+              }
+            },
+        };
+      }
     </script>
