@@ -366,5 +366,63 @@ class CommonController extends Controller
 
         return response()->json($response);
     }
+
+    public function calculateRate(Request $request)
+    {
+   
+
+        $bill_rate = removeComma($request->bill_rate);
+        $pay_rate = removeComma($request->pay_rate);
+        $mark_up = $request->markup;
+
+        $pay_rate = ($pay_rate == '') ? 0 : $pay_rate;
+        $bill_rate = ($bill_rate == '') ? 0 : $bill_rate;
+
+        $payrate = getActiveRecordsByType('pay-rate')->first();
+        $billrate = getActiveRecordsByType('bill-rate')->first();
+
+                $over_time = $payrate->name;
+                $double_time =$billrate->value;
+                $client_over_time = $billrate->name;
+                $client_double_time = $billrate->value;
+
+
+
+        $data = array();
+         //markup category
+            if ( $request->type == 'billRate' || $request->type == 'bill_rate') {
+                $data['billRate'] = $this->numberFormat($bill_rate);
+                $data['overTime'] = $this->numberFormat($bill_rate + ($bill_rate * $client_over_time));
+                $data['doubleRate'] = $this->numberFormat($bill_rate + ($bill_rate * $client_double_time));
+                $pay_rate = $bill_rate * (100 / (100 + $mark_up));
+                $data['payRate'] = $this->numberFormat($pay_rate);
+                $data['doubleTimeCandidate'] = $this->numberFormat($pay_rate + ($pay_rate * $double_time));
+                $data['overTimeCandidate'] = $this->numberFormat($pay_rate + ($pay_rate * $over_time));
+            } else {
+
+               $bill_rate = $bill_rate * (100 / (100 + $mark_up));
+                $data['billRate'] = $this->numberFormat($bill_rate);
+                $data['overTime'] = $this->numberFormat($bill_rate + ($bill_rate * $client_over_time));
+                $data['doubleRate'] = $this->numberFormat($bill_rate + ($bill_rate * $client_double_time));
+                $data['payRate'] = $this->numberFormat($pay_rate);
+                $data['doubleTimeCandidate'] = $this->numberFormat($pay_rate + ($pay_rate * $double_time));
+                $data['overTimeCandidate'] = $this->numberFormat($pay_rate + ($pay_rate * $over_time));
+            }
+
+            $data['markup_contract']=round((($bill_rate - $pay_rate) / $pay_rate*100),2);
+
+
+
+
+
+        return response()->json($data);
+
+
+    }
+
+    public function numberFormat($data)
+    {
+        return number_format($data, 2);
+    }
     
 }

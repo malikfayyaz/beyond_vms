@@ -77,7 +77,7 @@ Route::middleware(['ensure_role_is_selected'])->group(function () {
 
     Route::match(['post'], 'workflow/jobWorkFlowUpdate', [GenericDataController::class, 'workflowStore'])->name('admin.workflow.jobWorkFlowUpdate');
 
-    Route::post('calculate-rate', [CareerOpportunitiesOfferController::class, 'calculateRate'])->name('calculate_rate');
+    Route::post('calculate-rate', [CommonController::class, 'calculateRate'])->name('calculate_rate');
 
     // Role-specific dashboards
     Route::middleware(['user_role:admin'])->group(function () {

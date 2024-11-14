@@ -276,7 +276,7 @@
                                     <input type="text"
                                         class="w-full h-12 px-4 text-gray-500 border rounded-md shadow-sm focus:outline-none pl-7 required"
                                         placeholder="00.00" id="bill_rate" name="bill_rate" x-model="formFields.bill_rate"
-                                        @input="formatRate('bill_rate', $event)"  @blur="formatRate('bill_rate', $event)" />
+                                        @input="formatRate('bill_rate', $event)"  />
                                     <p x-show="errors.bill_rate" x-text="errors.bill_rate" class="text-red-500 text-xs mt-1">
                                     </p>
                                 </div>
@@ -309,7 +309,7 @@
                                     <input type="text"
                                         class="w-full h-12 px-4 text-gray-500 border rounded-md shadow-sm focus:outline-none pl-7"
                                         placeholder="00.00" id="pay_rate" name="pay_rate" x-model="formFields.pay_rate"
-                                        @input="formatRate('pay_rate', $event)"  @blur="formatRate('pay_rate', $event)" />
+                                        @input="formatRate('pay_rate', $event)"   />
                                     <p x-show="errors.pay_rate" x-text="errors.pay_rate" class="text-red-500 text-xs mt-1">
                                     </p>
                                 </div>
@@ -359,7 +359,7 @@
                                     <input type="text"
                                         class="w-full h-12 px-4 text-gray-500 border rounded-md shadow-sm focus:outline-none pl-7"
                                         placeholder="00.00" id="markup" name="markup" x-model="formFields.markup" disabled
-                                        @input="formatRate('markup', $event)" @blur="formatRate('markup', $event)" />
+                                        @input="formatRate('markup', $event)"  />
                                     <p x-show="errors.markup" x-text="errors.markup" class="text-red-500 text-xs mt-1">
                                     </p>
                                 </div>
@@ -716,8 +716,8 @@ function formData({ id }) {
                       };
                       ajaxCall(url, 'POST', [[updateElements, ['response', updates]]], data);
                       const intervalId = setInterval(() => {
-                          const billRate = $('#bill_rate').val();
-                          const payRate = $('#pay_rate').val();
+                        //   const billRate = $('#bill_rate').val();
+                        //   const payRate = $('#pay_rate').val();
                           const client_overtime_bill_rate = $('#client_overtime_bill_rate').val();
                           const client_doubletime_bill_rate= $('#client_doubletime_bill_rate').val();
                           const contractor_overtime_pay_rate = $('#contractor_overtime_pay_rate').val();
@@ -726,8 +726,8 @@ function formData({ id }) {
                           const markup = $('#markup').val();
 
                           // Only set formData when all the required fields have been populated
-                              this.formFields.bill_rate = billRate;
-                              this.formFields.pay_rate = payRate;
+                            //   this.formFields.bill_rate = billRate;
+                            //   this.formFields.pay_rate = payRate;
                               this.formFields.client_overtime_bill_rate = client_overtime_bill_rate;
                               this.formFields.client_doubletime_bill_rate = client_doubletime_bill_rate;
                               this.formFields.contractor_overtime_pay_rate = contractor_overtime_pay_rate;
