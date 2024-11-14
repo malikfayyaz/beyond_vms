@@ -16,6 +16,8 @@ use App\Models\Setting;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
 use Spatie\Activitylog\Models\Activity;
+use Illuminate\Support\Carbon;
+
 
 
 class CareerOpportunitiesWorkOrderController extends Controller
@@ -169,9 +171,15 @@ class CareerOpportunitiesWorkOrderController extends Controller
             if ($jobType) {
                 $attributes['job_type_title'] = $jobType->title;
             }
+
+            if (isset($attributes['start_date']) && $attributes['start_date']) {
+                $attributes['start_date_formatted'] = Carbon::parse($attributes['start_date'])->format('m/d/Y');
+            }
+            if (isset($attributes['end_date']) && $attributes['end_date']) {
+                $attributes['end_date_formatted'] = Carbon::parse($attributes['end_date'])->format('m/d/Y');
+            }
             
-            $log->properties = array_merge($log->properties->toArray(), ['attributes' => $attributes]); // Update properties
-            // dd($log->properties['attributes']);
+            $log->properties = array_merge($log->properties->toArray(), ['attributes' => $attributes]); 
         }
         $workorder = CareerOpportunitiesWorkorder::findOrFail($id);
         $rejectReasons =  Setting::where('category_id', 27)->get();        

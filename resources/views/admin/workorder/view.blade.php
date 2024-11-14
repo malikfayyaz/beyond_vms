@@ -979,18 +979,18 @@
                   <tr>
                     <th class="py-3 px-4 text-left">Status</th>
                     <th
-                      @click="sort('offerID')"
+                      @click="sort('workOrID')"
                       class="py-3 px-4 text-left cursor-pointer"
                     >
-                      Offer ID
+                      Workorder ID
                       <span class="ml-1">
                         <i
                           class="fas fa-sort-up"
-                          :class="{'text-blue-500': sortColumn === 'offerID' && sortDirection === 'asc'}"
+                          :class="{'text-blue-500': sortColumn === 'workOrID' && sortDirection === 'asc'}"
                         ></i>
                         <i
                           class="fas fa-sort-down"
-                          :class="{'text-blue-500': sortColumn === 'offerID' && sortDirection === 'desc'}"
+                          :class="{'text-blue-500': sortColumn === 'workOrID' && sortDirection === 'desc'}"
                         ></i>
                       </span>
                     </th>
@@ -1075,6 +1075,22 @@
                       </span>
                     </th>
                     <th
+                      @click="sort('endDate')"
+                      class="py-3 px-4 text-left cursor-pointer"
+                    >
+                      End Date
+                      <span class="ml-1">
+                        <i
+                          class="fas fa-sort-up"
+                          :class="{'text-blue-500': sortColumn === 'endDate' && sortDirection === 'asc'}"
+                        ></i>
+                        <i
+                          class="fas fa-sort-down"
+                          :class="{'text-blue-500': sortColumn === 'endDate' && sortDirection === 'desc'}"
+                        ></i>
+                      </span>
+                    </th>
+                    <th
                       @click="sort('billRate')"
                       class="py-3 px-4 text-left cursor-pointer"
                     >
@@ -1114,12 +1130,13 @@
                   <template x-for="item in paginatedItems" :key="item.id">
                     <tr class="border-b border-gray-200 hover:bg-gray-100">
                           <td class="py-3 px-4" x-text="item.status"></td>
-                          <td class="py-3 px-4" x-text="item.offerID"></td>
+                          <td class="py-3 px-4" x-text="item.workOrID"></td>
                           <td class="py-3 px-4" x-text="item.candidate"></td>
                           <td class="py-3 px-4" x-text="item.jobID"></td>
                           <td class="py-3 px-4" x-text="item.hiringManager"></td>
                           <td class="py-3 px-4" x-text="item.vendor"></td>
                           <td class="py-3 px-4" x-text="item.date"></td>
+                          <td class="py-3 px-4" x-text="item.endDate"></td>
                           <td class="py-3 px-4" x-text="item.billRate"></td>
                         <td class="py-3 px-4" x-text="item.jobType"></td>
                       <td class="py-3 px-4">
@@ -1334,17 +1351,17 @@
           items: logs.map(log => ({
                 id: log.id,  // Log ID
                 status: log.properties.attributes.status_name,
-                offerID: log.properties.attributes.offer_id, // Example usage of status for catalog name
+                workOrID: log.properties.attributes.id, 
                 candidate: log.properties.attributes.candidate_name, 
                 jobID: log.properties.attributes.career_opportunity_id, 
                 hiringManager: log.properties.attributes.hiring_manager_name, 
                 vendor: log.properties.attributes.vendor_name, 
-                date: log.properties.attributes.start_date, 
+                date: log.properties.attributes.start_date_formatted, 
+                endDate: log.properties.attributes.end_date_formatted, 
                 billRate: log.properties.attributes.wo_bill_rate, 
                 jobType: log.properties.attributes.job_type_title, 
-                
-                  // Using status from the logs
             })),
+
             sortColumn: "id",
             sortDirection: "asc",
             itemsPerPage: 10,
