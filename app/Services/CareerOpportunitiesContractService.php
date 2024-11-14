@@ -9,6 +9,7 @@ use App\Models\Workflow;
 use App\Models\ContractBudgetWorkflow;
 use App\Models\ContractRatesEditWorkflow;
 use App\Models\ContractExtensionWorkflow;
+use App\Models\ContractRate;
 use App\Models\Admin;
 use App\Models\Vendor;
 use App\Models\Client;
@@ -357,8 +358,45 @@ class CareerOpportunitiesContractService
                 }
             }
         }else{
-            $request_record->status = 3;
+            $request_record->status = 1;
             $request_record->save(); 
+            $workorder =  $request_record->contract->workorder;
+            $workorder->wo_pay_rate = $request_record->pay_rate;
+            $workorder->wo_over_time = $request_record->candidate_overtime_payrate;
+            $workorder->wo_double_time = $request_record->candidate_doubletime_payrate;
+            $workorder->wo_bill_rate = $request_record->bill_rate;
+            $workorder->wo_client_over_time = $request_record->client_overtime_payrate;
+            $workorder->wo_client_double_time = $request_record->client_doubletime_payrate;
+            $workorder->vendor_bill_rate = $request_record->vendor_bill_rate;
+            $workorder->vendor_overtime_rate = $request_record->vendor_overtime_rate;
+            $workorder->vendor_doubletime_rate = $request_record->vendor_doubletime_rate;
+            $workorder->markup = $request_record->markup;
+            $workorder->save();
+
+            $contract =  $request_record->contract;
+            $contract->start_date = $request_record->start_date;
+            $contract->end_date = $request_record->end_date;
+            $contract->status = 1;
+            $contract->save();
+
+            $contractRate = new ContractRate;
+            $contractRate->contract_id = $contract->id;
+            $contractRate->workorder_id = $workorder->id;
+            $contractRate->client_bill_rate = $request_record->bill_rate;
+            $contractRate->client_overtime_rate = $request_record->client_overtime_payrate;
+            $contractRate->client_doubletime_rate = $request_record->client_doubletime_payrate;
+            $contractRate->candidate_pay_rate = $request_record->pay_rate;
+            $contractRate->candidate_overtime_rate = $request_record->candidate_overtime_payrate;
+            $contractRate->candidate_doubletime_rate = $request_record->candidate_doubletime_payrate;
+            $contractRate->vendor_bill_rate =  $request_record->vendor_bill_rate;
+            $contractRate->markup = $request_record->markup;
+            $contractRate->vendor_overtime_rate = $request_record->vendor_overtime_rate;
+            $contractRate->vendor_doubletime_rate = $request_record->vendor_doubletime_rate;
+            $contractRate->effective_date = $request_record->effective_date;
+            $contractRate->request_type = 1;
+            $contractRate->history_id = $request_record->history_id;
+            $contractRate->date_created = now();
+            $contractRate->save();
         }
     }
 

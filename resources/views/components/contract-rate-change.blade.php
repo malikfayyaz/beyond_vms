@@ -105,11 +105,23 @@
                                     </div>
 
                                     <!-- Rejection Notice -->
+                                    @php
+                                            use Illuminate\Support\Facades\DB;
+
+                                            $contractWFlow = DB::select("
+                                                SELECT approve_reject_by, approve_reject_type, rejection_id, status_time 
+                                                FROM contract_rates_edit_workflows 
+                                                WHERE email_sent = 1 
+                                                AND rejection_id != 0 
+                                                AND request_id = ?", [$rateEditRequest->id]);
+                                        @endphp
+                                        @if (!empty($contractWFlow))
                                     <div class="bg-red-50 border border-red-100 rounded-lg p-4">
                                         <div class="text-red-700">Reason of Rejection: Submitted in Error</div>
                                         <div class="text-red-600 mt-1">Rejected By: Rachel Coy (Icon Information
                                             Consultants) on 07/26/2024 12:25 PM</div>
                                     </div>
+                                    @endif
 
                                     <!-- Approvers Table -->
                         <!-- Table Data -->

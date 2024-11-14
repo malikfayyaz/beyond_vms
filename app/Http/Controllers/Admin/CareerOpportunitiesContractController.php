@@ -760,13 +760,13 @@ class CareerOpportunitiesContractController extends BaseController
 
             
             $currentRates = Rateshelper::returnContractEffectiveRate($contract->id);
-            if($billRate <= $currentRates['bill_rate'] /*||  !ListingUtility::checkSowStatus($workorder->id)*/){
-                $model->status = 3;
-                $model->save();
+            // if($billRate <= $currentRates['bill_rate'] /*||  !ListingUtility::checkSowStatus($workorder->id)*/){
+            //     $model->status = 3;
+            //     $model->save();
                 
-            }else{
+            // }else{
                 contractHelper::contractEditRatesWorkflowProcess($model,  $contract);
-            }
+            // }
         }
         return true;
     }
