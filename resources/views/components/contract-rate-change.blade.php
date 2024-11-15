@@ -404,7 +404,7 @@
                     }
 
                     // Call the AJAX function (replace ajaxCall with your actual AJAX implementation)
-                    const url = '{{ route('admin.contract.contractRateChangeWorkflow') }}';
+                    const url = '{{ route('contract.contractRateChangeWorkflow') }}';
                     ajaxCall(url, 'POST', [[onSuccess, ['response']]], formData);
                 } else {
                     console.log('Form validation failed');

@@ -7,10 +7,15 @@ use App\Models\CareerOpportunitiesInterview;
 use App\Models\CareerOpportunitySubmission;
 use App\Models\CareerOpportunitiesContract;
 use App\Models\CareerOpportunity;
+use App\Facades\CareerOpportunitiesContract as contractHelper;
 use App\Models\JobTemplates;
 use App\Models\TemplateRatecard;
 use App\Models\GenericData;
 use App\Models\DivisionBranchZoneConfig;
+use App\Models\ContractRatesEditWorkflow;
+use App\Models\ContractRateEditRequest;
+
+
 
 
 class CommonController extends Controller
@@ -425,4 +430,52 @@ class CommonController extends Controller
         return number_format($data, 2);
     }
     
+    public function contractRateChangeWorkflow(Request $request)
+    {
+        $actionType = $request->input('actionType');
+        $validated = $request->validate([
+            'rowId' => 'required|integer',
+            'request_id'=>'required|integer',
+            'reason' => 'required_if:actionType,Reject|integer',
+        ]);
+
+        $user = \Auth::user();
+        $userid = \Auth::id();
+        $sessionrole = session('selected_role');
+
+        $userid = \Auth::id();
+        $sessionrole = session('selected_role');
+        $appRejdFrom = 'Portal';
+        $appRejBy = checkUserId($userid,$sessionrole);
+        $contractext = ContractRatesEditWorkflow::findOrFail($request->rowId);
+        $request_record = ContractRateEditRequest::findOrFail($request->request_id);
+        if ($actionType == 'Accept') {
+            
+            
+        	contractHelper::approveCRateWorkflow($contractext,$request_record,$request,$appRejdFrom,$appRejBy,1);
+            $message = 'Contract Workflow Approved successfully!';
+            session()->flash('success', $message);
+        } elseif ($actionType == 'Reject') {
+            // $approval = ContractRatesEditApproval::model()->findByPk($request->rowId);
+            if($contractext){
+            	contractHelper::RejectCRateWorkflow($contractext,$request,$appRejdFrom,$appRejBy,1);
+                $request_record->status = 2;
+                $request_record->rejection_reason = $request->reason;
+                if($request_record->save()){
+                    
+
+                    $message = 'Contract Workflow Rejected successfully!';
+                    session()->flash('success', $message);
+                }
+            }
+            
+        }
+        return response()->json([
+            'success' => true,
+            'message' => $message,
+            'redirect_url' => route("$sessionrole.contracts.show", ['contract' => $contractext->contract_id]),
+        ]);
+
+
+    }
 }

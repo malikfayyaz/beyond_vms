@@ -184,7 +184,6 @@ Route::middleware(['user_role:admin'])->group(function () {
 
         Route::POST('contracts/contractBudgetWorkflow', [CareerOpportunitiesContractController::class, 'contractBudgetWorkflow'])->name('contract.contractBudgetWorkflow');
         Route::POST('contracts/contractExtensionWorkflow', [CareerOpportunitiesContractController::class, 'contractExtensionWorkflow'])->name('contract.contractExtensionWorkflow');
-        Route::POST('contracts/contractRateChangeWorkflow', [CareerOpportunitiesContractController::class, 'contractRateChangeWorkflow'])->name('contract.contractRateChangeWorkflow');
 
 
     });
