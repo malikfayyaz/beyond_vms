@@ -443,8 +443,6 @@ class CommonController extends Controller
         $userid = \Auth::id();
         $sessionrole = session('selected_role');
 
-        $userid = \Auth::id();
-        $sessionrole = session('selected_role');
         $appRejdFrom = 'Portal';
         $appRejBy = checkUserId($userid,$sessionrole);
         $contractext = ContractRatesEditWorkflow::findOrFail($request->rowId);
