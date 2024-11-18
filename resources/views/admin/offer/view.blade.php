@@ -371,15 +371,17 @@
                     <div
                       class="flex items-center justify-between py-4 border-t"
                     >
-                      <div class="w-2/4">
+                      <div class="w-2/4" >
                         <h4 class="font-medium">Job Profile:</h4>
                       </div>
-                      <div class="w-2/4">
+                      <div class="w-2/4" x-data="{ jobDetails: null}" @job-details-updated.window="jobDetails = $event.detail">
                         <p class="font-light">
-                          <a href="#" class="text-blue-400 font-semibold"
+                          <a class="text-blue-400 font-semibold cursor-pointer"
+                            onclick="openJobDetailsModal({{ $offer->careerOpportunity->id }})"
                             >{{$offer->careerOpportunity->title}} ({{$offer->careerOpportunity->id}})</a
                           >
                         </p>
+                        <x-job-details />
                       </div>
                     </div>
                     <div
@@ -763,6 +765,22 @@
           
           
         };
+      }
+
+      function openJobDetailsModal(jobId) {
+        fetch(`/job-details/${jobId}`)
+            .then(response => response.json())
+            .then(data => {
+                const event = new CustomEvent('job-details-updated', {
+                        detail: data,
+                        bubbles: true,
+                        composed: true
+                    });
+                    // console.log(event.detail.data);
+                    
+                    document.dispatchEvent(event);
+            })
+            .catch(error => console.error('Error:', error));
       }
     </script>
 @endsection
