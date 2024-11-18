@@ -795,37 +795,7 @@ class CareerOpportunitiesContractController extends BaseController
 
 
     }
-    public function ContractExtensionWorkflow(Request $request)
-    {
-        $actionType = $request->input('actionType');
-        $validated = $request->validate([
-            'rowId' => 'required|integer',
-            'reason' => 'required_if:actionType,Reject|integer',
-        ]);
-        $contractext = ContractExtensionRequest::findOrFail($request->extId);
-        if ($actionType == 'Accept') {
-            contractHelper::contractExtensionWorkflowApprove($request);  //for approve
-            $message = 'Contract Extension Workflow Accepted successfully!';
-            $contractext->ext_status = 2;
-            $contractext->approval_rejection_date = now();
-            $contractext->save();
-            session()->flash('success', $message);
-        } elseif ($actionType == 'Reject') {
-            contractHelper::contractExtensionWorkflowApprove($request); // for reject
-            $contractext->ext_status = 3;
-            $contractext->approval_rejection_date = now();
-            $contractext->save();
-            $message = 'Contract Workflow Rejected successfully!';
-            session()->flash('success', $message);
-        }
-        return response()->json([
-            'success' => true,
-            'message' => $message,
-            'redirect_url' => route('admin.contracts.show', ['contract' => $contractext->contract_id]),
-        ]);
 
-
-    }
 
     // ratechange 
     

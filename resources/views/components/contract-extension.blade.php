@@ -439,7 +439,7 @@
                     if (fileInput.files.length > 0) {
                         formData.append('contractAttachment', fileInput.files[0]);
                     }
-                    const url = '{{ route('admin.contract.contractExtensionWorkflow') }}';
+                    const url = '{{ route('contract.contractExtensionWorkflow') }}';
                     ajaxCall(url, 'POST', [[onSuccess, ['response']]], formData);
                 } else {
                     console.log('Form validation failed');
