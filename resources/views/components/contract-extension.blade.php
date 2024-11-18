@@ -188,7 +188,7 @@
                                                         }else{
                                                             $flag = false;
                                                         }  @endphp
-                                                        @if($rateEditRequest->contract->termination_status != 2 && $flag==true)
+                                                        @if($extensionRequest->contract->termination_status != 2 && $flag==true)
                                                             <button
                                                                 @click="actionType = 'Accept'; openModal = true; currentRowId = {{ $workflow->id }}; submitForm(currentRowId, actionType);"
                                                                 class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded flex items-center"
