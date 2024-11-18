@@ -8,8 +8,7 @@
                                   x-transition:leave-end="transform translate-x-full"
                                   @click.outside="isOpen = false"
                                   class="fixed inset-y-0 right-0 w-[700px] bg-gray-100 shadow-lg overflow-y-auto z-50 pb-24"
-                      >
-                            
+                      >                            
                             <!-- Extension Request Content -->
                             <template x-if="selectedUser">
                                 <div class="space-y-4">
@@ -188,7 +187,7 @@
                                                         }else{
                                                             $flag = false;
                                                         }  @endphp
-                                                        @if($rateEditRequest->contract->termination_status != 2 && $flag==true)
+                                                        @if($extensionRequest->contract->termination_status != 2 && $flag==true)
                                                             <button
                                                                 @click="actionType = 'Accept'; openModal = true; currentRowId = {{ $workflow->id }}; submitForm(currentRowId, actionType);"
                                                                 class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded flex items-center"
@@ -279,7 +278,6 @@
                                         </label>
                                         <select id="reason" x-model="reason" @input="clearError('reason')" class="w-full">
                                             <option value="">Select</option>
-                                            
                                             @foreach (checksetting(29) as $key => $value)
                                                 <option value="{{ $key }}">{{ $value }}</option> <!-- Use index as value -->
                                             @endforeach
@@ -398,7 +396,7 @@
                             </div>
                         </div>
                       </div>
-                                </div>
+                    </div>
                             </template>
 
                   </div>

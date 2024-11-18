@@ -15,7 +15,7 @@ class ContractExtension extends Component
      * Create a new component instance.
      */
     public function __construct(ContractExtensionRequest $extensionRequest)
-    {
+    {       
         $this->extensionRequest = $extensionRequest;
         $this->extensionRequest->contract = $extensionRequest->contract;
         $this->extensionRequest->history = $extensionRequest->contractEditHistory;
