@@ -217,11 +217,15 @@
                             class="font-semibold"
                           >{{$submission->estimate_start_date}}</span>
                         </div>
-                        <div class="flex justify-between py-3 px-4">
+                        <div class="flex justify-between py-3 px-4" x-data="{ jobDetails: null}" @job-details-updated.window="jobDetails = $event.detail">
                           <span class="text-gray-600">Job Profile:</span>
                           <span
                             class="font-semibold"
-                          >{{$submission->careerOpportunity->title}}</span>
+                          ><a class="text-blue-400 font-semibold cursor-pointer"
+                            onclick="openJobDetailsModal({{ $submission->careerOpportunity->id }})"
+                            >{{$submission->careerOpportunity->title}} ({{$submission->careerOpportunity->id}})</a
+                          >
+                          <x-job-details />
                         </div>
                         <div class="flex justify-between py-3 px-4">
                           <span class="text-gray-600">Hiring Manager:</span>
@@ -424,5 +428,21 @@
         </div>
 
     </div>
-
+    <script>
+      function openJobDetailsModal(jobId) {
+        fetch(`/job-details/${jobId}`)
+          .then(response => response.json())
+          .then(data => {
+              const event = new CustomEvent('job-details-updated', {
+                      detail: data,
+                      bubbles: true,
+                      composed: true
+                  });
+                  // console.log(event.detail.data);
+                  
+                  document.dispatchEvent(event);
+          })
+          .catch(error => console.error('Error:', error));
+      }
+    </script>
     @endsection

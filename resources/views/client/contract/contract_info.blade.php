@@ -58,13 +58,15 @@
                 <div class="w-2/4">
                     <h4 class="font-medium">Job Title(ID):</h4>
                 </div>
-                <div class="w-2/4">
+                <div class="w-2/4" x-data="{ jobDetails: null}" @job-details-updated.window="jobDetails = $event.detail">
                     <p class="font-light">
-                        <a href="{{ route('client.career-opportunities.show', $contract->career_opportunity_id) }}" class="text-blue-500">
-                            {{ $contract->careerOpportunity->title }}
-                            ({{ $contract->careerOpportunity->id }})
-                        </a>
+                        <a class="text-blue-400 font-semibold cursor-pointer"
+                            onclick="openJobDetailsModal({{ $contract->careerOpportunity->id }})"
+                            >{{$contract->careerOpportunity->title}} ({{$contract->careerOpportunity->id}})</a
+                        >
+    
                     </p>
+                    <x-job-details />
                 </div>
             </div>
             <div class="flex items-center justify-between py-4 border-t">
@@ -559,3 +561,21 @@
         </h3>
     </div>
 </div>
+
+<script>
+    function openJobDetailsModal(jobId) {
+    fetch(`/job-details/${jobId}`)
+        .then(response => response.json())
+        .then(data => {
+            const event = new CustomEvent('job-details-updated', {
+                    detail: data,
+                    bubbles: true,
+                    composed: true
+                });
+                // console.log(event.detail.data);
+                
+                document.dispatchEvent(event);
+        })
+        .catch(error => console.error('Error:', error));
+    }
+</script>

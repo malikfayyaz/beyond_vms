@@ -46,20 +46,18 @@
                                     </p>
                                 </div>
                             </div>
-                            <div class="flex items-center justify-between py-4 border-t">
-                                <div class="w-2/4">
-                                    <h4 class="font-medium">Job ID:</h4>
-                                </div>
-                                <div class="w-2/4">
-                                    <p class="font-light">{{$workorder->careeropportunity->id}}</p>
-                                </div>
-                            </div>
+                            
                             <div class="flex items-center justify-between py-4 border-t">
                                 <div class="w-2/4">
                                     <h4 class="font-medium">Job Profile:</h4>
                                 </div>
-                                <div class="w-2/4">
-                                    <p class="font-light">{{$workorder->careeropportunity->title}}</p>
+                                <div class="w-2/4" x-data="{ jobDetails: null}" @job-details-updated.window="jobDetails = $event.detail">
+                                    <p class="font-light">
+                                    <a class="text-blue-400 font-semibold cursor-pointer"
+                                        onclick="openJobDetailsModal({{ $workorder->careerOpportunity->id }})"
+                                        >{{$workorder->careerOpportunity->title}} ({{$workorder->careerOpportunity->id}})</a
+                                    ></p>
+                                    <x-job-details />
                                 </div>
                             </div>
                             <div class="flex items-center justify-between py-4 border-t">
@@ -886,4 +884,22 @@
             },
         };
       }
+
+     
+      function openJobDetailsModal(jobId) {
+        fetch(`/job-details/${jobId}`)
+          .then(response => response.json())
+          .then(data => {
+              const event = new CustomEvent('job-details-updated', {
+                      detail: data,
+                      bubbles: true,
+                      composed: true
+                  });
+                  // console.log(event.detail.data);
+                  
+                  document.dispatchEvent(event);
+          })
+          .catch(error => console.error('Error:', error));
+      }
+    
 </script>
