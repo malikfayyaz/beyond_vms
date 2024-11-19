@@ -12,14 +12,14 @@
             <div class="container mx-auto p-4">
                 <div class="flex flex-wrap mb-4">
                     <div class="w-1/2 pr-2">
-                        <label for="user_id" class="block mb-2">Contractor <span class="text-red-500">*</span></label>
-                        <select id="user_id" name="user_id" class="w-full p-2 border rounded h-10 bg-white"
-                            x-model="formData.user_id">
+                        <label for="contract_id" class="block mb-2">Contractor <span class="text-red-500">*</span></label>
+                        <select id="contract_id" name="contract_id" class="w-full p-2 border rounded h-10 bg-white"
+                            x-model="formData.contract_id">
                             <option value="" disabled>Select Contractor</option>
 
 
                         </select>
-                        <p class="text-red-500 text-sm mt-1" x-text="user_idError"></p>
+                        <p class="text-red-500 text-sm mt-1" x-text="contract_idError"></p>
                     </div>
                     <div class="flex mb-4">
                         <button @click="submitData1()" class="bg-blue-500 text-white px-4 py-2 rounded mr-2">Continue
@@ -41,7 +41,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         function loadCandidates(){
            
-                ajaxCall('/get-candiadte', 'GET', [[updateStatesDropdown, ['response', 'user_id']]]);
+                ajaxCall('/get-candiadte', 'GET', [[updateStatesDropdown, ['response', 'contract_id']]]);
          
         }
     }
@@ -51,9 +51,9 @@ function contractor(editIndex) {
 
     return {
         formData: {
-            user_id: "",
+            contract_id: "",
         },
-        user_idError: "",
+        contract_idError: "",
         editIndex: editIndex,
         searchTerm: "",
         error: 0,
@@ -62,11 +62,11 @@ function contractor(editIndex) {
         validateFields() {
             this.error = 0;
 
-            if (this.formData.user_id === "") {
-                this.user_idError = `Please select Contractor`;
+            if (this.formData.contract_id === "") {
+                this.contract_idError = `Please select Contractor`;
                 this.error += 1;
             } else {
-                this.user_idError = "";
+                this.contract_idError = "";
             }
         },
 
@@ -74,14 +74,11 @@ function contractor(editIndex) {
             this.validateFields();
             if (this.error === 0) {
                 let formData = new FormData();
-                formData.append('user_id', this.formData.user_id);
+                formData.append('contract_id', this.formData.contract_id);
                 
-                if (this.editIndex !== null) {
-                    
-                    formData.append('_method', 'PUT');
-                }
+                url = '{{ route("vendor.timesheet.step_one") }}';
 
-                ajaxCall('', 'POST', [
+                ajaxCall(url, 'POST', [
                     [onSuccess, ['response']]
                 ], formData);
             }

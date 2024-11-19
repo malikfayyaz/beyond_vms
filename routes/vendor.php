@@ -44,7 +44,10 @@ Route::middleware(['user_role:vendor'])->group(function () {
 
         // timesheet
         Route::get('timesheet/select-candidate', [TimesheetController::class, 'selectCandidate'])->name('timesheet.select_candidate');
-        Route::resource('/timesheet', \App\Http\Controllers\Vendor\TimesheetController::class);
+        Route::post('timesheet/step-one', [TimesheetController::class, 'stepOne'])->name('timesheet.step_one');
+        Route::get('timesheet/{contract_id}/step-one', [TimesheetController::class, 'stepOneView'])->name('timesheet.step_one_view');
+        Route::post('timesheet/step-one-store', [TimesheetController::class, 'stepOneStore'])->name('timesheet.step_one_store');
+        Route::get('timesheet/step2', [TimesheetController::class, 'step2'])->name('timesheet.timesheetStep2');
 
     });
 

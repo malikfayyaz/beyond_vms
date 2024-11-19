@@ -417,6 +417,29 @@ if (!function_exists('updateContractReason')) {
         );
     }
 }
+if (!function_exists('timesheetGetStartAndEndDate')) {
+    function timesheetGetStartAndEndDate($week, $year, $startDay="")
+    {
+        if($startDay == ""){
+            $startDay = 0;
+        }
+        //$startDay = 1; // 0 means it will start from sunday. 1 means Monday
+        $day_of_week = date('m/d/Y', strtotime('Monday'));
+        $time = strtotime("1 January $year", time());
+        $day = date('w', $time);
+        $time += ((7*$week)+ $startDay -$day)*24*3600;
+        /*if($year == 2023){
+            $time += ((7*($week-1))+ $startDay -$day)*24*3600;
+        }else{
+            $time += ((7*$week)+ $startDay -$day)*24*3600;
+        }*/
+
+        $return[0] = date('Y-n-j', $time);
+        $time += 6*24*3600;
+        $return[1] = date('Y-n-j', $time);
+        return $return;
+    }
+}
 
 
 
