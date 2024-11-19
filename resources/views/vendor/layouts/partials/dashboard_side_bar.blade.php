@@ -215,6 +215,43 @@
 
                   </ul>
               </li>
+
+              <li x-data="{ open: false }">
+                  <button
+                      @click="open = !open"
+                      class="flex items-center w-full p-2 text-white rounded-lg hover:bg-gray-700 overflow-hidden"
+                      :class="{'justify-center': miniSidebar}"
+                  >
+                      <i class="fas fa-lock w-6 h-6"></i>
+                      <span
+                          class="flex-1 ml-3 text-left whitespace-nowrap"
+                          x-show="!miniSidebar"
+                          x-cloak
+                      >Timesheet</span
+                      >
+                      <i
+                          class="fas fa-chevron-down ml-auto"
+                          x-show="!miniSidebar"
+                          x-cloak
+                      ></i>
+                  </button>
+                  <ul x-show="open" class="py-2 space-y-2" x-cloak>
+                      <li class="{{ request()->routeIs('vendor.timesheet.create') ? 'active' : ''}}">
+                          <a href="{{ route('vendor.timesheet.create') }}"
+                             class="flex items-center w-full p-2 text-white transition duration-75 pl-11 hover:bg-gray-700">
+                              Add Timesheet
+                          </a>
+                      </li>
+                      <li class="{{ request()->routeIs('vendor.timesheet.index') ? 'active' : ''}}">
+                          <a href="{{ route('vendor.timesheet.index') }}"
+                             class="flex items-center w-full p-2 text-white transition duration-75 pl-11 hover:bg-gray-700">
+                              Timesheet
+                          </a>
+                      </li>
+
+                  </ul>
+              </li>
+
             <li>
               <a
                 href="#"
