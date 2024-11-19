@@ -42,6 +42,47 @@
                             </div>
                         </a>
                     </li>
+                    <!-- Additional Budget Tab -->
+                    <li class="flex justify-center">
+                        <a
+                            href="#pending_AB"
+                            class="tab-link w-full flex justify-center items-center gap-3 py-4 hover:bg-white hover:rounded-lg hover:shadow"
+                            data-type="pending_AB"
+                        >
+                            <i class="fa-solid fa-fill"></i>
+                            <span class="capitalize">Pending Additional Budget</span>
+                            <div class="px-1 py-1 flex items-center justify-center bg-gray-500 text-white rounded-lg">
+                                <span class="text-[10px]">{{ $counts['pending_AB'] }}</span>
+                            </div>
+                        </a>
+                    </li>
+                    <li class="flex justify-center">
+                        <a
+                            href="#pending_ER"
+                            class="tab-link w-full flex justify-center items-center gap-3 py-4 hover:bg-white hover:rounded-lg hover:shadow"
+                            data-type="pending_ER"
+                        >
+                            <i class="fa-solid fa-fill"></i>
+                            <span class="capitalize">Pending Extension</span>
+                            <div class="px-1 py-1 flex items-center justify-center bg-gray-500 text-white rounded-lg">
+                                <span class="text-[10px]">{{ $counts['pending_ER'] }}</span>
+                            </div>
+                        </a>
+                    </li>
+                    <li class="flex justify-center">
+                        <a
+                            href="#pending_RC"
+                            class="tab-link w-full flex justify-center items-center gap-3 py-4 hover:bg-white hover:rounded-lg hover:shadow"
+                            data-type="pending_RC"
+                        >
+                            <i class="fa-solid fa-fill"></i>
+                            <span class="capitalize">Pending Rate Change</span>
+                            <div class="px-1 py-1 flex items-center justify-center bg-gray-500 text-white rounded-lg">
+                                <span class="text-[10px]">{{ $counts['pending_RC'] }}</span>
+                            </div>
+                        </a>
+                    </li>
+                    
                  </ul>
                 </div>
 

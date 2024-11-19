@@ -18,6 +18,12 @@ class CareerOpportunitiesContractController extends Controller
         $counts = [
             'active' => CareerOpportunitiesContract::where('status', 1)->count(),
             'cancelled' => CareerOpportunitiesContract::where('status', 2)->count(),
+            'additional_budget' => CareerOpportunitiesContract::whereHas('contractAdditionalBudgetRequest')->count(),
+            'ext_req' => CareerOpportunitiesContract::whereHas('extensionRequest')->count(),
+            'rate_change' => CareerOpportunitiesContract::whereHas('contractRateEditRequest')->count(),
+            'pending_AB' => CareerOpportunitiesContract::whereHas('pendingBudgetRequests')->count(),
+            'pending_ER' => CareerOpportunitiesContract::whereHas('pendingExtensionRequests')->count(),
+            'pending_RC' => CareerOpportunitiesContract::whereHas('pendingRateChangeRequests')->count(),
         ];
 
         if ($request->ajax()) {
@@ -34,7 +40,16 @@ class CareerOpportunitiesContractController extends Controller
                     case 'cancelled':
                         $data->where('status', 2);
                         break;
-                    // Add additional cases as needed
+                    case 'pending_AB':
+                        $data->has('pendingBudgetRequests');
+                        break;
+                    case 'pending_ER':
+                        $data->has('pendingExtensionRequests');
+                        break;
+                    case 'pending_RC':
+                        $data->has('pendingRateChangeRequests');
+                        break;
+                        // Add additional cases as needed
                     default:
                         break; // Show all submissions if no type is specified
                 }

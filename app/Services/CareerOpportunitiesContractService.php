@@ -39,7 +39,7 @@ class CareerOpportunitiesContractService
                 'contract_id' => $contract->id,
                 'client_id' => $wf->hiring_manager_id,
                 'workflow_id' => 0,
-                'request_id' => 0,
+                'request_id' => $contractAdditionalBudget->id,
                 'approval_role_id' => $wf->approval_role_id,
                 'bulk_approval' => 0,
                 'approval_number' => $wf->approval_number,
@@ -124,32 +124,18 @@ class CareerOpportunitiesContractService
         $portal = 'Portal';
         $workflow = ContractBudgetWorkflow::findOrFail($request->rowId);
         self::rejectContractWorkFlow($request->rowId, $userid, $sessionrole, $portal, $request);
-        $nextWorkflow = ContractBudgetWorkflow::where([
+        $otherApproval = ContractBudgetWorkflow::where([
             ['contract_id', '=', $workflow->contract_id],
             ['status', '=', 'Pending'],
             ['email_sent', '=', 0]
         ])
             ->orderBy('id')
             ->get();
-        $count = 0;
-        if(count($nextWorkflow)>0){
-            foreach($nextWorkflow as $workflow){
-                if($count == 0){
-                    if($workflow->approval_required == 0 ){ 
-                        self::acceptContractBudgetWorkflow($workflow->id, $userid, $sessionrole, $portal,$request);
-                    }else{
-                        $workflow->email_sent = 1;
-                        $workflow->save();
-                        // Mail send code will be added here
-                        $count++;
-                    }
-                }
+            if(!empty($otherApproval)){
+            foreach ($otherApproval as $item){
+                $item->status = 'Rejected';
+                $item->save();
             }
-        }else{
-            $contract = CareerOpportunitiesContract::findOrFail($request->contractId);
-            $offer = CareerOpportunitiesOffer::findOrFail($contract->offer_id);
-            $offer->status = '2'; //offer status 2 is for rejected
-            $offer->save();
         }
     }
 

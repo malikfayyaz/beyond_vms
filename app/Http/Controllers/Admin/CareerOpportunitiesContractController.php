@@ -782,33 +782,6 @@ class CareerOpportunitiesContractController extends BaseController
         }
         return true;
     }
-    public function ContractBudgetWorkflow(Request $request)
-    {
-        $actionType = $request->input('actionType');
-        $validated = $request->validate([
-            'rowId' => 'required|integer',
-            'reason' => 'required_if:actionType,Reject|integer',
-        ]);
-        $contractworkflow = ContractAdditionalBudget::findOrFail($request->rowId);
-        if ($actionType == 'Accept') {
-            contractHelper::approveContractBudgetWorkflow($request);
-            $message = 'Contract Workflow Accepted successfully!';
-            session()->flash('success', $message);
-        } elseif ($actionType == 'Reject') {
-            contractHelper::rejectcontractsWorkFlow($request);
-            $message = 'Contract Workflow Rejected successfully!';
-            session()->flash('success', $message);
-        }
-        return response()->json([
-            'success' => true,
-            'message' => $message,
-            'redirect_url' => route('admin.contracts.show', ['contract' => $contractworkflow->contract_id]),
-        ]);
-
-
-    }
-
-
     // ratechange 
     
 
