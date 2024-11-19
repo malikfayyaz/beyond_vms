@@ -8,6 +8,7 @@ use App\Http\Controllers\{
     Vendor\CareerOpportunitiesOfferController,
     Vendor\CareerOpportunitiesInterviewController,
     Vendor\CareerOpportunitiesWorkOrderController,
+    Vendor\TimesheetController,
 };
 Route::middleware(['user_role:vendor'])->group(function () {
     Route::prefix('vendor')->name('vendor.')->group(function () {
@@ -40,6 +41,10 @@ Route::middleware(['user_role:vendor'])->group(function () {
 
         // contract
         Route::resource('contracts', \App\Http\Controllers\Vendor\CareerOpportunitiesContractController::class);
+
+        // timesheet
+        Route::get('timesheet/select-candidate', [TimesheetController::class, 'selectCandidate'])->name('timesheet.select_candidate');
+        Route::resource('/timesheet', \App\Http\Controllers\Vendor\TimesheetController::class);
 
     });
 
