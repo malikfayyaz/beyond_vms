@@ -44,6 +44,8 @@ Route::middleware(['user_role:vendor'])->group(function () {
 
         // timesheet
         Route::get('timesheet/select-candidate', [TimesheetController::class, 'selectCandidate'])->name('timesheet.select_candidate');
+        Route::resource('/timesheet', \App\Http\Controllers\Vendor\TimesheetController::class);
+
     });
 
 });
