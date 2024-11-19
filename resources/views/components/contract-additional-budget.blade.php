@@ -17,7 +17,7 @@
                           class="flex justify-between items-center p-4 bg-gray-800 text-white"
                         >
                         
-                        <h2 class="text-lg font-semibold">Additional Budget Request (<span  >{{$contract->latestPendingBudgetRequest->id}}</span>)</h2>
+                        <h2 class="text-lg font-semibold">Additional Budget Request (<span  >{{$budgetRequest->id}}</span>)</h2>
                           <button
                             @click="isOpen = false"
                             class="text-gray-500 hover:text-gray-700"
@@ -39,7 +39,7 @@
                                 <tr>
                                     <td class="p-2">Request Amount  RT :</td>
                                     <td class="p-2 text-green-800 font-bold">${{
-                                    $contract->latestPendingBudgetRequest->amount }}</td>
+                                    $budgetRequest->amount }}</td>
                                 </tr>
                             </tbody>
                             </table>
@@ -49,13 +49,13 @@
                     <div class="bg-gray-100 p-4 pt-0 rounded-lg">
                         <h3 class="text-md font-semibold">Reason for Additional Budget Request</h3>
                         <div class="ml-4 mt-2 text-gray-600">
-                            {{ getSettingTitleById($contract->latestPendingBudgetRequest->additional_budget_reason) }}
+                            {{ getSettingTitleById($budgetRequest->additional_budget_reason) }}
                         </div>
                     </div>
                     <div class="bg-gray-100 p-4 pt-0 rounded-lg">
                         <h3 class="text-md font-semibold">Additional Budget Request Notes</h3>
                         <div class="ml-4 mt-2 text-gray-600">
-                        {{ $contract->latestPendingBudgetRequest->notes }}
+                        {{ $budgetRequest->notes }}
                         </div>
                     </div>
                         <!-- Table Data -->
@@ -63,7 +63,7 @@
     openModal: false,
     currentRowId: null,
         actionType: '',
-        contractId: {{ $contract->id }},
+        contractId: {{ $budgetRequest->contract->id }},
     reason: '',
     note: '',
     errors: {},
@@ -94,7 +94,7 @@
             formData.append('jobAttachment', fileInput.files[0]);
         }
         // Call the AJAX function
-                const url = '{{ route('admin.contract.contractBudgetWorkflow') }}';
+                const url = '{{ route('contract.contractBudgetWorkflow') }}';
                 ajaxCall(url,'POST', [[onSuccess, ['response']]], formData);
     } else {
         console.log('Form validation failed');
@@ -135,7 +135,7 @@
                                 </tr>
                                 </thead>
                                 <tbody class="divide-y divide-gray-200">
-                                @if($contract->ContractBudgetWorkflow->isEmpty())
+                                @if($budgetRequest->workflow->isEmpty())
                                     <tr>
                                         <td colspan="9" class="py-4 px-4 text-center text-sm text-gray-600">
                                             No workflows available.
@@ -147,7 +147,7 @@
                                         
                                         $userid =  checkUserId(auth()->id(),$sessionrole);
                                     @endphp
-                                    @foreach($contract->ContractBudgetWorkflow as $workflow)
+                                    @foreach($budgetRequest->workflow as $workflow)
                                         <tr>
                                             <td class="py-4 px-4 text-center text-sm">{{ $workflow->hiringManager->full_name }}</td>
                                             <td class="py-4 px-4 text-center text-sm">{{ $workflow->approver_type }}</td>
@@ -160,7 +160,7 @@
                                                         }else{
                                                             $flag = false;
                                                         }  @endphp
-                                                        @if($contract->latestPendingBudgetRequest->contract->termination_status != 2 && $flag==true)
+                                                        @if($budgetRequest->contract->termination_status != 2 && $flag==true)
                                                             <button
                                                                 @click="actionType = 'Accept'; openModal = true; currentRowId = {{ $workflow->id }}; submitForm(currentRowId, actionType);"
                                                                 class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded flex items-center"

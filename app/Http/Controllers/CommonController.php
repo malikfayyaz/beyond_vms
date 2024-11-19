@@ -14,6 +14,8 @@ use App\Models\GenericData;
 use App\Models\DivisionBranchZoneConfig;
 use App\Models\ContractRatesEditWorkflow;
 use App\Models\ContractExtensionRequest;
+use App\Models\ContractAdditionalBudget;
+use App\Models\ContractBudgetWorkflow;
 use App\Models\ContractRateEditRequest;
 
 
@@ -503,6 +505,40 @@ class CommonController extends Controller
             'success' => true,
             'message' => $message,
             'redirect_url' => route("$sessionrole.contracts.show", ['contract' => $contractext->contract_id]),
+        ]);
+
+
+    }
+    public function ContractBudgetWorkflow(Request $request)
+    {
+        $actionType = $request->input('actionType');
+        $validated = $request->validate([
+            'rowId' => 'required|integer',
+            'reason' => 'required_if:actionType,Reject|integer',
+        ]);
+        $contractworflow = ContractBudgetWorkflow::findOrFail($request->rowId);
+        $contractbudgetrqst = ContractAdditionalBudget::where('id', $contractworflow->request_id)->firstOrFail();
+        if ($actionType == 'Accept') {
+            contractHelper::approveContractBudgetWorkflow($request);
+            $contractbudgetrqst->status = 'Approved';
+            $contractbudgetrqst->approval_rejection_date = now();
+            if($contractbudgetrqst->save()){
+                    $message = 'Contract Workflow Approved successfully!';
+                    session()->flash('success', $message);
+                }
+        } elseif ($actionType == 'Reject') {
+            contractHelper::rejectcontractsWorkFlow($request);
+            $contractbudgetrqst->status = 'Rejected';
+            $contractbudgetrqst->approval_rejection_date = now();
+                if($contractbudgetrqst->save()){
+                    $message = 'Contract Workflow Rejected successfully!';
+                    session()->flash('success', $message);
+                }
+        }
+        return response()->json([
+            'success' => true,
+            'message' => $message,
+            'redirect_url' => route('admin.contracts.show', ['contract' => $contractbudgetrqst->contract_id]),
         ]);
 
 

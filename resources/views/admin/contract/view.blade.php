@@ -10,7 +10,7 @@
                
             </div>
             <div class="mx-2 my-4 rounded px-8 w-full flex justify-end items-center gap-4 ">
-        @if($contract->ContractAdditionalBudgetRequest->isNotEmpty())
+        @if($contract->latestBudgetRequest())
             <!-- Additional Budget Flyout Button -->
              <div  x-data="{isOpen: false,
                 showModal: false,
@@ -37,7 +37,7 @@
                 @click="isOpen = false"
                 class="fixed inset-0 bg-black bg-opacity-50 z-40"
                 ></div>
-                <x-contract-additional-budget :contract="$contract"  />
+                <x-contract-additional :budgetRequest="$contract->latestBudgetRequest()"  />
                 </div>
         @endif
         @if($contract->latestApprovedExtensionRequest())

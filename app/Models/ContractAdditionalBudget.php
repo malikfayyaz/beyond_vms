@@ -19,6 +19,14 @@ class ContractAdditionalBudget extends Model
     ];
 	public function contract()
     {
-        return $this->belongsTo(CareerOpportunitiesContract::class, 'contract_id');
+        return $this->belongsTo(CareerOpportunitiesContract::class, 'contract_id', 'id');
+    }
+    public function contractBudgetWorkflow()
+    {
+        return $this->hasMany(ContractBudgetWorkflow::class, 'request_id', 'id');
+    }
+    public function contractEditHistory()
+    {
+        return $this->belongsTo(ContractEditHistory::class, 'history_id', 'id');
     }
 }

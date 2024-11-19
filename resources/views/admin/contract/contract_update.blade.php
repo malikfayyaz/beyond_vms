@@ -24,7 +24,7 @@
             $reasons = updateContractReason();
             $Error = '';
             $keysToUnset = [1, 2, 3, 5, 6];
-            if ($contract->contractAdditionalBudgetRequest->isNotEmpty()) {
+            if ($contract->latestBudgetRequest()) {
                 $Error = "Additional budget request is pending.";
                
                 foreach ($keysToUnset as $key){
