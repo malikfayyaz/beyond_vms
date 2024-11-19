@@ -215,42 +215,38 @@
 
                   </ul>
               </li>
-            <li>
-              <a
-                href="#"
-                class="flex items-center p-2 text-white rounded-lg hover:bg-gray-700 overflow-hidden"
-                :class="{'justify-center': miniSidebar}"
-              >
-                <i class="fas fa-envelope w-6 h-6"></i>
-                <span
-                  class="flex-1 ml-3 whitespace-nowrap"
-                  x-show="!miniSidebar"
-                  x-cloak
-                  >Email</span
-                >
-                <span
-                  class="inline-flex items-center justify-center w-3 h-3 p-3 ml-3 text-sm font-medium text-blue-800 bg-blue-100 rounded-full"
-                  x-show="!miniSidebar"
-                  x-cloak
-                  >3</span
-                >
-              </a>
-            </li>
-            <li>
-              <a
-                href="#"
-                class="flex items-center p-2 text-white rounded-lg hover:bg-gray-700 overflow-hidden"
-                :class="{'justify-center': miniSidebar}"
-              >
-                <i class="fas fa-comment w-6 h-6"></i>
-                <span
-                  class="flex-1 ml-3 whitespace-nowrap"
-                  x-show="!miniSidebar"
-                  x-cloak
-                  >Chat</span
-                >
-              </a>
-            </li>
+
+              <li x-data="{ open: false }">
+                  <button
+                      @click="open = !open"
+                      class="flex items-center w-full p-2 text-white rounded-lg hover:bg-gray-700 overflow-hidden"
+                      :class="{'justify-center': miniSidebar}"
+                  >
+                      <i class="fas fa-lock w-6 h-6"></i>
+                      <span
+                          class="flex-1 ml-3 text-left whitespace-nowrap"
+                          x-show="!miniSidebar"
+                          x-cloak
+                      >Timesheet</span
+                      >
+                      <i
+                          class="fas fa-chevron-down ml-auto"
+                          x-show="!miniSidebar"
+                          x-cloak
+                      ></i>
+                  </button>
+                  <ul x-show="open" class="py-2 space-y-2" x-cloak>
+                      <li class="{{ request()->routeIs('vendor.contracts.index') ? 'active' : ''}}">
+                          <a href="{{ route('vendor.timesheet.select_candidate') }}"
+                             class="flex items-center w-full p-2 text-white transition duration-75 pl-11 hover:bg-gray-700">
+                             Add Timesheet
+                          </a>
+                      </li>
+
+                  </ul>
+              </li>
+        
+           
           </ul>
         </div>
       </aside>

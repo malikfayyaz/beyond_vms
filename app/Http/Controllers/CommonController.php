@@ -282,6 +282,29 @@ class CommonController extends Controller
         return response()->json($formattedTemplates);
     }
 
+    public function getCandiadte()
+    {
+        $userid = \Auth::id();
+        $sessionrole = session('selected_role');
+
+        $userid =  checkUserId($userid,$sessionrole);
+        // Query the JobTemplate model
+            $contracts = CareerOpportunitiesContract::whereIn('status', [1, 3, 4, 5, 6])
+            ->where('vendor_id', $userid)
+            ->get();
+            
+
+            // Map the results to rename 'job_title' as 'name'
+            $formattedTemplates = $contracts->map(function ($template) {
+                return [
+                    'id' => $template->id,
+                    'name' => $template->consultant->full_name .' ('. $template->careerOpportunity->title .' - '.$template->id.')',
+                ];
+            });
+       // Return JSON response
+        return response()->json($formattedTemplates);
+    }
+
     
     // For loading job template
     public function loadJobTemplate(Request $request){

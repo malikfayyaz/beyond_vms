@@ -71,6 +71,7 @@ Route::middleware(['ensure_role_is_selected'])->group(function () {
     Route::get('load-market-job-template/{category}/{type}', [CommonController::class, 'loadMarketJobTemplate']);
     Route::post('load-job-template', [CommonController::class, 'loadJobTemplate'])->name('load_job_template');
     Route::post('division-load', [CommonController::class, 'divisionLoad'])->name('division_load');
+    Route::get('get-candiadte', [CommonController::class, 'getCandiadte']);
     Route::match(['get', 'post'], 'workflow', [GenericDataController::class, 'workflow'])->name('admin.workflow');
     Route::match(['get', 'post'], 'workflow/edit/{id}', [GenericDataController::class, 'workflowEdit'])->name('admin.workflow.edit');
     Route::match(['get', 'post'], 'workflow/store', [GenericDataController::class, 'workflowStore'])->name('admin.workflow.store');
