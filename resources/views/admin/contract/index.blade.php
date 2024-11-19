@@ -50,7 +50,7 @@
                             data-type="additional_budget"
                         >
                             <i class="fa-solid fa-fill"></i>
-                            <span class="capitalize">Additional Budget Request</span>
+                            <span class="capitalize">Additional Budget</span>
                             <div class="px-1 py-1 flex items-center justify-center bg-gray-500 text-white rounded-lg">
                                 <span class="text-[10px]">{{ $counts['additional_budget'] }}</span>
                             </div>
@@ -64,7 +64,7 @@
                             data-type="ext_req"
                         >
                             <i class="fa-solid fa-fill"></i>
-                            <span class="capitalize">Extension Request</span>
+                            <span class="capitalize">Extension</span>
                             <div class="px-1 py-1 flex items-center justify-center bg-gray-500 text-white rounded-lg">
                                 <span class="text-[10px]">{{ $counts['ext_req'] }}</span>
                             </div>
@@ -77,7 +77,7 @@
                             data-type="rate_change"
                         >
                             <i class="fa-solid fa-fill"></i>
-                            <span class="capitalize">Rate Change Request</span>
+                            <span class="capitalize">Rate Change</span>
                             <div class="px-1 py-1 flex items-center justify-center bg-gray-500 text-white rounded-lg">
                                 <span class="text-[10px]">{{ $counts['rate_change'] }}</span>
                             </div>
