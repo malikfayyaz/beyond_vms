@@ -143,4 +143,20 @@ class CareerOpportunitiesContract extends Model
             ->first();
     }
 
+    public function pendingBudgetRequests()
+    {
+        return $this->hasMany(ContractAdditionalBudget::class, 'contract_id', 'id')
+                    ->where('status', 'Pending');
+    }
+
+    public function pendingExtensionRequests()
+    {
+        return $this->hasMany(ContractExtensionRequest::class, 'contract_id', 'id')
+                    ->where('ext_status', 1); // 1 indicates "Pending" (adjust based on your database)
+    }
+    public function pendingRateChangeRequests()
+    {
+        return $this->hasMany(ContractRateEditRequest::class, 'contract_id', 'id')
+                    ->where('status', 0); // Assuming 0 indicates "Pending"
+    }
 }
