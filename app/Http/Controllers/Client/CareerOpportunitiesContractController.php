@@ -25,7 +25,7 @@ class CareerOpportunitiesContractController extends Controller
             'pending_ER' => CareerOpportunitiesContract::whereHas('pendingExtensionRequests')->count(),
             'pending_RC' => CareerOpportunitiesContract::whereHas('pendingRateChangeRequests')->count(),
         ];
-// dd($counts);
+
         if ($request->ajax()) {
 
             $clientId = Client::getClientIdByUserId(Auth::id());
