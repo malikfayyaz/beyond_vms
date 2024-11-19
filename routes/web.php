@@ -116,5 +116,6 @@ Route::middleware(['ensure_role_is_selected'])->group(function () {
     Route::get('submission-details/{id}', [CommonController::class, 'submissionDetails'])->name('submission_details');
     
     Route::POST('contracts/contractRateChangeWorkflow', [CommonController::class, 'contractRateChangeWorkflow'])->name('contract.contractRateChangeWorkflow');
+    Route::POST('contracts/contractExtensionWorkflow', [CommonController::class, 'contractExtensionWorkflow'])->name('contract.contractExtensionWorkflow');
 
 });

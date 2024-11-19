@@ -67,7 +67,7 @@
                 @click="isOpen = false"
                 class="fixed inset-0 bg-black bg-opacity-50 z-40"
                 ></div>
-                <x-contract-extension :contract="$contract"  />
+                <x-contract-extension :extensionRequest="$contract->latestApprovedExtensionRequest()"  />
                 </div>
         @endif
         @if($contract->latestRateEditRequest())

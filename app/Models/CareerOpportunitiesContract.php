@@ -121,8 +121,6 @@ class CareerOpportunitiesContract extends Model
     {
         return $this->hasMany(ContractBudgetWorkflow::class, 'contract_id', 'id');
     }
-    
-
     public function latestApprovedExtensionRequest()
     {
         return $this->hasMany(ContractExtensionRequest::class, 'contract_id', 'id')
@@ -130,12 +128,12 @@ class CareerOpportunitiesContract extends Model
                     ->latest()
                     ->first();
     }
-public function latestRateEditRequest()
-{
+    public function latestRateEditRequest()
+    {
     return  $this->hasOne(ContractRateEditRequest::class, 'contract_id', 'id')
             ->whereIn('status', [0, 3])
             ->latest()
             ->first();
-}
+    }
 
 }

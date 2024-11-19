@@ -40,6 +40,9 @@ class CareerOpportunitiesContractController extends BaseController
         $counts = [
             'active' => CareerOpportunitiesContract::where('status', 1)->count(),
             'cancelled' => CareerOpportunitiesContract::whereIn('status', [2, 6])->count(),
+            'additional_budget' => CareerOpportunitiesContract::whereHas('contractAdditionalBudgetRequest')->count(),
+            'ext_req' => CareerOpportunitiesContract::whereHas('extensionRequest')->count(),
+            'rate_change' => CareerOpportunitiesContract::whereHas('contractRateEditRequest')->count(),
         ];
 
         if ($request->ajax()) {
@@ -56,6 +59,15 @@ class CareerOpportunitiesContractController extends BaseController
                         break;
                     case 'cancelled':
                         $data->whereIn('status', [2, 6]);
+                        break;
+                    case 'additional_budget':
+                        $data->has('contractAdditionalBudgetRequest');
+                        break;
+                    case 'ext_req':
+                        $data->has('extensionRequest');
+                        break;
+                    case 'rate_change':
+                        $data->has('contractRateEditRequest');
                         break;
                     // Add additional cases as needed
                     default:
@@ -795,37 +807,7 @@ class CareerOpportunitiesContractController extends BaseController
 
 
     }
-    public function ContractExtensionWorkflow(Request $request)
-    {
-        $actionType = $request->input('actionType');
-        $validated = $request->validate([
-            'rowId' => 'required|integer',
-            'reason' => 'required_if:actionType,Reject|integer',
-        ]);
-        $contractext = ContractExtensionRequest::findOrFail($request->extId);
-        if ($actionType == 'Accept') {
-            contractHelper::contractExtensionWorkflowApprove($request);  //for approve
-            $message = 'Contract Extension Workflow Accepted successfully!';
-            $contractext->ext_status = 2;
-            $contractext->approval_rejection_date = now();
-            $contractext->save();
-            session()->flash('success', $message);
-        } elseif ($actionType == 'Reject') {
-            contractHelper::contractExtensionWorkflowApprove($request); // for reject
-            $contractext->ext_status = 3;
-            $contractext->approval_rejection_date = now();
-            $contractext->save();
-            $message = 'Contract Workflow Rejected successfully!';
-            session()->flash('success', $message);
-        }
-        return response()->json([
-            'success' => true,
-            'message' => $message,
-            'redirect_url' => route('admin.contracts.show', ['contract' => $contractext->contract_id]),
-        ]);
 
-
-    }
 
     // ratechange 
     
