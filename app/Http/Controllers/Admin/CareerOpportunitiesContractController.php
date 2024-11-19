@@ -40,6 +40,9 @@ class CareerOpportunitiesContractController extends BaseController
         $counts = [
             'active' => CareerOpportunitiesContract::where('status', 1)->count(),
             'cancelled' => CareerOpportunitiesContract::whereIn('status', [2, 6])->count(),
+            'additional_budget' => CareerOpportunitiesContract::whereHas('contractAdditionalBudgetRequest')->count(),
+            'ext_req' => CareerOpportunitiesContract::whereHas('extensionRequest')->count(),
+            'rate_change' => CareerOpportunitiesContract::whereHas('contractRateEditRequest')->count(),
         ];
 
         if ($request->ajax()) {
@@ -56,6 +59,15 @@ class CareerOpportunitiesContractController extends BaseController
                         break;
                     case 'cancelled':
                         $data->whereIn('status', [2, 6]);
+                        break;
+                    case 'additional_budget':
+                        $data->has('contractAdditionalBudgetRequest');
+                        break;
+                    case 'ext_req':
+                        $data->has('extensionRequest');
+                        break;
+                    case 'rate_change':
+                        $data->has('contractRateEditRequest');
                         break;
                     // Add additional cases as needed
                     default:

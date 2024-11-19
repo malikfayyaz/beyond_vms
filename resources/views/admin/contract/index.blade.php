@@ -42,6 +42,47 @@
                             </div>
                         </a>
                     </li>
+                    <!-- Additional Budget Tab -->
+                    <li class="flex justify-center">
+                        <a
+                            href="#additional-budget"
+                            class="tab-link w-full flex justify-center items-center gap-3 py-4 hover:bg-white hover:rounded-lg hover:shadow"
+                            data-type="additional_budget"
+                        >
+                            <i class="fa-solid fa-fill"></i>
+                            <span class="capitalize">Additional Budget Request</span>
+                            <div class="px-1 py-1 flex items-center justify-center bg-gray-500 text-white rounded-lg">
+                                <span class="text-[10px]">{{ $counts['additional_budget'] }}</span>
+                            </div>
+                        </a>
+                    </li>
+                    <!-- Ext Req Tab -->
+                    <li class="flex justify-center">
+                        <a
+                            href="#ext_req"
+                            class="tab-link w-full flex justify-center items-center gap-3 py-4 hover:bg-white hover:rounded-lg hover:shadow"
+                            data-type="ext_req"
+                        >
+                            <i class="fa-solid fa-fill"></i>
+                            <span class="capitalize">Extension Request</span>
+                            <div class="px-1 py-1 flex items-center justify-center bg-gray-500 text-white rounded-lg">
+                                <span class="text-[10px]">{{ $counts['ext_req'] }}</span>
+                            </div>
+                        </a>
+                    </li>
+                    <li class="flex justify-center">
+                        <a
+                            href="#rate_change"
+                            class="tab-link w-full flex justify-center items-center gap-3 py-4 hover:bg-white hover:rounded-lg hover:shadow"
+                            data-type="rate_change"
+                        >
+                            <i class="fa-solid fa-fill"></i>
+                            <span class="capitalize">Rate Change Request</span>
+                            <div class="px-1 py-1 flex items-center justify-center bg-gray-500 text-white rounded-lg">
+                                <span class="text-[10px]">{{ $counts['rate_change'] }}</span>
+                            </div>
+                        </a>
+                    </li>
                  </ul>
                 </div>
 
