@@ -24,67 +24,67 @@ class CareerOpportunitiesController extends Controller
      */
     public function index(Request $request)
     {
-    $clientid = Client::getClientIdByUserId(Auth::id());
-$counts = [
-    'all_jobs' => CareerOpportunity::whereHas('workFlow', function ($query) use ($clientid) {
-        $query->where('user_id', $clientid);
-    })->count(),
+        $clientid = Client::getClientIdByUserId(Auth::id());
+        $counts = [
+            'all_jobs' => CareerOpportunity::whereHas('workFlow', function ($query) use ($clientid) {
+                $query->where('client_id', $clientid);
+            })->count(),
 
-    'open' => CareerOpportunity::whereHas('workFlow', function ($query) use ($clientid) {
-        $query->where('user_id', $clientid);
-    })->where('jobStatus', 3)->count(),
+            'open' => CareerOpportunity::whereHas('workFlow', function ($query) use ($clientid) {
+                $query->where('client_id', $clientid);
+            })->where('jobStatus', 3)->count(),
 
-    'filled' => CareerOpportunity::whereHas('workFlow', function ($query) use ($clientid) {
-        $query->where('user_id', $clientid);
-    })->where('jobStatus', 4)->count(),
+            'filled' => CareerOpportunity::whereHas('workFlow', function ($query) use ($clientid) {
+                $query->where('client_id', $clientid);
+            })->where('jobStatus', 4)->count(),
 
-    'new' => CareerOpportunity::whereHas('workFlow', function ($query) use ($clientid) {
-        $query->where('user_id', $clientid);
-    })->where('jobStatus', 11)->count(),
+            'new' => CareerOpportunity::whereHas('workFlow', function ($query) use ($clientid) {
+                $query->where('client_id', $clientid);
+            })->where('jobStatus', 11)->count(),
 
-    'closed' => CareerOpportunity::whereHas('workFlow', function ($query) use ($clientid) {
-        $query->where('user_id', $clientid);
-    })->where('jobStatus', 12)->count(),
+            'closed' => CareerOpportunity::whereHas('workFlow', function ($query) use ($clientid) {
+                $query->where('client_id', $clientid);
+            })->where('jobStatus', 12)->count(),
 
-    'pending' => CareerOpportunity::whereHas('workFlow', function ($query) use ($clientid) {
-        $query->where('user_id', $clientid);
-    })->where('jobStatus', 1)->count(),
+            'pending' => CareerOpportunity::whereHas('workFlow', function ($query) use ($clientid) {
+                $query->where('client_id', $clientid);
+            })->where('jobStatus', 1)->count(),
 
-    'sourcing' => CareerOpportunity::whereHas('workFlow', function ($query) use ($clientid) {
-        $query->where('user_id', $clientid);
-    })->where('jobStatus', 13)->count(),
+            'sourcing' => CareerOpportunity::whereHas('workFlow', function ($query) use ($clientid) {
+                $query->where('client_id', $clientid);
+            })->where('jobStatus', 13)->count(),
 
-    'pendingpmo' => CareerOpportunity::whereHas('workFlow', function ($query) use ($clientid) {
-        $query->where('user_id', $clientid);
-    })->where('jobStatus', 22)->count(),
+            'pendingpmo' => CareerOpportunity::whereHas('workFlow', function ($query) use ($clientid) {
+                $query->where('client_id', $clientid);
+            })->where('jobStatus', 22)->count(),
 
-    'open_pending_release' => CareerOpportunity::whereHas('workFlow', function ($query) use ($clientid) {
-        $query->where('user_id', $clientid);
-    })->whereIn('jobStatus', [3, 23])->count(),
+            'open_pending_release' => CareerOpportunity::whereHas('workFlow', function ($query) use ($clientid) {
+                $query->where('client_id', $clientid);
+            })->whereIn('jobStatus', [3, 23])->count(),
 
-    'pending_hm' => CareerOpportunity::whereHas('workFlow', function ($query) use ($clientid) {
-        $query->where('user_id', $clientid);
-    })->whereIn('jobStatus', [1, 23, 24])->count(),
+            'pending_hm' => CareerOpportunity::whereHas('workFlow', function ($query) use ($clientid) {
+                $query->where('client_id', $clientid);
+            })->whereIn('jobStatus', [1, 23, 24])->count(),
 
-    'quick_create' => CareerOpportunity::whereHas('workFlow', function ($query) use ($clientid) {
-        $query->where('user_id', $clientid);
-    })->whereIn('jobStatus', [1, 3, 13])->count(),
+            'quick_create' => CareerOpportunity::whereHas('workFlow', function ($query) use ($clientid) {
+                $query->where('client_id', $clientid);
+            })->whereIn('jobStatus', [1, 3, 13])->count(),
 
-    'draft' => CareerOpportunity::whereHas('workFlow', function ($query) use ($clientid) {
-        $query->where('user_id', $clientid);
-    })->where('jobStatus', 2)->count(),
+            'draft' => CareerOpportunity::whereHas('workFlow', function ($query) use ($clientid) {
+                $query->where('client_id', $clientid);
+            })->where('jobStatus', 2)->count(),
 
-    'active' => CareerOpportunity::whereHas('workFlow', function ($query) use ($clientid) {
-        $query->where('user_id', $clientid);
-    })->whereIn('jobStatus', [1, 3, 6, 13, 23, 24])->count(),
-];
+            'active' => CareerOpportunity::whereHas('workFlow', function ($query) use ($clientid) {
+                $query->where('client_id', $clientid);
+            })->whereIn('jobStatus', [1, 3, 6, 13, 23, 24])->count(),
+        ];
 
         if ($request->ajax()) {
             $clientid = Client::getClientIdByUserId(Auth::id());
             $query = CareerOpportunity::with('hiringManager', 'workerType')
             ->withCount('submissions')
             ->orWhereHas('workFlow', function ($data) use ($clientid) {
-            $data->where('user_id', $clientid);
+            $data->where('client_id', $clientid);
             })
             ->orderby('id', 'desc');
                 if ($request->has('type')) {
