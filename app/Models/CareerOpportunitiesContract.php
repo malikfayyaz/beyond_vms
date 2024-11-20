@@ -159,4 +159,8 @@ class CareerOpportunitiesContract extends Model
         return $this->hasMany(ContractRateEditRequest::class, 'contract_id', 'id')
                     ->where('status', 0); // Assuming 0 indicates "Pending"
     }
+    public function createdBy()
+    {
+        return $this->belongsTo(User::class, 'created_by', 'id');
+    }
 }

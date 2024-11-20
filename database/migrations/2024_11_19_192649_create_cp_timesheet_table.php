@@ -24,8 +24,6 @@ class CreateCpTimesheetTable extends Migration
             $table->integer('sub_type_of_timesheet');
             $table->integer('location_id');
             $table->integer('contract_id');
-            $table->integer('workorder_id');
-            $table->integer('offer_id');
             $table->integer('candidate_id');
             $table->integer('client_id');
             $table->integer('approval_manager');
@@ -56,7 +54,6 @@ class CreateCpTimesheetTable extends Migration
             $table->decimal('total_doubletime_payrate', 10, 2);
             $table->decimal('total_payrate', 10, 2);
             $table->decimal('new_total_payrate', 10, 2)->nullable();
-            $table->decimal('marking_payrate', 10, 2);
             $table->text('notes');
             $table->decimal('regular_billrate', 10, 2);
             $table->decimal('total_regular_billrate', 10, 2);
@@ -66,9 +63,6 @@ class CreateCpTimesheetTable extends Migration
             $table->decimal('total_doubletime_billrate', 10, 2);
             $table->decimal('total_billrate', 10, 2);
             $table->decimal('new_totall_billrate', 10, 2)->nullable();
-            $table->decimal('marking_billrate', 10, 2);
-            $table->decimal('marking_vendor_billrate', 10, 2);
-            $table->decimal('regular_markup', 10, 2);
             $table->decimal('overtime_markup', 10, 2);
             $table->decimal('doubletime_markup', 10, 2);
             $table->decimal('total_markup', 10, 2);
@@ -103,7 +97,6 @@ class CreateCpTimesheetTable extends Migration
             $table->enum('timesheet_current_type', ['Original', 'Modified', 'Modified Original']);
             $table->integer('timesheet_current_reverse');
             $table->string('conso_serial_number', 100);
-            $table->boolean('reversal_updated');
             $table->integer('parser_request_id');
             $table->integer('is_matched');
             $table->text('unmatched_reason');

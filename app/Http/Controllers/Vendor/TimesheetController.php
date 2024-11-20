@@ -94,6 +94,6 @@ class TimesheetController extends Controller
         ->where('contract_id', $contract->id)
         ->get();
         // Your logic here
-        return view('vendor.timesheet.step2', compact('timesheetCostCenter', 'contract'));
+        return view('vendor.timesheet.step2', compact('timesheetCostCenter', 'contract', 'startDate', 'endDate'));
     }
 }

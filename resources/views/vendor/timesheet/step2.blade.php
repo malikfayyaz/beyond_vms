@@ -26,32 +26,26 @@
                     <div class="space-y-4">
                         <div class="flex flex-col sm:flex-row">
                             <span class="w-48 text-gray-600">Contractor Name:</span>
-                            <span>Sree Praveen</span>
+                            <span>{{$contract->consultant->fullname}}</span>
                         </div>
 
                         <div class="flex flex-col sm:flex-row">
                             <span class="w-48 text-gray-600">Timesheet Week:</span>
-                            <span>11/17/2024 to 11/23/2024</span>
+                            <span>{{formatDate($startDate)}} to {{formatDate($endDate)}}</span>
                         </div>
-
-                        <div class="flex flex-col sm:flex-row">
-                            <span class="w-48 text-gray-600">Timesheet Approved on:</span>
-                            <span></span>
-                        </div>
-
                         <div class="flex flex-col sm:flex-row">
                             <span class="w-48 text-gray-600">Date of Submission:</span>
-                            <span></span>
+                            <span>{{formatDate($contract->submission->shortlisted_date)}}</span>
                         </div>
 
                         <div class="flex flex-col sm:flex-row">
-                            <span class="w-48 text-gray-600">Assignment ID:</span>
-                            <span>4952</span>
+                            <span class="w-48 text-gray-600">Contract ID:</span>
+                            <span>{{$contract->id}}</span>
                         </div>
 
                         <div class="flex flex-col sm:flex-row">
-                            <span class="w-48 text-gray-600">Created From:</span>
-                            <span></span>
+                            <span class="w-48 text-gray-600">Created By:</span>
+                            <span>{{$contract->createdBy->name}}</span>
                         </div>
                     </div>
 
@@ -59,28 +53,27 @@
                     <div class="space-y-4">
                         <div class="flex flex-col sm:flex-row">
                             <span class="w-48 text-gray-600">Location:</span>
-                            <span>US Rolling Meadows 2850 Golf Road</span>
+                            <span>{{locationName($contract->location_id)}}</span>
                         </div>
 
                         <div class="flex flex-col sm:flex-row">
                             <span class="w-48 text-gray-600">Approving Manager:</span>
-                            <span>Satyanarayana Kamasani</span>
+                            <span>{{$contract->HiringManager->full_name}}</span>
                         </div>
 
                         <div class="flex flex-col sm:flex-row">
                             <span class="w-48 text-gray-600">Timesheet Type:</span>
-                            <span>Standard (Per Hour)</span>
+                            <span>{{getSettingTitleById($contract->timesheet_type)}}</span>
                         </div>
 
                         <div class="flex flex-col sm:flex-row">
                             <span class="w-48 text-gray-600">Job Profile:</span>
-                            <span class="flex-1">Statement of Work - SOW-TCS-000023-HomeOffice-CloudEngineer2
-                                (4660)</span>
+                            <span class="flex-1">{{$contract->careerOpportunity->title}}({{$contract->careerOpportunity->id}})</span>
                         </div>
 
                         <div class="flex flex-col sm:flex-row">
                             <span class="w-48 text-gray-600">Job Rate Type:</span>
-                            <span>Per Hour</span>
+                            <span>{{$contract->careerOpportunity->paymentType->title}}</span>
                         </div>
                     </div>
                 </div>
