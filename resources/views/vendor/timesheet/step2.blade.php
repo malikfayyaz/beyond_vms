@@ -79,29 +79,30 @@
                 </div>
             </div>
         </div>
-        <div x-data="{
-                    regularTime: Array(7).fill(0),
-                    overTime: Array(7).fill(0),
-                    days: [
-                        'Sunday (11/17/2024)',
-                        'Monday (11/18/2024)',
-                        'Tuesday (11/19/2024)',
-                        'Wednesday (11/20/2024)',
-                        'Thursday (11/21/2024)',
-                        'Friday (11/22/2024)',
-                        'Saturday (11/23/2024)'
-                    ],
-                    calculateRowTotal(type) {
-                        return type.reduce((sum, val) => sum + (parseFloat(val) || 0), 0).toFixed(2);
-                    },
-                    calculateDayTotal(index) {
-                        return ((parseFloat(this.regularTime[index]) || 0) + (parseFloat(this.overTime[index]) || 0)).toFixed(2);
-                    },
-                    calculateGrandTotal() {
-                        return (parseFloat(this.calculateRowTotal(this.regularTime)) + 
-                               parseFloat(this.calculateRowTotal(this.overTime))).toFixed(2);
-                    }
-                }" class="p-4">
+        <?php 
+        $diff = date_diff(date_create($startDate),date_create($endDate));
+        $starttimestamp = strtotime($startDate);
+        $days = $diff->format("%a");
+        // dd($days);
+        for($i = 0; $i <= $days; $i++ ){
+            $dayDate =  date('l', strtotime('+' . $i . ' day', $starttimestamp)) . ' (' . formatDate(date('m/d/Y',strtotime('+' . $i . ' day', $starttimestamp))).')';
+            $dayCheck= date('l', strtotime('+' . $i . ' day', $starttimestamp));
+            $dayStrTime= date('Y-m-d',strtotime('+' . $i . ' day', $starttimestamp));
+            $dimColorClass = ($dayCheck == 'Saturday' || $dayCheck == 'Sunday' ) ? 'dim-color' : '';
+            $daysArray[] = "".$dayDate."";
+            $regularTimeArray[] = [
+                'name' => "days[{$dayDate}][]",
+                'id' => date('D', strtotime('+' . $i . ' day', $starttimestamp)) ,
+                'class' => "form-control tsregulardays_" . date('D', strtotime('+' . $i . ' day', $starttimestamp)) . " tsregulardays {$dimColorClass}",
+                'value' => 0,
+            ];
+        }
+        // Encode the array as JSON
+        $daysJson = json_encode($daysArray);
+        $regularTime = json_encode($regularTimeArray);
+         ?>
+        <div x-data="timesheetHandler" class="p-4">
+       
             <div class="bg-white rounded-lg shadow p-6">
                 <!-- Timesheet Table -->
                 <div class="overflow-x-auto">
@@ -123,27 +124,24 @@
                             <!-- Regular Time -->
                             <tr>
                                 <td class="border p-2">Regular Time</td>
-                                <template x-for="(_, index) in regularTime" :key="index">
-                                    <td class="border p-2">
-                                        <input type="number" x-model="regularTime[index]"
-                                            class="w-full p-1 border rounded text-center" step="0.1">
-                                    </td>
+                                <template x-for="(input, index) in regularTimeInputs" :key="index">
+                                <td class="border p-2">
+                                                        <input type="number" 
+                                                            :name="input.name" 
+                                                            :id="input.id" 
+                                                            :class="input.class" 
+                                                            x-model="regularTime[index]" 
+                                                            min="0" 
+                                                            step="0.25" 
+                                                            :value="input.value"
+                                                            class="w-full p-1 border rounded text-center">
+                                                    </td>
                                 </template>
                                 <td class="border p-2 bg-gray-100 text-center font-medium"
                                     x-text="calculateRowTotal(regularTime)"></td>
                             </tr>
                             <!-- Over Time -->
-                            <tr>
-                                <td class="border p-2">Over Time</td>
-                                <template x-for="(_, index) in overTime" :key="index">
-                                    <td class="border p-2">
-                                        <input type="number" x-model="overTime[index]"
-                                            class="w-full p-1 border rounded text-center" step="0.1">
-                                    </td>
-                                </template>
-                                <td class="border p-2 bg-gray-100 text-center font-medium"
-                                    x-text="calculateRowTotal(overTime)"></td>
-                            </tr>
+                         
                             <!-- Daily Totals -->
                             <tr>
                                 <td class="border p-2">Total</td>
@@ -160,10 +158,10 @@
 
                 <!-- Buttons -->
                 <div class="mt-6 flex gap-4">
-                    <button class="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600">
+                    <button @click="submitTimesheet" name="simpleTimesheet" class="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600">
                         Submit Timesheet
                     </button>
-                    <button class="px-4 py-2 bg-yellow-500 text-white rounded hover:bg-yellow-600">
+                    <button name="saveSheet" class="px-4 py-2 bg-yellow-500 text-white rounded hover:bg-yellow-600">
                         Save Timesheet
                     </button>
                 </div>
@@ -173,3 +171,80 @@
 </div>
 
 @endsection
+<script>
+document.addEventListener('alpine:init', () => {
+    Alpine.data('timesheetHandler', () => ({
+        selectedProject: [],
+        regularTime: Array({{ count($regularTimeArray) }}).fill(0),
+        regularTimeInputs: {!! $regularTime !!},
+        days: {!! $daysJson !!},
+        startdate:{{strtotime($startDate)}},
+        enddate:{{strtotime($endDate)}},
+        contract_id:`{{$contract->id}}`,
+        errors: [],
+        country_timesheet_sub_type:`{{$contract->careerOpportunity->payment_type}}`,
+        projects: {!! $timesheetCostCenter->map(fn($proj) => $proj->buName->id)->toJson() !!},
+        init() {
+            // Automatically set the first project as selected, or adjust logic as needed
+            if (this.projects.length > 0) {
+                this.selectedProject = [...this.projects];
+            }
+        },
+        calculateRowTotal(type) {
+            return type.reduce((sum, val) => sum + (parseFloat(val) || 0), 0).toFixed(2);
+        },
+
+        calculateDayTotal(index) {
+            return (parseFloat(this.regularTime[index]) || 0).toFixed(2);
+        },
+
+        calculateGrandTotal() {
+            return this.calculateRowTotal(this.regularTime);
+        },
+        
+        validateInputs() {
+            
+            
+            this.errors = [];
+            this.regularTime.forEach((value, index) => {
+                if (value > 24) {
+                    this.errors.push(`Day ${this.days[index]} exceeds 24 hours.`);
+                }
+            });
+            return this.errors.length === 0;
+        },
+
+        submitTimesheet() {
+            if (!this.validateInputs()) {
+                document.getElementById('error_log').innerText = this.errors.join('\n');
+                return;
+            }
+           
+            let formData = new FormData();
+
+            // Create a payload
+            const payload = this.regularTimeInputs.map((input, index) => ({
+                day: this.days[index],
+                value: this.regularTime[index],
+            }));
+            
+            this.selectedProject.forEach((project) => {
+                formData.append('projects[]', project);
+            });
+            formData.append('startdate', this.startdate);
+            formData.append('enddate', this.enddate);
+            formData.append('country_timesheet_sub_type', this.country_timesheet_sub_type);
+            formData.append('timesheet', JSON.stringify(payload));
+            formData.append('contract_id', this.contract_id);
+            formData.append('type', 'submit');
+            // Send AJAX request
+            url = '{{ route("vendor.timesheet.step_two_store") }}';
+
+                ajaxCall(url, 'POST', [
+                    [onSuccess, ['response']]
+                ], formData);
+           
+        },
+    }));
+});
+</script>

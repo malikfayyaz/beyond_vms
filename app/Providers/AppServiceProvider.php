@@ -6,6 +6,7 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Blade;
 use App\Services\CareerOpportunitiesOfferService;
 use App\Services\CareerOpportunitiesContractService;
+use App\Services\TimesheetService;
 use App\Services\RateshelpersService;
 use Illuminate\Support\Facades\Schema;
 
@@ -24,6 +25,10 @@ class AppServiceProvider extends ServiceProvider
         });
         $this->app->singleton('careerOpportunitiescontract', function () {
             return new CareerOpportunitiesContractService();
+        });
+
+        $this->app->singleton('timesheet', function () {
+            return new TimesheetService();
         });
     }
 

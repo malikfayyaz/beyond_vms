@@ -48,6 +48,10 @@ class CareerOpportunitiesContract extends Model
     {
         return$this->belongsTo(CareerOpportunitiesWorkorder::class,'workorder_id','id');
     }
+    public function offer()
+    {
+        return$this->belongsTo(CareerOpportunitiesOffer::class,'offer_id','id');
+    }
     public function workorderBackground()
     {
         return $this->hasOne(WorkorderBackground::class, 'workorder_id', 'workorder_id');

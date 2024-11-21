@@ -48,6 +48,7 @@ Route::middleware(['user_role:vendor'])->group(function () {
         Route::get('timesheet/{contract_id}/step-one', [TimesheetController::class, 'stepOneView'])->name('timesheet.step_one_view');
         Route::post('timesheet/step-one-store', [TimesheetController::class, 'stepOneStore'])->name('timesheet.step_one_store');
         Route::get('timesheet/step2', [TimesheetController::class, 'step2'])->name('timesheet.timesheetStep2');
+        Route::post('timesheet/step-two-store', [TimesheetController::class, 'stepTwoStore'])->name('timesheet.step_two_store');
 
     });
 
