@@ -32,6 +32,9 @@ class CareerOpportunitiesInterviewController extends Controller
             ->addColumn('career_opportunity', function ($row) {
                 return '<span class="job-detail-trigger text-blue-500 cursor-pointer" data-id="' . $row->careerOpportunity->id . '">' . $row->careerOpportunity->title . '('.$row->careerOpportunity->id.')' . '</span>';
             })
+            ->addColumn('status', function($row) {
+                return CareerOpportunitiesInterview::getInterviewStatus($row->status);
+                })
             ->addColumn('hiring_manger', function($row) {
                 return $row->careerOpportunity->hiringManager ? $row->careerOpportunity->hiringManager->fullname : 'N/A';
             })

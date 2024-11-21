@@ -88,4 +88,23 @@ class CareerOpportunitiesInterview extends Model
     {
         return $this->hasMany(CareerOpportunitiesInterviewMember::class, 'interview_id');
     }
+    public static function getInterviewStatus($statusId)
+    {
+        switch ($statusId) {
+            case 1:
+                return 'Waiting for Approval';
+            case 2:
+                return 'Approved';
+            case 3:
+                return 'Cancelled';
+            case 4:
+                return 'Reschedule';
+            case 5:
+                return 'Interview Completed';
+            case 6:
+                return 'PMO Review';
+            default:
+                return 'danger';
+        }
+    }
 }

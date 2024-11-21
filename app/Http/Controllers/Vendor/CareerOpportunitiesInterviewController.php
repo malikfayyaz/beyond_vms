@@ -37,6 +37,9 @@ class CareerOpportunitiesInterviewController extends Controller
             ->addColumn('vendor_name', function($row) {
                 return $row->submission ? $row->submission->vendor->full_name : 'N/A';
             })
+            ->addColumn('status', function($row) {
+                return CareerOpportunitiesInterview::getInterviewStatus($row->status);
+                })
             ->addColumn('primary_date', function($row) {
                 $primaryDate = $row->interviewDates->where('schedule_date_order', 1)->first();
                 
