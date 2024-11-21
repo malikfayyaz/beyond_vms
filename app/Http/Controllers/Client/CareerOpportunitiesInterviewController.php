@@ -35,6 +35,9 @@ class CareerOpportunitiesInterviewController extends Controller
             ->addColumn('hiring_manger', function($row) {
                 return $row->careerOpportunity->hiringManager ? $row->careerOpportunity->hiringManager->fullname : 'N/A';
             })
+            ->addColumn('status', function($row) {
+                return CareerOpportunitiesInterview::getInterviewStatus($row->status);
+                })
             ->addColumn('vendor_name', function($row) {
                 return $row->submission ? $row->submission->vendor->full_name : 'N/A';
             })

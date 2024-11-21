@@ -79,7 +79,8 @@ class CareerOpportunitiesOfferController extends BaseController
                 })
                 ->addColumn('wo_status', function($row) {
                     return  '';
-                })->addColumn('worker_type', function($row) {
+                })
+                ->addColumn('worker_type', function($row) {
                     return $row->careerOpportunity && $row->careerOpportunity->workerType
                         ? $row->careerOpportunity->workerType->title
                         : 'N/A';
