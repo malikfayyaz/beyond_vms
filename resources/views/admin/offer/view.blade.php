@@ -40,8 +40,93 @@
                             this.openModal = false;
                         }
                     },-->
-
-                <div x-data="{
+ <div class="mx-4 pt-0 pb-0 px-8 rounded">
+    <div x-data="contractForm" class="w-full flex justify-end items-center gap-4">
+    @if (!in_array($offer->status, [13, 2]))
+    <button
+        @click="actionType = 'Reject'; openModal = true; currentRowId = {{ $offer->id }}; submitForm(currentRowId, actionType);"
+        type="button"
+        class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-700 capitalize">
+        Reject Offer
+    </button>
+    <button
+        @click="actionType = 'Withdraw'; openModal = true; currentRowId = {{ $offer->id }}; submitForm(currentRowId, actionType);"
+        type="button"
+        class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-700 capitalize">
+        Withdraw Offer
+    </button>
+    @endif
+    <!-- Modal -->
+    <div 
+        x-show="openModal" 
+        @click.away="openModal = false"
+        class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full"
+        x-transition:enter="transition ease-out duration-300"
+        x-transition:enter-start="opacity-0"
+        x-transition:enter-end="opacity-100"
+        x-transition:leave="transition ease-in duration-300"
+        x-transition:leave-start="opacity-100"
+        x-transition:leave-end="opacity-0"
+    >
+        <div class="relative top-20 mx-auto p-5 border w-[600px] shadow-lg rounded-md bg-white" @click.stop>
+            <!-- Header -->
+            <div class="flex items-center justify-between border-b p-4">
+                <h2 class="text-xl font-semibold">
+                  <span x-text="actionType === 'Reject' ? 'Reject Offer' : 'Withdraw Offer'"></span></h2>
+                <button @click="openModal = false" class="text-gray-400 hover:text-gray-600 bg-transparent hover:bg-transparent">
+                    &times;
+                </button>
+            </div>
+            <!-- Content -->
+            <div class="p-4">
+                <form @submit.prevent="submitForm(currentRowId, actionType)" id="generalformwizard">
+                    <div x-show="actionType === 'Reject'" class="mt-4">
+                        <label for="reason" class="block text-sm font-medium text-gray-700 mb-1">
+                            Reason for Rejection <span class="text-red-500">*</span>
+                        </label>
+                        <select id="reason" x-model="reason" class="w-full">
+                            <option value="">Select</option>
+                            @foreach (checksetting(17) as $key => $value)
+                                <option value="{{ $key }}">{{ $value }}</option>
+                            @endforeach
+                        </select>
+                        <p x-show="errors.reason" class="text-red-500 text-sm mt-1" x-text="errors.reason"></p>
+                    </div>
+                    <div x-show="actionType === 'Withdraw'" class="mt-4">
+                        <label for="reason" class="block text-sm font-medium text-gray-700 mb-1">
+                            Reason for Withdraw <span class="text-red-500">*</span>
+                        </label>
+                        <select id="reason" x-model="reason" class="w-full">
+                            <option value="">Select</option>
+                            @foreach (checksetting(17) as $key => $value)
+                                <option value="{{ $key }}">{{ $value }}</option>
+                            @endforeach
+                        </select>
+                        <p x-show="errors.reason" class="text-red-500 text-sm mt-1" x-text="errors.reason"></p>
+                    </div>
+                    <div class="mt-4">
+                        <label for="note" class="block text-sm font-medium text-gray-700 mb-1">
+                            Note <span class="text-red-500">*</span>
+                        </label>
+                        <textarea id="note" x-model="note" rows="4" class="w-full border border-gray-300 rounded-md"></textarea>
+                        <p x-show="errors.note" class="text-red-500 text-sm mt-1" x-text="errors.note"></p>
+                    </div>
+                </form>
+            </div>
+            <!-- Footer -->
+            <div class="flex justify-end space-x-2 border-t p-4">
+                <button type="button" @click="openModal = false" class="rounded-md bg-gray-200 px-4 py-2">
+                    Close
+                </button>
+                <button type="button" @click="submitForm(currentRowId, actionType)" class="rounded-md bg-green-500 px-4 py-2 text-white">
+                    Save
+                </button>
+            </div>
+        </div>
+    </div>
+    </div>
+            <!-- End model -->
+  <div x-data="{
     openModal: false,
     currentRowId: null,
         actionType: '',
@@ -783,4 +868,56 @@
             .catch(error => console.error('Error:', error));
       }
     </script>
+    <script>
+    document.addEventListener('alpine:init', () => {
+        Alpine.data('contractForm', () => ({
+            openModal: false,
+            actionType: '',
+            offerId: '{{ $offer->id }}',
+            reason: '',
+            note: '',
+            errors: {},
+
+            validateForm() {
+                this.errors = {};
+                if (this.actionType === 'Reject' && !this.reason) {
+                    this.errors.reason = 'Please select a reason';
+                }
+                if (this.actionType === 'Withdraw' && !this.reason) {
+                    this.errors.reason = 'Please select a reason';
+                }                
+                if (!this.note.trim()) this.errors.note = 'Please enter a note';
+                return Object.keys(this.errors).length === 0;
+            },
+
+            submitForm() {
+                console.log('Form submitted successfully');
+                const isValid = this.validateForm();
+                if (isValid) {
+                    // Create FormData object
+                    const formData = new FormData();
+                    formData.append('offerId', this.offerId);
+                    formData.append('actionType', this.actionType); //for button
+                    if (this.actionType === 'Reject') {
+                        formData.append('reason', this.reason);
+                    }
+                    if (this.actionType === 'Withdraw') {
+                        formData.append('reason', this.reason);
+                    }
+                    formData.append('note', this.note);
+                    console.log(this.actionType);
+                    const url = '{{ route('admin.offer.offerRejectWithdraw') }}';
+                    ajaxCall(url, 'POST', [[onSuccess, ['response']]], formData);
+                } else {
+                    console.log('Form validation failed');
+                }
+            },
+
+            clearError(field) {
+                delete this.errors[field];
+            }
+        }));
+    });
+</script>
+
 @endsection

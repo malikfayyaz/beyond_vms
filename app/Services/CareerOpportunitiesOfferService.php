@@ -163,5 +163,26 @@ class CareerOpportunitiesOfferService
         $workflow->machine_user_name = gethostname();
         $workflow->save();
     }
-
+     public static function withdrawRejectOffer($request)
+     {
+        $user = \Auth::user();
+        $userid = \Auth::id();
+        $sessionrole = session('selected_role');
+        $userid =  checkUserId($userid,$sessionrole);
+        $portal = 'Portal';
+        $offer = CareerOpportunitiesOffer::findOrFail($request->offerId);
+        if($request->actionType == 'Withdraw'){
+            $offer->status = 13;
+            $offer->withdraw_reason = $request->reason;
+        }
+        if($request->actionType == 'Reject'){
+            $offer->status = 2;
+            $offer->reason_rejection = $request->reason;
+        }
+        $offer->notes = $request->note;
+        $offer->rejected_by = $userid;
+        $offer->offer_rejection_date = now();
+        $offer->save();
+         return true;
+     }
 }

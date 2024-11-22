@@ -310,5 +310,29 @@ class CareerOpportunitiesOfferController extends BaseController
 
 
     }
+    public function offerRejectWithdraw(Request $request)
+    {
+        $actionType = $request->input('actionType');
+        $validated = $request->validate([
+            'reason' => 'required_if:actionType,Reject|integer',
+        ]);
+        $offer = CareerOpportunitiesOffer::findOrFail($request->offerId);
+        if ($actionType == 'Withdraw') {
+            offerHelper::withdrawRejectOffer($request);
+            $message = 'Offer Withdraw successfully!';
+            session()->flash('success', $message);
+        } elseif ($actionType == 'Reject') {
+            offerHelper::withdrawRejectOffer($request);
+            $message = 'Offer Rejected successfully!';
+            session()->flash('success', $message);
+        }
+        return response()->json([
+            'success' => true,
+            'message' => $message,
+            'redirect_url' => route('admin.offer.show', ['id' => $offer->id]),
+        ]);
+
+
+    }    
 
 }
