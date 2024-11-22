@@ -159,7 +159,7 @@ class TimesheetService
           if($timesheetID != 0){
               $modelOldData = CpTimesheet::findOrFail($timesheetID);
             //   TimesheetCostcenterTempTable::model()->deleteAllByAttributes(array('timesheet_id'=>$modelOldData->id));
-              CpTimesheetDetail::model()->deleteAllByAttributes(array('timesheet_id'=>$modelOldData->id));
+                CpTimesheetDetail::where('timesheet_id', $modelOldData->id)->delete();
               $modelOldData->total_regular_hours = 0;
               $modelOldData->total_overtime_hours = 0;
               $modelOldData->total_doubletime_hours = 0;
@@ -175,14 +175,20 @@ class TimesheetService
               $modelOldData->save(false);
           }
           $i = 1;
-          $model = CpTimesheet::model()->findByAttributes(array('contract_id' => $contract->id, 'invoice_start_date' => $invoiceStartDate, 'invoice_end_date' => $invoiceEndDate, 'timesheet_status' => array(0, 1, 3), 'unmatched_reason'=>''),array('order'=>'id desc'));
-          foreach( $_POST['days'] as $key1=>$value1 ){
+          $model  = CpTimesheet::where('contract_id', $contract->id)
+          ->where('invoice_start_date', $invoiceStartDate)
+          ->where('invoice_end_date', $invoiceEndDate)
+          ->whereIn('timesheet_status', [0, 1, 3])
+          ->where('unmatched_reason', '')
+          ->orderBy('id', 'desc')
+          ->first();
+          foreach( $result['days'] as $key1=>$value1 ){
   
-              if (!ModuleTimesheetUtility::dateIsInBetween($contract->start_date, $contract->end_date, $key1)) continue;
+              if (!self::dateIsInBetween($contract->start_date, $contract->end_date, $key1)) continue;
   
               $timecard_sub_config = UtilityManager::timeCardSubConfiguration();
               $timesheetSubTypeId =  $model->sub_type_of_timesheet;
-              if( strtolower($jobData->jobLocation->country) != 2 && $timesheetSubTypeId > 0 && strtolower($timecard_sub_config[$timesheetSubTypeId]) == strtolower('per hour')){
+              if(  strtolower($jobData->payment_type) == strtolower('per hour')){
                   $allowedRegHours = 40;
               }else{
                   $allowedRegHours = 168;
@@ -193,8 +199,8 @@ class TimesheetService
               $todayExistingRHours = 0;
               $leaveReason = 0;
   
-              if(isset($_POST['leave_reason'])){
-                  $leaveReason = $_POST['leave_reason'][$key1][0];
+              if(isset($request->leave_reason)){
+                  $leaveReason = $request['leave_reason'][$key1][0];
               }
   
               //if hours value exist then insert record otherwise not. //$key1 is the Date;
@@ -207,8 +213,7 @@ class TimesheetService
                       $model->rejected_child = $rejectedParent;
                       $model->parent_invoice_id = $parentInvoiceID;
                       $model->contract_id = $contract->id;
-                      $model->workorder_id = $workorderID;
-                      $model->offer_id = $offerID;
+                     
                       $model->candidate_id = $loginUser;
                       $model->client_id = $clientID;
                       $model->created_from = $portal;
@@ -237,8 +242,7 @@ class TimesheetService
                       $model->format_option = 4;
                       $model->invoice_duration = $timesheetDuration;
                       $model->timesheet_status = 3;
-                      $model->date_created = date('Y-m-d');
-                      $model->date_updated = date('Y-m-d H:i:s');
+                     
                       $model->type_of_timesheet = 'No-Project';
                       $model->sub_type_of_timesheet = $contract->sub_type_of_timesheet;
                       $sub_hour_type = 'Regular Hour';
@@ -327,7 +331,7 @@ class TimesheetService
                       $model->approval_manager = $approver;
                       $model->location_id = $locationID;
                       $model->date_updated = date('Y-m-d H:i:s');
-                      $model->save(false);
+                      $model->save();
   
                       //if already record exist in main table then this portion will run.
                       $hours = $model->total_regular_hours + $value;
@@ -491,6 +495,11 @@ class TimesheetService
         $contractRate = ContractRate::where('id', $contractRateID)->orderByDesc('id')->first();
 
         return $contractRate;
+    }
+
+    public static function dateIsInBetween($from, $to, $date)
+    {
+        return date('Ymd', strtotime($date)) >= date('Ymd', strtotime($from)) && date('Ymd', strtotime($date)) <= date('Ymd', strtotime($to)) ? true : false;
     }
     
 }
