@@ -223,10 +223,16 @@ document.addEventListener('alpine:init', () => {
             let formData = new FormData();
 
             // Create a payload
+           
+
             const payload = this.regularTimeInputs.map((input, index) => ({
-                day: this.days[index],
+                day: this.days[index].split('(')[1]?.replace(')', '').trim(),
                 value: this.regularTime[index],
             }));
+            // console.losg(payload);
+            
+           
+            
             
             this.selectedProject.forEach((project) => {
                 formData.append('projects[]', project);

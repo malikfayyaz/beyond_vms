@@ -101,7 +101,7 @@ class TimesheetController extends Controller
 
     public function stepTwoStore(Request $request)
     {
-        // dd(json_decode($request->timesheet));
+        // echo "<pre>"; print_r(json_decode($request->timesheet)); die();
         $validator = Validator::make($request->all(), [
             'projects' => 'required|array', // Ensure 'projects' is an array
             'projects.*' => 'integer', // Validate each element in the 'projects' array
@@ -169,14 +169,21 @@ class TimesheetController extends Controller
         ->where('contract_id', $contract->id)
         ->get();
         $oldModelID = "";           
-        $rejectedParent = "";
+        $rejectedParent = 0;
         $approver = $workorder->approval_manager;
         $timesheetDuration = timesheet::setTimesheetDurationWeek($invoiceStartDate,$invoiceEndDate);
         if($contract->type_of_timesheet == 72 ) {
-            timesheet::timesheetProCalc(0, $invoiceStartDate, $invoiceEndDate, $contract, $candidate, $contract->candidate_id, $workorder->id, $offer->id, $workorder->hiring_manager_id, $approver, $workorder->location_id, $timesheetDuration, 'Vendor', $oldModelID, $rejectedParent, $invoiceStartDateDisplay, $invoiceEndDateDisplay,$request);
+            timesheet::timesheetProCalc(0, $invoiceStartDate, $invoiceEndDate, $contract, $candidate, $contract->candidate_id, $workorder->id, $offer->id, $workorder->hiring_manager_id, $approver, $workorder->location_id, $timesheetDuration, '3', $oldModelID, $rejectedParent, $invoiceStartDateDisplay, $invoiceEndDateDisplay,$request);
         } else {
-            timesheet::timesheetCalifCalcNew(0, $invoiceStartDate, $invoiceEndDate, $contract, $candidate, $contract->candidate_id, $workorder->id, $offer->id, $workorder->hiring_manager_id, $approver, $workorder->location_id, $timesheetDuration, 'Vendor', $oldModelID, $rejectedParent, $invoiceStartDateDisplay, $invoiceEndDateDisplay,$request);
+            timesheet::timesheetCalifCalcNew(0, $invoiceStartDate, $invoiceEndDate, $contract, $candidate, $contract->candidate_id, $workorder->id, $offer->id, $workorder->hiring_manager_id, $approver, $workorder->location_id, $timesheetDuration, '3', $oldModelID, $rejectedParent, $invoiceStartDateDisplay, $invoiceEndDateDisplay,$request);
         }
+
+        $model = CpTimesheet::where('contract_id', $contractID)
+            ->where('invoice_start_date', $invoiceStartDate)
+            ->where('invoice_end_date', $invoiceEndDate)
+            ->orderBy('id', 'desc')
+            ->first();
+        timesheet::calculateTaxesOnSubmissionOfTimesheet($model, '3');
         return response()->json([
             'success' => true,
             // 'message' => 'Offer saved successfully!',

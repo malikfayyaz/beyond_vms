@@ -20,7 +20,6 @@ return new class extends Migration
             $table->string('duration_cycle', 10)->nullable();
             $table->bigInteger('client_location')->nullable();
             $table->bigInteger('timesheet_id')->nullable();
-            $table->bigInteger('job_id')->nullable();
             $table->integer('contract_id')->nullable();
             $table->bigInteger('candidate_id')->nullable();
             $table->bigInteger('vendor_id')->nullable();
