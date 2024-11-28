@@ -27,6 +27,7 @@
         "@fortawesome/react-fontawesome": "^0.2.2",
         "alpinejs": "^3.14.1",
         "flatpickr": "^4.6.13",
+        "formBuilder": "^3.19.13",
         "jquery": "^3.7.1",
         "quill": "^2.0.2",
         "select2": "^4.1.0-rc.0"
