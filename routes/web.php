@@ -120,4 +120,6 @@ Route::middleware(['ensure_role_is_selected'])->group(function () {
     Route::POST('contracts/contractExtensionWorkflow', [CommonController::class, 'contractExtensionWorkflow'])->name('contract.contractExtensionWorkflow');
     Route::POST('contracts/contractBudgetWorkflow', [CommonController::class, 'contractBudgetWorkflow'])->name('contract.contractBudgetWorkflow');
 
+    Route::match(['get', 'post'], 'formbuilder', [CommonController::class, 'formBuilder'])->name('formbuilder');
+
 });

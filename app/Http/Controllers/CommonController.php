@@ -566,4 +566,9 @@ class CommonController extends Controller
 
 
     }
+
+    public function formBuilder()
+    {
+        return view('formbuilder.view');
+    }
 }

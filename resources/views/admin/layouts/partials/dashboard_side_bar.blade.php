@@ -286,6 +286,10 @@
                         ></i>
                     </button>
                     <ul x-show="open" class="py-2 space-y-2" x-cloak>
+                        <a href="{{ route('formbuilder') }}"
+                            class="flex items-center w-full p-2 text-white transition duration-75 pl-11 hover:bg-gray-700">
+                            Form Builder
+                        </a>
                         <!-- Workflow Link -->
                         <li x-data="{ open: false }">
                             <button
