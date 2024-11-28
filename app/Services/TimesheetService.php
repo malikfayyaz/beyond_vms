@@ -725,8 +725,9 @@ class TimesheetService
                     $vendor_doubletime_billrate = $contractRate->vendor_bill_rate;
                 }
             }
-
-            $taxModel = TimesheetTaxAmount::model()->findByAttributes(array('timesheet_id' => $model->id, 'cost_center_config' => $data->cost_center));
+            $taxModel = TimesheetTaxAmount::where('timesheet_id', $model->id)
+            ->where('cost_center_config', $data->cost_center)
+            ->first();
             if (empty($taxModel)) {
                 $taxModel = new TimesheetTaxAmount;
                 $taxModel->timesheet_id = $model->id;
@@ -750,7 +751,7 @@ class TimesheetService
                 $taxModel->gl_id = $workorder->gl_code_id;
                 $taxModel->cost_center_id = $workorder->wo_cost_center;
                 $taxModel->created_at = date('Y-m-d H:i:s');
-                $taxModel->save(false);
+                $taxModel->save();
             }
 
             //inserting new all details to the timesheet detail table
@@ -770,11 +771,11 @@ class TimesheetService
 
             //if its holiday then no need to calculate the amounts
             if($timesheetDetails->leave_reason == 0){
-                if($sub_type_of_timesheet == 'per week' && $incrementalVar == 1){
+                if($sub_type_of_timesheet == 35 && $incrementalVar == 1){
                     $timesheetDetails->total_payrate = $regular_payrate * 1;
                     $timesheetDetails->total_billrate = $regular_billrate * 1;
                     $timesheetDetails->total_vendor_billrate = $vendor_regular_billrate * 1;
-                }else if($sub_type_of_timesheet == 'per day'){
+                }else if($sub_type_of_timesheet == 34){
                     /*$existingData = CpTimesheetDetails::model()->countByAttributes(array('timesheet_id'=>$model->id,'creation_day'=>$data->creation_day));
                     if($existingData == 0){
                         $timesheetDetails->total_payrate = $regular_payrate * 1;
@@ -801,53 +802,67 @@ class TimesheetService
                 }
             }
 
-            $timesheetDetails->save(false);
+            $timesheetDetails->save();
             $incrementalVar++;
         }
-
-        $allTaxModels = TimesheetTaxAmount::model()->findAllByAttributes(array('timesheet_id' => $model->id));
+        $allTaxModels = TimesheetTaxAmount::where('timesheet_id', $model->id)->get();
         $loop = 1;
         foreach($allTaxModels as $singleTaxModel){
 
             //picking regular hours calculations of rates
-            $detailRHoursQuery = "SELECT SUM(total_payrate) totalRPayrate, SUM(total_billrate) totalRBillrate, SUM(total_vendor_billrate) totalRVBillrate, SUM(no_100scale_of_hours) totalRHours100Scale FROM `cp_timesheet_details` td WHERE td.`hours_type` = 'Regular Hour' AND leave_reason = 0 AND td.`timesheet_id` = ".$model->id." AND td.project_code_id=".$singleTaxModel->cost_center_config;
-            $detailRHoursData = Yii::app()->db->createCommand($detailRHoursQuery)->queryRow();
+            $detailRHoursData = DB::table('cp_timesheet_details')
+                ->selectRaw('SUM(total_payrate) as totalRPayrate, SUM(total_billrate) as totalRBillrate, SUM(total_vendor_billrate) as totalRVBillrate, SUM(no_100scale_of_hours) as totalRHours100Scale')
+                ->where('hours_type', 'Regular Hour')
+                ->where('leave_reason', 0)
+                ->where('timesheet_id', $model->id)
+                ->where('project_code_id', $singleTaxModel->cost_center_config)
+                ->first();
 
-            //picking overtime hours calculations of rates
-            $detailOHoursQuery = "SELECT SUM(total_payrate) totalOPayrate, SUM(total_billrate) totalOBillrate, SUM(total_vendor_billrate) totalOVBillrate, SUM(no_100scale_of_hours) totalOHours100Scale FROM `cp_timesheet_details` td WHERE td.`hours_type` = 'Over Time' AND leave_reason = 0 AND td.`timesheet_id` = ".$model->id." AND td.project_code_id=".$singleTaxModel->cost_center_config;
-            $detailOHoursData = Yii::app()->db->createCommand($detailOHoursQuery)->queryRow();
+            // Overtime Hours Calculation
+            $detailOHoursData = DB::table('cp_timesheet_details')
+                ->selectRaw('SUM(total_payrate) as totalOPayrate, SUM(total_billrate) as totalOBillrate, SUM(total_vendor_billrate) as totalOVBillrate, SUM(no_100scale_of_hours) as totalOHours100Scale')
+                ->where('hours_type', 'Over Time')
+                ->where('leave_reason', 0)
+                ->where('timesheet_id', $model->id)
+                ->where('project_code_id', $singleTaxModel->cost_center_config)
+                ->first();
 
-            //picking doubletime hours calculations of rates
-            $detailDHoursQuery = "SELECT SUM(total_payrate) totalDPayrate, SUM(total_billrate) totalDBillrate, SUM(total_vendor_billrate) totalDVBillrate, SUM(no_100scale_of_hours) totalDHours100Scale FROM `cp_timesheet_details` td WHERE td.`hours_type` = 'Double Time' AND leave_reason = 0 AND td.`timesheet_id` = ".$model->id." AND td.project_code_id=".$singleTaxModel->cost_center_config;
-            $detailDHoursData = Yii::app()->db->createCommand($detailDHoursQuery)->queryRow();
+            // Double Time Hours Calculation
+            $detailDHoursData = DB::table('cp_timesheet_details')
+                ->selectRaw('SUM(total_payrate) as totalDPayrate, SUM(total_billrate) as totalDBillrate, SUM(total_vendor_billrate) as totalDVBillrate, SUM(no_100scale_of_hours) as totalDHours100Scale')
+                ->where('hours_type', 'Double Time')
+                ->where('leave_reason', 0)
+                ->where('timesheet_id', $model->id)
+                ->where('project_code_id', $singleTaxModel->cost_center_config)
+                ->first();
 
             //now saving the rates calculation to the timesheet main table.
-            $model->total_regular_payrate += $detailRHoursData['totalRPayrate'];
-            $model->total_overtime_payrate += $detailOHoursData['totalOPayrate'];
-            $model->total_doubletime_payrate += $detailDHoursData['totalDPayrate'];
-            $model->total_regular_billrate += $detailRHoursData['totalRBillrate'];
-            $model->total_overtime_billrate += $detailOHoursData['totalOBillrate'];
-            $model->total_doubletime_billrate += $detailDHoursData['totalDBillrate'];
+            $model->total_regular_payrate += $detailRHoursData->totalRPayrate;
+            $model->total_overtime_payrate += $detailOHoursData->totalOPayrate;
+            $model->total_doubletime_payrate += $detailDHoursData->totalDPayrate;
+            $model->total_regular_billrate += $detailRHoursData->totalRBillrate;
+            $model->total_overtime_billrate += $detailOHoursData->totalOBillrate;
+            $model->total_doubletime_billrate += $detailDHoursData->totalDBillrate;
             $model->total_payrate = $model->total_regular_payrate + $model->total_overtime_payrate + $model->total_doubletime_payrate;
             $model->new_total_payrate = $model->total_payrate;
             $model->total_billrate = $model->total_regular_billrate + $model->total_overtime_billrate + $model->total_doubletime_billrate;
             $model->new_totall_billrate = $model->total_billrate;
-            $model->save(false);
+            $model->save();
 
             //$singleTaxModel = CpTimesheetTaxAmount::model()->findByAttributes(array('timesheet_id'=>$model->id,'cost_center_config'=>$data->cost_center));
 
-            $totalRHours = $detailRHoursData['totalRHours100Scale'];
-            $totalOHours = $detailOHoursData['totalOHours100Scale'];
-            $totalDHours = $detailDHoursData['totalDHours100Scale'];
+            $totalRHours = $detailRHoursData->totalRHours100Scale;
+            $totalOHours = $detailOHoursData->totalOHours100Scale;
+            $totalDHours = $detailDHoursData->totalDHours100Scale;
 
-            if($sub_type_of_timesheet == 'per week' && $loop == 1){
+            if($sub_type_of_timesheet == 35 && $loop == 1){
                 $singleTaxModel->total_regular_billrate = $singleTaxModel->regular_billrate * 1;
 
                 $singleTaxModel->total_regular_payrate = $singleTaxModel->regular_payrate * 1;
                 $singleTaxModel->total_payrate = $singleTaxModel->total_regular_payrate + $singleTaxModel->total_overtime_payrate + $singleTaxModel->total_doubletime_payrate;
 
                 $vendorTotalRRate = $singleTaxModel->regular_vendor_billrate * 1;
-            }else if($sub_type_of_timesheet == 'per day' /*&& $loop == 1*/){
+            }else if($sub_type_of_timesheet == 34 /*&& $loop == 1*/){
 
                 /*$timesheetDetailCountQ = $timesheetCostCenter = CpTimesheetDetails::model()->countByAttributes(array('timesheet_id'=>$model->id),array('group'=>'creation_day'));
                 $singleTaxModel->total_regular_billrate = $singleTaxModel->regular_billrate * $timesheetDetailCountQ;
@@ -875,8 +890,8 @@ class TimesheetService
                 $vendorTotalDRate = $singleTaxModel->doubletime_vendor_billrate * $totalDHours;
             }
 
-            if($singleTaxModel->save(false)){
-                if($sub_type_of_timesheet == 'per week' || $sub_type_of_timesheet == 'per day'){
+            if($singleTaxModel->save()){
+                if($sub_type_of_timesheet == 35 || $sub_type_of_timesheet == 34){
                     //regular hours tax calculation.
                     self::calculateCalifTaxAmountHelper($singleTaxModel, $taxPercentage, $singleTaxModel->total_regular_billrate, $singleTaxModel->total_regular_payrate,'Regular Hour',$mspPercentage,$vendorTotalRRate);
                 }else{
@@ -915,26 +930,24 @@ class TimesheetService
                 $model->accept_rejected_by_type = 'Client';
             }
         }
-        if($model->save(false)){
+        if($model->save()){
             if($model->parent_id != 0){
-                $oldModel = CpTimesheet::model()->findByPk($model->parent_id);
-                $oldInvoices = GeneratedInvoice::model()->findAllByAttributes(array('timsheet_id'=>$oldModel->id));
+                $oldModel = CpTimesheet::findOrFail($model->parent_id);
+                $oldInvoices = GeneratedInvoice::where('timesheet_id', $oldModel->id)->get();
                 foreach($oldInvoices as $oldInvoice){
                     //updating old timesheet and invoice status to deferred.
                     if($oldInvoice->consolidate_invoice_generated != 1) {
                         $oldModel->timesheet_status = 5;
-                        $oldModel->save(false);
+                        $oldModel->save();
 
                         $oldInvoice->status = 3;
                     }
                     $oldInvoice->not_deduct_budget = 1;
-                    $oldInvoice->save(false);
+                    $oldInvoice->save();
                 }
             }
 
-            Yii::app()->user->setFlash('success', '<div class="alert alert-success"> 
-          <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button> 
-           Timesheet submitted successfully. </div>');
+         
         }
 
      
@@ -952,6 +965,97 @@ class TimesheetService
         $costcenter_hour->notes = $data['notes'];
         $costcenter_hour->leave_reason = $data['leaveReason'];
         return $costcenter_hour->save();
+    }
+
+    public static function calculateCalifTaxAmountHelper($taxModel, $taxPercentage, $totalBillRate, $totalPayRate,$hourType,$mspPercentage,$vendorTotalBillRate){
+        $location = Location::findOrFail($taxModel->location_id);
+
+        //client rates and taxes for tax table
+        if($hourType == 'Regular Hour'){
+            $totalRegularBillRate = $totalBillRate;
+
+            if(isset($location->pa_rule)){
+                $regularTax = ($totalRegularBillRate - $totalPayRate) * $taxPercentage/100;
+            }else{
+                $regularTax = $totalRegularBillRate * $taxPercentage/100;
+            }
+
+            //echo $taxModel->total_regular_billrate_tax_amount.'/'.$totalRegularBillRate.'/'.$regularTax;
+
+            //$taxModel->total_regular_billrate += $totalRegularBillRate;
+            $taxModel->total_regular_billrate = $totalRegularBillRate;
+            $taxModel->total_regular_billrate_tax += $regularTax;
+            $taxModel->total_regular_billrate_tax_amount += $totalRegularBillRate + $regularTax;
+            $taxModel->total_billrate = $taxModel->total_regular_billrate + $taxModel->total_overtime_billrate + $taxModel->total_doubletime_billrate;
+            $taxModel->total_billrate_tax = $taxModel->total_regular_billrate_tax + $taxModel->total_overtime_billrate_tax + $taxModel->total_doubletime_billrate_tax;
+            $taxModel->total_billrate_tax_amount = $taxModel->total_regular_billrate_tax_amount + $taxModel->total_overtime_billrate_tax_amount + $taxModel->total_doubletime_billrate_tax_amount;
+
+            //vendor regular hour rates.
+            $taxModel->total_regular_vendor_billrate += $vendorTotalBillRate;
+            $taxModel->total_vendor_billrate = $taxModel->total_regular_vendor_billrate + $taxModel->total_overtime_vendor_billrate + $taxModel->total_doubletime_vendor_billrate;
+
+            //msp fee
+            //$taxModel->msp_regular_fee += number_format($totalRegularBillRate - $vendorTotalBillRate,2);
+            $taxModel->msp_regular_fee += number_format(number_format($totalRegularBillRate,2) - number_format($vendorTotalBillRate,2),2);
+            $taxModel->msp_total_fee = $taxModel->meal_penality_billrate_fee + $taxModel->paid_break_penality_billrate_fee + $taxModel->msp_regular_fee + $taxModel->msp_overtime_fee + $taxModel->msp_doubletime_fee;
+
+        }else if($hourType == 'Overtime Hour'){
+            $totalOvertimeBillRate = $totalBillRate;
+
+            if(isset($location->pa_rule)){
+                $overtimeTax = ($totalOvertimeBillRate - $totalPayRate) * $taxPercentage/100;
+            }else{
+                $overtimeTax = $totalOvertimeBillRate * $taxPercentage/100;
+            }
+
+            //$taxModel->total_overtime_billrate += $totalOvertimeBillRate;
+            $taxModel->total_overtime_billrate = $totalOvertimeBillRate;
+            $taxModel->total_overtime_billrate_tax += $overtimeTax;
+            $taxModel->total_overtime_billrate_tax_amount += $totalOvertimeBillRate + $overtimeTax;
+            $taxModel->total_billrate = $taxModel->total_regular_billrate + $taxModel->total_overtime_billrate + $taxModel->total_doubletime_billrate;
+            $taxModel->total_billrate_tax = $taxModel->total_regular_billrate_tax + $taxModel->total_overtime_billrate_tax + $taxModel->total_doubletime_billrate_tax;
+            $taxModel->total_billrate_tax_amount = $taxModel->total_regular_billrate_tax_amount + $taxModel->total_overtime_billrate_tax_amount + $taxModel->total_doubletime_billrate_tax_amount;
+
+            //vendor overtime hour rates.
+            $taxModel->total_overtime_vendor_billrate += $vendorTotalBillRate;
+            $taxModel->total_vendor_billrate = $taxModel->total_regular_vendor_billrate + $taxModel->total_overtime_vendor_billrate + $taxModel->total_doubletime_vendor_billrate;
+
+            //msp fee
+            //$currentMspFee = number_format(number_format($totalOvertimeBillRate,2) - number_format($vendorTotalBillRate,2),2).'===';
+            $taxModel->msp_overtime_fee += number_format(number_format($totalOvertimeBillRate,2) - number_format($vendorTotalBillRate,2),2);
+            $taxModel->msp_total_fee = $taxModel->meal_penality_billrate_fee + $taxModel->paid_break_penality_billrate_fee + $taxModel->msp_regular_fee + $taxModel->msp_overtime_fee + $taxModel->msp_doubletime_fee;
+
+        }else{
+            $totalDoubletimeBillRate = $totalBillRate;
+
+            if(isset($location->pa_rule)){
+                $doubleTax = ($totalDoubletimeBillRate - $totalPayRate) * $taxPercentage/100;
+            }else{
+                $doubleTax = $totalDoubletimeBillRate * $taxPercentage/100;
+            }
+
+            //$taxModel->total_doubletime_billrate += $totalDoubletimeBillRate;
+            $taxModel->total_doubletime_billrate = $totalDoubletimeBillRate;
+            $taxModel->total_doubletime_billrate_tax += $doubleTax;
+            $taxModel->total_doubletime_billrate_tax_amount += $totalDoubletimeBillRate + $doubleTax;
+            $taxModel->total_billrate = $taxModel->total_regular_billrate + $taxModel->total_overtime_billrate + $taxModel->total_doubletime_billrate;
+            $taxModel->total_billrate_tax = $taxModel->total_regular_billrate_tax + $taxModel->total_overtime_billrate_tax + $taxModel->total_doubletime_billrate_tax;
+            $taxModel->total_billrate_tax_amount = $taxModel->total_regular_billrate_tax_amount + $taxModel->total_overtime_billrate_tax_amount + $taxModel->total_doubletime_billrate_tax_amount;
+
+            //vendor overtime hour rates.
+            $taxModel->total_doubletime_vendor_billrate += $vendorTotalBillRate;
+            $taxModel->total_vendor_billrate = $taxModel->total_regular_vendor_billrate + $taxModel->total_overtime_vendor_billrate + $taxModel->total_doubletime_vendor_billrate;
+
+            //msp fee
+            $currentMspFee = number_format($totalDoubletimeBillRate - $vendorTotalBillRate,2);
+            $taxModel->msp_doubletime_fee += number_format(number_format($totalDoubletimeBillRate,2) - number_format($vendorTotalBillRate,2),2);
+            $taxModel->msp_total_fee = $taxModel->meal_penality_billrate_fee + $taxModel->paid_break_penality_billrate_fee + $taxModel->msp_regular_fee + $taxModel->msp_overtime_fee + $taxModel->msp_doubletime_fee;
+
+        }
+
+        $taxModel->save();
+        //echo '<pre>';print_r($taxModel);exit;
+
     }
     
 }
