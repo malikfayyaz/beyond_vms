@@ -37,19 +37,7 @@
                             </div>
                         </a>
                     </li>
-                    <li class="flex justify-center">
-                        <a
-                            href="#open"
-                            class="tab-link w-full flex justify-center items-center gap-3 py-4 hover:bg-white hover:rounded-lg hover:shadow"
-                            data-type="open"
-                        >
-                            <i class="fa-regular fa-registered"></i>
-                            <span class="capitalize">Pending Release Job</span>
-                            <div class="px-1 py-1 flex items-center justify-center bg-gray-500 text-white rounded-lg">
-                                <span class="text-[10px]">{{ $counts['open'] }}</span>
-                            </div>
-                        </a>
-                    </li>
+                    
                     <li class="flex justify-center">
                         <a
                             href="#filled"
@@ -78,19 +66,7 @@
                             </div>
                         </a>
                     </li>
-                    <li class="flex justify-center">
-                        <a
-                            href="#pendingpmo"
-                            class="tab-link w-full flex justify-center items-center gap-3 py-4 hover:bg-white hover:rounded-lg hover:shadow"
-                            data-type="pendingpmo"
-                        >
-                            <i class="fa-solid fa-fill"></i>
-                            <span class="capitalize">Pending - PMO</span>
-                            <div class="px-1 py-1 flex items-center justify-center bg-gray-500 text-white rounded-lg">
-                                <span class="text-[10px]">{{ $counts['pendingpmo'] }}</span>
-                            </div>
-                        </a>
-                    </li>
+                    
                     
                     <li class="flex justify-center">
                         <a

@@ -78,7 +78,7 @@ $counts = [
             ->withCount('submissions')
             ->orWhereHas('VendorJobRelease', function ($query) use ($vendorid) {
                 $query->where('user_id', $vendorid);
-            });
+            })->orderby('id', 'desc');
 
         // Apply filtering based on request 'type'
         if ($request->has('type')) {
