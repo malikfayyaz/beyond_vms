@@ -13,6 +13,7 @@ import jobCatalog from "./widgets/add-job-catalog";
 import flatpickr from "flatpickr";
 import "flatpickr/dist/flatpickr.min.css";
 
+
 // import './bootstrap';
 import 'laravel-datatables-vite';
 // import 'datatables.net';
@@ -37,12 +38,17 @@ library.add(fas, far);
 dom.watch();
 
 window.$ = window.jQuery = jQuery;
+import 'jquery-ui/ui/widget'; // Widget module (must be loaded first)
+import 'jquery-ui/ui/widgets/mouse'; // Mouse module
+import 'jquery-ui/ui/widgets/sortable'; // Sortable widget
+import 'formBuilder/dist/form-builder.min.js';
 // import "datatables.net";
 // import "datatables.net-dt/css/jquery.dataTables.min.css";
 select2();
 window.Alpine = Alpine;
 
 //Initialize Select2
+
 
 $(".js-example-basic-single").select2();
 
@@ -55,3 +61,5 @@ $("#addjobformwizard .select2-single").select2({
   minimumResultsForSearch: Infinity,
   theme: "default",
 });
+
+
