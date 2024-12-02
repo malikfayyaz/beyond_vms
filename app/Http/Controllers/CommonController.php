@@ -328,11 +328,15 @@ class CommonController extends Controller
             $template_rates = TemplateRatecard::where('template_id', $id)
             ->where('level_id', $level_id)
             ->first();
-            $response['min_bill_rate'] = $template_rates->min_bill_rate;
-            $response['max_bill_rate'] = $template_rates->bill_rate;
-            $response['currency'] = $template_rates->currency_id;
+            $response['min_bill_rate'] = isset($template_rates->min_bill_rate) ?  $template_rates->min_bill_rate :'0.00';
+            $response['max_bill_rate'] = isset($template_rates->bill_rate) ?  $template_rates->bill_rate : '0.00';
+            $response['currency'] = isset($template_rates->currency_id) ? $template_rates->currency_id : '2';
             // $currencySetting = Setting::model()->findByPk($template_rates->currency);
             // $response['currency_class'] = $currencySetting->value;
+            } else {
+                $response['min_bill_rate'] = '0.00';
+                $response['max_bill_rate'] = '0.00';
+                $response['currency'] = '2';
             }
         echo json_encode($response);
     }
