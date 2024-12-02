@@ -62,7 +62,7 @@
 
                     <div class="w-1/2 mt-2 pr-2">
                         <label for="approval_number" class="block mb-2">Approval Number <span class="text-red-500">*</span></label>
-                        <select id="approval_number" x-model="approval_number" class="w-full p-2 border rounded h-10">
+                        <select id="approval_number" x-model="formData.approval_number" class="w-full p-2 border rounded h-10">
                             <option value="" disabled selected>Select Approval Number</option>
                             <option value="1">1</option>
                             <option value="2">2</option>
