@@ -77,7 +77,7 @@ class JobWorkflowUpdate
             }
         }else{
             $job = CareerOpportunity::find($jobWorkFlow->job_id);
-            $job->jobstatus = 4;
+            $job->jobstatus = 22;
             $job->save();
         }
     }
@@ -125,7 +125,7 @@ class JobWorkflowUpdate
         self::rejectWorkFlow($request->workflow_id, $userid, $sessionrole, $portal,$request);
 
         $job = CareerOpportunity::find($jobWorkFlow->job_id);
-        $job->jobstatus = 2;
+        $job->jobstatus = 5;
         $job->rejected_by = $userid;
         $job->rejected_type = $sessionrole;
         $job->reason_for_rejection = $request->reason;

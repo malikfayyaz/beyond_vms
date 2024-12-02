@@ -9,7 +9,7 @@
           @submission-details-updated.window="submissionDetails = $event.detail" class="bg-white mx-4 my-8 rounded p-8">
               @include('admin.layouts.partials.alerts')
 
-          @if($job->jobStatus == 2)
+          @if($job->jobStatus == 5)
               <div x-data="{
                     rejectionReason: '{{ $job->rejectionReason ? $job->rejectionReason->title : ' ' }}',
                     notes: '{{ $job->note_for_rejection }}',
@@ -128,7 +128,7 @@
                  
                 </a>
               </li>
-               <li class="flex justify-center" x-data="{ status: {{ $job->jobStatus }} }" x-show="status === 3 || status === 5">
+               <li class="flex justify-center" x-data="{ status: {{ $job->jobStatus }} }" x-show="status === 3 || status === 11">
                 <a
                 @click="tab = 'vendorrelease'"
                 :class="{ 'border-blue-500 text-blue-500': tab === 'vendorrelease' }"
@@ -235,7 +235,7 @@
                   }">
                   <!-- Trigger Button -->
                   <button
-                      x-show="status == 4"
+                      x-show="status == 22"
                       @click="rejectModal1 = true; currentRowId = '{{ $job->id }}'"
                       class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 capitalize">
                       Reject
@@ -345,7 +345,7 @@
                       <button 
                           type="button" 
                           class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 capitalize" 
-                          x-show="status == 4"
+                          x-show="status == 22"
                           @click="submitApprove"
                       >
                           Approve

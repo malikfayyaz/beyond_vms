@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('cp_timesheet_tax_amount', function (Blueprint $table) {
             $table->id();
- $table->integer('timesheet_id')->nullable()->index();
+            $table->integer('timesheet_id')->nullable()->index();
             $table->integer('cost_center_config')->nullable();
             $table->integer('location_id')->nullable();
             $table->integer('category_id')->nullable();

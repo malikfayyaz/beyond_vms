@@ -7,7 +7,7 @@
         @include('client.layouts.partials.header')
         <div  x-data="{ tab: 'activejobs' }"  class="bg-white mx-4 my-8 rounded p-8">
             @include('client.layouts.partials.alerts')
-            @if($job->jobStatus == 2)
+            @if($job->jobStatus == 5)
               <div x-data="{
                     rejectionReason: '{{ $job->rejectionReason->title }}',
                     notes: '{{ $job->note_for_rejection }}',
