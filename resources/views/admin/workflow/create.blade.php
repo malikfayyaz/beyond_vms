@@ -224,8 +224,8 @@
                     formData.append('approval_role_id', this.formData.arroval_role);
                     formData.append('hiring_manager_id', this.formData.hiring_manager);
                     formData.append('approval_required', this.formData.approval_req);
-                    formData.append('approval_number', this.approval_number);
-                    console.log(this.formData.approval_req);
+                    formData.append('approval_number', this.formData.approval_number);
+                    // console.log(this.formData.approval_req);
                     let url = '{{ route('admin.workflow.store') }}';
                     if (this.editIndex !== null) {
                         
