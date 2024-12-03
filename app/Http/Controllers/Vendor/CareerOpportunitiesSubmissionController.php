@@ -40,7 +40,7 @@ class CareerOpportunitiesSubmissionController extends Controller
             'withdraw' => CareerOpportunitySubmission::where('resume_status', 12)->count(),
         ];
         if ($request->ajax()) {
-            $submissions = CareerOpportunitySubmission::with(['consultant','vendor','careerOpportunity.hiringManager','location']);
+            $submissions = CareerOpportunitySubmission::with(['consultant','vendor','careerOpportunity.hiringManager','location'])->orderby('id', 'desc');
 
             if ($request->has('type')) {
                 $type = $request->input('type');
