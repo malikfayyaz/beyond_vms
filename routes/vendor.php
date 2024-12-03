@@ -4,6 +4,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\{
     Vendor\VendorController,
+    Vendor\CareerOpportunitiesController,
     Vendor\CareerOpportunitiesSubmissionController,
     Vendor\CareerOpportunitiesOfferController,
     Vendor\CareerOpportunitiesInterviewController,
@@ -49,6 +50,13 @@ Route::middleware(['user_role:vendor'])->group(function () {
         Route::post('timesheet/step-one-store', [TimesheetController::class, 'stepOneStore'])->name('timesheet.step_one_store');
         Route::get('timesheet/step2', [TimesheetController::class, 'step2'])->name('timesheet.timesheetStep2');
         Route::post('timesheet/step-two-store', [TimesheetController::class, 'stepTwoStore'])->name('timesheet.step_two_store');
+
+        Route::get('/career-opportunities/{id}/submission', [CareerOpportunitiesController::class, 'jobSubmission'])->name('jobSubmission');
+
+        Route::get('/career-opportunities/{id}/todayinterview', [CareerOpportunitiesController::class, 'jobTodayInterview'])->name('jobTodayInterview');
+        Route::get('/career-opportunities/{id}/otherinterview', [CareerOpportunitiesController::class, 'jobOtherInterview'])->name('jobOtherInterview');
+
+
 
     });
 
