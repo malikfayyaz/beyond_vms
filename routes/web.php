@@ -19,6 +19,7 @@ use App\Http\Controllers\{
     Auth\AuthController,
     Auth\ForgotPasswordController,
     Auth\ResetPasswordController,
+    LangController,
 };
 require base_path('routes/client.php');
 require base_path('routes/admin.php');
@@ -28,7 +29,8 @@ require base_path('routes/consultant.php');
 Route::get('/login', function () {
     return redirect('/');
 });
-
+Route::get('lang/home', [LangController::class, 'index']);
+Route::get('lang/change', [LangController::class, 'change'])->name('changeLang');
 Route::get('/', [AuthController::class, 'index'])->name('login');
 Route::post('post-login', [AuthController::class, 'postLogin'])->name('login.post');
 Route::get('registration', [AuthController::class, 'registration'])->name('register');
@@ -83,7 +85,7 @@ Route::middleware(['ensure_role_is_selected'])->group(function () {
     // Role-specific dashboards
     Route::middleware(['user_role:admin'])->group(function () {
         Route::get('/dashboard', [AdminController::class, 'index'])->name('dashboard');
-       
+
     });
     Route::middleware(['user_role:vendor'])->group(function () {
     Route::get('/vendor/dashboard', [VendorController::class, 'index'])->name('vendor.dashboard');
@@ -105,7 +107,7 @@ Route::middleware(['ensure_role_is_selected'])->group(function () {
     });
 
     Route::post('interview/{id}/reject_interview', [CommonController::class, 'rejectInterview'])->name('interview.reject_interview');
-    
+
     Route::post('interview/{id}/reject_candidate', [CommonController::class, 'rejectCandidate'])->name('interview.rejectCandidate');
 
     Route::post('contracts/{id}/reject_contract', [CommonController::class, 'closeAssignmentTemp'])->name('contract.reject_contract');
@@ -115,7 +117,7 @@ Route::middleware(['ensure_role_is_selected'])->group(function () {
     Route::get('job-details/{id}', [CommonController::class, 'jobDetails'])->name('job.job_details');
 
     Route::get('submission-details/{id}', [CommonController::class, 'submissionDetails'])->name('submission_details');
-    
+
     Route::POST('contracts/contractRateChangeWorkflow', [CommonController::class, 'contractRateChangeWorkflow'])->name('contract.contractRateChangeWorkflow');
     Route::POST('contracts/contractExtensionWorkflow', [CommonController::class, 'contractExtensionWorkflow'])->name('contract.contractExtensionWorkflow');
     Route::POST('contracts/contractBudgetWorkflow', [CommonController::class, 'contractBudgetWorkflow'])->name('contract.contractBudgetWorkflow');

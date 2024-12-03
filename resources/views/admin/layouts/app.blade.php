@@ -10,8 +10,8 @@
   </head>
   <body class="bg-gray-100">
     <div
-      x-data="{ 
-      miniSidebar: true, 
+      x-data="{
+      miniSidebar: true,
       currentTheme: localStorage.getItem('theme') || 'theme-1',
       darkMode: localStorage.getItem('darkMode') === 'true',
       setTheme(theme) {

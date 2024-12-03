@@ -15,7 +15,7 @@
                     notes: '{{ $job->note_for_rejection }}',
                     rejectedBy: '{{ $job->rejectionUser ? $job->rejectionUser->name : '' }}',
                     rejectionDate: '{{ $job->date_rejected }}'
-                    
+
                 }"
                 >
                     <div class="alert alert-danger">
@@ -27,7 +27,7 @@
                 </div>
               @endif
               <x-job-details />
-                
+
                 <x-submission-details />
 
           <div class="mb-4">
@@ -42,7 +42,7 @@
                 >
                   <i class="fa-regular fa-file-lines"></i>
                   <span class="capitalize">Job Details</span>
-                
+
                 </a>
               </li>
 
@@ -54,7 +54,7 @@
                 >
                   <i class="fa-regular fa-file-lines"></i>
                   <span class="capitalize">Submission </span>
-                
+
                 </a>
               </li>
 
@@ -66,7 +66,7 @@
                 >
                   <i class="fa-regular fa-file-lines"></i>
                   <span class="capitalize">Ranking</span>
-                
+
                 </a>
               </li>
 
@@ -78,7 +78,7 @@
                 >
                   <i class="fa-regular fa-file-lines"></i>
                   <span class="capitalize">Interviews</span>
-                
+
                 </a>
               </li>
 
@@ -90,7 +90,7 @@
                 >
                   <i class="fa-regular fa-file-lines"></i>
                   <span class="capitalize">Offers</span>
-                
+
                 </a>
               </li>
 
@@ -102,7 +102,7 @@
                 >
                   <i class="fa-regular fa-file-lines"></i>
                   <span class="capitalize">Workorders</span>
-                
+
                 </a>
               </li>
               <li class="flex justify-center">
@@ -113,7 +113,7 @@
                 >
                   <i class="fa-regular fa-file-lines"></i>
                   <span class="capitalize">Add notes</span>
-                
+
                 </a>
               </li>
 
@@ -125,7 +125,7 @@
                 >
                   <i class="fa-solid fa-fill"></i>
                   <span class="capitalize">Workflow</span>
-                 
+
                 </a>
               </li>
                <li class="flex justify-center" x-data="{ status: {{ $job->jobStatus }} }" x-show="status === 3 || status === 11">
@@ -152,7 +152,7 @@
                 >
                   <i class="fa-regular fa-file-lines"></i>
                   <span class="capitalize">Job Team Member</span>
-                
+
                 </a>
               </li>
 
@@ -179,9 +179,9 @@
 
 
 
-           
-          
-           
+
+
+
               <!-- <li class="flex justify-center">
                 <a
                   href="#page1"
@@ -342,9 +342,9 @@
                           ajaxCall(url, 'POST', [[onSuccess, ['response']]], formData);
                       }
                   }">
-                      <button 
-                          type="button" 
-                          class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 capitalize" 
+                      <button
+                          type="button"
+                          class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 capitalize"
                           x-show="status == 22"
                           @click="submitApprove"
                       >
@@ -512,7 +512,7 @@
                   </div>
                 </div>
                 @if($job->pre_candidate == 'Yes')
-              
+
                 <div class="flex items-center justify-between py-4 border-t">
                       <div class="w-2/4">
                           <h4 class="font-medium">Candidate First Name:</h4>
@@ -537,7 +537,7 @@
                           <p class="font-light">{{$job->pre_last_name}}</p>
                       </div>
                   </div>
-               
+
                 <div class="flex items-center justify-between py-4 border-t">
                       <div class="w-2/4">
                           <h4 class="font-medium">Candidate Phone:</h4>
@@ -546,7 +546,7 @@
                           <p class="font-light">{{$job->candidate_phone}}</p>
                       </div>
                   </div>
-               
+
                 <div class="flex items-center justify-between py-4 border-t">
                       <div class="w-2/4">
                           <h4 class="font-medium">Candidate Email:</h4>
@@ -912,7 +912,7 @@
       <div x-show="tab === 'pmoteammember'">
           @include('admin.career_opportunities.pmoteammember')
       </div>
-      
+
       <div x-show="tab === 'interview'">
           @include('admin.career_opportunities.interview')
       </div>
@@ -1129,12 +1129,12 @@
                 this.errors.vendor = 'Please select a vendor.';
                 this.showErrors = true;
             } else {
-                this.showErrors = true; 
+                this.showErrors = true;
             }
         },
         submitForm(event) {
-            event.preventDefault();  
-            this.validate(); 
+            event.preventDefault();
+            this.validate();
             if (Object.keys(this.errors).length === 0) {
                 const formData = new FormData();
                 formData.append('vendor_id', $('#vendor').val());
@@ -1467,8 +1467,8 @@
         ajaxCall(url,'POST', [[onSuccess, ['response']]], formData);
 
     }
-  
-    
+
+
  function submitworkflowform(event) {
         alert('Form Submitted!'); // Just to ensure it's being called
 
@@ -1494,7 +1494,7 @@
             console.error('Error:', error);
         });
       }
-    
+
     document.addEventListener('alpine:init', () => {
         Alpine.data('workflowHandler', () => ({
             note: '', // To store the note input
@@ -1561,7 +1561,7 @@ function initSelect2() {
 // Initialize Select2 on page load
 document.addEventListener('DOMContentLoaded', function() {
     initSelect2();
-    function toggleSidebar() 
+    function toggleSidebar()
             {
                 // Assuming you want to toggle selectedUser state
                 this.selectedUser = this.selectedUser ? 'user' : 'user';
@@ -1573,7 +1573,7 @@ document.addEventListener('DOMContentLoaded', function() {
             });
 
             function openJobDetailsModal(jobId) {
-                
+
                 fetch(`/job-details/${jobId}`)
                         .then(response => response.json())
                         .then(data => {
@@ -1583,7 +1583,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                     composed: true
                                 });
                                 console.log(event.detail.data);
-                                
+
                                 document.dispatchEvent(event);
                         })
                         .catch(error => console.error('Error:', error));
@@ -1616,7 +1616,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 
-  
+
 </script>
 
 

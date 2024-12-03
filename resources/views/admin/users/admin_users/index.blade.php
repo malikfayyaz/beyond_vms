@@ -16,7 +16,7 @@
                     <button
                         class="px-4 py-2 bg-blue-500 capitalize text-white rounded disabled:opacity-50 ml-2"
                         :style="{'background-color': 'var(--primary-color)'}"
-                        onclick="window.location.href='{{ route('admin.admin-users.create') }}'" 
+                        onclick="window.location.href='{{ route('admin.admin-users.create') }}'"
                     >
                         Add New Admin
                     </button>
@@ -39,7 +39,7 @@
                     </tbody>
                 </table>
             </div>
-            
+
         </div>
     </div>
 
@@ -58,6 +58,6 @@
             }
         });
 
-        
+
     </script>
 @endsection
