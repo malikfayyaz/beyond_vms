@@ -55,6 +55,9 @@ Route::middleware(['user_role:vendor'])->group(function () {
 
         Route::get('/career-opportunities/{id}/todayinterview', [CareerOpportunitiesController::class, 'jobTodayInterview'])->name('jobTodayInterview');
         Route::get('/career-opportunities/{id}/otherinterview', [CareerOpportunitiesController::class, 'jobOtherInterview'])->name('jobOtherInterview');
+        Route::get('/career-opportunities/{id}/jobOffer', [CareerOpportunitiesController::class, 'jobOffer'])->name('jobOffer');
+        Route::get('/career-opportunities/{id}/jobWorkorder', [CareerOpportunitiesController::class, 'jobWorkorder'])->name('jobWorkorder');
+
 
 
 

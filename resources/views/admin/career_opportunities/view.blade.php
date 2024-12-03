@@ -53,7 +53,7 @@
                 class="w-full flex justify-center items-center gap-3 hover:bg-white hover:rounded-lg hover:shadow py-4"
                 >
                   <i class="fa-regular fa-file-lines"></i>
-                  <span class="capitalize">Submission </span>
+                  <span class="capitalize">Submissions </span>
 
                 </a>
               </li>

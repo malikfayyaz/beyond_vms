@@ -50,7 +50,7 @@
                         class="w-full flex justify-center items-center gap-3 hover:bg-white hover:rounded-lg hover:shadow py-4"
                         >
                         <i class="fa-regular fa-file-lines"></i>
-                        <span class="capitalize">Submission </span>
+                        <span class="capitalize">Submissions </span>
                         
                         </a>
                     </li>
@@ -63,6 +63,29 @@
                         <i class="fa-regular fa-file-lines"></i>
                         <span class="capitalize">Interviews</span>
                         
+                        </a>
+                    </li>
+
+                    <li class="flex justify-center">
+                        <a
+                        @click="tab = 'offer'"
+                        :class="{ 'border-blue-500 text-blue-500': tab === 'offer' }"
+                        class="w-full flex justify-center items-center gap-3 hover:bg-white hover:rounded-lg hover:shadow py-4"
+                        >
+                        <i class="fa-regular fa-file-lines"></i>
+                        <span class="capitalize">Offers</span>
+                        
+                        </a>
+                    </li>
+                    <li class="flex justify-center">
+                        <a
+                        @click="tab = 'workorder'"
+                        :class="{ 'border-blue-500 text-blue-500': tab === 'workorder' }"
+                        class="w-full flex justify-center items-center gap-3 hover:bg-white hover:rounded-lg hover:shadow py-4"
+                        >
+                        <i class="fa-regular fa-file-lines"></i>
+                        <span class="capitalize">Workorders</span>
+
                         </a>
                     </li>
                 </ul>
@@ -537,6 +560,14 @@
 
             <div x-show="tab === 'interview'">
                 @include('vendor.career_opportunities.interview')
+            </div>
+
+            <div x-show="tab === 'offer'">
+                @include('vendor.career_opportunities.offer')
+            </div>
+
+            <div x-show="tab === 'workorder'">
+                @include('vendor.career_opportunities.workorder')
             </div>
         </div>
     </div>
