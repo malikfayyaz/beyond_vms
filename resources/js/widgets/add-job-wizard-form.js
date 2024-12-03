@@ -148,7 +148,7 @@ export default function wizardForm(careerOpportunity = null,businessUnitsData = 
              this.formData.billRate =  $('#billRate').val();
              this.formData.maxBillRate = $('#maxBillRate').val();
              this.formData.currency = $('#currency').val();
-            }, 500);
+            }, 1000);
           }
         };
 
@@ -295,7 +295,7 @@ export default function wizardForm(careerOpportunity = null,businessUnitsData = 
                 ajaxCall(url,  'POST', [[updateElements, ['response', updates]]], data);
       this.selectedBusinessUnit = "";
       this.budgetPercentage = "";
-      $(this.$refs.businessUnitSelect).val("").trigger("change");
+     // $(this.$refs.businessUnitSelect).val("").trigger("change");
       this.showErrors = false;
       this.businessUnitErrorMessage = "";
     },
