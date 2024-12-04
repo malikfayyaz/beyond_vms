@@ -10,8 +10,11 @@ function initializeDataTable(tableId, ajaxUrl, columns,getType) {
        
         data: function(d) {
             if (getType) {
-                d.type = getType(); // Pass the currentType
-            }
+                    const typeData = getType(); // Retrieve the object with currentType, currentId, and subId
+                    d.type = typeData.currentType;
+                    d.currentId = typeData.currentId;
+                    d.subId = typeData.subId;
+                }
         }
     },
      

@@ -153,7 +153,7 @@
                 { data: 'worker_type', name: 'worker_type' },
                 { data: 'action', name: 'action', orderable: false, searchable: false }
 
-            ], () => currentType);
+            ], () => ({ currentType, currentId, subId }));
 
             $(document).on('click', '.job-detail-trigger', function (e) {
                 e.preventDefault();

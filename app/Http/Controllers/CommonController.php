@@ -190,6 +190,10 @@ class CommonController extends Controller
 
     public function jobDetails($id)
     {
+        $user = \Auth::user();
+        $userid = \Auth::id();
+        $sessionrole = session('selected_role');
+        // dd($sessionrole);
         // Retrieve the job with the count of submissions
         $job = CareerOpportunity::withCount(['submissions', 'interviews', 'offers', 'workorders', 'hired'])
         ->with(['careerOpportunitiesBu.buName']) // Eager load the relationship
@@ -216,6 +220,7 @@ class CommonController extends Controller
             'hours' => $job->hours_per_day, 
             'jobDuration' => $job->date_range, 
             'ratetype' => $job->paymentType->title, 
+            'sessionrole' => $sessionrole, 
             'min_rate' => '$' . number_format($job->min_bill_rate, 2), 
             'max_rate' => '$' . number_format($job->max_bill_rate, 2), 
             'careerOpportunitiesBu' => $job->careerOpportunitiesBu->map(function ($bu) {
@@ -363,7 +368,7 @@ class CommonController extends Controller
                 ->first();
 
             if ($jobBranch) {
-                $response['branch'] .= '<option data-id="' . $jobBranch->id . '" value="' . $jobBranch->id . '">' . $jobBranch->name . '</option>';
+                $response['branch'] .= '<option data-id="' . $jobBranch->id . '" value="' . $jobBranch->id . '" selected="">' . $jobBranch->name . '</option>';
             }
         }
 
@@ -379,7 +384,7 @@ class CommonController extends Controller
                 ->first();
 
             if ($jobZone) {
-                $response['zone'] .= '<option data-id="' . $jobZone->id . '" value="' . $jobZone->id . '">' . $jobZone->name . '</option>';
+                $response['zone'] .= '<option data-id="' . $jobZone->id . '" value="' . $jobZone->id . '" selected="">' . $jobZone->name . '</option>';
             }
         }
 
@@ -395,7 +400,7 @@ class CommonController extends Controller
                 ->first();
 
             if ($jobDivision) {
-                $response['division'] .= '<option data-id="' . $jobDivision->id . '" value="' . $jobDivision->id . '">' . $jobDivision->name . '</option>';
+                $response['division'] .= '<option data-id="' . $jobDivision->id . '" value="' . $jobDivision->id . '" selected="">' . $jobDivision->name . '</option>';
             }
         }
 

@@ -54,7 +54,6 @@
                 >
                   <i class="fa-regular fa-file-lines"></i>
                   <span class="capitalize">{{translate('Job Submission')}} </span>
-
                 </a>
               </li>
 

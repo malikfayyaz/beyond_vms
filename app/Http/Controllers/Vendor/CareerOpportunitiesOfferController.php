@@ -35,6 +35,8 @@ class CareerOpportunitiesOfferController extends Controller
 
         if ($request->ajax()) {
             $offers = CareerOpportunitiesOffer::with(['consultant','careerOpportunity','hiringManager','vendor']);
+            $currentId = $request->input('currentId');
+            $subId = $request->input('subId');
             if ($request->has('type')) {
                 $type = $request->input('type');
                 switch ($type) {
@@ -55,6 +57,10 @@ class CareerOpportunitiesOfferController extends Controller
                     default:
                         break; // Show all submissions if no type is specified
                 }
+            }
+            if ($currentId && $subId) {
+                $offers->where('submission_id', $subId)
+                       ->where('id', '!=', $currentId);
             }
             return DataTables::of($offers)
                 ->addColumn('consultant_name', function($row) {

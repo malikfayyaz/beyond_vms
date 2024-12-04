@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\CareerOpportunity;
 use App\Models\CareerOpportunitySubmission;
 use App\Models\CareerOpportunitiesInterview;
+use App\Models\CareerOpportunitiesOffer;
+use App\Models\CareerOpportunitiesWorkorder;
 use App\Models\Vendor;
 use App\Models\VendorJobRelease;
 use Illuminate\Http\Request;
@@ -317,6 +319,66 @@ class CareerOpportunitiesController extends Controller
             })
             ->rawColumns(['career_opportunity','id','action'])
             ->make(true);
+    }
+
+    public function jobOffer($id){
+        $offers = CareerOpportunitiesOffer::with(['consultant','careerOpportunity','hiringManager','vendor'])->where('career_opportunity_id',$id)->orderBy('id', 'desc');
+           return DataTables::of($offers)
+               ->addColumn('consultant_name', function($row) {
+                   return $row->consultant ? $row->consultant->full_name : 'N/A';
+               })
+               ->addColumn('status', function($row) {
+                   return CareerOpportunitiesOffer::getOfferStatus($row->status);
+               })
+               ->addColumn('offer_id', function($row) {
+                   return '<span class="job-detail-trigger text-blue-500 cursor-pointer" data-id="' . $row->id . '">' . $row->id . '</span>';
+               })
+               ->addColumn('bill_rate', function($row) {
+                   return $row->offer_bill_rate ? $row->offer_bill_rate : 'N/A';
+               })
+               ->addColumn('offer_date', function($row) {
+                   return $row->offer_accept_date ? $row->offer_accept_date : 'N/A';
+               })
+               ->addColumn('action', function($row) {
+                   return '<a href="' . route('admin.offer.show', $row->id) . '"
+                               class="text-blue-500 hover:text-blue-700 mr-2 bg-transparent hover:bg-transparent">
+                                   <i class="fas fa-eye"></i>
+                           </a>';
+               })
+               ->rawColumns(['career_opportunity','offer_id','action'])
+               ->make(true);
+   }
+
+   public function jobWorkorder($id){
+    $data = CareerOpportunitiesWorkorder::with('hiringManager','vendor','careerOpportunity','location')->where('career_opportunity_id', $id)->orderBy('id', 'desc');
+    return DataTables::of($data)
+        ->addIndexColumn()
+        ->addColumn('status', function($row) {
+            return CareerOpportunitiesWorkorder::getWorkorderStatus($row->status);
+        })
+        ->addColumn('id', function ($row) {
+            return '<span class="job-detail-trigger text-blue-500 cursor-pointer" data-id="' . $row->id . '">' . $row->id . '</span>';
+        })
+        ->addColumn('consultant_name', function($row) {
+            return $row->consultant ? $row->consultant->full_name : 'N/A';
+        })
+        ->addColumn('bill_rate', function ($row) {
+            return $row->wo_bill_rate ? $row->wo_bill_rate : 'N/A';
+        })
+        ->addColumn('location', function($row) {
+            return $row->location ? $row->location->name : 'N/A';
+        })
+        ->addColumn('action', function ($row) {
+            $btn = ' <a href="' . route('admin.workorder.show', $row->id) . '"
+               class="text-blue-500 hover:text-blue-700 mr-2 bg-transparent hover:bg-transparent"
+             >
+               <i class="fas fa-eye"></i>
+             </a>';
+
+            return $btn;
+        })
+        ->rawColumns(['career_opportunity','id','action'])
+        ->make(true);
     }
 
     /**
