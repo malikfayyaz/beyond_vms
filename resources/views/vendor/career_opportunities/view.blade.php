@@ -17,14 +17,14 @@
                             class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 capitalize"
                             onclick="window.location.href='{{route('vendor.submission.create', ['id' => $job->id]) }}'"
                         >
-                            Create Submission
+                            {{translate('Create Submission')}}
                         </button>
                         <button
                             type="button"
                             class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 capitalize"
                             onclick="window.location.href='{{route('vendor.career-opportunities.index') }}'"
                         >
-                            Back to list of Career Opportunities
+                            {{translate('Back to list of Career Opportunities')}}
                         </button>
                     </div>
                     @endif
@@ -39,8 +39,8 @@
                         class="w-full flex justify-center items-center gap-3 hover:bg-white hover:rounded-lg hover:shadow py-4"
                         >
                         <i class="fa-regular fa-file-lines"></i>
-                        <span class="capitalize">Job Details</span>
-                        
+                        <span class="capitalize">{{translate('Job Details')}}</span>
+
                         </a>
                     </li>
                     <li class="flex justify-center">
@@ -50,8 +50,8 @@
                         class="w-full flex justify-center items-center gap-3 hover:bg-white hover:rounded-lg hover:shadow py-4"
                         >
                         <i class="fa-regular fa-file-lines"></i>
-                        <span class="capitalize">Submission </span>
-                        
+                        <span class="capitalize">{{translate('Submission')}} </span>
+
                         </a>
                     </li>
                     <li class="flex justify-center">
@@ -61,8 +61,8 @@
                         class="w-full flex justify-center items-center gap-3 hover:bg-white hover:rounded-lg hover:shadow py-4"
                         >
                         <i class="fa-regular fa-file-lines"></i>
-                        <span class="capitalize">Interviews</span>
-                        
+                        <span class="capitalize">{{translate('Interviews')}}</span>
+
                         </a>
                     </li>
                 </ul>

@@ -16,6 +16,7 @@ use App\Models\CareerOpportunitiesOffer;
 use App\Models\OfferWorkflowApproval;
 use App\Models\CareerOpportunitiesWorkorder;
 use App\Models\VendorTeammember;
+use Stichoza\GoogleTranslate\GoogleTranslate;
 
 function userType(){
     $array = array(
@@ -268,7 +269,7 @@ if (!function_exists('numberOfWorkingDays')) {
 
 if (!function_exists('updateSubmission')) {
     function updateSubmission($model,$type){
-        
+
 
        $userid =  checkUserId(\Auth::id(),session('selected_role'));
         $submission = CareerOpportunitySubmission::whereNotIn('resume_status', [6, 11])
@@ -323,7 +324,7 @@ if (!function_exists('updateSubmission')) {
                     //update offer workflow
 
                     $allapprovals = OfferWorkflowApproval::where('offer_id', $offerModel->id)->get();
-                   
+
                     if($allapprovals){
                         $reason_for_rejection = 66;
                         foreach ($allapprovals as $approval){
@@ -357,9 +358,9 @@ if (!function_exists('updateSubmission')) {
 
 if (!function_exists('jobVendSubmissionLimit')) {
     function jobVendSubmissionLimit($jobID){
-        
+
         $vendorID =  checkUserId(\Auth::id(),session('selected_role'));
-        
+
         $vendorID = superVendor($vendorID);
         $submissionCount = CareerOpportunitySubmission::where('career_opportunity_id', $jobID)
         ->where('vendor_id', $vendorID)
@@ -373,13 +374,13 @@ if (!function_exists('jobVendSubmissionLimit')) {
 if (!function_exists('SuperVendor')) {
     function superVendor($mainVendor){
         $vendorID = $mainVendor;
-        
-        
+
+
         $teamMemData = VendorTeammember::where('teammember_id',$vendorID)->first();
         if($teamMemData !=null){
         $vendorID = $teamMemData->vendor_id;
         }
-            
+
         return $vendorID;
     }
 }
@@ -438,6 +439,15 @@ if (!function_exists('timesheetGetStartAndEndDate')) {
         $time += 6*24*3600;
         $return[1] = date('Y-n-j', $time);
         return $return;
+    }
+}
+if (!function_exists('translate')) {
+    function translate($text)
+    {
+        if (session('locale') && session('locale') !== 'en') {
+            App::setLocale(session('locale'));
+        }
+        return GoogleTranslate::trans($text, app()->getLocale());
     }
 }
 

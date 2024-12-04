@@ -33,6 +33,63 @@
           <!-- Header Nav -->
           <div class="header-nav flex items-center gap-4">
             <div x-data="{ open: false }" class="relative">
+                  <!-- Display Selected Language Button -->
+                  <button
+                      @click="open = !open"
+                      class="flex items-center focus:outline-none w-10 h-10 rounded-full flex items-center justify-center"
+                  >
+                      <span class="text-white">{{ strtoupper(session('locale', 'en')) }}</span>
+                      <i class="fa-solid fa-language text-white ml-2"></i>
+                  </button>
+                  <!-- Dropdown Menu -->
+                  <div
+                      x-show="open"
+                      @click.away="open = false"
+                      class="absolute right-0 mt-2 w-48 bg-white rounded-md overflow-hidden shadow-xl z-10"
+                  >
+                      <!-- Language Options -->
+                      <a
+                          href="{{ url('lang/change?lang=en') }}"
+                          class="block px-4 py-2 text-sm text-gray-900 flex items-center"
+                          :class="{
+                'bg-blue-100': '{{ session('locale', 'en') }}' === 'en',
+                'hover:bg-gray-200': '{{ session('locale', 'en') }}' !== 'en'
+            }"
+                      >
+                          English
+                          <span class="ml-auto" x-show="'{{ session('locale', 'en') }}' === 'en'">
+                &#10003;
+            </span>
+                      </a>
+                      <a
+                          href="{{ url('lang/change?lang=fr') }}"
+                          class="block px-4 py-2 text-sm text-gray-900 flex items-center"
+                          :class="{
+                'bg-blue-100': '{{ session('locale', 'en') }}' === 'fr',
+                'hover:bg-gray-200': '{{ session('locale', 'en') }}' !== 'fr'
+            }"
+                      >
+                          French
+                          <span class="ml-auto" x-show="'{{ session('locale', 'en') }}' === 'fr'">
+                &#10003;
+            </span>
+                      </a>
+                      <a
+                          href="{{ url('lang/change?lang=es') }}"
+                          class="block px-4 py-2 text-sm text-gray-900 flex items-center"
+                          :class="{
+                'bg-blue-100': '{{ session('locale', 'en') }}' === 'es',
+                'hover:bg-gray-200': '{{ session('locale', 'en') }}' !== 'es'
+            }"
+                      >
+                          Spanish
+                          <span class="ml-auto" x-show="'{{ session('locale', 'en') }}' === 'es'">
+                &#10003;
+            </span>
+                      </a>
+                  </div>
+              </div>
+            <div x-data="{ open: false }" class="relative">
               <button
                 @click="open = !open"
                 class="flex items-center focus:outline-none w-10 h-10 rounded-full flex items-center justify-center"
@@ -237,7 +294,7 @@
 
                 <a
                 href="#"
-                onclick="event.preventDefault(); 
+                onclick="event.preventDefault();
                         ajaxCall('{{ route('logout') }}', 'POST', [[onSuccess, ['response']]]);"
                 class="block px-4 py-2 text-sm text-red-600 hover:bg-gray-100 flex items-center"
               >
