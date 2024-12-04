@@ -29,7 +29,7 @@
         "flatpickr": "^4.6.13",
         "formBuilder": "^3.19.13",
         "jquery": "^3.7.1",
-        "jquery-ui": "^1.14.1",
+        "jquery-ui": "^1.13.2",
         "quill": "^2.0.2",
         "select2": "^4.1.0-rc.0"
     }
