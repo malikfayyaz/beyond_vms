@@ -761,6 +761,38 @@
                             ></i>
                           </span>
                         </th>
+                        <th
+                          @click="sort('woStatusName')"
+                          class="py-3 px-4 text-left cursor-pointer"
+                        >
+                          Workorder Status
+                          <span class="ml-1">
+                            <i
+                              class="fas fa-sort-up"
+                              :class="{'text-blue-500': sortColumn === 'woStatusName' && sortDirection === 'asc'}"
+                            ></i>
+                            <i
+                              class="fas fa-sort-down"
+                              :class="{'text-blue-500': sortColumn === 'woStatusName' && sortDirection === 'desc'}"
+                            ></i>
+                          </span>
+                        </th>
+                        <th
+                          @click="sort('woType')"
+                          class="py-3 px-4 text-left cursor-pointer"
+                        >
+                          Worker Type
+                          <span class="ml-1">
+                            <i
+                              class="fas fa-sort-up"
+                              :class="{'text-blue-500': sortColumn === 'woType' && sortDirection === 'asc'}"
+                            ></i>
+                            <i
+                              class="fas fa-sort-down"
+                              :class="{'text-blue-500': sortColumn === 'woType' && sortDirection === 'desc'}"
+                            ></i>
+                          </span>
+                        </th>
                         
                         <th class="py-3 px-4 text-left">Action</th>
                       </tr>
@@ -776,6 +808,8 @@
                           <td class="py-3 px-4" x-text="item.vendor"></td>
                           <td class="py-3 px-4" x-text="item.date"></td>
                           <td class="py-3 px-4" x-text="item.offerBillRate"></td>
+                          <td class="py-3 px-4" x-text="item.woStatusName"></td>
+                          <td class="py-3 px-4" x-text="item.woType"></td>
                           
                           <td class="py-3 px-4">
                             <button
@@ -809,7 +843,10 @@
     <script>
       function catalogTable() {
         const logs = @json($logs);
-        
+        const wo_type = @json($wo_type);
+        const wo_statusName = @json($wo_statusName);
+        console.log(wo_statusName);
+
         return {
             items: logs.map(log => ({
                 id: log.id,  // Log ID
@@ -821,6 +858,8 @@
                 vendor: log.properties.attributes.vendor_name, 
                 date: log.properties.attributes.start_date, 
                 offerBillRate: log.properties.attributes.offer_bill_rate, 
+                woStatusName: wo_statusName,
+                woType: wo_type,
                 
                   // Using status from the logs
             })),

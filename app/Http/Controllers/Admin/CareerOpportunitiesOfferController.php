@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use App\Models\CareerOpportunitiesOffer;
 use App\Models\CareerOpportunitySubmission;
+use App\Models\CareerOpportunitiesWorkorder;
 use App\Facades\CareerOpportunitiesOffer as offerHelper;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -203,7 +204,16 @@ class CareerOpportunitiesOfferController extends BaseController
         $candidateIds = $logs->pluck('properties.attributes.candidate_id')->unique();
         $hiringManagerIds = $logs->pluck('properties.attributes.hiring_manager_id')->unique();
         $vendorIds = $logs->pluck('properties.attributes.vendor_id')->unique();
-    
+        $wo = CareerOpportunitiesWorkorder::where('offer_id', $id)->first();
+
+        if ($wo) {
+            $wo_type = $wo->jobType ? $wo->jobType->title : 'Unknown Job Type'; // Handle null jobType
+            $wo_statusName = CareerOpportunitiesWorkorder::getWorkorderStatus($wo->status);
+        } else {
+            $wo_type = 'No Work Order Found';
+            $wo_statusName = 'No Status Available';
+        }
+        
         // Load all relevant consultants, clients, and vendors
         $candidates = Consultant::whereIn('id', $candidateIds)->get()->keyBy('id');
         $hiringManagers = Client::whereIn('id', $hiringManagerIds)->get()->keyBy('id');
@@ -243,7 +253,7 @@ class CareerOpportunitiesOfferController extends BaseController
         $rejectionreason = checksetting(17);
         $workflows = OfferWorkFlow::where('offer_id', $id)->get();
         $offer = CareerOpportunitiesOffer::findOrFail($id);
-        return view('admin.offer.view', compact('offer', 'workflows', 'rejectionreason', 'logs'));
+        return view('admin.offer.view', compact('offer', 'workflows', 'rejectionreason', 'logs', 'wo_type', 'wo_statusName'));
     }
 
     // Show the form for editing an existing career opportunity offer
