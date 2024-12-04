@@ -190,6 +190,10 @@ class CommonController extends Controller
 
     public function jobDetails($id)
     {
+        $user = \Auth::user();
+        $userid = \Auth::id();
+        $sessionrole = session('selected_role');
+        // dd($sessionrole);
         // Retrieve the job with the count of submissions
         $job = CareerOpportunity::withCount(['submissions', 'interviews', 'offers', 'workorders', 'hired'])
         ->with(['careerOpportunitiesBu.buName']) // Eager load the relationship
@@ -216,6 +220,7 @@ class CommonController extends Controller
             'hours' => $job->hours_per_day, 
             'jobDuration' => $job->date_range, 
             'ratetype' => $job->paymentType->title, 
+            'sessionrole' => $sessionrole, 
             'min_rate' => '$' . number_format($job->min_bill_rate, 2), 
             'max_rate' => '$' . number_format($job->max_bill_rate, 2), 
             'careerOpportunitiesBu' => $job->careerOpportunitiesBu->map(function ($bu) {
