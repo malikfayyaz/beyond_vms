@@ -363,7 +363,7 @@ class CommonController extends Controller
                 ->first();
 
             if ($jobBranch) {
-                $response['branch'] .= '<option data-id="' . $jobBranch->id . '" value="' . $jobBranch->id . '" selected="">' . $jobBranch->name . '</option>';
+                $response['branch'] .= '<option data-id="' . $jobBranch->id . '" value="' . $jobBranch->id . '">' . $jobBranch->name . '</option>';
             }
         }
 
@@ -379,7 +379,7 @@ class CommonController extends Controller
                 ->first();
 
             if ($jobZone) {
-                $response['zone'] .= '<option data-id="' . $jobZone->id . '" value="' . $jobZone->id . '" selected="">' . $jobZone->name . '</option>';
+                $response['zone'] .= '<option data-id="' . $jobZone->id . '" value="' . $jobZone->id . '">' . $jobZone->name . '</option>';
             }
         }
 
@@ -395,7 +395,7 @@ class CommonController extends Controller
                 ->first();
 
             if ($jobDivision) {
-                $response['division'] .= '<option data-id="' . $jobDivision->id . '" value="' . $jobDivision->id . '" selected="">' . $jobDivision->name . '</option>';
+                $response['division'] .= '<option data-id="' . $jobDivision->id . '" value="' . $jobDivision->id . '">' . $jobDivision->name . '</option>';
             }
         }
 
