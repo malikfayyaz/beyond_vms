@@ -36,7 +36,10 @@ class CareerOpportunitiesOfferController extends BaseController
             'withdrawn' => CareerOpportunitiesOffer::where('status', 13)->count(),
         ];
         if ($request->ajax()) {
+            // dd($request->input('type'));
             $offers = CareerOpportunitiesOffer::with(['consultant','careerOpportunity','hiringManager','vendor']);
+            $currentId = $request->input('currentId');
+            $subId = $request->input('subId');
             if ($request->has('type')) {
                 $type = $request->input('type');
                 switch ($type) {
@@ -57,6 +60,10 @@ class CareerOpportunitiesOfferController extends BaseController
                     default:
                         break; // Show all submissions if no type is specified
                 }
+            }
+            if ($currentId && $subId) {
+                $offers->where('submission_id', $subId)
+                       ->where('id', '!=', $currentId);
             }
             
             return DataTables::of($offers)
@@ -94,7 +101,7 @@ class CareerOpportunitiesOfferController extends BaseController
                 })
                 ->rawColumns(['career_opportunity','action'])
                 ->make(true);
-            }
+        }
         return view('admin.offer.index' , compact('counts'));
     }
 

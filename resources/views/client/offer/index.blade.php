@@ -140,6 +140,8 @@
     document.addEventListener('DOMContentLoaded', function() {
         if (window.$) {
             let currentType = 'all_offers';
+            let currentId = '';
+            let subId = '';
             let table = initializeDataTable('#listing', '/client/offer/index', [
                 { data: 'status', name: 'status' },
                 { data: 'id', name: 'id' },
@@ -153,7 +155,7 @@
                 { data: 'worker_type', name: 'worker_type' },
                 { data: 'action', name: 'action', orderable: false, searchable: false }
 
-            ], () => currentType);
+            ], () => ({ currentType, currentId, subId }));
 
             $(document).on('click', '.job-detail-trigger', function (e) {
                 e.preventDefault();
