@@ -28,7 +28,7 @@
                     <form action="{{ route('client.career-opportunities.copy', $job->id) }}" method="POST" style="display: inline-block;">
                         @csrf
                         <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 capitalize">
-                            Copy Career Opportunity <i class="fas fa-copy"></i>
+                            {{translate('Copy Career Opportunity')}} <i class="fas fa-copy"></i>
                         </button>
                     </form>
                 </div>
@@ -44,11 +44,11 @@
                             class="w-full flex justify-center items-center gap-3 hover:bg-white hover:rounded-lg hover:shadow py-4 tab === 'activejobs'"
                         >
                             <i class="fa-regular fa-file-lines"></i>
-                            <span class="capitalize">Job Details</span>
-                           
+                            <span class="capitalize">{{translate('Job Details')}}</span>
+
                         </a>
                     </li>
-                   
+
                     <li class="flex justify-center">
                         <a
                         @click="tab = 'jobworkflow'"
@@ -56,11 +56,11 @@
                         class="flex justify-center items-center gap-3 py-4 w-full hover:bg-white hover:rounded-lg hover:shadow"
                         >
                           <i class="fa-solid fa-fill"></i>
-                          <span class="capitalize">Workflow</span>
-                          
+                          <span class="capitalize">{{translate('Workflow')}}</span>
+
                         </a>
                     </li>
-                  
+
                 </ul>
             </div>
             <div class="flex w-full gap-4" x-show="tab === 'activejobs'">
@@ -213,7 +213,7 @@
                             </div>
                         </div>
                         @if($job->pre_candidate == 'Yes')
-              
+
                             <div class="flex items-center justify-between py-4 border-t">
                                     <div class="w-2/4">
                                         <h4 class="font-medium">Candidate First Name:</h4>
@@ -238,7 +238,7 @@
                                         <p class="font-light">{{$job->pre_last_name}}</p>
                                     </div>
                                 </div>
-                            
+
                             <div class="flex items-center justify-between py-4 border-t">
                                     <div class="w-2/4">
                                         <h4 class="font-medium">Candidate Phone:</h4>
@@ -247,7 +247,7 @@
                                         <p class="font-light">{{$job->candidate_phone}}</p>
                                     </div>
                                 </div>
-                            
+
                             <div class="flex items-center justify-between py-4 border-t">
                                     <div class="w-2/4">
                                         <h4 class="font-medium">Candidate Email:</h4>
@@ -685,20 +685,20 @@
                     <div
                         x-data="{
                             currentRowId: {{ $workflow->id }},
-                            note: '',          
-                            errors: {},       
+                            note: '',
+                            errors: {},
                             submitForm() {
                                 let formData = new FormData();
-                                formData.append('note', 'N/A'); 
+                                formData.append('note', 'N/A');
                                 formData.append('workflow_id', {{$workflow->id }});
                                 formData.append('job_id', {{$job->id }});
                                 const url = '/client/jobWorkFlowApprove';
                                 ajaxCall(url, 'POST', [[onSuccess, ['response']]], formData); // Submit the form data
-                                this.currentRowId = ''; 
-                                this.note = ''; 
-                                this.file = null; 
-                                this.errors = {}; 
-                                
+                                this.currentRowId = '';
+                                this.note = '';
+                                this.file = null;
+                                this.errors = {};
+
                             },
                             clearError(field) {
                                 delete this.errors[field];

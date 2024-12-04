@@ -451,6 +451,7 @@ class GenericDataController extends BaseController
             'approval_role_id' => 'required|exists:settings,id',
             'hiring_manager_id' => 'required|exists:clients,id',
             'approval_required' => 'required|in:yes,no',
+            'approval_number' => 'required|integer'
         ]);
 
         $existingWorkflow = Workflow::where('client_id', $validatedData['client_id'])
@@ -476,6 +477,7 @@ class GenericDataController extends BaseController
             'approval_role_id' => $validatedData['approval_role_id'],
             'hiring_manager_id' => $validatedData['hiring_manager_id'],
             'approval_required' => $validatedData['approval_required'],
+            'approval_number' => $validatedData['approval_number'],
         ]);
 
         $successMessage = 'Workflow updated successfully!';

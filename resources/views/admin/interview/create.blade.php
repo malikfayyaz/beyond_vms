@@ -57,7 +57,7 @@
                     <span class="font-bold text-[#ff9f43]"
                         >Job Duration</span
                     >
-                    <span>06/17/2024 - 01/31-2025</span>
+                    <span>{{$submission->careerOpportunity->date_range}}</span>
                     </div>
                 </div>
                 </div>

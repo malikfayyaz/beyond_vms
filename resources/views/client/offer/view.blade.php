@@ -420,159 +420,75 @@
                     Offer History
                   </h2>
                 </div>
-                <div x-data="catalogTable()" style="overflow: scroll;">
-                  <table
+                <div style="overflow: scroll;">
+                  <table id="listing"
                     class="min-w-full bg-white shadow-md rounded-lg overflow-hidden" style="width: max-content;"
                   >
                     <thead class="bg-gray-200 text-gray-700">
-                      <tr>
-                        <th class="py-3 px-4 text-left">Status</th>
+                    <tr>
+                        <!-- Status -->
                         <th
-                          @click="sort('catalogName')"
-                          class="py-3 px-4 text-left cursor-pointer"
+                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                         >
-                          Offer ID
-                          <span class="ml-1">
-                            <i
-                              class="fas fa-sort-up"
-                              :class="{'text-blue-500': sortColumn === 'catalogName' && sortDirection === 'asc'}"
-                            ></i>
-                            <i
-                              class="fas fa-sort-down"
-                              :class="{'text-blue-500': sortColumn === 'catalogName' && sortDirection === 'desc'}"
-                            ></i>
-                          </span>
+                            Status
+                        </th>
+                        <!-- User -->
+                        <th
+                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                        >
+                            Offer ID
+                        </th>
+                        <!-- job -->
+                        <th
+                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                        >
+                            Contractor Name
                         </th>
                         <th
-                          @click="sort('category')"
-                          class="py-3 px-4 text-left cursor-pointer"
+                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                         >
-                          Contractor Name
-                          <span class="ml-1">
-                            <i
-                              class="fas fa-sort-up"
-                              :class="{'text-blue-500': sortColumn === 'category' && sortDirection === 'asc'}"
-                            ></i>
-                            <i
-                              class="fas fa-sort-down"
-                              :class="{'text-blue-500': sortColumn === 'category' && sortDirection === 'desc'}"
-                            ></i>
-                          </span>
+                            Job Profile
                         </th>
                         <th
-                          @click="sort('profileWorkerType')"
-                          class="py-3 px-4 text-left cursor-pointer"
+                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                         >
-                          Job ID
-                          <span class="ml-1">
-                            <i
-                              class="fas fa-sort-up"
-                              :class="{'text-blue-500': sortColumn === 'profileWorkerType' && sortDirection === 'asc'}"
-                            ></i>
-                            <i
-                              class="fas fa-sort-down"
-                              :class="{'text-blue-500': sortColumn === 'profileWorkerType' && sortDirection === 'desc'}"
-                            ></i>
-                          </span>
+                            Hiring Manger
                         </th>
                         <th
-                          @click="sort('status')"
-                          class="py-3 px-4 text-left cursor-pointer"
+                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                         >
-                          Hiring Manager
-                          <span class="ml-1">
-                            <i
-                              class="fas fa-sort-up"
-                              :class="{'text-blue-500': sortColumn === 'status' && sortDirection === 'asc'}"
-                            ></i>
-                            <i
-                              class="fas fa-sort-down"
-                              :class="{'text-blue-500': sortColumn === 'status' && sortDirection === 'desc'}"
-                            ></i>
-                          </span>
+                            Vendor
                         </th>
                         <th
-                          @click="sort('status')"
-                          class="py-3 px-4 text-left cursor-pointer"
+                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                         >
-                          Vendor
-                          <span class="ml-1">
-                            <i
-                              class="fas fa-sort-up"
-                              :class="{'text-blue-500': sortColumn === 'status' && sortDirection === 'asc'}"
-                            ></i>
-                            <i
-                              class="fas fa-sort-down"
-                              :class="{'text-blue-500': sortColumn === 'status' && sortDirection === 'desc'}"
-                            ></i>
-                          </span>
+                            Offer Date
                         </th>
                         <th
-                          @click="sort('status')"
-                          class="py-3 px-4 text-left cursor-pointer"
+                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                         >
-                          Offer Date
-                          <span class="ml-1">
-                            <i
-                              class="fas fa-sort-up"
-                              :class="{'text-blue-500': sortColumn === 'status' && sortDirection === 'asc'}"
-                            ></i>
-                            <i
-                              class="fas fa-sort-down"
-                              :class="{'text-blue-500': sortColumn === 'status' && sortDirection === 'desc'}"
-                            ></i>
-                          </span>
+                            Bill Rate
                         </th>
                         <th
-                          @click="sort('status')"
-                          class="py-3 px-4 text-left cursor-pointer"
+                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                         >
-                          Bill Rate
-                          <span class="ml-1">
-                            <i
-                              class="fas fa-sort-up"
-                              :class="{'text-blue-500': sortColumn === 'status' && sortDirection === 'asc'}"
-                            ></i>
-                            <i
-                              class="fas fa-sort-down"
-                              :class="{'text-blue-500': sortColumn === 'status' && sortDirection === 'desc'}"
-                            ></i>
-                          </span>
+                            Workorder Status
                         </th>
-                        <th class="py-3 px-4 text-left">Action</th>
-                      </tr>
+                        <th
+                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                        >
+                            Woker Type
+                        </th>
+                        <th style="width: 80px"
+                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                        >
+                            Action
+                        </th>
+
+                    </tr>
                     </thead>
                     <tbody>
-                      <template x-for="item in paginatedItems" :key="item.id">
-                        <tr class="border-b border-gray-200 hover:bg-gray-100">
-                          <td class="py-3 px-4" x-text="item.status"></td>
-                          <td class="py-3 px-4" x-text="item.offerID"></td>
-                          <td class="py-3 px-4" x-text="item.candidate"></td>
-                          <td class="py-3 px-4" x-text="item.jobID"></td>
-                          <td class="py-3 px-4" x-text="item.hiringManager"></td>
-                          <td class="py-3 px-4" x-text="item.vendor"></td>
-                          <td class="py-3 px-4" x-text="item.date"></td>
-                          <td class="py-3 px-4" x-text="item.offerBillRate"></td>
-                          <td class="py-3 px-4">
-                            <button
-                              class="text-blue-500 hover:text-blue-700 mr-2 bg-transparent hover:bg-transparent"
-                            >
-                              <i class="fas fa-eye"></i>
-                            </button>
-                            <button
-                              class="text-green-500 hover:text-green-700 mr-2 bg-transparent hover:bg-transparent"
-                            >
-                              <i class="fas fa-edit"></i>
-                            </button>
-                            <button
-                              @click="deleteItem(item.id)"
-                              class="text-red-500 hover:text-red-700 bg-transparent hover:bg-transparent"
-                            >
-                              <i class="fas fa-trash"></i>
-                            </button>
-                          </td>
-                        </tr>
-                      </template>
+                      
                     </tbody>
                   </table>
                 </div>
@@ -593,48 +509,28 @@
 
         </script>
     <script>
-      function catalogTable() {
-        const logs = @json($logs);
-        
-        return {
-            items: logs.map(log => ({
-                id: log.id,  // Log ID
-                status: log.properties.attributes.status_name,
-                offerID: log.properties.attributes.id, // Example usage of status for catalog name
-                candidate: log.properties.attributes.candidate_name, 
-                jobID: log.properties.attributes.career_opportunity_id, 
-                hiringManager: log.properties.attributes.hiring_manager_name, 
-                vendor: log.properties.attributes.vendor_name, 
-                date: log.properties.attributes.start_date, 
-                offerBillRate: log.properties.attributes.offer_bill_rate, 
-                
-                  // Using status from the logs
-            })),
-            sortColumn: "id",
-            sortDirection: "asc",
-            itemsPerPage: 10,
-            currentPage: 1,
-            get paginatedItems() {
-              const start = (this.currentPage - 1) * this.itemsPerPage;
-              const end = start + this.itemsPerPage;
-              return this.items.slice(start, end);
-            },
+      document.addEventListener('DOMContentLoaded', function() {
+        if (window.$) {
+            let currentType = 'all_offers';
+            let currentId = '{{$offer->id}}';
+            let subId = '{{$offer->submission_id}}';
             
-            deleteItem(id) {
-            //  alert(id);
-            },
+            let table = initializeDataTable('#listing', '/client/offer/index', [
+                { data: 'status', name: 'status' },
+                { data: 'id', name: 'id' },
+                { data: 'consultant_name', name: 'consultant_name' },
+                { data: 'career_opportunity', name: 'career_opportunity' },
+                { data: 'hiring_manger', name: 'hiring_manger' },
+                { data: 'vendor_name', name: 'vendor_name' },
+                { data: 'created_at', name: 'created_at' },
+                { data: 'offer_bill_rate', name: 'offer_bill_rate' },
+                { data: 'wo_status', name: 'wo_status' },
+                { data: 'worker_type', name: 'worker_type' },
+                { data: 'action', name: 'action', orderable: false, searchable: false }
 
-            sort(column) {
-              if (this.sortColumn === column) {
-                this.sortDirection =
-                  this.sortDirection === "asc" ? "desc" : "asc";
-              } else {
-                this.sortColumn = column;
-                this.sortDirection = "asc";
-              }
-            },
-        };
-      }
+            ], () => ({ currentType, currentId, subId }));
+          }
+        });
 
     
       function openJobDetailsModal(jobId) {

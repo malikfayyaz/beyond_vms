@@ -41,7 +41,7 @@
                 class="w-full flex justify-center items-center gap-3 hover:bg-white hover:rounded-lg hover:shadow py-4"
                 >
                   <i class="fa-regular fa-file-lines"></i>
-                  <span class="capitalize">Job Details</span>
+                  <span class="capitalize">{{translate('Job Details')}}</span>
 
                 </a>
               </li>
@@ -53,8 +53,7 @@
                 class="w-full flex justify-center items-center gap-3 hover:bg-white hover:rounded-lg hover:shadow py-4"
                 >
                   <i class="fa-regular fa-file-lines"></i>
-                  <span class="capitalize">Submissions </span>
-
+                  <span class="capitalize">{{translate('Job Submission')}} </span>
                 </a>
               </li>
 
@@ -65,7 +64,7 @@
                 class="w-full flex justify-center items-center gap-3 hover:bg-white hover:rounded-lg hover:shadow py-4"
                 >
                   <i class="fa-regular fa-file-lines"></i>
-                  <span class="capitalize">Ranking</span>
+                  <span class="capitalize">{{translate('Ranking')}}</span>
 
                 </a>
               </li>
@@ -77,7 +76,7 @@
                 class="w-full flex justify-center items-center gap-3 hover:bg-white hover:rounded-lg hover:shadow py-4"
                 >
                   <i class="fa-regular fa-file-lines"></i>
-                  <span class="capitalize">Interviews</span>
+                  <span class="capitalize">{{translate('Interviews')}}</span>
 
                 </a>
               </li>
@@ -89,7 +88,7 @@
                 class="w-full flex justify-center items-center gap-3 hover:bg-white hover:rounded-lg hover:shadow py-4"
                 >
                   <i class="fa-regular fa-file-lines"></i>
-                  <span class="capitalize">Offers</span>
+                  <span class="capitalize">{{translate('Offers')}}</span>
 
                 </a>
               </li>
@@ -101,7 +100,7 @@
                 class="w-full flex justify-center items-center gap-3 hover:bg-white hover:rounded-lg hover:shadow py-4"
                 >
                   <i class="fa-regular fa-file-lines"></i>
-                  <span class="capitalize">Workorders</span>
+                  <span class="capitalize">{{translate('Workorders')}}</span>
 
                 </a>
               </li>
@@ -112,7 +111,7 @@
                 class="w-full flex justify-center items-center gap-3 hover:bg-white hover:rounded-lg hover:shadow py-4"
                 >
                   <i class="fa-regular fa-file-lines"></i>
-                  <span class="capitalize">Add notes</span>
+                  <span class="capitalize">{{translate('Add notes')}}</span>
 
                 </a>
               </li>
@@ -124,7 +123,7 @@
                 class="flex justify-center items-center gap-3 py-4 w-full hover:bg-white hover:rounded-lg hover:shadow"
                 >
                   <i class="fa-solid fa-fill"></i>
-                  <span class="capitalize">Workflow</span>
+                  <span class="capitalize">{{translate('Workflow')}}</span>
 
                 </a>
               </li>
@@ -135,7 +134,7 @@
                 class="flex justify-center items-center gap-3 py-4 w-full hover:bg-white hover:rounded-lg hover:shadow"
                 >
                     <i class="fa-solid fa-fill"></i>
-                    <span class="capitalize">Vendor Release</span>
+                    <span class="capitalize">{{translate('Vendor Release')}}</span>
                     <div
                       class="px-1 py-1 flex items-center justify-center bg-gray-500 text-white rounded-lg"
                     >
@@ -151,7 +150,7 @@
                 class="w-full flex justify-center items-center gap-3 hover:bg-white hover:rounded-lg hover:shadow py-4"
                 >
                   <i class="fa-regular fa-file-lines"></i>
-                  <span class="capitalize">Job Team Member</span>
+                  <span class="capitalize">{{translate('Job Team Member')}}</span>
 
                 </a>
               </li>
@@ -163,7 +162,7 @@
                 class="w-full flex justify-center items-center gap-3 hover:bg-white hover:rounded-lg hover:shadow py-4"
               >
                 <i class="fa-regular fa-file-lines"></i>
-                <span class="capitalize">PMO Specialist</span>
+                <span class="capitalize">{{translate('PMO Specialist')}}</span>
               </a>
             </li>
             <li class="flex justify-center">
@@ -173,7 +172,7 @@
                 class="w-full flex justify-center items-center gap-3 hover:bg-white hover:rounded-lg hover:shadow py-4"
               >
                 <i class="fa-regular fa-file-lines"></i>
-                <span class="capitalize">history</span>
+                <span class="capitalize">{{translate('history')}}</span>
               </a>
             </li>
 
@@ -356,7 +355,7 @@
                       <form action="{{ route('admin.career-opportunities.copy', $job->id) }}" method="POST" style="display: inline-block;">
                           @csrf
                           <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 capitalize">
-                              Copy Career Opportunity <i class="fas fa-copy"></i>
+                              {{translate('Copy Career Opportunity')}}<i class="fas fa-copy"></i>
                           </button>
                       </form>
                   </div>
@@ -583,7 +582,7 @@
               <div class="flex flex-col">
                   <div class="flex items-center justify-between py-4 border-t">
                       <div class="w-2/4">
-                          <h4 class="font-medium">Job Status:</h4>
+                          <h4 class="font-medium">{{ translate('Job Status:') }}</h4>
                       </div>
                       <div class="w-2/4">
                           <p class="font-light">{{ \App\Models\CareerOpportunity::getStatus($job->jobStatus) }}</p>

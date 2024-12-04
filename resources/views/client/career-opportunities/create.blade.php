@@ -9,7 +9,7 @@
             @include('client.layouts.partials.alerts')
             <div id="success-message" style="display: none;" class="alert alert-success"></div>
             <div >
-        <div class="bg-white mx-4 my-8 rounded p-8" x-data='wizardForm({!! json_encode($careerOpportunity) !!},{!! json_encode($businessUnitsData) !!})' x-init="mounted()">
+        <div class="bg-white mx-4 my-8 rounded p-8" x-data='wizardForm({!! json_encode($careerOpportunity, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP) !!},{!! json_encode($businessUnitsData, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP) !!})' x-init="mounted()">
 
             
             @php         $user = Auth::user();
