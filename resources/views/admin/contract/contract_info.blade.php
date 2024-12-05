@@ -10,13 +10,13 @@
                 :style="{'color': 'var(--primary-color)'}"
             ></i
             ><span :style="{'color': 'var(--primary-color)'}"
-            >Contract Info</span
+            >{{translate('Contract Info')}}</span
             >
         </h3>
         <div class="flex flex-col">
             <div class="flex items-center justify-between py-4 border-t">
                 <div class="w-2/4">
-                    <h4 class="font-medium">Contract ID:</h4>
+                    <h4 class="font-medium">{{translate('Contract ID:')}}</h4>
                 </div>
                 <div class="w-2/4">
                     <p class="font-light">{{ $contract->id }}</p>
@@ -24,7 +24,7 @@
             </div>
             <div class="flex items-center justify-between py-4 border-t">
                 <div class="w-2/4">
-                    <h4 class="font-medium">Contract Status:</h4>
+                    <h4 class="font-medium">{{translate('Contract Status:')}}</h4>
                 </div>
                 <div class="w-2/4">
                     <p class="font-light">{{ $contract->getContractStatus($contract->status) }}</p>
@@ -32,7 +32,7 @@
             </div>
             <div class="flex items-center justify-between py-4 border-t">
                 <div class="w-2/4">
-                    <h4 class="font-medium">Contract Start Date:</h4>
+                    <h4 class="font-medium">{{translate('Contract Start Date:')}}</h4>
                 </div>
                 <div class="w-2/4">
                     <p class="font-light">{{$contract->start_date}}</p>
@@ -40,7 +40,7 @@
             </div>
             <div class="flex items-center justify-between py-4 border-t">
                 <div class="w-2/4">
-                    <h4 class="font-medium">Contract End Date:</h4>
+                    <h4 class="font-medium">{{translate('Contract End Date:')}}</h4>
                 </div>
                 <div class="w-2/4">
                     <p class="font-light">{{$contract->end_date}}</p>
@@ -48,7 +48,7 @@
             </div>
             <div class="flex items-center justify-between py-4 border-t">
                 <div class="w-2/4">
-                    <h4 class="font-medium">Vendor Name:</h4>
+                    <h4 class="font-medium">{{translate('Vendor Name:')}}</h4>
                 </div>
                 <div class="w-2/4">
                     <p class="font-light">{{$contract->vendor->full_name}}</p>
@@ -56,7 +56,7 @@
             </div>
             <div class="flex items-center justify-between py-4 border-t">
                 <div class="w-2/4">
-                    <h4 class="font-medium">Job Title(ID):</h4>
+                    <h4 class="font-medium">{{translate('Job Title(ID):')}}</h4>
                 </div>
                 <div class="w-2/4" x-data="{ jobDetails: null}" @job-details-updated.window="jobDetails = $event.detail">
                     <p class="">
@@ -70,7 +70,7 @@
             </div>
             <div class="flex items-center justify-between py-4 border-t">
                 <div class="w-2/4">
-                    <h4 class="font-medium">Job Code:</h4>
+                    <h4 class="font-medium">{{translate('Job Code:')}}</h4>
                 </div>
                 <div class="w-2/4">
                     <p class="font-light">{{$contract->careerOpportunity->job_code}}</p>
@@ -78,7 +78,7 @@
             </div>
             <div class="flex items-center justify-between py-4 border-t">
                 <div class="w-2/4">
-                    <h4 class="font-medium">Worker Type:</h4>
+                    <h4 class="font-medium">{{translate('Worker Type:')}}</h4>
                 </div>
                 <div class="w-2/4">
                     <p class="font-light">{{$contract->careerOpportunity->workerType->title}}</p>
@@ -86,7 +86,7 @@
             </div>
             <div class="flex items-center justify-between py-4 border-t">
                 <div class="w-2/4">
-                    <h4 class="font-medium">Hiring Manager:</h4>
+                    <h4 class="font-medium">{{translate('Hiring Manager:')}}</h4>
                 </div>
                 <div class="w-2/4">
                     <p class="font-light">{{$contract->HiringManager->full_name}}</p>
@@ -94,7 +94,7 @@
             </div>
             <div class="flex items-center justify-between py-4 border-t">
                 <div class="w-2/4">
-                    <h4 class="font-medium">Labour Type:</h4>
+                    <h4 class="font-medium">{{translate('Labour Type:')}}</h4>
                 </div>
                 <div class="w-2/4">
                     <p class="font-light">{{getSettingTitleById($contract->careerOpportunity->labour_type)}}</p>
@@ -102,15 +102,15 @@
             </div>
            <div class="flex items-center justify-between py-4 border-t">
                 <div class="w-2/4">
-                    <h4 class="font-medium">Country Tax:</h4>
+                    <h4 class="font-medium">{{translate('Country Tax:')}}</h4>
                 </div>
                 <div class="w-2/4">
                     <p class="font-light">{{$contract->country_tax}}</p>
                 </div>
-            </div>--}}
+            </div>
             <div class="flex items-center justify-between py-4 border-t">
                 <div class="w-2/4">
-                    <h4 class="font-medium">Timesheet Approving Manager:</h4>
+                    <h4 class="font-medium">{{translate('Timesheet Approving Manager:')}}</h4>
                 </div>
                 <div class="w-2/4">
                     <p class="font-light">{{$contract->HiringManager->full_name}}</p>
@@ -118,7 +118,7 @@
             </div>
             <div class="flex items-center justify-between py-4 border-t">
                 <div class="w-2/4">
-                    <h4 class="font-medium">Work Location:</h4>
+                    <h4 class="font-medium">{{translate('Work Location:')}}</h4>
                 </div>
                 <div class="w-2/4">
                     <p class="font-light">
@@ -128,7 +128,7 @@
             </div>
             <div class="flex items-center justify-between py-4 border-t">
                 <div class="w-2/4">
-                    <h4 class="font-medium">Total Budget:</h4>
+                    <h4 class="font-medium">{{translate('Total Budget:')}}</h4>
                 </div>
                 <div class="w-2/4">
                     <p class="font-light">{{$contract->total_estimated_cost}}</p>
@@ -136,7 +136,7 @@
             </div>
             <div class="flex items-center justify-between py-4 border-t">
                 <div class="w-2/4">
-                    <h4 class="font-medium">Division:</h4>
+                    <h4 class="font-medium">{{translate('Division:')}}</h4>
                 </div>
                 <div class="w-2/4">
                     <p class="font-light">{{ getGenericTitleById($contract->careerOpportunity->division_id) }}</p>
@@ -144,7 +144,7 @@
             </div>
             <div class="flex items-center justify-between py-4 border-t">
                 <div class="w-2/4">
-                    <h4 class="font-medium">Region/Zone:</h4>
+                    <h4 class="font-medium">{{translate('Region/Zone:')}}</h4>
                 </div>
                 <div class="w-2/4">
                     <p class="font-light">{{ getGenericTitleById($contract->careerOpportunity->region_zone_id) }}</p>
@@ -152,7 +152,7 @@
             </div>
             <div class="flex items-center justify-between py-4 border-t">
                 <div class="w-2/4">
-                    <h4 class="font-medium">Branch:</h4>
+                    <h4 class="font-medium">{{translate('Branch:')}}</h4>
                 </div>
                 <div class="w-2/4">
                     <p class="font-light">{{ getGenericTitleById($contract->careerOpportunity->branch_id) }}</p>
@@ -160,7 +160,7 @@
             </div>
             <div class="flex items-center justify-between py-4 border-t">
                 <div class="w-2/4">
-                    <h4 class="font-medium">GL Account:</h4>
+                    <h4 class="font-medium">{{translate('GL Account:')}}</h4>
                 </div>
                 <div class="w-2/4">
                     <p class="font-light">{{ getGenericTitleById($contract->careerOpportunity->gl_code_id) }}</p>
@@ -168,7 +168,7 @@
             </div>
             <div class="flex items-center justify-between py-4 border-t">
                 <div class="w-2/4">
-                    <h4 class="font-medium">Travel Required:</h4>
+                    <h4 class="font-medium">{{translate('Travel Required:')}}</h4>
                 </div>
                 <div class="w-2/4">
                     <p class="font-light">{{ $contract->careerOpportunity->travel_required ?? 'N/A' }}</p>
@@ -176,7 +176,7 @@
             </div>
             <div class="flex items-center justify-between py-4 border-t">
                 <div class="w-2/4">
-                    <h4 class="font-medium">Business Reason:</h4>
+                    <h4 class="font-medium">{{translate('Business Reason:')}}</h4>
                 </div>
                 <div class="w-2/4">
                     <p class="font-light">{{ getSettingTitleById($contract->careerOpportunity->hire_reason_id) }}</p>
@@ -184,7 +184,7 @@
             </div>
             <div class="flex items-center justify-between py-4 border-t">
                 <div class="w-2/4">
-                    <h4 class="font-medium">Client Billable:</h4>
+                    <h4 class="font-medium">{{translate('Client Billable:')}}</h4>
                 </div>
                 <div class="w-2/4">
                     <p class="font-light">{{ $contract->careerOpportunity->client_billable ?? 'N/A' }}</p>
@@ -192,7 +192,7 @@
             </div>
             <div class="flex items-center justify-between py-4 border-t">
                 <div class="w-2/4">
-                    <h4 class="font-medium">Expenses Allowed?</h4>
+                    <h4 class="font-medium">{{translate('Expenses Allowed?')}}</h4>
                 </div>
                 <div class="w-2/4">
                     <p class="font-light">{{ $contract->careerOpportunity->expenses_allowed ?? 'N/A' }}</p>
@@ -200,7 +200,7 @@
             </div>
             <div class="flex items-center justify-between py-4 border-t">
                 <div class="w-2/4">
-                    <h4 class="font-medium">Remote Candidate:</h4>
+                    <h4 class="font-medium">{{translate('Remote Candidate:')}}</h4>
                 </div>
                 <div class="w-2/4">
                     <p class="font-light">{{ $contract->careerOpportunity->remote_option ?? 'N/A' }}</p>
@@ -208,7 +208,7 @@
             </div>
             <div class="flex items-center justify-between py-4 border-t">
                 <div class="w-2/4">
-                    <h4 class="font-medium">Number of Opening(s):</h4>
+                    <h4 class="font-medium">{{translate('Number of Opening(s):')}}</h4>
                 </div>
                 <div class="w-2/4">
                     <p class="font-light">{{ $contract->careerOpportunity->num_openings ?? 'N/A' }}</p>
@@ -227,7 +227,7 @@
                 :style="{'color': 'var(--primary-color)'}"
             ></i
             ><span :style="{'color': 'var(--primary-color)'}"
-            >Contract Rates</span
+            >{{translate('Contract Rates')}}</span
             >
         </h3>
         <!-- Cards -->
@@ -245,7 +245,7 @@
                         <div class="text-center">
         <span
             class="font-bold text-sm font-normal text-[#28c76f]"
-        >Bill Rate For Vendor</span
+        >{{translate('Bill Rate For Vendor')}}</span
         >
                         </div>
                     </div>
@@ -265,7 +265,7 @@
                         <div class="text-center">
         <span
             class="font-bold text-sm font-normal text-[#00bad1]"
-        >Bill Rate For Client</span
+        >{{translate('Bill Rate For Client')}}</span
         >
                         </div>
                     </div>
@@ -285,7 +285,7 @@
                         <div class="text-center">
         <span
             class="font-bold text-sm font-normal text-[#ff9f43]"
-        >All Resources Cost</span
+        >{{translate('All Resources Cost')}}</span
         >
                         </div>
                     </div>
@@ -301,7 +301,7 @@
                 :style="{'background-color': 'var(--primary-color)'}"
             >
                 <div class="w-3/5">
-                    <span class="text-white">Business Unit</span>
+                    <span class="text-white">{{translate('Business Unit')}}</span>
                 </div>
                 <div class="w-2/5 text-center">
                     <p class="font-light">%</p>
@@ -322,7 +322,7 @@
         </div>
         <div class="flex items-center justify-between py-4 border-t">
             <div class="w-2/4">
-                <h4 class="font-medium">Bill Rate (For Vendor):</h4>
+                <h4 class="font-medium">{{translate('Bill Rate (For Vendor):')}}</h4>
             </div>
             <div class="w-2/4">
                 <p class="font-light">{{ $contract->contractRates->vendor_bill_rate ?? 'N/A' }}</p>
@@ -330,7 +330,7 @@
         </div>
         <div class="flex items-center justify-between py-4 border-t">
             <div class="w-2/4">
-                <h4 class="font-medium">Bill Rate (For Client):<h4>
+                <h4 class="font-medium">{{translate('Bill Rate (For Client):')}}<h4>
             </div>
             <div class="w-2/4">
                 <p class="font-light">{{ $contract->contractRates->client_bill_rate ?? 'N/A' }}</p>
@@ -342,11 +342,11 @@
                 class="fa-regular fa-clock"
                 :style="{'color': 'var(--primary-color)'}"
             ></i
-            ><span :style="{'color': 'var(--primary-color)'}">Other Information</span>
+            ><span :style="{'color': 'var(--primary-color)'}">{{translate('Other Information')}}</span>
         </h3>
         <div class="flex items-center justify-between py-4 border-t">
             <div class="w-2/4">
-                <h4 class="font-medium">Location Tax(%):</h4>
+                <h4 class="font-medium">{{translate('Location Tax(%):')}}</h4>
             </div>
             <div class="w-2/4">
                 <p class="font-light">{{$contract->workOrder->location_tax}}</p>
@@ -354,7 +354,7 @@
         </div>
         <div class="flex items-center justify-between py-4 border-t">
             <div class="w-2/4">
-                <h4 class="font-medium">Currency:</h4>
+                <h4 class="font-medium">{{translate('Currency:')}}</h4>
             </div>
             <div class="w-2/4">
                 <p class="font-light">{{ getGenericTitleById($contract->careerOpportunity->currency_id) }}</p>
@@ -362,7 +362,7 @@
         </div>
         <div class="flex items-center justify-between py-4 border-t">
             <div class="w-2/4">
-                <h4 class="font-medium">Source Type:</h4>
+                <h4 class="font-medium">{{translate('Source Type:')}}</h4>
             </div>
             <div class="w-2/4">
                 <p class="font-light">{{ getSettingTitleById($contract->workOrder->sourcing_type)  }}</p>
@@ -370,7 +370,7 @@
         </div>
         <div class="flex items-center justify-between py-4 border-y">
             <div class="w-2/4">
-                <h4 class="font-medium">Timesheet Type:</h4>
+                <h4 class="font-medium">{{translate('Timesheet Type:')}}</h4>
             </div>
             <div class="w-2/4">
                 <p class="font-light">{{ getSettingTitleById($contract->type_of_timesheet) }}</p>
@@ -378,7 +378,7 @@
         </div>
         <div class="flex items-center justify-between py-4 border-y">
             <div class="w-2/4">
-                <h4 class="font-medium">Expense Allowed:</h4>
+                <h4 class="font-medium">{{translate('Expense Allowed:')}}</h4>
             </div>
             <div class="w-2/4">
                 <p class="font-light">{{ $contract->careerOpportunity->expenses_allowed }}</p>
@@ -391,12 +391,12 @@
                 :style="{'color': 'var(--primary-color)'}"
             ></i
             ><span :style="{'color': 'var(--primary-color)'}"
-            >Onboarding Info</span
+            >{{translate('Onboarding Info')}}</span
             >
         </h3>
         <div class="flex items-center justify-between py-4 border-t">
             <div class="w-2/4">
-                <h4 class="font-medium">Onboarding Start Date:</h4>
+                <h4 class="font-medium">{{translate('Onboarding Start Date:')}}</h4>
             </div>
             <div class="w-2/4">
                 <p class="font-light">{{ $contract->workOrder->onboard_change_start_date ?? 'N/A' }}</p>
@@ -404,7 +404,7 @@
         </div>
         <div class="flex items-center justify-between py-4 border-t">
             <div class="w-2/4">
-                <h4 class="font-medium">Onboarding End Date:</h4>
+                <h4 class="font-medium">{{translate('Onboarding End Date:')}}</h4>
             </div>
             <div class="w-2/4">
                 <p class="font-light">{{ $contract->workOrder->onboard_changed_end_date ?? 'N/A' }}</p>
@@ -412,7 +412,7 @@
         </div>
         <div class="flex items-center justify-between py-4 border-t">
             <div class="w-2/4">
-                <h4 class="font-medium">Onboarded status:</h4>
+                <h4 class="font-medium">{{translate('Onboarded status:')}}</h4>
             </div>
             <div class="w-2/4">
                 <p class="font-light">{{ $contract->workOrder->on_board_status ?? 'N/A' }}</p>
@@ -431,13 +431,13 @@
                 :style="{'color': 'var(--primary-color)'}"
             ></i
             ><span :style="{'color': 'var(--primary-color)'}"
-            >Contractor Information</span
+            >{{translate('Contractor Information')}}</span
             >
         </h3>
         <!-- Cards -->
         <div class="flex items-center justify-between py-4 border-t">
             <div class="w-2/4">
-                <h4 class="font-medium">Unique ID:</h4>
+                <h4 class="font-medium">{{translate('Unique ID:')}}</h4>
             </div>
             <div class="w-2/4">
                 <p class="font-light">{{ $contract->consultant->unique_id ?? 'N/A' }}</p>
@@ -445,7 +445,7 @@
         </div>
         <div class="flex items-center justify-between py-4 border-t">
             <div class="w-2/4">
-                <h4 class="font-medium">Contractor Portal ID:<h4>
+                <h4 class="font-medium">{{translate('Contractor Portal ID:')}}<h4>
             </div>
             <div class="w-2/4">
                 <p class="font-light">{{ $contract->consultant->candidate_id ?? 'N/A' }}</p>
@@ -453,7 +453,7 @@
         </div>
         <div class="flex items-center justify-between py-4 border-t">
             <div class="w-2/4">
-                <h4 class="font-medium">Contractor Name:<h4>
+                <h4 class="font-medium">{{translate('Contractor Name:')}}<h4>
             </div>
             <div class="w-2/4">
                 <p class="font-light">{{ $contract->consultant->full_name ?? 'N/A' }}</p>
@@ -461,7 +461,7 @@
         </div>
         <div class="flex items-center justify-between py-4 border-t">
             <div class="w-2/4">
-                <h4 class="font-medium">Contractor Login ID:<h4>
+                <h4 class="font-medium">{{translate('Contractor Login ID:')}}<h4>
             </div>
             <div class="w-2/4">
                 <p class="font-light">{{ $contract->consultant->user->email ?? 'N/A' }}</p>
@@ -469,7 +469,7 @@
         </div>
         <div class="flex items-center justify-between py-4 border-t">
             <div class="w-2/4">
-                <h4 class="font-medium">Contractor Phone Number:<h4>
+                <h4 class="font-medium">{{translate('Contractor Phone Number:')}}<h4>
             </div>
             <div class="w-2/4">
                 <p class="font-light">{{ $contract->consultant->phone ?? 'N/A' }}</p>
@@ -477,7 +477,7 @@
         </div>
         <div class="flex items-center justify-between py-4 border-t">
             <div class="w-2/4">
-                <h4 class="font-medium">Vendor Name:<h4>
+                <h4 class="font-medium">{{translate('Vendor Name:')}}<h4>
             </div>
             <div class="w-2/4">
                 <p class="font-light">{{ $contract->vendor->full_name ?? 'N/A' }}</p>
@@ -485,7 +485,7 @@
         </div>
         <div class="flex items-center justify-between py-4 border-t">
             <div class="w-2/4">
-                <h4 class="font-medium">Vendor Email:<h4>
+                <h4 class="font-medium">{{translate('Vendor Email:')}}<h4>
             </div>
             <div class="w-2/4">
                 <p class="font-light">{{ $contract->vendor->user->email ?? 'N/A' }}</p>
@@ -498,12 +498,12 @@
                 :style="{'color': 'var(--primary-color)'}"
             ></i
             ><span :style="{'color': 'var(--primary-color)'}">
-                Onboarding Document Background Screening
+                {{translate('Onboarding Document Background Screening')}}
             </span>
         </h3>
         <div class="flex items-center justify-between py-4 border-t">
             <div class="w-2/4">
-                <h4 class="font-medium">Code of Conduct:<h4>
+                <h4 class="font-medium">{{translate('Code of Conduct:')}}<h4>
             </div>
             <div class="w-2/4">
                 <p class="font-light">{{ optional($contract->workorderBackground)->code_of_conduct == 1 ? 'Yes' : 'No' ?? 'N/A' }}
@@ -512,7 +512,7 @@
         </div>
         <div class="flex items-center justify-between py-4 border-t">
             <div class="w-2/4">
-                <h4 class="font-medium">Data Privacy:<h4>
+                <h4 class="font-medium">{{translate('Data Privacy:')}}<h4>
             </div>
             <div class="w-2/4">
                 <p class="font-light">{{ optional($contract->workorderBackground)->data_privacy == 1 ? 'Yes' : 'No' ?? 'N/A' }}</p>
@@ -520,7 +520,7 @@
         </div>
         <div class="flex items-center justify-between py-4 border-t">
             <div class="w-2/4">
-                <h4 class="font-medium">Non-Disclosure:<h4>
+                <h4 class="font-medium">{{translate('Non-Disclosure:')}}<h4>
             </div>
             <div class="w-2/4">
                 <p class="font-light">{{ optional($contract->workorderBackground)->non_disclosure  == 1 ? 'Yes' : 'No' }}</p>
@@ -528,7 +528,7 @@
         </div>
         <div class="flex items-center justify-between py-4 border-t">
             <div class="w-2/4">
-                <h4 class="font-medium">Criminal Background:<h4>
+                <h4 class="font-medium">{{translate('Criminal Background:')}}<h4>
             </div>
             <div class="w-2/4">
                 <p class="font-light">{{ optional($contract->workorderBackground)->criminal_background   == 1 ? 'Yes' : 'No' }}</p>
@@ -541,7 +541,7 @@
             ></i
             ><span :style="{'color': 'var(--primary-color)'}">
                 <a href="{{ route('admin.workorder.show', $contract->workorder_id) }}" class="text-blue-500">
-                    WorkOrder
+                    {{translate('WorkOrder')}}
                             ({{ $contract->careerOpportunity->id }})
                         </a>
             </span>
@@ -554,7 +554,7 @@
             ></i
             ><span :style="{'color': 'var(--primary-color)'}"
             ><a href="{{ route('admin.offer.show', $contract->offer_id) }}" class="text-blue-500">
-                   Offer
+                   {{translate('Offer')}}
                     ({{ $contract->offer_id }})
                 </a></span>
         </h3>
@@ -572,7 +572,7 @@
                       composed: true
                   });
                   // console.log(event.detail.data);
-                  
+
                   document.dispatchEvent(event);
           })
           .catch(error => console.error('Error:', error));

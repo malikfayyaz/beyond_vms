@@ -12,20 +12,20 @@
             <div class="w-full flex justify-end items-center gap-4">
 
               <div x-data="{ showModal: false, status: {{ $interview->status }} }">
-                  <a href="javascript:void(0);" 
-                    class="btn bg-red-600 text-white py-2 px-4 rounded hover:bg-red-500" 
+                  <a href="javascript:void(0);"
+                    class="btn bg-red-600 text-white py-2 px-4 rounded hover:bg-red-500"
                     @click="showModal = true"
                     x-bind:disabled="status == 3"
                     :class="{ 'opacity-50 pointer-events-none': status == 3  || status == 5}">
-                    Reschedule/Cancel Interview
+                      {{translate('Reschedule/Cancel Interview')}}
                   </a>
                   <!-- The Modal -->
-                  <div x-show="showModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50" 
+                  <div x-show="showModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
                       @click.away="showModal = false">
                       <div class="bg-white w-full max-w-lg rounded-lg shadow-lg">
                           <!-- Modal Header -->
                           <div class="flex justify-between items-center p-4 border-b">
-                              <h4 class="text-lg font-semibold">Reschedule/Cancel Interview</h4>
+                              <h4 class="text-lg font-semibold">Reschedule/Cancel Interview')}}</h4>
                               <button type="button" class="text-gray-500 hover:text-gray-700 bg-transparent" @click="showModal = false">&times;</button>
                           </div>
 
@@ -35,9 +35,9 @@
                               @csrf
                                 <div class="mb-4">
                                     <label class="block text-sm font-medium text-gray-700">Reschedule Reason:</label>
-                                    <select 
+                                    <select
                                         x-model="formData.reschedule_reason"
-                                        id="reschedule_reason" 
+                                        id="reschedule_reason"
                                         name="reschedule_reason"
                                         class="w-full px-3 py-2 border rounded-md"
                                         :class="{'border-red-500': errors.reschedule_reason}">
@@ -48,12 +48,12 @@
                                     </select>
                                     <p x-show="errors.reschedule_reason" class="text-red-500 text-xs italic" x-text="errors.reschedule_reason"></p>
                                 </div>
-                                
+
                                 <div>
                                     <label class="block text-sm font-medium text-gray-700">Note <i class="fa fa-asterisk text-red-600"></i>:</label>
-                                    <textarea 
+                                    <textarea
                                         x-model="formData.rejection_note"
-                                        name="rejection_note" 
+                                        name="rejection_note"
                                         class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
                                         :class="{'border-red-500': errors.rejection_note}">
                                     </textarea>
@@ -72,15 +72,15 @@
               </div>
 
               <div x-data="{ showModal: false, status: {{ $interview->status }} }">
-                <a href="javascript:void(0);" 
-                  class="btn bg-red-600 text-white py-2 px-4 rounded hover:bg-red-400" 
+                <a href="javascript:void(0);"
+                  class="btn bg-red-600 text-white py-2 px-4 rounded hover:bg-red-400"
                   @click="showModal = true"
                   x-bind:disabled="status == 3 || status == 1"
                   :class="{ 'opacity-50 pointer-events-none': status == 3 || status == 1}">
-                  Reject Candidate
+                    {{translate('Reject Candidate')}}
                 </a>
                 <!-- The Modal -->
-                <div x-show="showModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50" 
+                <div x-show="showModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
                     @click.away="showModal = false">
                     <div class="bg-white w-full max-w-lg rounded-lg shadow-lg">
                         <!-- Modal Header -->
@@ -95,9 +95,9 @@
                           @csrf
                           <div class="mb-4">
                               <label class="block text-sm font-medium text-gray-700">Reason for Candidate Rejection:</label>
-                              <select 
+                              <select
                                   x-model="formData.cand_rej_reason"
-                                  id="cand_rej_reason" 
+                                  id="cand_rej_reason"
                                   name="cand_rej_reason"
                                   class="w-full px-3 py-2 border rounded-md"
                                   :class="{'border-red-500': errors.cand_rej_reason}">
@@ -108,12 +108,12 @@
                               </select>
                               <p x-show="errors.cand_rej_reason" class="text-red-500 text-xs italic" x-text="errors.cand_rej_reason"></p>
                           </div>
-                          
+
                           <div>
                               <label class="block text-sm font-medium text-gray-700">Note <i class="fa fa-asterisk text-red-600"></i>:</label>
-                              <textarea 
+                              <textarea
                                   x-model="formData.cand_rej_note"
-                                  name="cand_rej_note" 
+                                  name="cand_rej_note"
                                   class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
                                   :class="{'border-red-500': errors.cand_rej_note}">
                               </textarea>
@@ -136,7 +136,7 @@
                       type="button"
                       class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 capitalize"
                   >
-                      Back to Interview
+                      {{translate('Back to Interview')}}
                   </button>
               </a>
 
@@ -192,7 +192,7 @@
                       role="tab"
                     >
                       <i class="fa-regular fa-thumbs-up"></i>
-                      <span class="capitalize">Summary</span>
+                      <span class="capitalize">{{translate('Summary')}}</span>
                     </button>
                   </li>
 
@@ -210,7 +210,7 @@
                       role="tab"
                     >
                       <i class="fa fa-calendar"></i>
-                      <span class="capitalize"> Date & Time</span>
+                      <span class="capitalize"> {{translate('Date & Time')}}</span>
                     </button>
                   </li>
                 </ul>
@@ -233,7 +233,7 @@
                       <div class="divide-y divide-gray-200">
                           <!-- Update each field accordingly -->
                         <div class="flex justify-between py-3 px-4">
-                        <span class="text-gray-600">Status:</span>
+                        <span class="text-gray-600">{{translate('Status:')}}</span>
                         <span
                             class="bg-green-500 text-white px-2 py-1 rounded-full text-sm"
                             >{{$interview->status}}</span>
@@ -241,43 +241,43 @@
                         @if($interview->status == 3)
                           <div class="flex justify-between py-3 px-4">
                             <p class="font-bold text-red-400">
-                              <i class="fas fa-clipboard"></i> Cancel Reason
+                              <i class="fas fa-clipboard"></i> {{translate('Cancel Reason')}}
                             </p>
                           </div>
                           <div class="flex justify-between py-3 px-4">
-                            <span class="text-gray-600">Reason for Cancel:</span>
+                            <span class="text-gray-600">{{translate('Reason for Cancel:')}}</span>
                             <span class="font-semibold">{{$interview->reasonRejection->title}}</span>
                           </div>
                           <div class="flex justify-between py-3 px-4">
-                            <span class="text-gray-600">Cancel Notes:</span>
+                            <span class="text-gray-600">{{translate('Cancel Notes:')}}</span>
                             <span class="font-semibold">{{$interview->notes}}</span>
                           </div>
                           <div class="flex justify-between py-3 px-4">
-                            <span class="text-gray-600">Cancel By:</span>
+                            <span class="text-gray-600">{{translate('Cancel By:')}}</span>
                             <span class="font-semibold">{{$interview->rejectedBy->name}}</span>
                           </div>
                           <div class="flex justify-between py-3 px-4">
-                            <span class="text-gray-600">Date & Time:</span>
+                            <span class="text-gray-600">{{translate('Date & Time:')}}</span>
                             <span class="font-semibold">{{$interview->formatted_interview_cancellation_date}}</span>
                           </div>
                         @endif
                         <div class="flex justify-between py-3 px-4">
                           <p class="font-bold text-blue-400">
-                              <i class="fas fa-user"></i> Candidate Info
+                              <i class="fas fa-user"></i> {{translate('Candidate Info')}}
                           </p>
                         </div>
                         <div class="flex justify-between py-3 px-4">
-                            <span class="text-gray-600">Candidate Name:</span>
+                            <span class="text-gray-600">{{translate('Candidate Name:')}}</span>
                             <span class="font-semibold">{{$interview->consultant->full_name}}</span>
                         </div>
                         <div class="flex justify-between py-3 px-4">
-                            <span class="text-gray-600">Vendor Name:</span>
+                            <span class="text-gray-600">{{translate('Vendor Name:')}}</span>
                             <span
                             class="font-semibold"
                             >{{$interview->consultant->vendor->full_name}}</span>
                         </div>
                         <div class="flex justify-between py-3 px-4">
-                          <span class="text-gray-600">Division</span>
+                          <span class="text-gray-600">{{translate('Division')}}</span>
                           <span
                             class="font-semibold"
                           >{{$interview->careerOpportunity->division->name}}</span>
@@ -285,7 +285,7 @@
                         @isset($interview->offer)
                         <div class="flex justify-between py-3 px-4">
                           <span class="text-gray-600"
-                            >Offer ID:</span
+                            >{{translate('Offer ID:')}}</span
                           >
                           <span
                             class="font-semibold"
@@ -294,12 +294,12 @@
                         @endisset
                         <div class="flex justify-between py-3 px-4">
                           <p class="font-bold text-blue-400">
-                              <i class="fas fa-comments"></i> Interview Details
+                              <i class="fas fa-comments"></i> {{translate('Interview Details')}}
                           </p>
                         </div>
                         <div class="flex justify-between py-3 px-4">
                           <span class="text-gray-600"
-                            >Type of Interview:</span
+                            >{{translate('Type of Interview:')}}</span
                           >
                           <span
                             class="font-semibold"
@@ -307,25 +307,25 @@
                         </div>
                         @if (!empty($interview->interview_instructions))
                             <div class="flex justify-between py-3 px-4">
-                                <span class="text-gray-600">Interview Instruction:</span>
+                                <span class="text-gray-600">{{translate('Interview Instruction:')}}</span>
                                 <span class="font-semibold">{{ $interview->interview_instructions }}</span>
                             </div>
                         @endif
 
                         @if (!empty($interview->interview_detail))
                             <div class="flex justify-between py-3 px-4">
-                                <span class="text-gray-600">Interview Detail:</span>
+                                <span class="text-gray-600">{{translate('Interview Detail:')}}</span>
                                 <span class="font-semibold">{{ $interview->interview_detail }}</span>
                             </div>
                         @endif
                         <div class="flex justify-between py-3 px-4">
-                          <span class="text-gray-600">Location:</span>
+                          <span class="text-gray-600">{{translate('Location:')}}</span>
                           <span
                             class="font-semibold"
                           >{{ $interview->location->LocationDetails }}</span>
                         </div>
                         <div class="flex justify-between py-3 px-4" x-data="{ jobDetails: null}" @job-details-updated.window="jobDetails = $event.detail">
-                          <span class="text-gray-600">Job Profile:</span>
+                          <span class="text-gray-600">{{translate('Job Profile:')}}</span>
                           <span
                             class="font-semibold"
                           >
@@ -337,7 +337,7 @@
                           <x-job-details />
                         </div>
                         <div class="flex justify-between py-3 px-4">
-                          <span class="text-gray-600">Timezone:</span>
+                          <span class="text-gray-600">{{translate('Timezone:')}}</span>
                           <span
                             class="font-semibold"
                           >{{ $interview->timezone->title }}</span>
@@ -345,11 +345,11 @@
 
                         <div class="flex justify-between py-3 px-4">
                           <p class="font-bold text-blue-400">
-                              <i class="fa fa-calendar"></i> Interview Date
+                              <i class="fa fa-calendar"></i> {{translate('Interview Date')}}
                           </p>
                         </div>
                         <div class="flex justify-between py-3 px-4">
-                          <span class="text-gray-600">Date of Interview:</span>
+                          <span class="text-gray-600">{{translate('Date of Interview:')}}</span>
                           <span
                             class="font-semibold"
                           >
@@ -358,12 +358,12 @@
                         @if (!empty($interview->job_attachment))
                           <div class="flex justify-between py-3 px-4">
                             <p class="font-bold text-blue-400">
-                            <i class="fa fa-plus-square"></i> Additional Details
+                            <i class="fa fa-plus-square"></i> {{translate('Additional Details')}}
                             </p>
                           </div>
 
                           <div class="flex justify-between py-3 px-4">
-                            <span class="text-gray-600">Resume:</span>
+                            <span class="text-gray-600">{{translate('Resume:')}}</span>
                             <span
                               class="font-semibold"
                               >{{ $interview->job_attachment }} <a href="{{ asset('storage/interview_resume/' . $interview->job_attachment) }}" class="text-blue-500 hover:text-blue-700" download>
@@ -374,13 +374,13 @@
                         @endif
                         <div class="flex justify-between py-3 px-4">
                           <p class="font-bold text-blue-400">
-                          <i class="fa fa-user-plus"></i> Interviewer(s)
+                          <i class="fa fa-user-plus"></i> {{translate('Interviewer(s)')}}
                           </p>
                         </div>
                         @if($interview->interviewMembers)
                         @foreach($interview->interviewMembers as $member)
                         <div class="flex justify-between py-3 px-4">
-                          <span class="text-gray-600">Interviewer:</span>
+                          <span class="text-gray-600">{{translate('Interviewer:')}}</span>
                           <span
                             class="font-semibold"
                           >{{$member->member->full_name}}</span>
@@ -402,11 +402,11 @@
                     >
                       <div class="p-6 space-y-4">
                         <div class="flex justify-between items-center">
-                          <span class="text-gray-600">Date & Time:</span>
+                          <span class="text-gray-600">{{translate('Date & Time:')}}</span>
                         </div>
                         @foreach($interview->interviewDates as $dates)
                         <div class="bg-blue-50 p-3 rounded-md">
-                         
+
                           <div class="flex justify-between items-center">
                             <span class="text-gray-600">  {{$dates->formatted_schedule_date}} <br> <small>{{$dates->formatted_start_time}} - {{$dates->formatted_end_time}}</small></span>
                             <span class="bg-green-500 text-white px-2 py-1 rounded-full text-sm">{{$interview->status}}</span>
@@ -435,7 +435,7 @@
                 </p>
               </object>
             @else
-              <p>No resume available.</p>
+              <p>{{translate('No resume available.')}}</p>
             @endif
             </div>
           </div>
@@ -545,7 +545,7 @@
                       composed: true
                   });
                   // console.log(event.detail.data);
-                  
+
                   document.dispatchEvent(event);
           })
           .catch(error => console.error('Error:', error));

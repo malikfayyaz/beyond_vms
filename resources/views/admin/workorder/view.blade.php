@@ -11,7 +11,7 @@
           <div class="py-2 flex justify-between items-center gap-2">
             <div>
               <h3 class="text-xl" :style="{'color': 'var(--primary-color)'}">
-                My Web Application - Workorder ID: 5854
+                  {{translate('My Web Application - Workorder ID:')}} {{$workorder->id}}
               </h3>
             </div>
             <div class="flex items-center gap-2">
@@ -46,7 +46,7 @@
                     <button
                         @click="rejectModal1 = true"
                         class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 capitalize"
-                    >Withdraw Workorder/Submission</button>
+                    >{{translate('Withdraw Workorder/Submission')}}</button>
                     <div
                         x-show="rejectModal1"
                         @click.away="rejectModal1 = false"
@@ -60,7 +60,7 @@
                         <div class="relative top-20 mx-auto p-5 border w-[600px] shadow-lg rounded-md bg-white" @click.stop>
                             <!-- Modal Header -->
                             <div class="flex items-center justify-between border-b p-4">
-                                <h2 class="text-xl font-semibold">Withdraw Submission</h2>
+                                <h2 class="text-xl font-semibold">{{translate('Withdraw Submission')}}</h2>
                                 <button
                                     @click="rejectModal1 = false"
                                     class="text-gray-400 hover:text-gray-600 bg-transparent hover:bg-transparent"
@@ -135,13 +135,13 @@
                     </div>
                 </div>
                 @endif
-       
+
               <a href="{{ route('admin.workorder.index') }}">
                   <button
                       type="button"
                       class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 capitalize"
                   >
-                      Back to List of Workorders
+                      {{translate('Back to List of Workorders')}}
                   </button>
               </a>
 
@@ -159,13 +159,13 @@
                   :style="{'color': 'var(--primary-color)'}"
                 ></i>
                 <span :style="{'color': 'var(--primary-color)'}"
-                  >Work order information</span
+                  >{{translate('Work order information')}}</span
                 >
               </h3>
               <div class="flex flex-col">
                 <div class="flex items-center justify-between py-4 border-t">
                   <div class="w-2/4">
-                    <h4 class="font-medium capitalize">contractor name:</h4>
+                    <h4 class="font-medium capitalize">{{translate('Contractor name:')}}</h4>
                   </div>
                   <div class="w-2/4">
                     <a
@@ -178,7 +178,7 @@
                 </div>
                 <div class="flex items-center justify-between py-4 border-t">
                   <div class="w-2/4">
-                    <h4 class="font-medium capitalize">offer ID:</h4>
+                    <h4 class="font-medium capitalize">{{translate('Offer ID:')}}</h4>
                   </div>
                   <div class="w-2/4">
                     <a
@@ -191,7 +191,7 @@
                 </div>
                 <div class="flex items-center justify-between py-4 border-t">
                   <div class="w-2/4">
-                    <h4 class="font-medium capitalize">Unique ID:</h4>
+                    <h4 class="font-medium capitalize">{{translate('Unique ID:')}}</h4>
                   </div>
                   <div class="w-2/4">
                     <p class="font-light">{{$workorder->consultant->unique_id}}</p>
@@ -199,7 +199,7 @@
                 </div>
                 <div class="flex items-center justify-between py-4 border-t">
                   <div class="w-2/4">
-                    <h4 class="font-medium">Workorder Status:</h4>
+                    <h4 class="font-medium">{{translate('Workorder Status:')}}</h4>
                   </div>
                   <div class="w-2/4">
                     <p class="font-light">
@@ -212,7 +212,7 @@
                 </div>
                 <div class="flex items-center justify-between py-4 border-t">
                   <div class="w-2/4">
-                    <h4 class="font-medium capitalize">offer accepted date:</h4>
+                    <h4 class="font-medium capitalize">{{translate('Offer accepted date:')}}</h4>
                   </div>
                   <div class="w-2/4">
                     <p class="font-light">{{formatDate($workorder->offer->offer_accept_date)}}</p>
@@ -220,7 +220,7 @@
                 </div>
                 <div class="flex items-center justify-between py-4 border-t">
                   <div class="w-2/4">
-                    <h4 class="font-medium capitalize">offer accepted by:</h4>
+                    <h4 class="font-medium capitalize">{{translate('Offer accepted by:')}}</h4>
                   </div>
                   <div class="w-2/4">
                     <p class="font-light"><?php
@@ -242,12 +242,12 @@
                     :style="{'color': 'var(--primary-color)'}"
                   ></i>
                   <span :style="{'color': 'var(--primary-color)'}"
-                    >Pay Rate (For Candidate)</span
+                    >{{translate('Pay Rate (For Candidate)')}}</span
                   >
                 </h3>
                 <div class="flex items-center justify-between py-4 border-t">
                   <div class="w-2/4">
-                    <h4 class="font-medium capitalize">pay rate:</h4>
+                    <h4 class="font-medium capitalize">{{translate('Pay rate:')}}</h4>
                   </div>
                   <div class="w-2/4">
                     <p class="font-light">${{$workorder->wo_pay_rate}}</p>
@@ -255,7 +255,7 @@
                 </div>
                 <div class="flex items-center justify-between py-4 border-t">
                   <div class="w-2/4">
-                    <h4 class="font-medium capitalize">over time rate:</h4>
+                    <h4 class="font-medium capitalize">{{translate('Over time rate:')}}</h4>
                   </div>
                   <div class="w-2/4">
                     <p class="font-light">${{$workorder->wo_over_time}}</p>
@@ -271,12 +271,12 @@
                     class="capitalize"
                     :style="{'color': 'var(--primary-color)'}"
                   >
-                    Bill Rate (For Vendor)</span
+                    {{translate('Bill Rate (For Vendor)')}}</span
                   >
                 </h3>
                 <div class="flex items-center justify-between py-4 border-t">
                   <div class="w-2/4">
-                    <h4 class="font-medium capitalize">bill rate:</h4>
+                    <h4 class="font-medium capitalize">{{translate('Bill rate:')}}</h4>
                   </div>
                   <div class="w-2/4">
                     <p class="font-light">${{$workorder->vendor_bill_rate}}</p>
@@ -284,7 +284,7 @@
                 </div>
                 <div class="flex items-center justify-between py-4 border-t">
                   <div class="w-2/4">
-                    <h4 class="font-medium capitalize">over time rate:</h4>
+                    <h4 class="font-medium capitalize">{{translate('Over time rate:')}}</h4>
                   </div>
                   <div class="w-2/4">
                     <p class="font-light">${{$workorder->vendor_overtime_rate}}</p>
@@ -300,12 +300,12 @@
                     class="capitalize"
                     :style="{'color': 'var(--primary-color)'}"
                   >
-                    Bill Rate (For Client)</span
+                    {{translate('Bill Rate (For Client)')}}</span
                   >
                 </h3>
                 <div class="flex items-center justify-between py-4 border-t">
                   <div class="w-2/4">
-                    <h4 class="font-medium capitalize">Bill Rate:</h4>
+                    <h4 class="font-medium capitalize">{{translate('Bill Rate:')}}</h4>
                   </div>
                   <div class="w-2/4">
                     <p class="font-light">${{$workorder->wo_bill_rate}}</p>
@@ -313,7 +313,7 @@
                 </div>
                 <div class="flex items-center justify-between py-4 border-t">
                   <div class="w-2/4">
-                    <h4 class="font-medium capitalize">over time rate:</h4>
+                    <h4 class="font-medium capitalize">{{translate('Over time rate:')}}</h4>
                   </div>
                   <div class="w-2/4">
                     <p class="font-light">${{$workorder->wo_client_over_time}}</p>
@@ -374,7 +374,7 @@
                       role="tab"
                     >
                       <i class="fa-solid fa-circle-info"></i>
-                      <span class="capitalize">workorder info</span>
+                      <span class="capitalize">{{translate('Workorder info')}}</span>
                     </button>
                   </li>
                   @if($workorder->status==1)
@@ -392,7 +392,7 @@
                       role="tab"
                     >
                       <i class="fa-solid fa-money-bill"></i>
-                      <span class="capitalize">Onboarding Info</span>
+                      <span class="capitalize">{{translate('Onboarding Info')}}</span>
                     </button>
                   </li>
                   @endif
@@ -411,7 +411,7 @@
                     >
                       <i class="fa-regular fa-file"></i>
                       <span class="capitalize"
-                        >Onboarding Document Background Screening</span
+                        >{{translate('Onboarding Document Background Screening')}}</span
                       >
                     </button>
                   </li>
@@ -452,7 +452,7 @@
                       <div class="divide-y divide-gray-200">
                         <div class="flex justify-between py-3 px-4">
                           <span class="text-gray-600 capitalize"
-                            >start date:</span
+                            >{{translate('start date:')}}</span
                           >
                           <span
                             class="font-semibold"
@@ -461,7 +461,7 @@
                         </div>
                         <div class="flex justify-between py-3 px-4">
                           <span class="text-gray-600 capitalize"
-                            >End Date:</span
+                            >{{translate('End Date:')}}</span
                           >
                           <span
                             class="font-semibold"
@@ -470,7 +470,7 @@
                         </div>
                         <div class="flex justify-between py-3 px-4">
                           <span class="text-gray-600 capitalize"
-                            >Timesheet Approving Manager:</span
+                            >{{translate('Timesheet Approving Manager:')}}</span
                           >
                           <span
                             class="font-semibold"
@@ -479,7 +479,7 @@
                         </div>
                         <div class="flex justify-between py-3 px-4">
                           <span class="text-gray-600 capitalize"
-                            >Location of Work:</span
+                            >{{translate('Location of Work:')}}</span
                           >
                           <span
                             class="font-semibold"
@@ -488,7 +488,7 @@
                         </div>
                         <div class="flex justify-between py-3 px-4">
                           <span class="text-gray-600 capitalize"
-                            >Vendor Name:</span
+                            >{{translate('Vendor Name:')}}</span
                           >
                           <span
                             class="font-semibold"
@@ -497,7 +497,7 @@
                         </div>
                         <div class="flex justify-between py-3 px-4">
                           <span class="text-gray-600 capitalize"
-                            >Job Type:</span
+                            >{{translate('Job Type:')}}</span
                           >
                           <span
                             class="font-semibold"
@@ -506,7 +506,7 @@
                         </div>
                         <div class="flex justify-between py-3 px-4">
                           <span class="text-gray-600 capitalize"
-                            >Secondary Job Title:</span
+                            >{{translate('Secondary Job Title:')}}</span
                           >
                           <span
                             class="font-semibold"
@@ -515,7 +515,7 @@
                         </div>
                         <div class="flex justify-between py-3 px-4">
                           <span class="text-gray-600 capitalize"
-                            >Hiring Manager:</span
+                            >{{translate('Hiring Manager:')}}</span
                           >
                           <span
                             class="font-semibold"
@@ -524,7 +524,7 @@
                         </div>
                         <div class="flex justify-between py-3 px-4">
                           <span class="text-gray-600 capitalize"
-                            >GL Account:</span
+                            >{{translate('GL Account:')}}</span
                           >
                           <span
                             class="font-semibold"
@@ -533,7 +533,7 @@
                         </div>
                         <div class="flex justify-between py-3 px-4">
                           <span class="text-gray-600 capitalize"
-                            >Location Tax (%):</span
+                            >{{translate('Location Tax (%):')}}</span
                           >
                           <span
                             class="font-semibold"
@@ -542,7 +542,7 @@
                         </div>
                         <div class="flex justify-between py-3 px-4">
                           <span class="text-gray-600 capitalize"
-                            >Total Estimated Cost:</span
+                            >{{translate('Total Estimated Cost:')}}</span
                           >
                           <span
                             class="font-semibold"
@@ -551,7 +551,7 @@
                         </div>
                         <div class="flex justify-between py-3 px-4">
                           <span class="text-gray-600 capitalize"
-                            >Regular Hours Estimated cost:</span
+                            >{{translate('Regular Hours Estimated cost:')}}</span
                           >
                           <span
                             class="font-semibold"
@@ -585,14 +585,14 @@
                           <span
                             class="text-lg capitalize"
                             :style="{'color': 'var(--primary-color)'}"
-                            >Contractor Information</span
+                            >{{translate('Contractor Information')}}</span
                           >
                         </h3>
                         <div class="px-6 py-3">
                           <div class="flex space-x-4">
                             <div class="flex-1">
                               <label class="block mb-2 capitalize"
-                                >Contractor Name</label
+                                >{{translate('Contractor Name')}}</label
                               >
                               <input
                                 type="text"
@@ -603,7 +603,7 @@
                             </div>
                             <div class="flex-1">
                               <label class="block mb-2 capitalize"
-                                >Personal Email Address</label
+                                >{{translate('Personal Email Address')}}</label
                               >
                               <input
                                 type="text"
@@ -618,7 +618,7 @@
                           <div class="flex space-x-4">
                             <div class="flex-1">
                               <label class="block mb-2 capitalize"
-                                >Account Manager</label
+                                >{{translate('Account Manager')}}</label
                               >
                               <select
                                 class="w-full select2-single custom-style"
@@ -641,7 +641,7 @@
                             </div>
                             <div class="flex-1">
                               <label class="block mb-2 capitalize"
-                                >Work Location</label
+                                >{{translate('Work Location')}}</label
                               >
                               <input
                                 type="text"
@@ -656,14 +656,14 @@
                           <span
                             class="text-lg capitalize"
                             :style="{'color': 'var(--primary-color)'}"
-                            >Onboarding Details</span
+                            >{{translate('Onboarding Details')}}</span
                           >
                         </h3>
                         <div class="px-6 py-3">
                           <div class="flex space-x-4">
                             <div class="flex-1">
                               <label class="block mb-2 capitalize"
-                                >Job Profile</label
+                                >{{translate('Job Profile')}}</label
                               >
                               <input
                                 type="text"
@@ -674,7 +674,7 @@
                             </div>
                             <div class="flex-1">
                               <label class="block mb-2 capitalize"
-                                >Official Email Address</label
+                                >{{translate('Official Email Address')}}</label
                               >
                               <input
                                 type="text"
@@ -689,7 +689,7 @@
                           <div class="flex space-x-4">
                             <div class="flex-1">
                               <label class="block mb-2 capitalize"
-                                >Division</label
+                                >{{translate('Division')}}</label
                               >
                               <input
                                 type="text"
@@ -700,7 +700,7 @@
                             </div>
                             <div class="flex-1">
                               <label class="block mb-2 capitalize"
-                                >Region</label
+                                >{{translate('Region')}}</label
                               >
                               <input
                                 type="text"
@@ -715,7 +715,7 @@
                           <div class="flex space-x-4">
                             <div class="flex-1">
                               <label class="block mb-2 capitalize"
-                                >Start Date
+                                >{{translate('Start Date')}}
                                 <span class="text-red-500">*</span></label
                               >
                               <input
@@ -727,7 +727,7 @@
                             </div>
                             <div class="flex-1">
                               <label class="block mb-2 capitalize"
-                                >End Date
+                                >{{translate('End Date')}}
                                 <span class="text-red-500">*</span></label
                               >
                               <input
@@ -744,7 +744,7 @@
                           <div class="flex space-x-4">
                             <div class="flex-1">
                               <label class="block mb-2 capitalize"
-                                >Candidate Sourcing Type & Worker Type<span
+                                >{{translate('Candidate Sourcing Type & Worker Type')}}<span
                                   class="text-red-500"
                                   >*</span
                                 >
@@ -766,7 +766,7 @@
                             </div>
                             <div class="flex-1">
                               <label class="block mb-2 capitalize"
-                                >Original Start Date
+                                >{{translate('Original Start Date')}}
                                 <span class="text-red-500">*</span></label
                               >
                               <input
@@ -788,14 +788,14 @@
                           <span
                             class="text-lg capitalize"
                             :style="{'color': 'var(--primary-color)'}"
-                            >Contractor Portal Details</span
+                            >{{translate('Contractor Portal Details')}}</span
                           >
                         </h3>
                         <div class="px-6 py-3">
                           <div class="flex space-x-4">
                             <div class="flex-1">
                               <label class="block mb-2 capitalize"
-                                >Contractor Portal ID
+                                >{{translate('Contractor Portal ID')}}
                                 <span class="text-red-500">*</span></label
                               >
                               <input
@@ -807,7 +807,7 @@
                             </div>
                             <div class="flex-1">
                               <label class="block mb-2 capitalize"
-                                >Contractor Password
+                                >{{translate('Contractor Password')}}
                                 <span class="text-red-500">*</span></label
                               >
                               <input
@@ -823,14 +823,14 @@
                           <span
                             class="text-lg capitalize"
                             :style="{'color': 'var(--primary-color)'}"
-                            >Timesheet Information</span
+                            >{{translate('Timesheet Information')}}</span
                           >
                         </h3>
                         <div class="px-6 py-3">
                           <div class="flex space-x-4">
                             <div class="flex-1">
                               <label class="block mb-2 capitalize"
-                                >Timesheet Type
+                                >{{translate('Timesheet Type')}}
                                 <span class="text-red-500">*</span>
                               </label>
                               <select
@@ -838,7 +838,7 @@
                                 x-model="timesheetType"
                                 id="timesheetType" :disabled="isDisabled"
                               >
-                                <option value="" disabled>Select Timesheet Type</option>
+                                <option value="" disabled>{{translate('Select Timesheet Type')}}</option>
                                 @foreach (checksetting(19) as $key => $value)
                             <option value="{{ $key }}">{{ $value }}</option>
                             @endforeach
@@ -858,47 +858,47 @@
                             class="px-4 py-2 text-white capitalize rounded"
                             :style="{'background-color': 'var(--primary-color)', 'background-color:hover': 'var(--primary-hover)'}"
                           >
-                            Onboard
-                          </button>
-                        </div>
-                        @endif
-                      </form>
-                    </div>
-                  </section>
-                  @endif
-                  <!-- Third Tab-->
-                  <section
-                    x-show="isSelected($id('tab', whichChild($el, $el.parentElement)))"
-                    :aria-labelledby="$id('tab', whichChild($el, $el.parentElement))"
-                    role="tabpanel"
-                    class=""
-                    >
-                    @if($workorder->verification_status==1)
-                    <div
-                      class="overflow-x-auto"
-                      x-data="{
-                        openModal: false,
-                        currentRowId: null,
-                        rows: [
-                          { id: 1, documentCheckList: 'Code of Conduct', dateTime: '10/03/2024 06:18 PM' },
-                          { id: 2, documentCheckList: 'Data Privacy/Data Handling', dateTime: '10/03/2024 06:18 PM' },
-                          { id: 3, documentCheckList: 'Non-Disclosure', dateTime: '10/03/2024 06:18 PM' },
-                          { id: 4, documentCheckList: 'Criminal Background', dateTime: '10/03/2024 06:18 PM' },
-                        ]
-                      }"
-                    >
-                      <table class="w-full">
-                        <thead>
-                          <tr class="bg-gray-50 text-left">
-                            <th
-                              class="py-4 px-4 text-center font-semibold text-sm text-gray-600 capitalize"
-                            >
-                              Document Check List
+                              {{translate('Onboard')}}
+                            </button>
+                          </div>
+                          @endif
+                        </form>
+                      </div>
+                    </section>
+                    @endif
+                    <!-- Third Tab-->
+                    <section
+                      x-show="isSelected($id('tab', whichChild($el, $el.parentElement)))"
+                      :aria-labelledby="$id('tab', whichChild($el, $el.parentElement))"
+                      role="tabpanel"
+                      class=""
+                      >
+                      @if($workorder->verification_status==1)
+                      <div
+                        class="overflow-x-auto"
+                        x-data="{
+                          openModal: false,
+                          currentRowId: null,
+                          rows: [
+                            { id: 1, documentCheckList: 'Code of Conduct', dateTime: '10/03/2024 06:18 PM' },
+                            { id: 2, documentCheckList: 'Data Privacy/Data Handling', dateTime: '10/03/2024 06:18 PM' },
+                            { id: 3, documentCheckList: 'Non-Disclosure', dateTime: '10/03/2024 06:18 PM' },
+                            { id: 4, documentCheckList: 'Criminal Background', dateTime: '10/03/2024 06:18 PM' },
+                          ]
+                        }"
+                      >
+                        <table class="w-full">
+                          <thead>
+                            <tr class="bg-gray-50 text-left">
+                              <th
+                                class="py-4 px-4 text-center font-semibold text-sm text-gray-600 capitalize"
+                              >
+                                  {{translate('Document Check List')}}
                             </th>
                             <th
                               class="py-4 px-4 text-center font-semibold text-sm text-gray-600 capitalize"
                             >
-                              Date & Time
+                                {{translate('Date & Time')}}
                             </th>
                           </tr>
                         </thead>
@@ -919,11 +919,11 @@
                       </table>
                     </div>
                     <div class="px-6 py-3">
-                      <p><b>Reviewed By:</b> System Admin</p>
-                      <p><b>Reviewed Date:</b> 10/03/2024</p>
+                      <p><b>{{translate('Reviewed By:')}}</b> System Admin</p>
+                      <p><b>{{translate('Reviewed Date:')}}</b> 10/03/2024</p>
                     </div>
                     @else
-                    <p>Background verification still not submitted for review.</p>
+                    <p>{{translate('Background verification still not submitted for review.')}}</p>
                     @endif
                   </section>
                 </div>
@@ -937,10 +937,10 @@
               :style="{'background-color': 'var(--primary-color)'}"
             >
               <div class="w-3/5">
-                <span class="text-white">Business Unit</span>
+                <span class="text-white">{{translate('Business Unit')}}</span>
               </div>
               <div class="w-2/5 text-center">
-                <span class="text-white">Budget Percentage</span>
+                <span class="text-white">{{translate('Budget Percentage')}}</span>
               </div>
             </div>
             @foreach($workorder->careerOpportunity->careerOpportunitiesBu as $bu)
@@ -968,21 +968,21 @@
                 class="text-xl font-bold"
                 :style="{'color': 'var(--primary-color)'}"
               >
-                Workorder History
-              </h2>
-            </div>
-            <div x-data="workOrderHistory()" style="overflow: scroll;">
-              <table
-                class="min-w-full bg-white shadow-md rounded-lg overflow-hidden" style="width: max-content;"
-              >
-                <thead class="bg-gray-200 text-gray-700">
-                  <tr>
-                    <th class="py-3 px-4 text-left">Status</th>
+                  {{translate('Workorder History')}}
+                </h2>
+              </div>
+              <div x-data="workOrderHistory()" style="overflow: scroll;">
+                <table
+                  class="min-w-full bg-white shadow-md rounded-lg overflow-hidden" style="width: max-content;"
+                >
+                  <thead class="bg-gray-200 text-gray-700">
+                    <tr>
+                      <th class="py-3 px-4 text-left">{{translate('Status')}}</th>
                     <th
                       @click="sort('workOrID')"
                       class="py-3 px-4 text-left cursor-pointer"
                     >
-                      Workorder ID
+                        {{translate('Workorder ID')}}
                       <span class="ml-1">
                         <i
                           class="fas fa-sort-up"
@@ -998,7 +998,7 @@
                       @click="sort('candidate')"
                       class="py-3 px-4 text-left cursor-pointer"
                     >
-                      Contractor Name
+                        {{translate('Contractor Name')}}
                       <span class="ml-1">
                         <i
                           class="fas fa-sort-up"
@@ -1014,7 +1014,7 @@
                       @click="sort('jobID')"
                       class="py-3 px-4 text-left cursor-pointer"
                     >
-                      Job ID
+                        {{translate('Job ID')}}
                       <span class="ml-1">
                         <i
                           class="fas fa-sort-up"
@@ -1030,7 +1030,7 @@
                       @click="sort('hiringManager')"
                       class="py-3 px-4 text-left cursor-pointer"
                     >
-                      Hiring Manager
+                        {{translate('Hiring Manager')}}
                       <span class="ml-1">
                         <i
                           class="fas fa-sort-up"
@@ -1046,7 +1046,7 @@
                       @click="sort('vendor')"
                       class="py-3 px-4 text-left cursor-pointer"
                     >
-                      Vendor
+                        {{translate('Vendor')}}
                       <span class="ml-1">
                         <i
                           class="fas fa-sort-up"
@@ -1062,7 +1062,7 @@
                       @click="sort('date')"
                       class="py-3 px-4 text-left cursor-pointer"
                     >
-                      Start Date
+                        {{translate('Start Date')}}
                       <span class="ml-1">
                         <i
                           class="fas fa-sort-up"
@@ -1078,7 +1078,7 @@
                       @click="sort('endDate')"
                       class="py-3 px-4 text-left cursor-pointer"
                     >
-                      End Date
+                        {{translate('End Date')}}
                       <span class="ml-1">
                         <i
                           class="fas fa-sort-up"
@@ -1094,7 +1094,7 @@
                       @click="sort('billRate')"
                       class="py-3 px-4 text-left cursor-pointer"
                     >
-                      Bill Rate
+                        {{translate('Bill Rate')}}
                       <span class="ml-1">
                         <i
                           class="fas fa-sort-up"
@@ -1111,7 +1111,7 @@
                       @click="sort('jobType')"
                       class="py-3 px-4 text-left cursor-pointer"
                     >
-                      Worker Type
+                        {{translate('Worker Type')}}
                       <span class="ml-1">
                         <i
                           class="fas fa-sort-up"
@@ -1123,7 +1123,7 @@
                         ></i>
                       </span>
                     </th>
-                    <th class="py-3 px-4 text-left">Action</th>
+                    <th class="py-3 px-4 text-left">{{translate('Action')}}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -1351,15 +1351,15 @@
           items: logs.map(log => ({
                 id: log.id,  // Log ID
                 status: log.properties.attributes.status_name,
-                workOrID: log.properties.attributes.id, 
-                candidate: log.properties.attributes.candidate_name, 
-                jobID: log.properties.attributes.career_opportunity_id, 
-                hiringManager: log.properties.attributes.hiring_manager_name, 
-                vendor: log.properties.attributes.vendor_name, 
-                date: log.properties.attributes.start_date_formatted, 
-                endDate: log.properties.attributes.end_date_formatted, 
-                billRate: log.properties.attributes.wo_bill_rate, 
-                jobType: log.properties.attributes.job_type_title, 
+                workOrID: log.properties.attributes.id,
+                candidate: log.properties.attributes.candidate_name,
+                jobID: log.properties.attributes.career_opportunity_id,
+                hiringManager: log.properties.attributes.hiring_manager_name,
+                vendor: log.properties.attributes.vendor_name,
+                date: log.properties.attributes.start_date_formatted,
+                endDate: log.properties.attributes.end_date_formatted,
+                billRate: log.properties.attributes.wo_bill_rate,
+                jobType: log.properties.attributes.job_type_title,
             })),
 
             sortColumn: "id",
@@ -1371,7 +1371,7 @@
               const end = start + this.itemsPerPage;
               return this.items.slice(start, end);
             },
-            
+
             deleteItem(id) {
             //  alert(id);
             },

@@ -47,18 +47,18 @@
         @click="actionType = 'Reject'; openModal = true; currentRowId = {{ $offer->id }}; submitForm(currentRowId, actionType);"
         type="button"
         class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-700 capitalize">
-        Reject Offer
+        {{translate('Reject Offer')}}
     </button>
     <button
         @click="actionType = 'Withdraw'; openModal = true; currentRowId = {{ $offer->id }}; submitForm(currentRowId, actionType);"
         type="button"
         class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-700 capitalize">
-        Withdraw Offer
+        {{translate('Withdraw Offer')}}
     </button>
     @endif
     <!-- Modal -->
-    <div 
-        x-show="openModal" 
+    <div
+        x-show="openModal"
         @click.away="openModal = false"
         class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full"
         x-transition:enter="transition ease-out duration-300"
@@ -187,7 +187,7 @@
                             class="text-xl font-bold"
                             :style="{'color': 'var(--primary-color)'}"
                         >
-                            Offer Workflow
+                            {{translate('Offer Workflow')}}
                         </h2>
                     </div>
                     <div class="bg-white shadow rounded-lg">
@@ -195,15 +195,15 @@
                             <table class="w-full">
                                 <thead>
                                 <tr class="bg-gray-50 text-left">
-                                    <th class="py-4 px-4 text-center font-semibold text-sm text-gray-600">S.NO</th>
-                                    <th class="py-4 px-4 text-center font-semibold text-sm text-gray-600">Approver Name</th>
-                                    <th class="py-4 px-4 text-center font-semibold text-sm text-gray-600">Approver Type</th>
-                                    <th class="py-4 px-4 text-center font-semibold text-sm text-gray-600">Approved/Rejected By</th>
-                                    <th class="py-4 px-4 text-center font-semibold text-sm text-gray-600">Approved/Rejected Date & Time</th>
-                                    <th class="py-4 px-4 text-center font-semibold text-sm text-gray-600">Approval Notes</th>
-                                    <th class="py-4 px-4 text-center font-semibold text-sm text-gray-600">Approval Document</th>
-                                    <th class="py-4 px-4 text-center font-semibold text-sm text-gray-600">Status</th>
-                                    <th class="py-4 px-4 text-center font-semibold text-sm text-gray-600">Action</th>
+                                    <th class="py-4 px-4 text-center font-semibold text-sm text-gray-600">{{translate('S.NO')}}</th>
+                                    <th class="py-4 px-4 text-center font-semibold text-sm text-gray-600">{{translate('Approver Name')}}</th>
+                                    <th class="py-4 px-4 text-center font-semibold text-sm text-gray-600">{{translate('Approver Type')}}</th>
+                                    <th class="py-4 px-4 text-center font-semibold text-sm text-gray-600">{{translate('Approved/Rejected By')}}</th>
+                                    <th class="py-4 px-4 text-center font-semibold text-sm text-gray-600">{{translate('Approved/Rejected Date & Time')}}</th>
+                                    <th class="py-4 px-4 text-center font-semibold text-sm text-gray-600">{{translate('Approval Notes')}}</th>
+                                    <th class="py-4 px-4 text-center font-semibold text-sm text-gray-600">{{translate('Approval Document')}}</th>
+                                    <th class="py-4 px-4 text-center font-semibold text-sm text-gray-600">{{translate('Status')}}</th>
+                                    <th class="py-4 px-4 text-center font-semibold text-sm text-gray-600">{{translate('Action')}}</th>
                                 </tr>
                                 </thead>
                                 <tbody class="divide-y divide-gray-200">
@@ -230,13 +230,13 @@
                                                         @click="actionType = 'Accept'; openModal = true; currentRowId = {{ $workflow->id }}; submitForm(currentRowId, actionType);"
                                                         class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
                                                     >
-                                                        Accept
+                                                        {{translate('Accept')}}
                                                     </button>
                                                     <button
                                                         @click="actionType = 'Reject'; openModal = true; currentRowId = {{ $workflow->id }}; submitForm(currentRowId, actionType);"
                                                         class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
                                                     >
-                                                        Reject
+                                                        {{translate('Reject')}}
                                                     </button>
                                                 @endif
                                             </td>
@@ -357,7 +357,7 @@
                       :style="{'color': 'var(--primary-color)'}"
                     ></i
                     ><span :style="{'color': 'var(--primary-color)'}"
-                      >Offer Details (Offer ID:4713)</span
+                      >{{translate('Offer Details (Offer ID:')}}{{$offer->id}})</span
                     >
                   </h3>
                   <div class="flex flex-col">
@@ -365,7 +365,7 @@
                       class="flex items-center justify-between py-4 border-t"
                     >
                       <div class="w-2/4">
-                        <h4 class="font-medium">Status:</h4>
+                        <h4 class="font-medium">{{translate('Status:')}}</h4>
                       </div>
                       <div class="w-2/4">
                         <p class="font-light">
@@ -380,7 +380,7 @@
                       class="flex items-center justify-between py-4 border-t"
                     >
                       <div class="w-2/4">
-                        <h4 class="font-medium">Contractor Name:</h4>
+                        <h4 class="font-medium">{{translate('Contractor Name:')}}</h4>
                       </div>
                       <div class="w-2/4">
                         <p class="font-light capitalize font-semibold">
@@ -392,7 +392,7 @@
                       class="flex items-center justify-between py-4 border-t"
                     >
                       <div class="w-2/4">
-                        <h4 class="font-medium">Hiring Manager:</h4>
+                        <h4 class="font-medium">{{translate('Hiring Manager:')}}</h4>
                       </div>
                       <div class="w-2/4">
                         <p class="font-light">{{$offer->careerOpportunity->hiringManager->fullname}}</p>
@@ -403,7 +403,7 @@
                     >
                       <div class="w-2/4">
                         <h4 class="font-medium">
-                          Timesheet Approving Manager:
+                            {{translate('Timesheet Approving Manager:')}}
                         </h4>
                       </div>
                       <div class="w-2/4">
@@ -414,7 +414,7 @@
                       class="flex items-center justify-between py-4 border-t"
                     >
                       <div class="w-2/4">
-                        <h4 class="font-medium">Vendor:</h4>
+                        <h4 class="font-medium">{{translate('Vendor:')}}</h4>
                       </div>
                       <div class="w-2/4">
                         <p class="font-light">
@@ -427,7 +427,7 @@
                       class="flex items-center justify-between py-4 border-t"
                     >
                       <div class="w-2/4">
-                        <h4 class="font-medium">Division:</h4>
+                        <h4 class="font-medium">{{translate('Division:')}}</h4>
                       </div>
                       <div class="w-2/4">
                         <p class="font-light">{{$offer->careerOpportunity->division->name}}</p>
@@ -437,7 +437,7 @@
                       class="flex items-center justify-between py-4 border-t"
                     >
                       <div class="w-2/4">
-                        <h4 class="font-medium">Region:</h4>
+                        <h4 class="font-medium">{{translate('Region:')}}</h4>
                       </div>
                       <div class="w-2/4">
                         <p class="font-light">{{$offer->careerOpportunity->regionZone->name}}</p>
@@ -447,7 +447,7 @@
                       class="flex items-center justify-between py-4 border-t"
                     >
                       <div class="w-2/4">
-                        <h4 class="font-medium">Remote:</h4>
+                        <h4 class="font-medium">{{translate('Remote:')}}</h4>
                       </div>
                       <div class="w-2/4">
                         <p class="font-light">{{$offer->remote_option}}</p>
@@ -457,7 +457,7 @@
                       class="flex items-center justify-between py-4 border-t"
                     >
                       <div class="w-2/4" >
-                        <h4 class="font-medium">Job Profile:</h4>
+                        <h4 class="font-medium">{{translate('Job Profile:')}}</h4>
                       </div>
                       <div class="w-2/4" x-data="{ jobDetails: null}" @job-details-updated.window="jobDetails = $event.detail">
                         <p class="font-light">
@@ -473,7 +473,7 @@
                       class="flex items-center justify-between py-4 border-t"
                     >
                       <div class="w-2/4">
-                        <h4 class="font-medium">Job Duration:</h4>
+                        <h4 class="font-medium">{{translate('Job Duration:')}}</h4>
                       </div>
                       <div class="w-2/4">
                         <p class="font-light">{{$offer->careerOpportunity->date_range }}</p>
@@ -484,7 +484,7 @@
                     >
                       <div class="w-2/4">
                         <h4 class="font-medium">
-                          Job Budget (All Resources Cost):
+                            {{translate('Job Budget (All Resources Cost):')}}
                         </h4>
                       </div>
                       <div class="w-2/4">
@@ -495,7 +495,7 @@
                       class="flex items-center justify-between py-4 border-t"
                     >
                       <div class="w-2/4">
-                        <h4 class="font-medium">Client Billable:</h4>
+                        <h4 class="font-medium">{{translate('Client Billable:')}}</h4>
                       </div>
                       <div class="w-2/4">
                         <p class="font-light"> {{$offer->careerOpportunity->client_billable}} </p>
@@ -511,7 +511,7 @@
                           :style="{'color': 'var(--primary-color)'}"
                         ></i
                         ><span :style="{'color': 'var(--primary-color)'}"
-                          >Offer Dates and Location</span
+                          >{{translate('Offer Dates and Location')}}</span
                         >
                       </h3>
                     </div>
@@ -519,7 +519,7 @@
                       class="flex items-center justify-between py-4 border-t"
                     >
                       <div class="w-2/4">
-                        <h4 class="font-medium">Start Date:</h4>
+                        <h4 class="font-medium">{{translate('Start Date:')}}</h4>
                       </div>
                       <div class="w-2/4">
                         <p class="font-light"> {{$offer->start_date}} </p>
@@ -529,7 +529,7 @@
                       class="flex items-center justify-between py-4 border-t"
                     >
                       <div class="w-2/4">
-                        <h4 class="font-medium">End Date:</h4>
+                        <h4 class="font-medium">{{translate('End Date:')}}</h4>
                       </div>
                       <div class="w-2/4">
                         <p class="font-light"> {{$offer->end_date}} </p>
@@ -539,7 +539,7 @@
                       class="flex items-center justify-between py-4 border-t"
                     >
                       <div class="w-2/4">
-                        <h4 class="font-medium">Location:</h4>
+                        <h4 class="font-medium">{{translate('Location:')}}</h4>
                       </div>
                       <div class="w-2/4">
                         <p class="font-light"> {{$offer->CareerOpportunity->location->LocationDetails}}
@@ -559,7 +559,7 @@
                       :style="{'color': 'var(--primary-color)'}"
                     ></i
                     ><span :style="{'color': 'var(--primary-color)'}"
-                      >Offer Rates</span
+                      >{{translate('Offer Rates')}}</span
                     >
                   </h3>
                   <div class="flex items-center justify-between py-4 border-t">
@@ -569,13 +569,13 @@
                         :style="{'color': 'var(--primary-color)'}"
                       ></i
                       ><span :style="{'color': 'var(--primary-color)'}"
-                        >Bill Rate (For Vendor)</span
+                        >{{translate('Bill Rate (For Vendor)')}}</span
                       >
                     </h3>
                   </div>
                   <div class="flex items-center justify-between py-4 border-t">
                     <div class="w-2/4">
-                      <h4 class="font-medium">Bill Rate:</h4>
+                      <h4 class="font-medium">{{translate('Bill Rate:')}}</h4>
                     </div>
                     <div class="w-2/4">
                       <p class="font-light">${{$offer->offer_bill_rate}} </p>
@@ -583,7 +583,7 @@
                   </div>
                   <div class="flex items-center justify-between py-4 border-t">
                     <div class="w-2/4">
-                      <h4 class="font-medium">Over Time Rate:</h4>
+                      <h4 class="font-medium">{{translate('Over Time Rate:')}}</h4>
                     </div>
                     <div class="w-2/4">
                       <p class="font-light">${{$offer->over_time}}</p>
@@ -596,13 +596,13 @@
                         :style="{'color': 'var(--primary-color)'}"
                       ></i
                       ><span :style="{'color': 'var(--primary-color)'}"
-                        >Bill Rate (For Vendor)</span
+                        >{{translate('Bill Rate (For Vendor)')}}</span
                       >
                     </h3>
                   </div>
                   <div class="flex items-center justify-between py-4 border-y">
                     <div class="w-2/4">
-                      <h4 class="font-medium">Bill Rate:</h4>
+                      <h4 class="font-medium">{{translate('Bill Rate:')}}</h4>
                     </div>
                     <div class="w-2/4">
                       <p class="font-light">${{$offer->vendor_bill_rate}}</p>
@@ -610,7 +610,7 @@
                   </div>
                   <div class="flex items-center justify-between py-4 border-y">
                     <div class="w-2/4">
-                      <h4 class="font-medium">Over Time Rate:</h4>
+                      <h4 class="font-medium">{{translate('Over Time Rate:')}}</h4>
                     </div>
                     <div class="w-2/4">
                       <p class="font-light">${{$offer->vendor_overtime}}</p>
@@ -618,7 +618,7 @@
                   </div>
                   <div class="flex items-center justify-between py-4 border-y">
                     <div class="w-2/4">
-                      <h4 class="font-medium">Regular Hours Estimated Cost:</h4>
+                      <h4 class="font-medium">{{translate('Regular Hours Estimated Cost:')}}</h4>
                     </div>
                     <div class="w-2/4">
                       <p class="font-light">${{$offer->careerOpportunity->regular_hours_cost}} </p>
@@ -639,7 +639,7 @@
                     class="text-xl font-bold"
                     :style="{'color': 'var(--primary-color)'}"
                   >
-                    Offer History
+                      {{translate('Offer History')}}
                   </h2>
                 </div>
                 <div style="overflow: scroll;">
@@ -652,68 +652,68 @@
                         <th
                             class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                         >
-                            Status
+                            {{translate('Status')}}
                         </th>
                         <!-- User -->
                         <th
                             class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                         >
-                            Offer ID
+                            {{translate('Offer ID')}}
                         </th>
                         <!-- job -->
                         <th
                             class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                         >
-                            Contractor Name
+                            {{translate('Contractor Name')}}
                         </th>
                         <th
                             class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                         >
-                            Job Profile
+                            {{translate('Job Profile')}}
                         </th>
                         <th
                             class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                         >
-                            Hiring Manger
+                            {{translate('Hiring Manger')}}
                         </th>
                         <th
                             class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                         >
-                            Vendor
+                            {{translate('Vendor')}}
                         </th>
                         <th
                             class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                         >
-                            Offer Date
+                            {{translate('Offer Date')}}
                         </th>
                         <th
                             class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                         >
-                            Bill Rate
+                            {{translate('Bill Rate')}}
                         </th>
                         <th
                             class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                         >
-                            Workorder Status
+                            {{translate('Workorder Status')}}
                         </th>
                         <th
                             class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                         >
-                            Woker Type
+                            {{translate('Woker Type')}}
                         </th>
                         <th style="width: 80px"
                             class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                         >
-                            Action
+                            {{translate('Action')}}
                         </th>
 
                     </tr>
                     </thead>
                     <tbody>
-                      
+
                     </tbody>
                   </table>
-                  
+
                 </div>
               </div>
             </div>
@@ -721,13 +721,13 @@
         </div>
     </div>
     <script>
-     
+
      document.addEventListener('DOMContentLoaded', function() {
         if (window.$) {
             let currentType = 'all_offers';
             let currentId = '{{$offer->id}}';
             let subId = '{{$offer->submission_id}}';
-            
+
             let table = initializeDataTable('#listing', '/admin/offer/index', [
                 { data: 'status', name: 'status' },
                 { data: 'id', name: 'id' },
@@ -754,7 +754,7 @@
                         composed: true
                     });
                     // console.log(event.detail.data);
-                    
+
                     document.dispatchEvent(event);
             })
             .catch(error => console.error('Error:', error));
@@ -777,7 +777,7 @@
                 }
                 if (this.actionType === 'Withdraw' && !this.reason) {
                     this.errors.reason = 'Please select a reason';
-                }                
+                }
                 if (!this.note.trim()) this.errors.note = 'Please enter a note';
                 return Object.keys(this.errors).length === 0;
             },

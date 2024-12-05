@@ -12,7 +12,7 @@
                 <i class="fas fa-dollar-sign text-4xl text-blue-400 mb-2"></i>
                 <div class="mt-2">
                     <span class="block text-2xl font-bold text-blue-400">$36,280.00</span>
-                    <span class="text-gray-800">Approved Budget</span>
+                    <span class="text-gray-800">{{translate('Approved Budget')}}</span>
                 </div>
             </div>
         </div>
@@ -22,7 +22,7 @@
                 <i class="fas fa-dollar-sign text-3xl text-blue-400"></i>
                 <div class="mt-2">
                     <span class="block text-xl font-bold text-blue-400">$0.00</span>
-                    <span class="text-gray-800">Spend Pending Approval Amount</span>
+                    <span class="text-gray-800">{{translate('Spend Pending Approval Amount')}}</span>
                 </div>
             </div>
         </div>
@@ -32,7 +32,7 @@
                 <i class="fas fa-dollar-sign text-4xl text-blue-400"></i>
                 <div class="mt-2">
                     <span id="remaining_spend_amount" class="block text-2xl font-bold text-blue-400">$33,886.00</span>
-                    <span class="text-gray-800">Remaining Spend Amount</span>
+                    <span class="text-gray-800">{{translate('Remaining Spend Amount')}}</span>
                 </div>
             </div>
         </div>
@@ -42,7 +42,7 @@
                 <i class="fas fa-dollar-sign text-4xl text-blue-400"></i>
                 <div class="mt-2">
                     <span id="spend_to_date" class="block text-2xl font-bold text-blue-400">$2,394.00</span>
-                    <span class="text-gray-800">Spend to Date</span>
+                    <span class="text-gray-800">{{translate('Spend to Date')}}</span>
                 </div>
             </div>
         </div>
