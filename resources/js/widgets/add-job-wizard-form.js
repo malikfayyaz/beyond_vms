@@ -117,8 +117,11 @@ export default function wizardForm(careerOpportunity = null,businessUnitsData = 
         $("#ledger_code").prop('required', isLedgerCodeRequired);
         $(".ledger_code_").toggleClass('fa-asterisk', isLedgerCodeRequired);
 
-        $("#ledger_type").on('change').on('change', () => {
-          var isLedgerCodeRequired = $(this).val() === "33";
+        $("#ledger_type").on('change', function () {
+          // console.log($(this));
+
+          var isLedgerCodeRequired = $(this).val() === 33;
+          console.log(isLedgerCodeRequired);
           $("#ledger_code").prop('required', isLedgerCodeRequired);
           $(".ledger_code_").toggleClass('fa-asterisk', isLedgerCodeRequired);
           $(".ledger_code__").toggle(isLedgerCodeRequired);
@@ -286,6 +289,7 @@ export default function wizardForm(careerOpportunity = null,businessUnitsData = 
                 data.append('bu_id', this.selectedBusinessUnit);
 
                 const updates = {
+
                     '#regionZone': { type: 'select2append', field: 'zone' },
                     '#branch': { type: 'select2append', field: 'branch' },
                     '#division': { type: 'select2append', field: 'division' },
