@@ -16,7 +16,7 @@
               class="self-center text-xl font-semibold whitespace-nowrap text-white ml-2"
               x-show="!miniSidebar"
               x-cloak
-              >{{ucfirst(session('selected_role'))}}</span
+              >{{ translate(ucfirst(session('selected_role'))) }}</span
             >
           </a>
           <ul class="space-y-2 font-medium">
@@ -28,7 +28,7 @@
               >
                 <i class="fas fa-tachometer-alt w-6 h-6"></i>
                 <span class="ml-3" x-show="!miniSidebar" x-cloak
-                  >Dashboard</span
+                  >{{ translate('Dashboard') }}</span
                 >
               </a>
             </li>
@@ -44,7 +44,7 @@
                   class="flex-1 ml-3 text-left whitespace-nowrap"
                   x-show="!miniSidebar"
                   x-cloak
-                  >Job</span
+                  >{{ translate('Job') }}</span
                 >
                 <i
                   class="fas fa-chevron-down ml-auto"
@@ -58,7 +58,7 @@
                       <li class="{{ request()->routeIs('admin.career-opportunities.index') ? 'active' : '' }}">
                           <a href="{{ route('admin.career-opportunities.index') }}"
                              class="flex items-center w-full p-2 text-white transition duration-75 pl-11 hover:bg-gray-700">
-                               Job
+                              {{ translate('Job') }}
                           </a>
                       </li>
 
@@ -66,7 +66,7 @@
                   <li class="{{ request()->routeIs('admin.catalog.index') ? 'active' : '' }}">
                   <a href="{{ route('admin.catalog.index') }}"
                       class="flex items-center w-full p-2 text-white transition duration-75 pl-11 hover:bg-gray-700">
-                       Job Catalog
+                      {{ translate('Job Catalog') }}
                   </a>
                 </li>
                  {{-- @endcan--}}
@@ -85,7 +85,7 @@
                   class="flex-1 ml-3 text-left whitespace-nowrap"
                   x-show="!miniSidebar"
                   x-cloak
-                  >Submission</span
+                  >{{ translate('Submission') }}</span
                 >
                 <i
                   class="fas fa-chevron-down ml-auto"
@@ -97,7 +97,7 @@
                     <li class="{{ request()->routeIs('admin.submission.index') ? 'active' : ''}}">
                     <a href="{{ route('admin.submission.index') }}"
                         class="flex items-center w-full p-2 text-white transition duration-75 pl-11 hover:bg-gray-700">
-                        Submission
+                        {{ translate('Submission') }}
                     </a>
                 </li>
 
@@ -115,7 +115,7 @@
                   class="flex-1 ml-3 text-left whitespace-nowrap"
                   x-show="!miniSidebar"
                   x-cloak
-                  >Interview</span
+                  >{{ translate('Interview') }}</span
                 >
                 <i
                   class="fas fa-chevron-down ml-auto"
@@ -127,7 +127,7 @@
                     <li class="{{ request()->routeIs('admin.interview.index') ? 'active' : ''}}">
                     <a href="{{ route('admin.interview.index') }}"
                         class="flex items-center w-full p-2 text-white transition duration-75 pl-11 hover:bg-gray-700">
-                        Interview
+                        {{ translate('Interview') }}
                     </a>
                 </li>
 
@@ -145,7 +145,7 @@
                   class="flex-1 ml-3 text-left whitespace-nowrap"
                   x-show="!miniSidebar"
                   x-cloak
-                  >Offer</span
+                  >{{ translate('Offer') }}</span
                 >
                 <i
                   class="fas fa-chevron-down ml-auto"
@@ -157,7 +157,7 @@
                     <li class="{{ request()->routeIs('admin.offer.index') ? 'active' : ''}}">
                     <a href="{{ route('admin.offer.index') }}"
                         class="flex items-center w-full p-2 text-white transition duration-75 pl-11 hover:bg-gray-700">
-                        Offer
+                        {{ translate('Offer') }}
                     </a>
                 </li>
 
@@ -174,7 +174,7 @@
                           class="flex-1 ml-3 text-left whitespace-nowrap"
                           x-show="!miniSidebar"
                           x-cloak
-                      >WorkOrder</span
+                      >{{ translate('WorkOrder') }}</span
                       >
                       <i
                           class="fas fa-chevron-down ml-auto"
@@ -186,7 +186,7 @@
                       <li class="{{ request()->routeIs('admin.workorder.index') ? 'active' : ''}}">
                           <a href="{{ route('admin.workorder.index') }}"
                              class="flex items-center w-full p-2 text-white transition duration-75 pl-11 hover:bg-gray-700">
-                              WorkOrder
+                              {{ translate('WorkOrder') }}
                           </a>
                       </li>
 
@@ -203,7 +203,7 @@
                           class="flex-1 ml-3 text-left whitespace-nowrap"
                           x-show="!miniSidebar"
                           x-cloak
-                      >Contract</span
+                      >{{ translate('Contract') }}</span
                       >
                       <i
                           class="fas fa-chevron-down ml-auto"
@@ -215,7 +215,7 @@
                       <li class="{{ request()->routeIs('admin.contracts.index') ? 'active' : ''}}">
                           <a href="{{ route('admin.contracts.index') }}"
                              class="flex items-center w-full p-2 text-white transition duration-75 pl-11 hover:bg-gray-700">
-                              Contract
+                              {{ translate('Contract') }}
                           </a>
                       </li>
 
@@ -277,7 +277,7 @@
                             class="flex-1 ml-3 text-left whitespace-nowrap"
                             x-show="!miniSidebar"
                             x-cloak
-                        >App Systems</span
+                        >{{ translate('App Systems') }}</span
                         >
                         <i
                             class="fas fa-chevron-down ml-auto"
@@ -298,7 +298,7 @@
                                     class="flex-1 ml-3 text-left whitespace-nowrap"
                                     x-show="!miniSidebar"
                                     x-cloak
-                                >MSP System</span
+                                >{{ translate('MSP System') }}</span
                                 >
                                 <i
                                     class="fas fa-chevron-down ml-auto"
@@ -311,7 +311,7 @@
                                 <li class="{{ request()->routeIs('admin.workflow') ? 'active' : '' }}">
                                     <a href="{{ route('admin.workflow') }}"
                                        class="flex items-center w-full p-2 text-white transition duration-75 pl-11 hover:bg-gray-700">
-                                        Workflow
+                                        {{ translate('Workflow') }}
                                     </a>
                                 </li>
                             </ul>
@@ -328,7 +328,7 @@
                                             class="flex-1 ml-3 text-left whitespace-nowrap"
                                             x-show="!miniSidebar"
                                             x-cloak
-                                        >System Users</span
+                                        >{{ translate('System Users') }}</span
                                         >
                                         <i
                                             class="fas fa-chevron-down ml-auto"
@@ -341,19 +341,19 @@
                                         <li class="{{ request()->routeIs('admin.admin-users.index') ? 'active' : '' }}">
                                             <a href="{{ route('admin.admin-users.index') }}"
                                                class="flex items-center w-full p-2 text-white transition duration-75 pl-11 hover:bg-gray-700">
-                                                Admin Users
+                                                {{ translate('Admin Users') }}
                                             </a>
                                         </li>
                                         <li class="{{ request()->routeIs('admin.client-users.index') ? 'active' : '' }}">
                                             <a href="{{ route('admin.client-users.index') }}"
                                                class="flex items-center w-full p-2 text-white transition duration-75 pl-11 hover:bg-gray-700">
-                                                Client Users
+                                                {{ translate('Client Users') }}
                                             </a>
                                         </li>
                                         <li class="{{ request()->routeIs('admin.vendor-users.index') ? 'active' : '' }}">
                                             <a href="{{ route('admin.vendor-users.index') }}"
                                                class="flex items-center w-full p-2 text-white transition duration-75 pl-11 hover:bg-gray-700">
-                                                Vendor Users
+                                                {{ translate('Vendor Users') }}
                                             </a>
                                         </li>
                                     </ul>
@@ -369,7 +369,7 @@
                                             class="flex-1 ml-3 text-left whitespace-nowrap"
                                             x-show="!miniSidebar"
                                             x-cloak
-                                        >Roles & Permission</span
+                                        >{{ translate('Roles & Permission') }}</span
                                         >
                                         <i
                                             class="fas fa-chevron-down ml-auto"
@@ -382,25 +382,25 @@
                                         <li class="{{ request()->routeIs('users') ? 'active' : '' }}">
                                             <a href="{{ route('users.index') }}"
                                                class="flex items-center w-full p-2 text-white transition duration-75 pl-11 hover:bg-gray-700">
-                                                Assign User Roles&Permissions
+                                                {{ translate('Assign User Roles&Permissions') }}
                                             </a>
                                         </li>
                                         <li class="{{ request()->routeIs('roles') ? 'active' : '' }}">
                                             <a href="{{ route('roles.index') }}"
                                                class="flex items-center w-full p-2 text-white transition duration-75 pl-11 hover:bg-gray-700">
-                                                Assign Roles to Permissions
+                                                {{ translate('Assign Roles to Permissions') }}
                                             </a>
                                         </li>
                                             <li class="{{ request()->routeIs('roles.index') ? 'active' : '' }}">
                                                 <a href="{{ route('roles.index') }}"
                                                    class="flex items-center w-full p-2 text-white transition duration-75 pl-11 hover:bg-gray-700">
-                                                    Roles
+                                                    {{ translate('Roles') }}
                                                 </a>
                                             </li>
                                             <li class="{{ request()->routeIs('permissions.index') ? 'active' : '' }}">
                                                 <a href="{{ route('permissions.index') }}"
                                                    class="flex items-center w-full p-2 text-white transition duration-75 pl-11 hover:bg-gray-700">
-                                                    Permission
+                                                    {{ translate('Permission') }}
                                                 </a>
                                             </li>
 
@@ -418,7 +418,7 @@
                                             class="flex-1 ml-3 text-left whitespace-nowrap"
                                             x-show="!miniSidebar"
                                             x-cloak
-                                        >Data Point</span
+                                        >{{ translate('Data Point') }}</span
                                         >
                                         <i
                                             class="fas fa-chevron-down ml-auto"
@@ -431,7 +431,7 @@
                                         <li class="{{ request()->routeIs('admin.data.two') && request()->route('type') === 'account-code' ? 'active' : '' }}">
                                             <a href="{{ route('admin.data.two', ['type' => 'account-code']) }}"
                                                class="flex items-center w-full p-2 text-white transition duration-75 pl-11 hover:bg-gray-700">
-                                                Account Code
+                                                {{ translate('Account Code') }}
                                             </a>
                                         </li>
 
@@ -439,14 +439,14 @@
                                         <li class="{{ request()->routeIs('admin.data.two') && request()->route('type') === 'spend-category-code' ? 'active' : '' }}">
                                             <a href="{{ route('admin.data.two', ['type' => 'spend-category-code']) }}"
                                                class="flex items-center w-full p-2 text-white transition duration-75 pl-11 hover:bg-gray-700">
-                                                Spend Category Code
+                                                {{ translate('Spend Category Code') }}
                                             </a>
                                         </li>
 
                                         <li class="{{ request()->routeIs('admin.data.four') && request()->route('type') === 'currency' ? 'active' : '' }}">
                                             <a href="{{ route('admin.data.four', ['type' => 'currency']) }}"
                                                class="flex items-center w-full p-2 text-white transition duration-75 pl-11 hover:bg-gray-700">
-                                                Currency
+                                                {{ translate('Currency') }}
                                             </a>
                                         </li>
 
@@ -454,7 +454,7 @@
                                         <li class="{{ request()->routeIs('admin.data.two') && request()->route('type') === 'workspace' ? 'active' : '' }}">
                                             <a href="{{ route('admin.data.two', ['type' => 'workspace']) }}"
                                                class="flex items-center w-full p-2 text-white transition duration-75 pl-11 hover:bg-gray-700">
-                                                Workspace
+                                                {{ translate('Workspace') }}
                                             </a>
                                         </li>
 
@@ -462,7 +462,7 @@
                                         <li class="{{ request()->routeIs('admin.data.two') && request()->route('type') === 'program-industry-name' ? 'active' : '' }}">
                                             <a href="{{ route('admin.data.two', ['type' => 'program-industry-name']) }}"
                                                class="flex items-center w-full p-2 text-white transition duration-75 pl-11 hover:bg-gray-700">
-                                                Program Industry Name
+                                                {{ translate('Program Industry Name') }}
                                             </a>
                                         </li>
 
@@ -471,7 +471,7 @@
                                         <li class="{{ request()->is('admin/three/departments') ? 'active' : '' }}">
                                             <a href="{{ url('admin/three/departments') }}"
                                                class="flex items-center w-full p-2 text-white transition duration-75 pl-11 hover:bg-gray-700">
-                                                Departments
+                                                {{ translate('Departments') }}
                                             </a>
                                         </li>
 
@@ -479,7 +479,7 @@
                                         <li class="{{ request()->is('admin/three/cost-center') ? 'active' : '' }}">
                                             <a href="{{ url('admin/three/cost-center') }}"
                                                class="flex items-center w-full p-2 text-white transition duration-75 pl-11 hover:bg-gray-700">
-                                                Cost Center
+                                                {{ translate('Cost Center') }}
                                             </a>
                                         </li>
 
@@ -487,7 +487,7 @@
                                         <li class="{{ request()->is('admin/three/busines-unit') ? 'active' : '' }}">
                                             <a href="{{ url('admin/three/busines-unit') }}"
                                                class="flex items-center w-full p-2 text-white transition duration-75 pl-11 hover:bg-gray-700">
-                                                Business Unit
+                                                {{ translate('Business Unit') }}
                                             </a>
                                         </li>
 
@@ -495,7 +495,7 @@
                                         <li class="{{ request()->routeIs('admin.data.two') && request()->route('type') === 'job-family' ? 'active' : '' }}">
                                             <a href="{{ route('admin.data.two', ['type' => 'job-family']) }}"
                                                class="flex items-center w-full p-2 text-white transition duration-75 pl-11 hover:bg-gray-700">
-                                                Job Family Name
+                                                {{ translate('Job Family Name') }}
                                             </a>
                                         </li>
 
@@ -503,14 +503,14 @@
                                         <li class="{{ request()->routeIs('admin.data.two') && request()->route('type') === 'job-family-group' ? 'active' : '' }}">
                                             <a href="{{ route('admin.data.two', ['type' => 'job-family-group']) }}"
                                                class="flex items-center w-full p-2 text-white transition duration-75 pl-11 hover:bg-gray-700">
-                                                Job Family Group
+                                                {{ translate('Job Family Group') }}
                                             </a>
                                         </li>
 
                                         <li class="{{ request()->routeIs('admin.data.job_group_family_config') ? 'active' : '' }}">
                                             <a href="{{ route('admin.data.job_group_family_config') }}"
                                                class="flex items-center w-full p-2 text-white transition duration-75 pl-11 hover:bg-gray-700">
-                                                Job Family Group Configuration
+                                                {{ translate('Job Family Group Configuration') }}
                                             </a>
                                         </li>
 
@@ -518,7 +518,7 @@
                                         <li class="{{ request()->routeIs('admin.data.two') && request()->route('type') === 'division' ? 'active' : '' }}">
                                             <a href="{{ route('admin.data.two', ['type' => 'division']) }}"
                                                class="flex items-center w-full p-2 text-white transition duration-75 pl-11 hover:bg-gray-700">
-                                                Division
+                                                {{ translate('Division') }}
                                             </a>
                                         </li>
 
@@ -526,7 +526,7 @@
                                         <li class="{{ request()->routeIs('admin.data.two') && request()->route('type') === 'branch' ? 'active' : '' }}">
                                             <a href="{{ route('admin.data.two', ['type' => 'branch']) }}"
                                                class="flex items-center w-full p-2 text-white transition duration-75 pl-11 hover:bg-gray-700">
-                                                Branch
+                                                {{ translate('Branch') }}
                                             </a>
                                         </li>
 
@@ -534,14 +534,14 @@
                                         <li class="{{ request()->routeIs('admin.data.two') && request()->route('type') === 'region-zone' ? 'active' : '' }}">
                                             <a href="{{ route('admin.data.two', ['type' => 'region-zone']) }}"
                                                class="flex items-center w-full p-2 text-white transition duration-75 pl-11 hover:bg-gray-700">
-                                                Region Zone
+                                                {{ translate('Region Zone') }}
                                             </a>
                                         </li>
 
                                         <li class="{{ request()->routeIs('admin.data.division_branch_zone_config') ? 'active' : '' }}">
                                             <a href="{{ route('admin.data.division_branch_zone_config') }}"
                                                class="flex items-center w-full p-2 text-white transition duration-75 pl-11 hover:bg-gray-700">
-                                                Division Branch Zone Configuration
+                                                {{ translate('Division Branch Zone Configuration') }}
                                             </a>
                                         </li>
 
@@ -550,7 +550,7 @@
                                         <li class="{{ request()->routeIs('admin.data.two') && request()->route('type') === 'brand' ? 'active' : '' }}">
                                             <a href="{{ route('admin.data.two', ['type' => 'brand']) }}"
                                                class="flex items-center w-full p-2 text-white transition duration-75 pl-11 hover:bg-gray-700">
-                                                Brand
+                                                {{ translate('Brand') }}
                                             </a>
                                         </li>
 
@@ -558,7 +558,7 @@
                                         <li class="{{ request()->routeIs('admin.data.two') && request()->route('type') === 'group-platform' ? 'active' : '' }}">
                                             <a href="{{ route('admin.data.two', ['type' => 'group-platform']) }}"
                                                class="flex items-center w-full p-2 text-white transition duration-75 pl-11 hover:bg-gray-700">
-                                                Group / Platform
+                                                {{ translate('Group / Platform') }}
                                             </a>
                                         </li>
 
@@ -566,7 +566,7 @@
                                         <li class="{{ request()->is('admin/three/gl-code') ? 'active' : '' }}">
                                             <a href="{{ url('admin/three/gl-code') }}"
                                                class="flex items-center w-full p-2 text-white transition duration-75 pl-11 hover:bg-gray-700">
-                                                GL Code
+                                                {{ translate('GL Code') }}
                                             </a>
                                         </li>
 
@@ -574,33 +574,33 @@
                                         <li class="{{ request()->routeIs('admin.data.location') ? 'active' : '' }}">
                                             <a href="{{ route('admin.data.location') }}"
                                                class="flex items-center w-full p-2 text-white transition duration-75 pl-11 hover:bg-gray-700">
-                                                Location
+                                                {{ translate('Location') }}
                                             </a>
                                         </li>
                                         <!-- Setting Menu Item -->
                                         <li class="{{ request()->routeIs('admin.setting.info') ? 'active' : '' }}">
                                             <a href="{{ route('admin.setting.info') }}"
                                                class="flex items-center w-full p-2 text-white transition duration-75 pl-11 hover:bg-gray-700">
-                                                Setting
+                                                {{ translate('Setting') }}
                                             </a>
                                         </li>
                                         <li class="{{ request()->routeIs('admin.setting.markup') ? 'active' : '' }}">
                                             <a href="{{ route('admin.setting.markup') }}"
                                                class="flex items-center w-full p-2 text-white transition duration-75 pl-11 hover:bg-gray-700">
-                                                Markup
+                                                {{ translate('Markup') }}
                                             </a>
                                         </li>
                                         <!-- Business Unit Menu Item -->
                                         <li class="{{ request()->is('admin/rates/bill-rate') ? 'active' : '' }}">
                                             <a href="{{ url('admin/rates/bill-rate') }}"
                                                class="flex items-center w-full p-2 text-white transition duration-75 pl-11 hover:bg-gray-700">
-                                                Bill Rate
+                                                {{ translate('Bill Rate') }}
                                             </a>
                                         </li>
                                         <li class="{{ request()->is('admin/rates/pay-rate') ? 'active' : '' }}">
                                             <a href="{{ url('admin/rates/pay-rate') }}"
                                                class="flex items-center w-full p-2 text-white transition duration-75 pl-11 hover:bg-gray-700">
-                                                Pay Rate
+                                                {{ translate('Pay Rate') }}
                                             </a>
                                         </li>
 

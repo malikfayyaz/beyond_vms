@@ -2,31 +2,31 @@
   <div
     class="w-100 p-[30px] rounded border"
     :style="{'border-color': 'var(--primary-color)'}">
-    <span>Highest Bill Rate</span>
+    <span>{{translate('Highest Bill Rate')}}</span>
     <table class="min-w-full divide-y divide-gray-200" id="rankingTable">
       <thead class="bg-gray-50">
         <tr>
           <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-            Candidate Name
+              {{translate('Candidate Name')}}
           </th>
           <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-            Start Date
+              {{translate(' Start Date')}}
           </th>
           <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-            Bill Rate
-          </th>
-
-          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-            Submission Cost
+              {{translate('Bill Rate')}}
           </th>
 
           <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-            Action
+              {{translate('Submission Cost')}}
+          </th>
+
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              {{translate('Action')}}
           </th>
         </tr>
       </thead>
       <tbody>
-       
+
       </tbody>
     </table>
   </div>

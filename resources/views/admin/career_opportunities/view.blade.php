@@ -381,7 +381,7 @@
                       <div class="text-center">
                         <span
                           class="font-bold text-sm font-normal text-[#28c76f]"
-                          >Regular Hours Cost</span
+                          >{{translate('Regular Hours Cost')}}</span
                         >
                       </div>
                     </div>
@@ -401,7 +401,7 @@
                       <div class="text-center">
                         <span
                           class="font-bold text-sm font-normal text-[#00bad1]"
-                          >Single Resource Cost</span
+                          >{{translate('Single Resource Cost')}}</span
                         >
                       </div>
                     </div>
@@ -421,7 +421,7 @@
                       <div class="text-center">
                         <span
                           class="font-bold text-sm font-normal text-[#ff9f43]"
-                          >All Resources Cost</span
+                          >{{translate('All Resources Cost')}}</span
                         >
                       </div>
                     </div>
@@ -438,7 +438,7 @@
                   :style="{'background-color': 'var(--primary-color)'}"
                 >
                   <div class="w-3/5">
-                    <span class="text-white">Business Unit</span>
+                    <span class="text-white">{{translate('Business Unit')}}</span>
                   </div>
                   <div class="w-2/5 text-center">
                       <p class="font-light">%</p>
@@ -475,7 +475,7 @@
                 <p class="mt-4">(Justin Stephenson Vacancy)</p>
               </div>--}}
               <div class="mt-4 rounded p-4 bg-[#F5F7FC]">
-                <p class="color-[#202124] font-light">Internal Notes</p>
+                <p class="color-[#202124] font-light">{{translate('Internal Notes')}}</p>
                 <div class="mt-4">
                   <ul class="color-[#202124] font-light">
                     {!! $job->internal_notes !!}
@@ -483,7 +483,7 @@
                 </div>
               </div>
                 <div class="mt-4 rounded p-4 bg-[#F5F7FC]">
-                    <p class="color-[#202124] font-light">Skills</p>
+                    <p class="color-[#202124] font-light">{{translate('Skills')}}</p>
                     <div class="mt-4">
                         <ul class="color-[#202124] font-light">
                             {!! $job->skills !!}
@@ -492,29 +492,29 @@
                 </div>
               <div class="mt-4 rounded p-4 bg-[#F5F7FC]">
                 <p class="color-[#202124] font-light">
-                  Pre-Identified Candidate
-                </p>
-                <div
-                  class="flex items-center mt-4 border rounded"
-                  :style="{'border-color': 'var(--primary-color)'}"
-                >
+                    {{translate('Pre-Identified Candidate')}}
+                  </p>
                   <div
-                    class="py-4 w-2/4 pl-4 rounded rounded-r-none"
-                    :style="{'background-color': 'var(--primary-color)'}"
+                    class="flex items-center mt-4 border rounded"
+                    :style="{'border-color': 'var(--primary-color)'}"
                   >
-                    <span class="text-white font-light"
-                      >Pre-Identified Candidate?</span
+                    <div
+                      class="py-4 w-2/4 pl-4 rounded rounded-r-none"
+                      :style="{'background-color': 'var(--primary-color)'}"
                     >
-                  </div>
-                  <div class="w-2/4 pl-4">
-                    <span class="color-[#202124] font-light">{{$job->pre_candidate}}</span>
+                      <span class="text-white font-light"
+                        >{{translate('Pre-Identified Candidate?')}}</span
+                      >
+                    </div>
+                    <div class="w-2/4 pl-4">
+                      <span class="color-[#202124] font-light">{{$job->pre_candidate}}</span>
                   </div>
                 </div>
                 @if($job->pre_candidate == 'Yes')
 
                 <div class="flex items-center justify-between py-4 border-t">
                       <div class="w-2/4">
-                          <h4 class="font-medium">Candidate First Name:</h4>
+                          <h4 class="font-medium">{{translate('Candidate First Name:')}}</h4>
                       </div>
                       <div class="w-2/4">
                           <p class="font-light">{{$job->pre_name}}</p>
@@ -522,7 +522,7 @@
                   </div>
                 <div class="flex items-center justify-between py-4 border-t">
                       <div class="w-2/4">
-                          <h4 class="font-medium">Candidate middle Name:</h4>
+                          <h4 class="font-medium">{{translate('Candidate middle Name:')}}</h4>
                       </div>
                       <div class="w-2/4">
                           <p class="font-light">{{$job->pre_middle_name}}</p>
@@ -530,7 +530,7 @@
                   </div>
                 <div class="flex items-center justify-between py-4 border-t">
                       <div class="w-2/4">
-                          <h4 class="font-medium">Candidate Last Name:</h4>
+                          <h4 class="font-medium">{{translate('Candidate Last Name:')}}</h4>
                       </div>
                       <div class="w-2/4">
                           <p class="font-light">{{$job->pre_last_name}}</p>
@@ -539,7 +539,7 @@
 
                 <div class="flex items-center justify-between py-4 border-t">
                       <div class="w-2/4">
-                          <h4 class="font-medium">Candidate Phone:</h4>
+                          <h4 class="font-medium">{{translate('Candidate Phone:')}}</h4>
                       </div>
                       <div class="w-2/4">
                           <p class="font-light">{{$job->candidate_phone}}</p>
@@ -548,7 +548,7 @@
 
                 <div class="flex items-center justify-between py-4 border-t">
                       <div class="w-2/4">
-                          <h4 class="font-medium">Candidate Email:</h4>
+                          <h4 class="font-medium">{{translate('Candidate Email:')}}</h4>
                       </div>
                       <div class="w-2/4">
                           <p class="font-light">{{$job->candidate_email}}</p>
@@ -556,7 +556,7 @@
                   </div>
                   <div class="flex items-center justify-between py-4 border-t">
                       <div class="w-2/4">
-                          <h4 class="font-medium">Worker Pay Rate:</h4>
+                          <h4 class="font-medium">{{translate('Worker Pay Rate:')}}</h4>
                       </div>
                       <div class="w-2/4">
                           <p class="font-light">{{$job->pre_current_rate}}</p>
@@ -576,7 +576,7 @@
                   :style="{'color': 'var(--primary-color)'}"
                 ></i
                 ><span :style="{'color': 'var(--primary-color)'}"
-                  >Job Info</span
+                  >{{translate('Job Info')}}</span
                 >
               </h3>
               <div class="flex flex-col">
@@ -590,7 +590,7 @@
                   </div>
                 <div class="flex items-center justify-between py-4 border-t">
                   <div class="w-2/4">
-                    <h4 class="font-medium">Job Title:</h4>
+                    <h4 class="font-medium">{{translate('Job Title:')}}</h4>
                   </div>
                   <div class="w-2/4">
                     <p class="font-light">{{ $job->title }}</p>
@@ -598,7 +598,7 @@
                 </div>
                 <div class="flex items-center justify-between py-4 border-t">
                   <div class="w-2/4">
-                    <h4 class="font-medium">Hiring Manager:</h4>
+                    <h4 class="font-medium">{{translate('Hiring Manager:')}}</h4>
                   </div>
                   <div class="w-2/4">
                     <p class="font-light">{{ $job->hiringManager->full_name ?? '' }}</p>
@@ -606,7 +606,7 @@
                 </div>
                 <div class="flex items-center justify-between py-4 border-t">
                   <div class="w-2/4">
-                    <h4 class="font-medium">Job Title for Email Signature:</h4>
+                    <h4 class="font-medium">{{translate('Job Title for Email Signature:')}}</h4>
                   </div>
                   <div class="w-2/4">
                     <p class="font-light">{{$job->alternative_job_title}}</p>
@@ -614,7 +614,7 @@
                 </div>
                 <div class="flex items-center justify-between py-4 border-t">
                   <div class="w-2/4">
-                    <h4 class="font-medium">Work Location:</h4>
+                    <h4 class="font-medium">{{translate('Work Location:')}}</h4>
                   </div>
                   <div class="w-2/4">
                     <p class="font-light">
@@ -624,7 +624,7 @@
                 </div>
                 <div class="flex items-center justify-between py-4 border-t">
                   <div class="w-2/4">
-                    <h4 class="font-medium">Division:</h4>
+                    <h4 class="font-medium">{{translate('Division:')}}</h4>
                   </div>
                   <div class="w-2/4">
                     <p class="font-light">{{ $job->division->type ?? 'N/A' }}</p>
@@ -632,7 +632,7 @@
                 </div>
                 <div class="flex items-center justify-between py-4 border-t">
                   <div class="w-2/4">
-                    <h4 class="font-medium">Region/Zone:</h4>
+                    <h4 class="font-medium">{{translate('Region/Zone:')}}</h4>
                   </div>
                   <div class="w-2/4">
                     <p class="font-light">{{ $job->regionZone->type ?? 'N/A' }}</p>
@@ -640,7 +640,7 @@
                 </div>
                 <div class="flex items-center justify-between py-4 border-t">
                   <div class="w-2/4">
-                    <h4 class="font-medium">Branch:</h4>
+                    <h4 class="font-medium">{{translate('Branch:')}}</h4>
                   </div>
                   <div class="w-2/4">
                       <p class="font-light">{{ $job->branch->type ?? 'N/A' }}</p>
@@ -648,7 +648,7 @@
                 </div>
                 <div class="flex items-center justify-between py-4 border-t">
                   <div class="w-2/4">
-                    <h4 class="font-medium">Job Code:</h4>
+                    <h4 class="font-medium">{{translate('Job Code:')}}</h4>
                   </div>
                   <div class="w-2/4">
                       <p class="font-light">{{ $job->job_code ?? 'N/A' }}</p>
@@ -656,7 +656,7 @@
                 </div>
                 <div class="flex items-center justify-between py-4 border-t">
                   <div class="w-2/4">
-                    <h4 class="font-medium">Category:</h4>
+                    <h4 class="font-medium">{{translate('Category:')}}</h4>
                   </div>
                   <div class="w-2/4">
                       <p class="font-light">{{ $job->category->title ?? 'N/A' }}</p>
@@ -664,7 +664,7 @@
                 </div>
                 <div class="flex items-center justify-between py-4 border-t">
                   <div class="w-2/4">
-                    <h4 class="font-medium">Travel Required:</h4>
+                    <h4 class="font-medium">{{translate('Travel Required:')}}</h4>
                   </div>
                   <div class="w-2/4">
                       <p class="font-light">{{ $job->travel_required ?? 'N/A' }}</p>
@@ -672,7 +672,7 @@
                 </div>
                 <div class="flex items-center justify-between py-4 border-t">
                   <div class="w-2/4">
-                    <h4 class="font-medium">Business Reason:</h4>
+                    <h4 class="font-medium">{{translate('Business Reason:')}}</h4>
                   </div>
                   <div class="w-2/4">
                     <p class="font-light">{{ $job->businessReason->title ?? 'N/A' }}</p>
@@ -680,7 +680,7 @@
                 </div>
                 <div class="flex items-center justify-between py-4 border-t">
                   <div class="w-2/4">
-                    <h4 class="font-medium">Time System:</h4>
+                    <h4 class="font-medium">{{translate('Time System:')}}</h4>
                   </div>
                   <div class="w-2/4">
                     <p class="font-light">{{ $job->jobType->title ?? 'N/A' }}</p>
@@ -688,7 +688,7 @@
                 </div>
                 <div class="flex items-center justify-between py-4 border-t">
                   <div class="w-2/4">
-                    <h4 class="font-medium">Client Billable:</h4>
+                    <h4 class="font-medium">{{translate('Client Billable:')}}</h4>
                   </div>
                   <div class="w-2/4">
                       <p class="font-light">{{ $job->client_billable ?? 'N/A' }}</p>
@@ -697,7 +697,7 @@
                 @if($job->client_billable == 'Yes')
                 <div class="flex items-center justify-between py-4 border-t">
                   <div class="w-2/4">
-                    <h4 class="font-medium">Client Name:</h4>
+                    <h4 class="font-medium">{{translate('Client Name:')}}</h4>
                   </div>
                   <div class="w-2/4">
                       <p class="font-light">{{ $job->client_name ?? 'N/A' }}</p>
@@ -706,7 +706,7 @@
                 @endif
                 <div class="flex items-center justify-between py-4 border-t">
                   <div class="w-2/4">
-                    <h4 class="font-medium">Expenses Allowed?</h4>
+                    <h4 class="font-medium">{{translate('Expenses Allowed?')}}</h4>
                   </div>
                   <div class="w-2/4">
                       <p class="font-light">{{ $job->expenses_allowed ?? 'N/A' }}</p>
@@ -715,7 +715,7 @@
                 @if($job->expenses_allowed == 'Yes')
                 <div class="flex items-center justify-between py-4 border-t">
                   <div class="w-2/4">
-                    <h4 class="font-medium">Estimated Expense</h4>
+                    <h4 class="font-medium">{{translate('Estimated Expense')}}</h4>
                   </div>
                   <div class="w-2/4">
                       <p class="font-light">{{ $job->expense_cost ?? 'N/A' }}</p>
@@ -724,7 +724,7 @@
                 @endif
                 <div class="flex items-center justify-between py-4 border-t">
                   <div class="w-2/4">
-                    <h4 class="font-medium">Remote Candidate:</h4>
+                    <h4 class="font-medium">{{translate('Remote Candidate:')}}</h4>
                   </div>
                   <div class="w-2/4">
                       <p class="font-light">{{ $job->remote_option ?? 'N/A' }}</p>
@@ -732,7 +732,7 @@
                 </div>
                 <div class="flex items-center justify-between py-4 border-t">
                   <div class="w-2/4">
-                    <h4 class="font-medium">Number of Opening(s):</h4>
+                    <h4 class="font-medium">{{translate('Number of Opening(s):')}}</h4>
                   </div>
                   <div class="w-2/4">
                       <p class="font-light">{{ $job->num_openings ?? 'N/A' }}</p>
@@ -740,7 +740,7 @@
                 </div>
                 <div class="flex items-center justify-between py-4 border-t">
                   <div class="w-2/4">
-                    <h4 class="font-medium">Worker Type:</h4>
+                    <h4 class="font-medium">{{translate('Worker Type:')}}</h4>
                   </div>
                   <div class="w-2/4">
                       <p class="font-light">{{ $job->workerType->title ?? 'N/A' }}</p>
@@ -756,7 +756,7 @@
                 </div>--}}
                 <div class="flex items-center justify-between py-4 border-t">
                   <div class="w-2/4">
-                    <h4 class="font-medium">GL Account:</h4>
+                    <h4 class="font-medium">{{translate('GL Account:')}}</h4>
                   </div>
                   <div class="w-2/4">
                       <p class="font-light">{{ $job->glCode->title ?? 'N/A' }}</p>
@@ -775,12 +775,12 @@
                   :style="{'color': 'var(--primary-color)'}"
                 ></i
                 ><span :style="{'color': 'var(--primary-color)'}"
-                  >Job Duration</span
+                  >{{translate('Job Duration')}}</span
                 >
               </h3>
               <div class="flex items-center justify-between py-4 border-t">
                 <div class="w-2/4">
-                  <h4 class="font-medium">Work Days / Week:</h4>
+                  <h4 class="font-medium">{{translate('Work Days / Week:')}}</h4>
                 </div>
                 <div class="w-2/4">
                     <p class="font-light">{{ $job->day_per_week ?? 'N/A' }}</p>
@@ -788,7 +788,7 @@
               </div>
               <div class="flex items-center justify-between py-4 border-t">
                 <div class="w-2/4">
-                  <h4 class="font-medium">Total Hours/Week:</h4>
+                  <h4 class="font-medium">{{translate('Total Hours/Week:')}}</h4>
                 </div>
                 <div class="w-2/4">
                     <p class="font-light">{{ $job->hours_per_week ?? 'N/A' }}</p>
@@ -796,7 +796,7 @@
               </div>
               <div class="flex items-center justify-between py-4 border-t">
                 <div class="w-2/4">
-                  <h4 class="font-medium">Estimated Hours / Day:</h4>
+                  <h4 class="font-medium">{{translate('Estimated Hours / Day:')}}</h4>
                 </div>
                 <div class="w-2/4">
                     <p class="font-light">{{ $job->hours_per_day ?? 'N/A' }}</p>
@@ -812,7 +812,7 @@
               </div>--}}
               <div class="flex items-center justify-between py-4 border-y">
                 <div class="w-2/4">
-                  <h4 class="font-medium">Job Duration:</h4>
+                  <h4 class="font-medium">{{translate('Job Duration:')}}</h4>
                 </div>
                 <div class="w-2/4">
                     <p class="font-light">{{ $job->date_range }} </p>
@@ -824,11 +824,11 @@
                   class="fa-regular fa-money-bill-1"
                   :style="{'color': 'var(--primary-color)'}"
                 ></i
-                ><span :style="{'color': 'var(--primary-color)'}">Rates</span>
+                ><span :style="{'color': 'var(--primary-color)'}">{{translate('Rates')}}</span>
               </h3>
               <div class="flex items-center justify-between py-4 border-t">
                 <div class="w-2/4">
-                  <h4 class="font-medium">Unit of Measure:</h4>
+                  <h4 class="font-medium">{{translate('Unit of Measure:')}}</h4>
                 </div>
                 <div class="w-2/4">
                     <p class="font-light">{{ $job->paymentType->title }}</p>
@@ -836,7 +836,7 @@
               </div>
               <div class="flex items-center justify-between py-4 border-t">
                 <div class="w-2/4">
-                  <h4 class="font-medium">Currency:</h4>
+                  <h4 class="font-medium">{{translate('Currency:')}}</h4>
                 </div>
                 <div class="w-2/4">
                     <p class="font-light">{{ $job->currency->symbol->title ?? 'N/A' }}</p>
@@ -844,7 +844,7 @@
               </div>
               <div class="flex items-center justify-between py-4 border-t">
                 <div class="w-2/4">
-                  <h4 class="font-medium">Minimum Bill Rate:</h4>
+                  <h4 class="font-medium">{{translate('Minimum Bill Rate:')}}</h4>
                 </div>
                 <div class="w-2/4">
                     <p class="font-light">{{ $job->min_bill_rate }}</p>
@@ -852,7 +852,7 @@
               </div>
               <div class="flex items-center justify-between py-4 border-t">
                 <div class="w-2/4">
-                  <h4 class="font-medium">Maximum Bill Rate:</h4>
+                  <h4 class="font-medium">{{translate('Maximum Bill Rate:')}}</h4>
                 </div>
                 <div class="w-2/4">
                     <p class="font-light">{{ $job->max_bill_rate }}</p>
@@ -860,7 +860,7 @@
               </div>
               <div class="flex items-center justify-between py-4 border-y">
                 <div class="w-2/4">
-                  <h4 class="font-medium">Time Type:</h4>
+                  <h4 class="font-medium">{{translate('Time Type:')}}</h4>
                 </div>
                 <div class="w-2/4">
                     <p class="font-light">{{ $job->jobType->title ?? 'N/A' }}</p>
@@ -873,12 +873,12 @@
                   :style="{'color': 'var(--primary-color)'}"
                 ></i
                 ><span :style="{'color': 'var(--primary-color)'}"
-                  >Job Publish Info</span
+                  >{{translate('Job Publish Info')}}</span
                 >
               </h3>
               <div class="flex items-center justify-between py-4 border-t">
                 <div class="w-2/4">
-                  <h4 class="font-medium">Job Created at:</h4>
+                  <h4 class="font-medium">{{translate('Job Created at:')}}</h4>
                 </div>
                 <div class="w-2/4">
                     <p class="font-light">{{ $job->created_at ?? 'N/A' }}</p>
@@ -886,7 +886,7 @@
               </div>
               <div class="flex items-center justify-between py-4 border-t">
                 <div class="w-2/4">
-                  <h4 class="font-medium">Job Created By:</h4>
+                  <h4 class="font-medium">{{translate('Job Created By:')}}</h4>
                 </div>
                 <div class="w-2/4">
                     <p class="font-light">{{ $job->createdBy->name ?? 'N/A' }}</p>
@@ -956,10 +956,10 @@
                                 <form @submit.prevent="submitForm" method="POST" enctype="multipart/form-data">
                                     @csrf
                                     <div class="media-body">
-                                        <label for="comment">Add Notes</label>
+                                        <label for="comment">{{translate('Add Notes')}}</label>
                                         <input type="hidden" id="hidden_job_id" value="{{ $job->id }}">
                                         <textarea id="comment" x-model="note" required class="form-control " placeholder="Enter text ..." style="width: 100%; min-height: 100px"></textarea>
-                                        <button type="submit" class="btn btn-success mt-3">Submit</button>
+                                        <button type="submit" class="btn btn-success mt-3">{{translate('Submit')}}</button>
                                         <button type="button" class="btn btn-success wait_comment mt-3" style="display: none;">
                                             <i class="fa fa-spinner fa-spin"></i>
                                         </button>
@@ -1004,40 +1004,40 @@
             <thead class="bg-gray-50">
               <tr>
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Sr. #
+                    {{translate(' Sr. #')}}
                 </th>
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Approver Name
+                    {{translate(' Approver Name')}}
                 </th>
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Approval Type
+                    {{translate(' Approval Type')}}
                 </th>
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Approval Required
-                </th>
-
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Approval/Rejected By
+                    {{translate(' Approval Required')}}
                 </th>
 
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Release Date & Time
+                    {{translate(' Approval/Rejected By')}}
                 </th>
 
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Approved/Rejected Date & Time
+                    {{translate('Release Date & Time')}}
                 </th>
 
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Approval Notes
+                    {{translate('Approved/Rejected Date & Time')}}
                 </th>
 
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Approval Document
+                    {{translate('Approval Notes')}}
                 </th>
 
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Action
+                    {{translate('Approval Document')}}
+                </th>
+
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  {{translate('Action')}}
                 </th>
               </tr>
             </thead>

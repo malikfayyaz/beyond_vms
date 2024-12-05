@@ -1,5 +1,5 @@
 <div class="rounded border p-[30px]">
-	
+
    <div
           class="w-100 p-[30px] rounded border"
           :style="{'border-color': 'var(--primary-color)'}">
@@ -7,43 +7,43 @@
             <thead class="bg-gray-50">
               <tr>
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Type
+                    {{translate(' Type')}}
                 </th>
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Interview ID
+                    {{translate(' Interview ID')}}
                 </th>
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Contractor Name
-                </th>
-
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Date
+                    {{translate(' Contractor Name')}}
                 </th>
 
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Start Time
+                    {{translate(' Date')}}
                 </th>
 
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  End Time
+                    {{translate(' Start Time')}}
                 </th>
 
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Location
+                    {{translate(' End Time')}}
                 </th>
 
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Vendor
+                    {{translate(' Location')}}
                 </th>
 
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Vendor
+                    {{translate(' Vendor')}}
+                </th>
+
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    {{translate(' Vendor')}}
                 </th>
 
               </tr>
             </thead>
             <tbody>
-             
+
             </tbody>
           </table>
 
@@ -51,47 +51,47 @@
             <thead class="bg-gray-50">
               <tr>
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Type
+                    {{translate(' Type')}}
                 </th>
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Interview ID
+                    {{translate(' Interview ID')}}
                 </th>
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Contractor Name
-                </th>
-
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Date
+                    {{translate(' Contractor Name')}}
                 </th>
 
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Start Time
+                    {{translate(' Date')}}
                 </th>
 
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  End Time
+                    {{translate(' Start Time')}}
                 </th>
 
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Location
+                    {{translate(' End Time')}}
                 </th>
 
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Vendor
+                    {{translate(' Location')}}
                 </th>
 
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Action
+                    {{translate('Vendor')}}
+                </th>
+
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    {{translate('Action')}}
                 </th>
 
               </tr>
             </thead>
             <tbody>
-             
+
             </tbody>
           </table>
       </div>
-	
+
 </div>
 <script>
 document.addEventListener('DOMContentLoaded', function() {

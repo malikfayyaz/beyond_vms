@@ -16,7 +16,7 @@
                  <ul
                      class="grid grid-flow-col text-center text-gray-500 bg-gray-100 rounded-lg p-1"
                  >
-                
+
                     <li class="flex justify-center">
                         <a
                             href="#all_offers"
@@ -70,8 +70,8 @@
                             </div>
                         </a>
                     </li>
-                    
-                    
+
+
                  </ul>
                 </div>
                 <x-job-details />
@@ -176,7 +176,7 @@
             });
 
             function openJobDetailsModal(jobId) {
-                
+
                 fetch(`/job-details/${jobId}`)
                         .then(response => response.json())
                         .then(data => {
@@ -186,7 +186,7 @@
                                     composed: true
                                 });
                                 console.log(event.detail.data);
-                                
+
                                 document.dispatchEvent(event);
                         })
                         .catch(error => console.error('Error:', error));
@@ -204,10 +204,10 @@
                 // Update currentType variable if needed
                 currentType = $(this).data('type');
                 console.log(currentType);
-                
+
                 window.location.hash = $(this).attr('href');
                 table.ajax.reload();
-                
+
             });
         }
     });

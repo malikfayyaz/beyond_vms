@@ -6,33 +6,33 @@
       <thead class="bg-gray-50">
         <tr>
           <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-            Status
+              {{translate('  Status')}}
           </th>
           <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-            Offer ID
+              {{translate('  Offer ID')}}
           </th>
           <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-            Contractor Name
+              {{translate('  Contractor Name')}}
           </th>
           <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-            Offer Date
-          </th>
-
-          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-            Bill Rate
+              {{translate(' Offer Date')}}
           </th>
 
           <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-            Action
+              {{translate(' Bill Rate')}}
+          </th>
+
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              {{translate('Action')}}
           </th>
         </tr>
       </thead>
       <tbody>
-       
+
       </tbody>
     </table>
 </div>
-	
+
 
 
 </div>
