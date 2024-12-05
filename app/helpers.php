@@ -444,10 +444,16 @@ if (!function_exists('timesheetGetStartAndEndDate')) {
 if (!function_exists('translate')) {
     function translate($text)
     {
-        if (session('locale') && session('locale') !== 'en') {
-            App::setLocale(session('locale'));
-        }
-        return GoogleTranslate::trans($text, app()->getLocale());
+        $locale = session('locale', 'en');
+        App::setLocale($locale);
+        $cacheKey = "translation_{$locale}_" . md5($text);
+        return Cache::remember($cacheKey, now()->addDays(30), function () use ($text, $locale) {
+            try {
+                return GoogleTranslate::trans($text, $locale);
+            } catch (Exception $e) {
+                return $text;
+            }
+        });
     }
 }
 
