@@ -286,10 +286,44 @@
                         ></i>
                     </button>
                     <ul x-show="open" class="py-2 space-y-2" x-cloak>
-                        <a href="{{ route('admin.formbuilder') }}"
-                            class="flex items-center w-full p-2 text-white transition duration-75 pl-11 hover:bg-gray-700">
-                            Form Builder
-                        </a>
+                        
+                        <li x-data="{ open: false }"  @click.away="open = false">
+                            <button
+                                @click="open = !open"
+                                class="flex items-center w-full p-2 text-white rounded-lg hover:bg-gray-700 overflow-hidden"
+                                :class="{'justify-center': miniSidebar}"
+                            >
+                                <i class="fas fa-cog w-6 h-6"></i>
+                                <span
+                                    class="flex-1 ml-3 text-left whitespace-nowrap"
+                                    x-show="!miniSidebar"
+                                    x-cloak
+                                >Form Builder</span
+                                >
+                                <i
+                                    class="fas fa-chevron-down ml-auto"
+                                    x-show="!miniSidebar"
+                                    x-cloak
+                                ></i>
+                            </button>
+                            <ul x-show="open" class="py-2 space-y-2" x-cloak>
+
+                                <li class="{{ request()->routeIs('users') ? 'active' : '' }}">
+                                    <a href="{{ route('admin.formbuilder') }}"
+                                        class="flex items-center w-full p-2 text-white transition duration-75 pl-11 hover:bg-gray-700">
+                                        Create
+                                    </a>
+                                </li>
+                                <li class="{{ request()->routeIs('users') ? 'active' : '' }}">
+                                    <a href="{{ route('admin.formbuilder.index') }}"
+                                        class="flex items-center w-full p-2 text-white transition duration-75 pl-11 hover:bg-gray-700">
+                                        Listing
+                                    </a>
+                                </li>
+                            </ul>
+
+                        </li>
+                        
                         <!-- Workflow Link -->
                         <li x-data="{ open: false }">
                             <button

@@ -184,6 +184,7 @@ Route::middleware(['user_role:admin'])->group(function () {
         Route::POST('/career-opportunities/pmoteammemberDelete/{id}', [CareerOpportunitiesController::class, 'pmoteammemberDelete'])->name('pmoteammemberDelete');
 
         Route::match(['get', 'post'], 'formbuilder', [FormBuilderController::class, 'formBuilder'])->name('formbuilder');
+        Route::match(['get', 'post'], 'formbuilder/index', [FormBuilderController::class, 'index'])->name('formbuilder.index');
         Route::post('form-builder/save', [FormBuilderController::class, 'store'])->name('form-builder.save');
 
 

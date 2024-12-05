@@ -13,7 +13,7 @@ class FormBuilderController extends Controller
      */
     public function index()
     {
-        //
+        return view('admin.formbuilder.index');
     }
 
     /**
@@ -83,6 +83,6 @@ class FormBuilderController extends Controller
 
     public function formBuilder()
     {
-        return view('admin.formbuilder.view');
+        return view('admin.formbuilder.create');
     }
 }
