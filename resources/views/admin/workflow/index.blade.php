@@ -11,9 +11,9 @@
                 <table class="w-full border-collapse border">
                     <thead>
                         <tr>
-                            <th class="border p-2">Sr #</th>
-                            <th class="border p-2">Clients</th>
-                            <th class="border p-2">Action</th>
+                            <th class="border p-2">{{translate('Sr #')}}Sr #</th>
+                            <th class="border p-2">{{translate('Clients')}}</th>
+                            <th class="border p-2">{{translate('Action')}}</th>
                         </tr>
                     </thead>
                     <tbody>

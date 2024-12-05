@@ -10,13 +10,13 @@
         <!-- Include the partial view -->
 
         <div x-data="accountManager()" class="container mx-auto p-4">
-            <h1>{{ ucfirst(str_replace('-', ' ', $formtype)) }} Management</h1>
+            <h1>{{ translate(ucfirst(str_replace('-', ' ', $formtype))) }} {{translate('Management')}}</h1>
             <div class="flex flex-wrap mb-4">
                 <!-- Blade template -->
                 @foreach ($fields as $field => $attributes)
                 <div class="w-1/2 mt-2 pr-2">
                     <label for="{{ $field }}" class="block mb-2">
-                        {{ ucfirst($attributes['label']) }} <span class="text-red-500">*</span>
+                        {{ translate(ucfirst($attributes['label'])) }} <span class="text-red-500">*</span>
                     </label>
 
                     @if ($attributes['type'] === 'select' && $field === 'country')
@@ -38,7 +38,7 @@
                     @elseif ($attributes['type'] === 'select')
                     <select id="{{ $field }}" name="{{ $field }}" x-model="{{ $field }}"
                         class="w-full p-2 border rounded h-10 bg-white">
-                        <option value="" disabled>Select {{ ucfirst($attributes['label']) }}</option>
+                        <option value="" disabled>{{translate('Select'.ucfirst($attributes['label'])) }}</option>
                         <option value="active">Active</option>
                         <option value="inactive">Inactive</option>
                     </select>
@@ -56,26 +56,27 @@
 
             <div class="flex mb-4">
                 <button @click="submitData()" class="bg-blue-500 text-white px-4 py-2 rounded mr-2">
-                    <span x-text="editIndex !== null ? 'Update' : 'Add'"></span>
+                    <span x-text="editIndex !== null ? '{{ translate('Update') }}' : '{{ translate('Add') }}'"></span>
                 </button>
                 <button @click="cancelEdit()" class="bg-gray-500 text-white px-4 py-2 rounded">
-                    Cancel
-                </button>
-            </div>
+                    {{translate(' Cancel')}}
+                 </button>
+             </div>
 
-            <div class="mb-4">
-                <input type="text" x-model="searchTerm" placeholder="Search Account Code"
+             <div class="mb-4">
+                 <input type="text" x-model="searchTerm" placeholder="{{translate('Search Account Code')}}"
                     class="w-full p-2 border rounded" />
             </div>
 
             <table class="w-full border-collapse border">
                 <thead>
                     <tr>
-                        <th class="border p-2">Sr #</th>
-                        <template x-for="(field, index) in fields" :key="index">
-                            <th class="border p-2" x-text="fields[index]['label']"></th>
-                        </template>
-                        <th class="border p-2">Action</th>
+                        <th class="border p-2">{{ translate('Sr #')}}</th>
+                        @foreach($fields as $field)
+                            <!-- Output the translated label directly within the HTML structure -->
+                            <th class="border p-2">{{ translate($field['label']) }}</th>
+                        @endforeach
+                        <th class="border p-2">{{ translate('Action')}}</th>
                     </tr>
                 </thead>
                 <tbody>

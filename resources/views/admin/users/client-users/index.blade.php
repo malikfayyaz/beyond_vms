@@ -10,7 +10,7 @@
             @include('admin.layouts.partials.alerts')
             <div>
                 <div class="mb-4 flex justify-between items-center">
-                    <h3 class="text-xl font-bold">Client Management</h3>
+                    <h3 class="text-xl font-bold">{{translate('Client Management')}}</h3>
 
                     <!-- Add User Button -->
                     <button
@@ -18,7 +18,7 @@
                         :style="{'background-color': 'var(--primary-color)'}"
                         onclick="window.location.href='{{ route('admin.client-users.create') }}'"
                     >
-                        Add New Client
+                        {{translate('Add New Client')}}
                     </button>
                 </div>
 
@@ -27,11 +27,11 @@
                     <thead class="bg-gray-200 text-gray-700">
                     <tr>
                         <th class="py-3 px-4 text-left">ID</th>
-                        <th class="py-3 px-4 text-left cursor-pointer">Client Name</th>
-                        <th class="py-3 px-4 text-left cursor-pointer">Email</th>
-                        <th class="py-3 px-4 text-left cursor-pointer">User Role</th>
-                        <th class="py-3 px-4 text-left cursor-pointer">Profile Status</th>
-                        <th class="py-3 px-4 text-left">Action</th>
+                        <th class="py-3 px-4 text-left cursor-pointer">{{translate('Client Name')}}</th>
+                        <th class="py-3 px-4 text-left cursor-pointer">{{translate('Email')}}</th>
+                        <th class="py-3 px-4 text-left cursor-pointer">{{translate('User Role')}}</th>
+                        <th class="py-3 px-4 text-left cursor-pointer">{{translate('Profile Status')}}</th>
+                        <th class="py-3 px-4 text-left">{{translate('Action')}}</th>
                     </tr>
                     </thead>
                     <tbody>
