@@ -6,18 +6,18 @@
     <div class="container mx-auto p-4">
       <div class="flex flex-wrap mb-4">
           <div class="w-1/2 pr-2">
-            <label for="user_id" class="block mb-2">Job Team Member <span class="text-red-500">*</span></label>
+            <label for="user_id" class="block mb-2">{{translate('Job Team Member')}} <span class="text-red-500">*</span></label>
             <select
                 id="user_id"
                 name="user_id"
                 class="w-full p-2 border rounded h-10 bg-white"
                 x-model="formData.user_id"
             >
-                <option value="" disabled>Select Team Member</option>
+                <option value="" disabled>{{translate('Select Team Member')}}</option>
                 @foreach($clients as $data)
                     <option value="{{ $data->id }}">{{ $data->first_name }} {{ $data->last_name}}</option>
                 @endforeach
-               
+
             </select>
             <p class="text-red-500 text-sm mt-1" x-text="user_idError"></p>
         </div>
@@ -26,7 +26,7 @@
           <button
               @click="submitData1()"
               class="bg-blue-500 text-white px-4 py-2 rounded mr-2"
-          >Add
+          >{{translate('Add')}}
           </button>
       </div>
     </div>
@@ -38,18 +38,18 @@
             Sr. #
           </th> -->
           <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-            Name
+              {{translate('Name')}}
           </th>
           <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-            Email
+              {{translate('Email')}}
           </th>
           <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-            Action
+              {{translate('Action')}}
           </th>
         </tr>
       </thead>
       <tbody>
-       
+
       </tbody>
     </table>
   </div>
@@ -59,7 +59,7 @@
 document.addEventListener('DOMContentLoaded', function() {
     if (window.$) {
       table1 = initializeDataTable('#dataTable1', `{{ route('admin.jobteammember',$job->id) }}`, [
-       
+
        { data: 'name', name: 'name' },
        { data: 'email', name: 'email' },
        { data: 'action', name: 'action', orderable: false, searchable: false }
@@ -67,10 +67,10 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 });
   function accountManager1(editIndex) {
-    
+
     return {
       formData: {
-          user_id: "", 
+          user_id: "",
       },
       user_idError:"",
       editIndex: editIndex,
@@ -80,7 +80,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
       validateFields() {
           this.error = 0;
-        
+
           if (this.formData.user_id === "") {
               this.user_idError = `Please select Team Member`;
               this.error += 1;
@@ -96,11 +96,11 @@ document.addEventListener('DOMContentLoaded', function() {
               formData.append('user_id', this.formData.user_id);
               url = '{{ route("admin.jobteammember", $job->id) }}';
               if (this.editIndex !== null) {
-                  url = '{{ route("admin.jobteammember", $job->id) }}'; 
-                  url = url.replace(':id', editIndex); 
-                  formData.append('_method', 'PUT'); 
+                  url = '{{ route("admin.jobteammember", $job->id) }}';
+                  url = url.replace(':id', editIndex);
+                  formData.append('_method', 'PUT');
               }
-              
+
               ajaxCall(url, 'POST', [[onSuccess, ['response']]], formData);
               table1.ajax.reload();
           }
