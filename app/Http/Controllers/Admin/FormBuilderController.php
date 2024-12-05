@@ -61,8 +61,11 @@ class FormBuilderController extends Controller
         $formBuilder->created_by_portal = 1; // Example: Set your portal ID
         $formBuilder->save();
 
-        return response()->json(['success' => true, 'message' => 'Form saved successfully!']);
-    
+        return response()->json([
+            'success' => true,
+            'message' => 'Form saved successfully!',
+            'redirect_url' => route('admin.formbuilder.index') // Redirect back URL for AJAX
+        ]);
     }
 
     /**
