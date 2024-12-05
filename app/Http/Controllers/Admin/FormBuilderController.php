@@ -5,14 +5,30 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\FormBuilder;
+use Yajra\DataTables\Facades\DataTables;
+
 
 class FormBuilderController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
+        if ($request->ajax()) {
+            $forms = FormBuilder::latest()->get();
+            
+            return DataTables::of($forms)
+            ->addColumn('action', function($row) {
+                return '<a href="' . route('admin.formbuilder.index', $row->id) . '"
+                            class="text-blue-500 hover:text-blue-700 mr-2 bg-transparent hover:bg-transparent">
+                                <i class="fas fa-eye"></i>
+                        </a>';
+            })->rawColumns(['action'])
+            ->make(true);
+           
+        }
+        
         return view('admin.formbuilder.index');
     }
 
