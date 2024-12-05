@@ -65,5 +65,5 @@ $("#addjobformwizard .select2-single").select2({
   theme: "default",
 });
 
-$('#fb-editor').formBuilder();
+// $('#fb-editor').formBuilder();
 
