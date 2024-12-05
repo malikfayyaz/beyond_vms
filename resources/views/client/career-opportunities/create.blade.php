@@ -555,25 +555,25 @@
                     <!-- Step 3: Fourth row form fields -->
                     <div class="flex space-x-4 mb-4">
                         <div class="flex-1">
-                            <label class="block mb-2">Sub Ledger Type</label>
-                            <select name="ledger_type_id" x-model="formData.subLedgerType"
-                                    class="w-full select2-single custom-style" data-field="subLedgerType" id="ledger_type">
+                        <label class="block mb-2">Sub Ledger Type</label>
+                        <select name="ledger_type_id" x-model="formData.subLedgerType"
+                            class="w-full select2-single custom-style" data-field="subLedgerType" id="ledger_type">
 
-                                <option value="">Select Sub Ledger Type</option>
-                                @foreach (checksetting(7) as $key => $value)
-                                    <option value="{{ $key }}">{{ $value }}</option>
-                                @endforeach
-                                <!-- Add options here -->
-                            </select>
-                        </div>
-                        <div class="flex-1">
-                            <label class="block mb-2">Sub Ledger Code <span class="text-red-500 ledger_code__"
-                                                                            style="display:none;">*</span></label>
-                            <input name="ledger_code" type="text" id="ledger_code" x-model="formData.subLedgerCode"
-                                   class="w-full  h-12 px-4 text-gray-500 border border-gray-300 rounded-md shadow-sm focus:outline-none" />
+                            <option value="">Select Sub Ledger Type</option>
+                            @foreach (checksetting(7) as $key => $value)
+                            <option value="{{ $key }}">{{ $value }}</option>
+                            @endforeach
+                            <!-- Add options here -->
+                        </select>
+                    </div>
+                    <div class="flex-1" x-show="formData.subLedgerType">
+                        <label class="block mb-2">Sub Ledger Code  <span class="text-red-500 ledger_code__"
+                                >*</span></label>
+                        <input name="ledger_code" type="text" id="ledger_code" x-model="formData.subLedgerCode"
+                            class="w-full  h-12 px-4 text-gray-500 border border-gray-300 rounded-md shadow-sm focus:outline-none" />
                             <p x-show="showErrors && !isFieldValid('subLedgerCode')" class="text-red-500 text-sm mt-1"
-                               x-text="getErrorMessageById('subLedgerCode')"></p>
-                        </div>
+                            x-text="getErrorMessageById('subLedgerCode')"></p>
+                    </div>
                         <div class="flex-1">
                             <label class="block mb-2">Worker Type <span class="text-red-500">*</span></label>
                             <select name="worker_type_id" id="Job_worker_type" x-model="formData.workerType"

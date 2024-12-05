@@ -121,7 +121,6 @@ export default function wizardForm(careerOpportunity = null,businessUnitsData = 
           // console.log($(this));
 
           var isLedgerCodeRequired = $(this).val() === 33;
-          console.log(isLedgerCodeRequired);
           $("#ledger_code").prop('required', isLedgerCodeRequired);
           $(".ledger_code_").toggleClass('fa-asterisk', isLedgerCodeRequired);
           $(".ledger_code__").toggle(isLedgerCodeRequired);
