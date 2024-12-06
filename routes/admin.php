@@ -185,8 +185,9 @@ Route::middleware(['user_role:admin'])->group(function () {
 
         Route::match(['get', 'post'], 'formbuilder', [FormBuilderController::class, 'formBuilder'])->name('formbuilder');
         Route::match(['get', 'post'], 'formbuilder/index', [FormBuilderController::class, 'index'])->name('formbuilder.index');
-        Route::post('form-builder/save', [FormBuilderController::class, 'store'])->name('form-builder.save');
-
+        Route::post('formbuilder/save', [FormBuilderController::class, 'store'])->name('formbuilder.save');
+        Route::get('formbuilder/{id}/edit', [FormBuilderController::class, 'edit'])->name('formbuilder.edit');
+        Route::post('formbuilder/{id}/update', [FormBuilderController::class, 'update'])->name('formbuilder.update');
 
     });
 });

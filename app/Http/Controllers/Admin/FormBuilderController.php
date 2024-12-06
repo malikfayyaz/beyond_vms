@@ -23,6 +23,10 @@ class FormBuilderController extends Controller
                 return '<a href="' . route('admin.formbuilder.index', $row->id) . '"
                             class="text-blue-500 hover:text-blue-700 mr-2 bg-transparent hover:bg-transparent">
                                 <i class="fas fa-eye"></i>
+                        </a>
+                        <a href="' . route('admin.formbuilder.edit', $row->id) . '" 
+                            class="text-green-500 hover:text-green-700 bg-transparent hover:bg-transparent">
+                                <i class="fas fa-edit"></i>
                         </a>';
             })->rawColumns(['action'])
             ->make(true);
@@ -81,7 +85,9 @@ class FormBuilderController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $formBuilder =  FormBuilder::findOrFail($id);
+        return view('admin.formbuilder.create', compact('formBuilder'))
+        ->with(['editMode' => true, 'editIndex' => $id]);
     }
 
     /**
@@ -89,7 +95,22 @@ class FormBuilderController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        // dd($request->all());
+        $validatedData = $request->validate([
+            'type' => 'required|integer',
+            'data' => 'required|json',
+            'status' => 'required|string',
+        ]);
+    
+        $formBuilder = FormBuilder::findOrFail($id);
+    
+        // Update the form builder record
+        $formBuilder->update($validatedData);
+        return response()->json([
+            'success' => true,
+            'message' => 'Form update successfully!',
+            'redirect_url' => route('admin.formbuilder.index') // Redirect back URL for AJAX
+        ]);
     }
 
     /**
@@ -102,6 +123,6 @@ class FormBuilderController extends Controller
 
     public function formBuilder()
     {
-        return view('admin.formbuilder.create');
+        return view('admin.formbuilder.create')->with(['editMode' => false, 'editIndex' => null]);
     }
 }
