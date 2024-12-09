@@ -9,6 +9,7 @@ class VendorTeammember extends Model
 {
     protected $table = 'vendor_teammembers';
     public $timestamps = false;
+    protected $fillable = ['vendor_id', 'teammember_id'];
     protected $guarded = [
         // List attributes you want to guard from mass assignment
         // e.g., 'id', 'created_at', 'updated_at'

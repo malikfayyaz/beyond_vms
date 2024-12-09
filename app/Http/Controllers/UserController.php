@@ -70,16 +70,20 @@ class UserController extends Controller
             $commonRules = [
                 'first_name' => 'required',
                 'last_name' => 'required',
-                'description' => 'required',
                 'profile_image' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             ];
             $roleSpecificRules = [];
             if ($sessionrole == 'admin') {
-                $roleSpecificRules['username'] = 'required'; // Username is required for admin
+                $roleSpecificRules['description'] = 'required';
+                $roleSpecificRules['username'] = 'required';
             } elseif ($sessionrole == 'client') {
                 $roleSpecificRules['middle_name'] = 'required';
                 $roleSpecificRules['business_name'] = 'required';
-                $roleSpecificRules['organization'] = 'required'; // Organization is required for client
+                $roleSpecificRules['organization'] = 'required';
+            }elseif ($sessionrole == 'vendor') {
+                $roleSpecificRules['middle_name'] = 'required';
+                $roleSpecificRules['business_name'] = 'required';
+                $roleSpecificRules['organization'] = 'required';
             }
             // Merge common and role-specific rules
             $rules = array_merge($commonRules, $roleSpecificRules);
@@ -102,13 +106,16 @@ class UserController extends Controller
             } elseif ($sessionrole == 'client') {
                 $user = Client::find($userId); // Assuming you have a Client model
                 $successMessage = 'Client updated successfully!';
+            }elseif ($sessionrole == 'vendor') {
+                $user = Vendor::find($userId);
+                $successMessage = 'Vendor updated successfully!';
             }
             if ($user) {
                 $filename = handleFileUpload($request, 'profile_image', 'profile_images');
                 if ($filename) {
                     $validatedData['profile_image'] = $filename; // Store file path in the validated data
                 }
-                $user->update($validatedData); // Update the user with validated data
+                $user->update($validatedData);
                 session()->flash('success', $successMessage);
                 return response()->json([
                     'success' => true,

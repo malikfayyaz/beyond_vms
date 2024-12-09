@@ -10,6 +10,7 @@ use App\Http\Controllers\{
     Vendor\CareerOpportunitiesInterviewController,
     Vendor\CareerOpportunitiesWorkOrderController,
     Vendor\TimesheetController,
+    Vendor\StaffMemberController,
 };
 Route::middleware(['user_role:vendor'])->group(function () {
     Route::prefix('vendor')->name('vendor.')->group(function () {
@@ -57,10 +58,13 @@ Route::middleware(['user_role:vendor'])->group(function () {
         Route::get('/career-opportunities/{id}/otherinterview', [CareerOpportunitiesController::class, 'jobOtherInterview'])->name('jobOtherInterview');
         Route::get('/career-opportunities/{id}/jobOffer', [CareerOpportunitiesController::class, 'jobOffer'])->name('jobOffer');
         Route::get('/career-opportunities/{id}/jobWorkorder', [CareerOpportunitiesController::class, 'jobWorkorder'])->name('jobWorkorder');
-
-
-
-
+//staff member
+        Route::get('staffmember/index', [\App\Http\Controllers\Vendor\StaffMemberController::class, 'index'])->name('staffmember.index');
+        Route::get('staffmember/create', [\App\Http\Controllers\Vendor\StaffMemberController::class, 'create'])->name('staffmember.create');
+        Route::put('staffmember//{id}/update', [\App\Http\Controllers\Vendor\StaffMemberController::class, 'update'])->name('staffmember.update');
+        Route::get('staffmember/{id}/edit', [\App\Http\Controllers\Vendor\StaffMemberController::class, 'edit'])->name('staffmember.edit');
+        Route::post('staffmember/store', [\App\Http\Controllers\Vendor\StaffMemberController::class, 'store'])->name('staffmember.store');
+        Route::delete('staffmember/{id}', [StaffMemberController::class, 'destroy'])->name('staffmember.destroy');
     });
 
 });

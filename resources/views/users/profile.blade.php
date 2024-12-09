@@ -2,10 +2,22 @@
 
 @section('content')
     <!-- Sidebar -->
-    @include('admin.layouts.partials.dashboard_side_bar')
+    @if($sessionrole === 'vendor')
+        @include('vendor.layouts.partials.dashboard_side_bar')
+    @elseif($sessionrole === 'client')
+        @include('client.layouts.partials.dashboard_side_bar')
+    @else
+        @include('admin.layouts.partials.dashboard_side_bar')
+    @endif
     <div class="ml-16">
         <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/alpine.min.js" defer></script>
-        @include('admin.layouts.partials.header')
+        @if($sessionrole === 'vendor')
+            @include('vendor.layouts.partials.header')
+        @elseif($sessionrole === 'client')
+            @include('client.layouts.partials.header')
+        @else
+            @include('admin.layouts.partials.header')
+        @endif
         <div class="bg-white mx-4 my-8 rounded p-8" x-data="profileForm()" enctype="multipart/form-data">
             @include('admin.layouts.partials.alerts') <!-- Include the partial view -->
             <div class="flex justify-between items-center mb-6">
