@@ -120,8 +120,14 @@ class StaffMemberController extends Controller
             $vendorRecord = Vendor::where('user_id', $user->id)->first();
             if ($vendorRecord) {
                 $memberRecord = VendorTeammember::where('teammember_id', $vendorRecord->id)->first();
-                dd($memberRecord);
-                $successMessage = 'A vendor record already exists for this email.!';
+                if(empty($memberRecord)){
+                    $vendorteamMember = [
+                        'vendor_id' => Vendor::getVendorIdByUserId($userId),
+                        'teammember_id' => $vendorRecord->id,
+                    ];
+                    $team = VendorTeammember::create($vendorteamMember);
+                }
+                $successMessage = 'This vendor is already a Teammember email.!';
                 session()->flash('success', $successMessage);
                 return response()->json([
                     'success' => true,
