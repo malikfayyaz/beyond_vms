@@ -13,7 +13,7 @@
                 <i class="fas fa-dollar-sign text-4xl text-blue-400 mb-2"></i>
                 <div class="mt-2">
                     <span class="block text-2xl font-bold text-blue-400">$36,280.00</span>
-                    <span class="text-gray-800">Approved Budget</span>
+                    <span class="text-gray-800">{{translate('Approved Budget')}}</span>
                 </div>
             </div>
         </div>
@@ -23,7 +23,7 @@
                 <i class="fas fa-dollar-sign text-3xl text-blue-400"></i>
                 <div class="mt-2">
                     <span class="block text-xl font-bold text-blue-400">$0.00</span>
-                    <span class="text-gray-800">Spend Pending Approval Amount</span>
+                    <span class="text-gray-800">{{translate('Spend Pending Approval Amount')}}</span>
                 </div>
             </div>
         </div>
@@ -33,7 +33,7 @@
                 <i class="fas fa-dollar-sign text-4xl text-blue-400"></i>
                 <div class="mt-2">
                     <span id="remaining_spend_amount" class="block text-2xl font-bold text-blue-400">$33,886.00</span>
-                    <span class="text-gray-800">Remaining Spend Amount</span>
+                    <span class="text-gray-800">{{translate('Remaining Spend Amount')}}</span>
                 </div>
             </div>
         </div>
@@ -43,7 +43,7 @@
                 <i class="fas fa-dollar-sign text-4xl text-blue-400"></i>
                 <div class="mt-2">
                     <span id="spend_to_date" class="block text-2xl font-bold text-blue-400">$2,394.00</span>
-                    <span class="text-gray-800">Spend to Date</span>
+                    <span class="text-gray-800">{{translate('Spend to Date')}}</span>
                 </div>
             </div>
         </div>
@@ -56,20 +56,20 @@
     <div class="bg-white mx-4 my-8 rounded p-8">
         <div>
             <div class="flex justify-between items-center mb-6">
-                <h2 class="text-2xl font-bold">Contract BU</h2>
+                <h2 class="text-2xl font-bold">{{translate('Contract BU')}}</h2>
             </div>
             <table class="min-w-full divide-y divide-gray-200" id="listing">
                 <thead class="bg-gray-200">
                 <tr>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Business Unit</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Business Percentage</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Created Date</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{{translate('Business Unit')}}</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{{translate('Business Percentage')}}</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{{translate('Created Date')}}</th>
                     <th
                         class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                     >
-                        Contract Start Date
+                        {{translate('Contract Start Date')}}
                     </th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{{translate('Status')}}</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -127,7 +127,7 @@
                                 <form @submit.prevent="submitForm" method="POST" enctype="multipart/form-data">
                                     @csrf
                                     <div class="media-body">
-                                        <label for="comment">Add Notes</label>
+                                        <label for="comment">{{translate('Add Notes')}}</label>
                                         <input type="hidden" id="hidden_contract_id" value="{{ $contract->id }}">
                                         <textarea id="comment" x-model="note" required class="form-control" placeholder="Enter text ..." style="width: 100%; min-height: 100px"></textarea>
                                         <button type="submit" class="btn btn-success mt-3">Submit</button>
@@ -148,13 +148,13 @@
                                                 <p><strong>{{ $note->notes }}</strong></p>
                                             </div>
                                             <p class="postedby meta-inner pull-left">
-                                                Posted By: {{ $note->posted_by_type }}
+                                                {{translate('Posted By:')}} {{ $note->posted_by_type }}
                                             </p>
                                             <p class="postedby meta-inner pull-left">
-                                                Name: {{ Auth::user()->name }}
+                                                {{translate('Name:')}} {{ Auth::user()->name }}
                                             </p>
                                             <p class="meta-inner pull-left" style="color: #8b92ca;">
-                                                {{ $note->created_at->format('m/d/Y') }} at {{ $note->created_at->format('H:i A') }}
+                                                {{ $note->created_at->format('m/d/Y') }}{{translate(' at ')}}{{ $note->created_at->format('H:i A') }}
                                             </p>
                                         </div>
                                     </div>
@@ -179,12 +179,12 @@
                 height="100%"
             >
                 <p>
-                    Alternative text - include a link
+                    {{translate(' Alternative text - include a link')}}
                     <a href="{{ asset('storage/submission_resume/' . $contract->submission->resume) }}">to the PDF!</a>
                 </p>
             </object>
         @else
-            <p>No resume available.</p>
+            <p>{{translate('No resume available.')}}</p>
         @endif
     </div>
 </div>

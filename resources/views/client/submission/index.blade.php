@@ -10,13 +10,13 @@
             @include('client.layouts.partials.alerts')
             <div >
                 <div class="flex justify-between items-center mb-6">
-                    <h2 class="text-2xl font-bold">Submission</h2>
+                    <h2 class="text-2xl font-bold">{{translate('Submission')}}</h2>
                 </div>
 
                 <div class="mb-4">
                     <ul
                         class="grid grid-flow-col text-center text-gray-500 bg-gray-100 rounded-lg p-1">
-                    
+
                         <li class="flex justify-center">
                             <a
                                 href="#all_subs"
@@ -24,7 +24,7 @@
                                 data-type="all_subs"
                             >
                                 <i class="fa-solid fa-fill"></i>
-                                <span class="capitalize">All</span>
+                                <span class="capitalize">{{translate('All')}}</span>
                                 <div class="px-1 py-1 flex items-center justify-center bg-gray-500 text-white rounded-lg">
                                     <span class="text-[10px]">{{ $counts['all_subs'] }}</span>
                                 </div>
@@ -37,13 +37,13 @@
                                 data-type="review"
                             >
                                 <i class="fa-solid fa-fill"></i>
-                                <span class="capitalize">Resumes to Review</span>
+                                <span class="capitalize">{{translate('Resumes to Review')}}</span>
                                 <div class="px-1 py-1 flex items-center justify-center bg-gray-500 text-white rounded-lg">
                                     <span class="text-[10px]">{{ $counts['review'] }}</span>
                                 </div>
                             </a>
                         </li>
-                        
+
                         <li class="flex justify-center">
                             <a
                                 href="#interview"
@@ -51,7 +51,7 @@
                                 data-type="interview"
                             >
                                 <i class="fa-solid fa-fill"></i>
-                                <span class="capitalize">interview Process</span>
+                                <span class="capitalize">{{translate('Interview Process')}}</span>
                                 <div class="px-1 py-1 flex items-center justify-center bg-gray-500 text-white rounded-lg">
                                     <span class="text-[10px]">{{ $counts['interview'] }}</span>
                                 </div>
@@ -65,7 +65,7 @@
                                 data-type="rejected"
                             >
                                 <i class="fa-solid fa-fill"></i>
-                                <span class="capitalize">Rejected</span>
+                                <span class="capitalize">{{translate('Rejected')}}</span>
                                 <div class="px-1 py-1 flex items-center justify-center bg-gray-500 text-white rounded-lg">
                                     <span class="text-[10px]">{{ $counts['rejected'] }}</span>
                                 </div>
@@ -78,7 +78,7 @@
                                 data-type="offer"
                             >
                                 <i class="fa-solid fa-fill"></i>
-                                <span class="capitalize">Offer</span>
+                                <span class="capitalize">{{translate('Offer')}}</span>
                                 <div class="px-1 py-1 flex items-center justify-center bg-gray-500 text-white rounded-lg">
                                     <span class="text-[10px]">{{ $counts['offer'] }}</span>
                                 </div>
@@ -91,7 +91,7 @@
                                 data-type="hired"
                             >
                                 <i class="fa-solid fa-fill"></i>
-                                <span class="capitalize">Hired</span>
+                                <span class="capitalize">{{translate('Hired')}}</span>
                                 <div class="px-1 py-1 flex items-center justify-center bg-gray-500 text-white rounded-lg">
                                     <span class="text-[10px]">{{ $counts['hired'] }}</span>
                                 </div>
@@ -104,7 +104,7 @@
                                 data-type="workorder"
                             >
                                 <i class="fa-solid fa-fill"></i>
-                                <span class="capitalize">WorkOrder Release</span>
+                                <span class="capitalize">{{translate('WorkOrder Release')}}</span>
                                 <div class="px-1 py-1 flex items-center justify-center bg-gray-500 text-white rounded-lg">
                                     <span class="text-[10px]">{{ $counts['workorder'] }}</span>
                                 </div>
@@ -117,14 +117,14 @@
                                 data-type="withdraw"
                             >
                                 <i class="fa-solid fa-fill"></i>
-                                <span class="capitalize">Withdrawn</span>
+                                <span class="capitalize">{{translate('Withdrawn')}}</span>
                                 <div class="px-1 py-1 flex items-center justify-center bg-gray-500 text-white rounded-lg">
                                     <span class="text-[10px]">{{ $counts['withdraw'] }}</span>
                                 </div>
                             </a>
                         </li>
-                        
-                        
+
+
                     </ul>
                 </div>
 
@@ -140,68 +140,68 @@
                         <th
                             class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                         >
-                            Status
+                            {{translate('Status')}}
                         </th>
                         <!-- User -->
                         <th
                             class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                         >
-                            Submission ID
+                            {{translate('Submission ID')}}
                         </th>
                         <!-- job -->
                         <th
                             class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                         >
-                            Candidate Name
+                            {{translate('Candidate Name')}}
                         </th>
                         <th
                             class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                         >
-                            Unique ID
+                            {{translate('Unique ID')}}
                         </th>
                         <th
                             class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                         >
-                            Job Profile
+                            {{translate('Job Profile')}}
                         </th>
                         <th
                             class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                         >
-                            Hiring Manager
-                        </th>
-
-                        <th
-                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                        >
-                            Vendor
-                        </th>
-                        <th
-                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                        >
-                            Pay Rate
+                            {{translate('Hiring Manager')}}
                         </th>
 
                         <th
                             class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                         >
-                            Bill Rate
+                            {{translate('Vendor')}}
+                        </th>
+                        <th
+                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                        >
+                            {{translate('Pay Rate')}}
                         </th>
 
                         <th
                             class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                         >
-                            Location
+                            {{translate('Bill Rate')}}
+                        </th>
+
+                        <th
+                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                        >
+                            {{translate('Location')}}
                         </th>
                         <th
                             class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                         >
-                            Worker Type
+                            {{translate('Worker Type')}}
                         </th>
 
                         <th style="width: 80px"
                             class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                         >
-                            Action
+                            {{translate('Action')}}
                         </th>
                     </tr>
                     </thead>
@@ -242,7 +242,7 @@
             });
 
             function openJobDetailsModal(jobId) {
-                
+
                 fetch(`/job-details/${jobId}`)
                         .then(response => response.json())
                         .then(data => {
@@ -252,7 +252,7 @@
                                     composed: true
                                 });
                                 console.log(event.detail.data);
-                                
+
                                 document.dispatchEvent(event);
                         })
                         .catch(error => console.error('Error:', error));
@@ -293,10 +293,10 @@
                 // Update currentType variable if needed
                 currentType = $(this).data('type');
                 console.log(currentType);
-                
+
                 window.location.hash = $(this).attr('href');
                 table.ajax.reload();
-                
+
             });
         }
     });

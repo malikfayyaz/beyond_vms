@@ -16,7 +16,7 @@
               class="self-center text-xl font-semibold whitespace-nowrap text-white ml-2"
               x-show="!miniSidebar"
               x-cloak
-              >{{ucfirst(session('selected_role'))}}</span
+              >{{translate(ucfirst(session('selected_role')))}}</span
             >
           </a>
           <ul class="space-y-2 font-medium">
@@ -28,7 +28,7 @@
               >
                 <i class="fas fa-tachometer-alt w-6 h-6"></i>
                 <span class="ml-3" x-show="!miniSidebar" x-cloak
-                  >Dashboard</span
+                  >{{translate('Dashboard')}}</span
                 >
               </a>
             </li>
@@ -43,7 +43,7 @@
                           class="flex-1 ml-3 text-left whitespace-nowrap"
                           x-show="!miniSidebar"
                           x-cloak
-                      >Job</span
+                      >{{translate('Job')}}</span
                       >
                       <i
                           class="fas fa-chevron-down ml-auto"
@@ -57,7 +57,7 @@
                           <li class="{{ request()->routeIs('client.career-opportunities.index') ? 'active' : '' }}">
                               <a href="{{ route('client.career-opportunities.index') }}"
                                  class="flex items-center w-full p-2 text-white transition duration-75 pl-11 hover:bg-gray-700">
-                                  Job
+                                  {{translate('Job')}}
                               </a>
                           </li>
 {{--                      @endcan--}}
@@ -84,7 +84,7 @@
                   class="flex-1 ml-3 text-left whitespace-nowrap"
                   x-show="!miniSidebar"
                   x-cloak
-                  >Submission</span
+                  >{{translate('Submission')}}</span
                 >
                 <i
                   class="fas fa-chevron-down ml-auto"
@@ -97,7 +97,7 @@
                 <li class="{{ request()->routeIs('client.submission.index') ? 'active' : ''}}">
                   <a href="{{ route('client.submission.index') }}"
                     class="flex items-center w-full p-2 text-white transition duration-75 pl-11 hover:bg-gray-700">
-                    Submission
+                      {{translate('Submission')}}
                   </a>
               </li>
 
@@ -115,7 +115,7 @@
                   class="flex-1 ml-3 text-left whitespace-nowrap"
                   x-show="!miniSidebar"
                   x-cloak
-                  >Interview</span
+                  >{{translate('Interview')}}</span
                 >
                 <i
                   class="fas fa-chevron-down ml-auto"
@@ -128,7 +128,7 @@
                 <li class="{{ request()->routeIs('client.interview.index') ? 'active' : ''}}">
                   <a href="{{ route('client.interview.index') }}"
                     class="flex items-center w-full p-2 text-white transition duration-75 pl-11 hover:bg-gray-700">
-                    Interview
+                      {{translate('Interview')}}
                   </a>
               </li>
 
@@ -146,7 +146,7 @@
                   class="flex-1 ml-3 text-left whitespace-nowrap"
                   x-show="!miniSidebar"
                   x-cloak
-                  >Offer</span
+                  >{{translate('Offer')}}</span
                 >
                 <i
                   class="fas fa-chevron-down ml-auto"
@@ -158,7 +158,7 @@
                     <li class="{{ request()->routeIs('client.offer.index') ? 'active' : ''}}">
                     <a href="{{ route('client.offer.index') }}"
                         class="flex items-center w-full p-2 text-white transition duration-75 pl-11 hover:bg-gray-700">
-                        Offer
+                        {{translate('Offer')}}
                     </a>
                 </li>
 
@@ -175,7 +175,7 @@
                           class="flex-1 ml-3 text-left whitespace-nowrap"
                           x-show="!miniSidebar"
                           x-cloak
-                      >WorkOrder</span
+                      >{{translate('WorkOrder')}}</span
                       >
                       <i
                           class="fas fa-chevron-down ml-auto"
@@ -187,7 +187,7 @@
                       <li class="{{ request()->routeIs('client.workorder.index') ? 'active' : ''}}">
                           <a href="{{ route('client.workorder.index') }}"
                              class="flex items-center w-full p-2 text-white transition duration-75 pl-11 hover:bg-gray-700">
-                              WorkOrder
+                              {{translate('WorkOrder')}}
                           </a>
                       </li>
 
@@ -204,7 +204,7 @@
                           class="flex-1 ml-3 text-left whitespace-nowrap"
                           x-show="!miniSidebar"
                           x-cloak
-                      >Contract</span
+                      >{{translate('Contract')}}</span
                       >
                       <i
                           class="fas fa-chevron-down ml-auto"
@@ -216,7 +216,7 @@
                       <li class="{{ request()->routeIs('client.contracts.index') ? 'active' : ''}}">
                           <a href="{{ route('client.contracts.index') }}"
                              class="flex items-center w-full p-2 text-white transition duration-75 pl-11 hover:bg-gray-700">
-                              Contract
+                              {{translate('Contract')}}
                           </a>
                       </li>
 

@@ -9,14 +9,14 @@
             @include('client.layouts.partials.alerts')
             <div >
                 <div class="flex justify-between items-center mb-6">
-                    <h2 class="text-2xl font-bold">Offers</h2>
+                    <h2 class="text-2xl font-bold">{{translate('Offers')}}</h2>
                 </div>
 
                 <div class="mb-4">
                  <ul
                      class="grid grid-flow-col text-center text-gray-500 bg-gray-100 rounded-lg p-1"
                  >
-                
+
                     <li class="flex justify-center">
                         <a
                             href="#all_offers"
@@ -24,7 +24,7 @@
                             data-type="all_offers"
                         >
                             <i class="fa-solid fa-fill"></i>
-                            <span class="capitalize">All</span>
+                            <span class="capitalize">{{translate('All')}}</span>
                             <div class="px-1 py-1 flex items-center justify-center bg-gray-500 text-white rounded-lg">
                                 <span class="text-[10px]">{{ $counts['all_offers'] }}</span>
                             </div>
@@ -37,7 +37,7 @@
                             data-type="pending"
                         >
                             <i class="fa-solid fa-fill"></i>
-                            <span class="capitalize">Pending</span>
+                            <span class="capitalize">{{translate('Pending')}}</span>
                             <div class="px-1 py-1 flex items-center justify-center bg-gray-500 text-white rounded-lg">
                                 <span class="text-[10px]">{{ $counts['pending'] }}</span>
                             </div>
@@ -51,13 +51,13 @@
                             data-type="approved"
                         >
                             <i class="fa-solid fa-fill"></i>
-                            <span class="capitalize">Approved</span>
+                            <span class="capitalize">{{translate('Approved')}}</span>
                             <div class="px-1 py-1 flex items-center justify-center bg-gray-500 text-white rounded-lg">
                                 <span class="text-[10px]">{{ $counts['approved'] }}</span>
                             </div>
                         </a>
                     </li>
-                   
+
                  </ul>
                 </div>
 
@@ -70,59 +70,59 @@
                         <th
                             class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                         >
-                            Status
+                            {{translate('Status')}}
                         </th>
                         <!-- User -->
                         <th
                             class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                         >
-                            Offer ID
+                            {{translate('Offer ID')}}
                         </th>
                         <!-- job -->
                         <th
                             class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                         >
-                            Contractor Name
+                            {{translate('Contractor Name')}}
                         </th>
                         <th
                             class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                         >
-                            Job Profile
+                            {{translate('Job Profile')}}
                         </th>
                         <th
                             class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                         >
-                            Hiring Manger
+                            {{translate('Hiring Manger')}}
                         </th>
                         <th
                             class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                         >
-                            Vendor
+                            {{translate('Vendor')}}
                         </th>
                         <th
                             class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                         >
-                            Offer Date
+                            {{translate('Offer Date')}}
                         </th>
                         <th
                             class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                         >
-                            Bill Rate
+                            {{translate('Bill Rate')}}
                         </th>
                         <th
                             class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                         >
-                            Workorder Status
+                            {{translate('Workorder Status')}}
                         </th>
                         <th
                             class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                         >
-                            Woker Type
+                            {{translate('Woker Type')}}
                         </th>
                         <th style="width: 80px"
                             class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                         >
-                            Action
+                            {{translate('Action')}}
                         </th>
 
                     </tr>
@@ -164,7 +164,7 @@
             });
 
             function openJobDetailsModal(jobId) {
-                
+
                 fetch(`/job-details/${jobId}`)
                         .then(response => response.json())
                         .then(data => {
@@ -174,7 +174,7 @@
                                     composed: true
                                 });
                                 console.log(event.detail.data);
-                                
+
                                 document.dispatchEvent(event);
                         })
                         .catch(error => console.error('Error:', error));
@@ -192,10 +192,10 @@
                 // Update currentType variable if needed
                 currentType = $(this).data('type');
                 console.log(currentType);
-                
+
                 window.location.hash = $(this).attr('href');
                 table.ajax.reload();
-                
+
             });
         }
     });

@@ -9,14 +9,14 @@
             @include('client.layouts.partials.alerts')
             <div >
                 <div class="flex justify-between items-center mb-6">
-                    <h2 class="text-2xl font-bold">Jobs</h2>
+                    <h2 class="text-2xl font-bold">{{translate('Jobs')}}</h2>
                     <div class="flex space-x-2">
                         <button
                             type="button"
                             class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 capitalize"
                             onclick="window.location.href='{{ route('client.career-opportunities.create') }}'"
                         >
-                            Create New Job
+                            {{translate('Create New Job')}}
                         </button>
                     </div>
                 </div>
@@ -24,7 +24,7 @@
                  <ul
                      class="grid grid-flow-col text-center text-gray-500 bg-gray-100 rounded-lg p-1"
                  >
-                
+
                     <li class="flex justify-center">
                         <a
                             href="#active"
@@ -32,7 +32,7 @@
                             data-type="active"
                         >
                             <i class="fa-regular fa-file-lines"></i>
-                            <span class="capitalize">Active Jobs</span>
+                            <span class="capitalize">{{translate('Active Jobs')}}</span>
                             <div class="px-1 py-1 flex items-center justify-center bg-gray-500 text-white rounded-lg">
                                 <span class="text-[10px]">{{ $counts['active'] }}</span>
                             </div>
@@ -45,7 +45,7 @@
                             data-type="open"
                         >
                             <i class="fa-regular fa-registered"></i>
-                            <span class="capitalize">Pending Release Job</span>
+                            <span class="capitalize">{{translate('Pending Release Job')}}</span>
                             <div class="px-1 py-1 flex items-center justify-center bg-gray-500 text-white rounded-lg">
                                 <span class="text-[10px]">{{ $counts['open'] }}</span>
                             </div>
@@ -58,7 +58,7 @@
                             data-type="filled"
                         >
                             <i class="fa-solid fa-fill"></i>
-                            <span class="capitalize">Filled Jobs</span>
+                            <span class="capitalize">{{translate('Filled Jobs')}}</span>
                             <div class="px-1 py-1 flex items-center justify-center bg-gray-500 text-white rounded-lg">
                                 <span class="text-[10px]">{{ $counts['filled'] }}</span>
                             </div>
@@ -73,7 +73,7 @@
                             data-type="closed"
                         >
                             <i class="fa-solid fa-fill"></i>
-                            <span class="capitalize">Closed Jobs</span>
+                            <span class="capitalize">{{translate('Closed Jobs')}}</span>
                             <div class="px-1 py-1 flex items-center justify-center bg-gray-500 text-white rounded-lg">
                                 <span class="text-[10px]">{{ $counts['closed'] }}</span>
                             </div>
@@ -86,13 +86,13 @@
                             data-type="pendingpmo"
                         >
                             <i class="fa-solid fa-fill"></i>
-                            <span class="capitalize">Pending - PMO</span>
+                            <span class="capitalize">{{translate('Pending - PMO')}}</span>
                             <div class="px-1 py-1 flex items-center justify-center bg-gray-500 text-white rounded-lg">
                                 <span class="text-[10px]">{{ $counts['pendingpmo'] }}</span>
                             </div>
                         </a>
                     </li>
-                    
+
                     <li class="flex justify-center">
                         <a
                             href="#all_jobs"
@@ -100,7 +100,7 @@
                             data-type="all_jobs"
                         >
                             <i class="fa-solid fa-fill"></i>
-                            <span class="capitalize">All Jobs</span>
+                            <span class="capitalize">{{translate('All Jobs')}}</span>
                             <div class="px-1 py-1 flex items-center justify-center bg-gray-500 text-white rounded-lg">
                                 <span class="text-[10px]">{{ $counts['all_jobs'] }}</span>
                             </div>
@@ -108,7 +108,7 @@
                     </li>
                  </ul>
              </div>
-             
+
                 <x-job-details />
 
                 <table class="min-w-full divide-y divide-gray-200" id="example">
@@ -118,58 +118,58 @@
                         <th
                             class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                         >
-                            Status
+                            {{translate('Status')}}
                         </th>
                         <!-- User -->
                         <th
                             class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                         >
-                            Job ID
+                            {{translate('Job ID')}}
                         </th>
                         <!-- job -->
                         <th
                             class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                         >
-                            Job title
+                            {{translate('Job title')}}
                         </th>
                         <th
                             class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                         >
-                            Job Title for Email Signature
+                            {{translate('Job Title for Email Signature')}}
                         </th>
+
+                        <th
+                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                        >
+                            {{translate(' Hiring Manager')}}
+                        </th>
+                        <th
+                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                        >
+                            {{translate(' Job Duration')}}
+                        </th>
+                        <th
+                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                        >
+                            {{translate(' Submissions')}}
+                        </th>
+                        <th
+                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                        >
+                            {{translate(' Position')}}
+                        </th>
+
 
                         <th
                             class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                         >
-                            Hiring Manager
-                        </th>
-                        <th
-                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                        >
-                            Job Duration
-                        </th>
-                        <th
-                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                        >
-                            Submissions
-                        </th>
-                        <th
-                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                        >
-                            Position
-                        </th>
-
-
-                        <th
-                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                        >
-                            Worker Type
+                            {{translate('Worker Type')}}
                         </th>
 
                         <th style="width: 80px"
                             class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                         >
-                            Action
+                            {{translate('Action')}}
                         </th>
                     </tr>
                     </thead>

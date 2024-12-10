@@ -9,7 +9,7 @@
             @include('client.layouts.partials.alerts')
             <div>
                 <div class="flex justify-between items-center mb-6">
-                    <h2 class="text-2xl font-bold">Contract</h2>
+                    <h2 class="text-2xl font-bold">{{translate('Contract')}}</h2>
                 </div>
 
                 <div class="mb-4">
@@ -23,7 +23,7 @@
                             data-type="active"
                         >
                             <i class="fa-solid fa-fill"></i>
-                            <span class="capitalize">Active</span>
+                            <span class="capitalize">{{translate('Active')}}</span>
                             <div class="px-1 py-1 flex items-center justify-center bg-gray-500 text-white rounded-lg">
                                 <span class="text-[10px]">{{ $counts['active'] }}</span>
                             </div>
@@ -36,7 +36,7 @@
                             data-type="cancelled"
                         >
                             <i class="fa-solid fa-fill"></i>
-                            <span class="capitalize">Expired</span>
+                            <span class="capitalize">{{translate('Expired')}}</span>
                             <div class="px-1 py-1 flex items-center justify-center bg-gray-500 text-white rounded-lg">
                                 <span class="text-[10px]">{{ $counts['cancelled'] }}</span>
                             </div>
@@ -50,7 +50,7 @@
                             data-type="pending_AB"
                         >
                             <i class="fa-solid fa-fill"></i>
-                            <span class="capitalize">Pending Additional Budget</span>
+                            <span class="capitalize">{{translate('Pending Additional Budget')}}</span>
                             <div class="px-1 py-1 flex items-center justify-center bg-gray-500 text-white rounded-lg">
                                 <span class="text-[10px]">{{ $counts['pending_AB'] }}</span>
                             </div>
@@ -63,7 +63,7 @@
                             data-type="pending_ER"
                         >
                             <i class="fa-solid fa-fill"></i>
-                            <span class="capitalize">Pending Extension</span>
+                            <span class="capitalize">{{translate('Pending Extension')}}</span>
                             <div class="px-1 py-1 flex items-center justify-center bg-gray-500 text-white rounded-lg">
                                 <span class="text-[10px]">{{ $counts['pending_ER'] }}</span>
                             </div>
@@ -76,13 +76,13 @@
                             data-type="pending_RC"
                         >
                             <i class="fa-solid fa-fill"></i>
-                            <span class="capitalize">Pending Rate Change</span>
+                            <span class="capitalize">{{translate('Pending Rate Change')}}</span>
                             <div class="px-1 py-1 flex items-center justify-center bg-gray-500 text-white rounded-lg">
                                 <span class="text-[10px]">{{ $counts['pending_RC'] }}</span>
                             </div>
                         </a>
                     </li>
-                    
+
                  </ul>
                 </div>
 
@@ -91,32 +91,32 @@
                 <table class="min-w-full divide-y divide-gray-200" id="listing">
                     <thead class="bg-gray-50">
                     <tr>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Contract Status</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Contract ID</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Consultant</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{{translate('Contract Status')}}</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{{translate('Contract ID')}}</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{{translate('Consultant')}}</th>
                         <th
                             class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                         >
-                            Career Opportunity(ID)
+                            {{translate('Career Opportunity(ID)')}}
                         </th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Hiring Manager</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{{translate('Hiring Manager')}}</th>
                         <th
                             class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                         >
-                            Vendor
-                        </th>
-                        <th
-                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                        >
-                            Duration
+                            {{translate('Vendor')}}
                         </th>
                         <th
                             class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                         >
-                            Worker Type
+                            {{translate('Duration')}}
                         </th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Location</th>
-                        <th style="width: 80px" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Action</th>
+                        <th
+                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                        >
+                            {{translate('Worker Type')}}
+                        </th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{{translate('Location')}}</th>
+                        <th style="width: 80px" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{{translate('Action')}}</th>
                     </tr>
                     </thead>
                     <tbody></tbody>
@@ -149,7 +149,7 @@
                 });
 
                 function openJobDetailsModal(jobId) {
-                    
+
                     fetch(`/job-details/${jobId}`)
                             .then(response => response.json())
                             .then(data => {
@@ -159,7 +159,7 @@
                                         composed: true
                                     });
                                     console.log(event.detail.data);
-                                    
+
                                     document.dispatchEvent(event);
                             })
                             .catch(error => console.error('Error:', error));
@@ -177,10 +177,10 @@
                     // Update currentType variable if needed
                     currentType = $(this).data('type');
                     console.log(currentType);
-                    
+
                     window.location.hash = $(this).attr('href');
                     table.ajax.reload();
-                    
+
                 });
             }
         });

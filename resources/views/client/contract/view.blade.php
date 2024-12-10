@@ -5,13 +5,13 @@
     @include('client.layouts.partials.dashboard_side_bar')
     <div class="ml-16">
         @include('client.layouts.partials.header')
-        
+
         <div class="rounded mx-4 my-2">
             @include('admin.layouts.partials.alerts')
         </div>
 
         <div class="mx-2 my-4 rounded px-8 w-full flex justify-end items-center gap-4 ">
-           
+
             @if($contract->latestRateEditRequest())
                 <!-- Additional Budget Flyout Button -->
                 <div  x-data="{isOpen: false,
@@ -24,9 +24,9 @@
                             @click="isOpen = true;"
                             class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
                         >
-                            <i class="fas fa-exclamation-circle text-red-500 text-xl"></i> 
-                            <span class="mx-2">Pending Rate Change Request</span>
-                            <span class="text-blue-500 font-semibold text-red-500 text-xl">View</span>
+                            <i class="fas fa-exclamation-circle text-red-500 text-xl"></i>
+                            <span class="mx-2">{{translate('Pending Rate Change Request')}}</span>
+                            <span class="text-blue-500 font-semibold text-red-500 text-xl">View')}}</span>
                         </a>
                     <div
                     x-show="isOpen"
@@ -42,22 +42,22 @@
                     <x-contract-rate-change :rateEditRequest="$contract->latestRateEditRequest()"  />
                     </div>
             @endif
-            
+
             <div x-data="{ showModal: false, status: {{ json_encode($contract->termination_status) }} }">
-                <a href="javascript:void(0);" 
-                    class="btn bg-red-600 text-white py-2 px-4 rounded hover:bg-red-500" 
+                <a href="javascript:void(0);"
+                    class="btn bg-red-600 text-white py-2 px-4 rounded hover:bg-red-500"
                     @click="showModal = true"
                     x-show="status != 2"
                     :class="{ 'opacity-50 pointer-events-none': status == 2 }">
-                    Temporary Close Contract 
+                    {{translate('Temporary Close Contract')}}
                 </a>
                 <!-- The Modal -->
-                <div x-show="showModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50" 
+                <div x-show="showModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
                     @click.away="showModal = false">
                     <div class="bg-white w-full max-w-lg rounded-lg shadow-lg">
                         <!-- Modal Header -->
                         <div class="flex justify-between items-center p-4 border-b">
-                            <h4 class="text-lg font-semibold">Temporarily Close Contract </h4>
+                            <h4 class="text-lg font-semibold">{{translate('Temporarily Close Contract')}} </h4>
                             <button type="button" class="text-gray-500 hover:text-gray-700 bg-transparent" @click="showModal = false">&times;</button>
                         </div>
 
@@ -66,9 +66,9 @@
                             <form x-data="closeAssignmentTemp()" @submit.prevent="submitData()" class="reject-form space-y-4">
                                 <div class="mb-4">
                                     <label class="block text-sm font-medium text-gray-700">Reason for Closing <i class="fa fa-asterisk text-red-600"></i>:</label>
-                                    <select 
+                                    <select
                                         x-model="formData.close_contr_reason"
-                                        id="close_contr_reason" 
+                                        id="close_contr_reason"
                                         name="close_contr_reason"
                                         class="w-full px-3 py-2 border rounded-md"
                                         :class="{'border-red-500': errors.close_contr_reason}">
@@ -79,12 +79,12 @@
                                     </select>
                                     <p x-show="errors.close_contr_reason" class="text-red-500 text-xs italic" x-text="errors.close_contr_reason"></p>
                                 </div>
-                                
+
                                 <div>
                                     <label class="block text-sm font-medium text-gray-700">Note <i class="fa fa-asterisk text-red-600"></i>:</label>
-                                    <textarea 
+                                    <textarea
                                         x-model="formData.close_contr_note"
-                                        name="close_contr_note" 
+                                        name="close_contr_note"
                                         class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
                                         :class="{'border-red-500': errors.close_contr_note}">
                                     </textarea>
@@ -101,13 +101,13 @@
                     </div>
                 </div>
             </div>
-            
+
             @if($contract->termination_status == 2)
             <form x-data="openContract()" @submit.prevent="submitData()">
                 <button type="submit"
                     class="px-4 py-2 capitalize bg-green-500 text-white rounded hover:bg-green-600"
                 >
-                    Open Contract
+                    {{translate('Open Contract')}}
                 </button>
             </form>
             @endif
@@ -143,7 +143,7 @@
                             :style="{'color': activePage === 'tab1' ? 'var(--primary-color)' : ''}"
                         >
                             <i class="fa-regular fa-file-lines"></i>
-                            <span class="capitalize">Contract Info</span>
+                            <span class="capitalize">{{translate('Contract Info')}}</span>
                             <div class="px-1 py-1 flex items-center justify-center text-white rounded-lg"
                                  :style="{'background-color': activePage === 'tab1' ? 'var(--primary-color)' : 'bg-gray-500'}"
                             >
@@ -161,7 +161,7 @@
                             :style="{'color': activePage === 'tab2' ? 'var(--primary-color)' : ''}"
                         >
                             <i class="fa-regular fa-registered"></i>
-                            <span class="capitalize">Budget</span>
+                            <span class="capitalize">{{translate('Budget')}}</span>
                             <div class="px-1 py-1 flex items-center justify-center text-white rounded-lg"
                                  :style="{'background-color': activePage === 'tab2' ? 'var(--primary-color)' : 'bg-gray-500'}"
                             >
@@ -180,7 +180,7 @@
                             :style="{'color': activePage === 'tab3' ? 'var(--primary-color)' : ''}"
                         >
                             <i class="fa-solid fa-fill"></i>
-                            <span class="capitalize">BU</span>
+                            <span class="capitalize">{{translate('BU')}}</span>
                             <div class="px-1 py-1 flex items-center justify-center text-white rounded-lg"
                                  :style="{'background-color': activePage === 'tab3' ? 'var(--primary-color)' : 'bg-gray-500'}"
                             >
@@ -198,7 +198,7 @@
                             :style="{'color': activePage === 'tab4' ? 'var(--primary-color)' : ''}"
                         >
                             <i class="fa-solid fa-lock"></i>
-                            <span class="capitalize">Add Notes</span>
+                            <span class="capitalize">{{translate('Add Notes')}}</span>
                             <div class="px-1 py-1 flex items-center justify-center text-white rounded-lg"
                                  :style="{'background-color': activePage === 'tab4' ? 'var(--primary-color)' : 'bg-gray-500'}"
                             >
@@ -216,7 +216,7 @@
                             :style="{'color': activePage === 'tab5' ? 'var(--primary-color)' : ''}"
                         >
                             <i class="fa-solid fa-briefcase"></i>
-                            <span class="capitalize">Resume</span>
+                            <span class="capitalize">{{translate('Resume')}}</span>
                             <div class="px-1 py-1 flex items-center justify-center text-white rounded-lg"
                                  :style="{'background-color': activePage === 'tab5' ? 'var(--primary-color)' : 'bg-gray-500'}"
                             >
