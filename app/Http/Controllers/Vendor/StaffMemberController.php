@@ -23,36 +23,46 @@ class StaffMemberController extends Controller
      */
     public function index(Request $request)
     {
+        $vendorId = Vendor::getVendorIdByUserId(Auth::user()->id);
+
         if ($request->ajax()) {
-            $vendors = Vendor::with('user')->get();
+            // Fetch the vendors and their related user data
+            $vendors = VendorTeammember::with('vendor.user')
+                ->where('vendor_id', $vendorId)
+                ->get();
+
             return DataTables::of($vendors)
-                ->addColumn('full_name', function ($vendor) {
-                    return $vendor->full_name; // Use the accessor method to get full name
+                ->addColumn('full_name', function ($vendorTeammember) {
+                    // Access full name via the vendor's user relationship
+                    return $vendorTeammember->vendor->full_name;
                 })
-                ->addColumn('email', function ($vendor) {
-                    return $vendor->user->email; // Fetch email from the related User model
+                ->addColumn('email', function ($vendorTeammember) {
+                    // Access email via the vendor's user relationship
+                    return $vendorTeammember->vendor->user->email;
                 })
-                ->addColumn('profile_status', function ($vendor) {
-                    return $vendor->profile_status == 1 ? 'Active' : 'Inactive'; // Check status and return text
+                ->addColumn('profile_status', function ($vendorTeammember) {
+                    // Return profile status
+                    return $vendorTeammember->vendor->profile_status == 1 ? 'Active' : 'Inactive';
                 })
-                ->addColumn('action', function($vendor) {
-                    return '<a href="' . route('vendor.staffmember.edit', $vendor->id) . '"
-                        class="text-green-500 hover:text-green-700 mr-2 bg-transparent hover:bg-transparent"
-                        >
-                        <i class="fas fa-edit"></i>
-                        </a>
-                            <form action="'. route('vendor.staffmember.destroy', $vendor->id) .'" method="POST" style="display:inline;" onsubmit="return confirm(\'Are you sure?\');">
-                            ' . csrf_field() . method_field('DELETE') . '
-                            <button type="submit" class="text-red-500 hover:text-red-700 bg-transparent hover:bg-transparent">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                        </form>';
+                ->addColumn('action', function($vendorTeammember) {
+                    return '<a href="' . route('vendor.staffmember.edit', $vendorTeammember->id) . '"
+                    class="text-green-500 hover:text-green-700 mr-2 bg-transparent hover:bg-transparent">
+                    <i class="fas fa-edit"></i>
+                    </a>
+                    <form action="'. route('vendor.staffmember.destroy', $vendorTeammember->id) .'" method="POST" style="display:inline;" onsubmit="return confirm(\'Are you sure?\');">
+                        ' . csrf_field() . method_field('DELETE') . '
+                        <button type="submit" class="text-red-500 hover:text-red-700 bg-transparent hover:bg-transparent">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </form>';
                 })
-                ->rawColumns(['id','action'])
+                ->rawColumns(['action'])
                 ->make(true);
         }
+
         return view('vendor.staff_member.index');
     }
+
 
     /**
      * Show the form for creating a new resource.
@@ -96,7 +106,7 @@ class StaffMemberController extends Controller
         if (!empty($getParentvendor)) {
             $organization = $request->organization;
             $memberType = 3;
-            $parentVendorID = $getParentvendor->id;
+            $parentVendorID = Vendor::getVendorIdByUserId($userId);
         } else {
             $organization = $request->organization;
             $parentVendorID = 0;
@@ -109,6 +119,8 @@ class StaffMemberController extends Controller
         if ($user) {
             $vendorRecord = Vendor::where('user_id', $user->id)->first();
             if ($vendorRecord) {
+                $memberRecord = VendorTeammember::where('teammember_id', $vendorRecord->id)->first();
+                dd($memberRecord);
                 $successMessage = 'A vendor record already exists for this email.!';
                 session()->flash('success', $successMessage);
                 return response()->json([
@@ -135,8 +147,9 @@ class StaffMemberController extends Controller
             $imagePath = handleFileUpload($request, 'profile_image', 'vendor_profile');
             $vendor->profile_image = $imagePath;
         }
+
         $vendorteamMember = [
-            'vendor_id' => $parentVendorID,
+            'vendor_id' => Vendor::getVendorIdByUserId($userId),
             'teammember_id' => $vendor->id,
         ];
         if ($parentVendorID) {
