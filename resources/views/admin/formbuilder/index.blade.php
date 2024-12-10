@@ -9,7 +9,7 @@
             @include('admin.layouts.partials.alerts')
             
                 <div class="flex justify-between items-center mb-6">
-                    <h2 class="text-2xl font-bold">Interviews</h2>
+                    <h2 class="text-2xl font-bold">Forms</h2>
                 </div>
                 <table id="forms-table" class="table-auto w-full text-left border border-gray-300">
                     <thead  class="bg-gray-50">

@@ -19,6 +19,19 @@ class FormBuilderController extends Controller
             $forms = FormBuilder::latest()->get();
             
             return DataTables::of($forms)
+            ->editColumn('status', function ($row) {
+                return ucfirst($row->status) == 'Active' ? 'Active' : 'Inactive';
+            })
+            ->editColumn('type', function ($row) {
+                // Assuming you have an array that maps types to human-readable labels
+                $types = [
+                    1 => 'Job',
+                    2 => 'Submission',
+                    3 => 'Offer'
+                ];
+            
+                return $types[$row->type] ?? 'Unknown';
+            })
             ->addColumn('action', function($row) {
                 return '<a href="' . route('admin.formbuilder.index', $row->id) . '"
                             class="text-blue-500 hover:text-blue-700 mr-2 bg-transparent hover:bg-transparent">
