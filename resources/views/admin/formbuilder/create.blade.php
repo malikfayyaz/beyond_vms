@@ -29,7 +29,7 @@
                 >Status:<span class="text-red-500">*</span></label
                 >
                 <select id="formStatus" x-model="formStatus" class="w-full p-2 border rounded h-10">
-                    <option value="" disabled selected>Select</option>
+                    <option value="" selected>Select</option>
                     <option value="active">Active</option>
                     <option value="inactive">Inactive</option>
                 </select>
@@ -41,6 +41,7 @@
             
         </div>
         <div id="fb-editor" class="mx-4 my-4"></div>
+        
     </div>
 
     <script>
