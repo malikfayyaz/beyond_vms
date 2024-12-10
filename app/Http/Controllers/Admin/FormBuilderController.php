@@ -33,11 +33,7 @@ class FormBuilderController extends Controller
                 return $types[$row->type] ?? 'Unknown';
             })
             ->addColumn('action', function($row) {
-                return '<a href="' . route('admin.formbuilder.index', $row->id) . '"
-                            class="text-blue-500 hover:text-blue-700 mr-2 bg-transparent hover:bg-transparent">
-                                <i class="fas fa-eye"></i>
-                        </a>
-                        <a href="' . route('admin.formbuilder.edit', $row->id) . '" 
+                return '<a href="' . route('admin.formbuilder.edit', $row->id) . '" 
                             class="text-green-500 hover:text-green-700 bg-transparent hover:bg-transparent">
                                 <i class="fas fa-edit"></i>
                         </a>';
@@ -99,7 +95,9 @@ class FormBuilderController extends Controller
     public function edit(string $id)
     {
         $formBuilder =  FormBuilder::findOrFail($id);
-        return view('admin.formbuilder.create', compact('formBuilder'))
+        $existingTypes = FormBuilder::pluck('type')->toArray();
+
+        return view('admin.formbuilder.create', compact('formBuilder','existingTypes'))
         ->with(['editMode' => true, 'editIndex' => $id]);
     }
 
@@ -136,6 +134,12 @@ class FormBuilderController extends Controller
 
     public function formBuilder()
     {
-        return view('admin.formbuilder.create')->with(['editMode' => false, 'editIndex' => null]);
+        $existingTypes = FormBuilder::pluck('type')->toArray();
+        
+        return view('admin.formbuilder.create', [
+            'existingTypes' => $existingTypes,
+            'editMode' => false,
+            'editIndex' => null
+        ]);
     }
 }

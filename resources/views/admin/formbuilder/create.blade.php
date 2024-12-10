@@ -21,8 +21,17 @@
                 >
                     <option value="" disabled selected>Select</option>
                     @foreach (formType() as $key => $value)
-                        <option value="{{ $key }}">{{ $value }}</option>
-                    @endforeach
+                        <option value="{{ $key }}" 
+                                @if(in_array($key, $existingTypes)) 
+                                    disabled 
+                                @endif
+                        >
+                            {{ $value }} 
+                            @if(in_array($key, $existingTypes)) 
+                                (Already Exists)
+                            @endif
+                        </option>
+                 @endforeach
                 </select>
                 <p class="text-red-500 text-sm mt-1" x-text="formTypeError"></p>
             </div>
@@ -43,8 +52,10 @@
             </div>
             
         </div>
-        <p class="text-red-500 text-sm mt-1 mx-4" x-text="formMainError"></p>
-        <div id="fb-editor" class="mx-4 my-4"></div>
+        <div>
+            <div id="fb-editor" class="mx-4 my-4 mb-1"></div>
+            <p class="text-red-500 text-sm mb-4 mx-4" x-text="formMainError"></p>
+        </div>
     </div>
 
     <script>
