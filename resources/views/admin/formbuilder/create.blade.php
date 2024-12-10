@@ -3,7 +3,10 @@
 @section('content')
     @include('admin.layouts.partials.dashboard_side_bar')
 
-    <div class="ml-16" x-data="{ formTypeError: '', formStatusError: '', formMainError: '', formStatus: '' }">
+    <div class="ml-16"  x-data="extraData({
+        formType: '{{ $editMode ? $formBuilder->type ?? '' : '' }}',
+        formStatus: '{{ $editMode ? $formBuilder->status ?? '' : '' }}',
+    })">
         <div class="flex space-x-4 mx-4 my-4">
             <div class="flex-1">
                 <label for="formType" class="block mb-2"
@@ -12,7 +15,7 @@
                 >
                 <select
                     id="formType"
-                    
+                    x-model="formType" 
                     class="w-full px-3 py-2 border rounded-md"
                     
                 >
@@ -45,6 +48,16 @@
     </div>
 
     <script>
+        function extraData(initialData = { formType: '', formStatus: '' }) {
+            return {
+                formTypeError: '',
+                formStatusError: '',
+                formMainError: '',
+                formType: initialData.formType || '', // Use initial value or default to empty
+                formStatus: initialData.formStatus || '', // Use initial value or default to empty
+                // Other Alpine.js properties or methods
+            };
+        }
     document.addEventListener('DOMContentLoaded', function () {
         if (window.$) {
             // Dynamically load jQuery UI
