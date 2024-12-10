@@ -3,7 +3,7 @@
 @section('content')
     @include('admin.layouts.partials.dashboard_side_bar')
 
-    <div class="ml-16" x-data="extraData()">
+    <div class="ml-16" x-data="{ formTypeError: '', formStatusError: '', formMainError: '', formStatus: '' }">
         <div class="flex space-x-4 mx-4 my-4">
             <div class="flex-1">
                 <label for="formType" class="block mb-2"
@@ -40,8 +40,8 @@
             </div>
             
         </div>
+        <p class="text-red-500 text-sm mt-1 mx-4" x-text="formMainError"></p>
         <div id="fb-editor" class="mx-4 my-4"></div>
-        
     </div>
 
     <script>
@@ -75,9 +75,10 @@
                         let errors = false;
                         const formTypeError = document.querySelector('[x-text="formTypeError"]');
                         const formStatusError = document.querySelector('[x-text="formStatusError"]');
-
+                        const formMainError = document.querySelector('[x-text="formMainError"]');
                         formTypeError.textContent = '';
                         formStatusError.textContent = '';
+                        formMainError.textContent = '';
 
                         if (!formType) {
                             formTypeError.textContent = 'Form Type is required.';
@@ -87,6 +88,18 @@
                             formStatusError.textContent = 'Form Status is required.';
                             errors = true;
                         }
+
+                        try {
+                            const parsedData = JSON.parse(formData); // Attempt to parse the JSON data
+                            if (!Array.isArray(parsedData) || parsedData.length === 0) {
+                                formMainError.textContent = 'Form Builder data is required.';
+                                errors = true;
+                            }
+                        } catch (e) {
+                            formMainError.textContent = 'Invalid Form Builder data.';
+                            errors = true;
+                        }
+
 
                         if (errors) {
                             return; // Stop if validation fails
