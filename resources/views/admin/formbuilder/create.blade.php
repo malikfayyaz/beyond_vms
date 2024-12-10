@@ -3,7 +3,7 @@
 @section('content')
     @include('admin.layouts.partials.dashboard_side_bar')
 
-    <div class="ml-16">
+    <div class="ml-16" x-data="extraData()">
         <div class="flex space-x-4 mx-4 my-4">
             <div class="flex-1">
                 <label for="formType" class="block mb-2"
@@ -21,7 +21,22 @@
                         <option value="{{ $key }}">{{ $value }}</option>
                     @endforeach
                 </select>
-                
+                <p class="text-red-500 text-sm mt-1" x-text="formTypeError"></p>
+            </div>
+
+            <div class="flex-1">
+                <label for="formStatus" class="block mb-2"
+                >Status:<span class="text-red-500">*</span></label
+                >
+                <select id="formStatus" x-model="formStatus" class="w-full p-2 border rounded h-10">
+                    <option value="" disabled selected>Select</option>
+                    <option value="active">Active</option>
+                    <option value="inactive">Inactive</option>
+                </select>
+                <p
+                class="text-red-500 text-sm mt-1"
+                x-text="formStatusError"
+                ></p>
             </div>
             
         </div>
@@ -47,51 +62,43 @@
                 // Get the saved data if in edit mode
                 let savedData = @json($formBuilder->data ?? '[]'); // Default to empty array if no data
 
-                // Define custom fields and templates
-                let fields = [
-                    {
-                        label: 'Status',
-                        attrs: {
-                            type: 'status',
-                            required: true 
-                        },
-                        icon: '🔘'
-                    }
-                ];
-                let templates = {
-                    status: function (fieldData) {
-                        return {
-                            field: `
-                                <label for="${fieldData.name}" class="block mb-2">${fieldData.label}:</label>
-                                <select id="${fieldData.name}" class="w-full p-2 border rounded h-10" ${fieldData.required ? 'required' : ''}>
-                                    <option value="" disabled selected>Select Status</option>
-                                    <option value="active">Active</option>
-                                    <option value="inactive">Inactive</option>
-                                </select>
-                            `,
-                            onRender: function () {
-                                console.log(`Status field "${fieldData.name}" rendered.`);
-                            }
-                        };
-                    }
-                };
-
                 // Set form builder options
                 var options = {
                     formData: savedData, // Load saved form data into the editor
-                    fields: fields, // Custom fields
-                    controlOrder: ['status', 'text', 'textarea', 'checkbox-group', 'radio-group'],
-                    templates: templates, // Custom templates
+                   
                     onSave: function (evt, formData) {
+
+                        const formType = document.getElementById('formType').value;
+                        const formStatus = document.getElementById('formStatus').value;
+                       
+                        let errors = false;
+                        const formTypeError = document.querySelector('[x-text="formTypeError"]');
+                        const formStatusError = document.querySelector('[x-text="formStatusError"]');
+
+                        formTypeError.textContent = '';
+                        formStatusError.textContent = '';
+
+                        if (!formType) {
+                            formTypeError.textContent = 'Form Type is required.';
+                            errors = true;
+                        }
+                        if (!formStatus) {
+                            formStatusError.textContent = 'Form Status is required.';
+                            errors = true;
+                        }
+
+                        if (errors) {
+                            return; // Stop if validation fails
+                        }
                         // Determine URL and HTTP method based on edit mode
                         let url = '{{ $editMode ? route("admin.formbuilder.update", $editIndex) : route("admin.formbuilder.save") }}';
                         let method = 'POST';
 
                         // Prepare FormData object
                         let formDataObj = new FormData();
-                        formDataObj.append('type', 1);
+                        formDataObj.append('type', formType);
                         formDataObj.append('data', formData); // Pass JSON string
-                        formDataObj.append('status', 'active');
+                        formDataObj.append('status', formStatus);
                         if (method === 'PUT') {
                             formDataObj.append('_method', 'PUT'); // Include method override for Laravel
                         }
