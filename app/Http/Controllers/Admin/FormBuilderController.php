@@ -59,17 +59,17 @@ class FormBuilderController extends Controller
     public function store(Request $request)
     {
         // Validate request data
-        $request->validate([
+        $validatedData = $request->validate([
             'type' => 'required|integer',
-            'data' => 'required|string',
+            'data' => 'required|json',
             'status' => 'required|in:active,inactive',
         ]);
 
         // Save form data to the database
         $formBuilder = new FormBuilder();
-        $formBuilder->type = $request->type;
-        $formBuilder->data = $request->data;
-        $formBuilder->status = $request->status;
+        $formBuilder->type = $validatedData['type'];
+        $formBuilder->data = $validatedData['data'];
+        $formBuilder->status = $validatedData['status'];
         $formBuilder->created_by = auth()->id(); // Assume logged-in user ID
         $formBuilder->created_by_portal = 1; // Example: Set your portal ID
         $formBuilder->save();
