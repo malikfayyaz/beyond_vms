@@ -307,17 +307,10 @@
                                 ></i>
                             </button>
                             <ul x-show="open" class="py-2 space-y-2" x-cloak>
-
-                                <li class="{{ request()->routeIs('users') ? 'active' : '' }}">
-                                    <a href="{{ route('admin.formbuilder') }}"
-                                        class="flex items-center w-full p-2 text-white transition duration-75 pl-11 hover:bg-gray-700">
-                                        Create
-                                    </a>
-                                </li>
                                 <li class="{{ request()->routeIs('users') ? 'active' : '' }}">
                                     <a href="{{ route('admin.formbuilder.index') }}"
                                         class="flex items-center w-full p-2 text-white transition duration-75 pl-11 hover:bg-gray-700">
-                                        Listing
+                                        Forms
                                     </a>
                                 </li>
                             </ul>
