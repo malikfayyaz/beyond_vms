@@ -18,6 +18,7 @@ use Illuminate\Support\Carbon;
 use Yajra\DataTables\Facades\DataTables;
 use App\Facades\Rateshelper as Rateshelper;
 use Spatie\Activitylog\Models\Activity;
+use App\Models\FormBuilder;
 
 
 class CareerOpportunitiesOfferController extends BaseController
@@ -100,10 +101,16 @@ class CareerOpportunitiesOfferController extends BaseController
     // Show the form for creating a new career opportunity offer
     public function create($id)
     {
-       $submission =  CareerOpportunitySubmission::findOrFail($id);
-       return view('admin.offer.create',[
-        'submission'=>$submission
-         ]);
+        // $formBuilderData = FormBuilder::get();
+        $formBuilderData = FormBuilder::where('type', 3)
+        ->where('status', 'active')
+        ->first();
+        
+        $submission =  CareerOpportunitySubmission::findOrFail($id);
+        return view('admin.offer.create',[
+            'submission'=>$submission,
+            'formBuilderData' => $formBuilderData,
+        ]);
     }
 
     // Store a newly created career opportunity offer in the database

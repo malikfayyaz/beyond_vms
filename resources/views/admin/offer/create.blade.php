@@ -729,6 +729,7 @@
                           </div>
                         </div>
                       </div>
+                      <div id="fb-render"></div>
                     </div>
                     <button
                       type="submit"
@@ -745,6 +746,40 @@
         </div>
         </div>
     </div>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    if (window.$) {
+      // Dynamically load jQuery UI
+      let script = document.createElement('script');
+      script.src = "https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.13.2/jquery-ui.min.js";
+      script.type = "text/javascript";
+      script.onload = function () {
+          // console.log("jQuery UI loaded successfully!");
+          
+          // Initialize form builder
+          jQuery(function ($) {
+              const fbRender = document.getElementById("fb-render");
+              const formData = @json($formBuilderData);
+
+              try {
+                  const parsedData = JSON.parse(formData.data);
+                  console.log(parsedData);
+
+                  $(fbRender).formRender({
+                      formData: parsedData
+                  });
+              } catch (error) {
+                  console.error("Error parsing form data:", error);
+              }
+          });
+      };
+      document.head.appendChild(script);
+    } else {
+        console.error("jQuery is not loaded. Ensure jQuery is available.");
+    }
+  });
+
+</script>
     <script>
       document.addEventListener("alpine:init", () => {
         Alpine.data("createOffer", () => ({
