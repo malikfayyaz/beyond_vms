@@ -746,38 +746,51 @@
         </div>
         </div>
     </div>
-<script>
-  document.addEventListener('DOMContentLoaded', function () {
-    if (window.$) {
-      // Dynamically load jQuery UI
-      let script = document.createElement('script');
-      script.src = "https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.13.2/jquery-ui.min.js";
-      script.type = "text/javascript";
-      script.onload = function () {
-          // console.log("jQuery UI loaded successfully!");
-          
-          // Initialize form builder
-          jQuery(function ($) {
-              const fbRender = document.getElementById("fb-render");
-              const formData = @json($formBuilderData);
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+  if (window.$) {
+    // Dynamically load jQuery UI
+    let jqueryUiScript = document.createElement('script');
+    jqueryUiScript.src = "https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.13.2/jquery-ui.min.js";
+    jqueryUiScript.type = "text/javascript";
+    jqueryUiScript.onload = function () {
+      // Dynamically load jquery-form-render
+      let formRenderScript = document.createElement('script');
+      formRenderScript.src = "https://cdnjs.cloudflare.com/ajax/libs/jquery-form-builder/3.8.1/form-render.min.js";
+      formRenderScript.type = "text/javascript";
+      formRenderScript.onload = function () {
+        // Initialize form rendering
+        console.log("test");
 
-              try {
-                  const parsedData = JSON.parse(formData.data);
-                  console.log(parsedData);
+        jQuery(function ($) {
+          const fbRender = document.getElementById("fb-render");
+          const formData = @json($formBuilderData);
 
-                  $(fbRender).formRender({
-                      formData: parsedData
-                  });
-              } catch (error) {
-                  console.error("Error parsing form data:", error);
-              }
-          });
+          try {
+            const parsedData = JSON.parse(formData.data);
+            console.log("Form data parsed:", parsedData);
+
+            $(fbRender).formRender({
+              formData: parsedData,
+            });
+          } catch (error) {
+            console.error("Error parsing form data:", error);
+          }
+        });
       };
-      document.head.appendChild(script);
-    } else {
-        console.error("jQuery is not loaded. Ensure jQuery is available.");
-    }
-  });
+      formRenderScript.onerror = function () {
+        console.error("Failed to load form-render script");
+      };
+      document.head.appendChild(formRenderScript);
+    };
+    jqueryUiScript.onerror = function () {
+      console.error("Failed to load jQuery UI script");
+    };
+    document.head.appendChild(jqueryUiScript);
+  } else {
+    console.error("jQuery is not loaded. Ensure jQuery is available.");
+  }
+});
 
 </script>
     <script>
