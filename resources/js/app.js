@@ -44,6 +44,7 @@ import 'jquery-ui/ui/widgets/sortable'; // Sortable widget
 import 'jquery-ui/themes/base/all.css'; // jQuery UI CSS
 
 import 'formBuilder/dist/form-builder.min.js'; // FormBuilder JS
+import 'formBuilder/dist/form-render.min.js';
 // import "datatables.net";
 // import "datatables.net-dt/css/jquery.dataTables.min.css";
 select2();
