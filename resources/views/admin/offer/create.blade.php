@@ -746,18 +746,18 @@
         </div>
         </div>
     </div>
-    <script>
+<script>
     document.addEventListener('DOMContentLoaded', function () {
-  if (window.$) {
-    // Dynamically load jQuery UI
-    console.log($.fn.formRender);
-    $(".render-wrap").formRender({
-    formData: {!! $formBuilderData->data !!}
-  });
-    };
-   
-});
-
+      if (window.$) {
+        // Dynamically load jQuery UI
+        const formData = @json($formBuilderData);
+        const parsedData = JSON.parse(formData.data);
+        // console.log(parsedData);
+        $(".render-wrap").formRender({
+          formData: parsedData
+        });
+      };
+    });
 </script>
     <script>
       document.addEventListener("alpine:init", () => {
@@ -1050,6 +1050,19 @@
                     formData.append(key, this.formData[key]);
                   }
                 });
+                 // Collect dynamically rendered field data
+                const dynamicFields = document.querySelectorAll(".render-wrap [name]");
+                dynamicFields.forEach((field) => {
+                    const fieldName = field.name;
+                    const fieldValue = field.type === "checkbox" || field.type === "radio" ? field.checked : field.value;
+                    formData.append(fieldName, fieldValue);
+                });
+
+                // Debugging: Log all form data entries
+                // console.log("Final FormData:");
+                // for (let [key, value] of formData.entries()) {
+                //     console.log(`${key}: ${value}`);
+                // }
                 const url = "/admin/offer/store";
               ajaxCall(url,'POST', [[onSuccess, ['response']]], formData);
               console.log("Form is valid. Submitting...");
