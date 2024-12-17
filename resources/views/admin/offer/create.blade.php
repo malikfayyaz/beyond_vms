@@ -729,7 +729,24 @@
                           </div>
                         </div>
                       </div>
-                      <div class="render-wrap"></div>
+                      @if(!empty($formBuilderData))
+                        <div class="p-[30px] rounded border my-4">
+                          <div class="mb-4 flex items-center gap-2">
+                            <i
+                              class="fa-solid fa-server"
+                              :style="{'color': 'var(--primary-color)'}"
+                            ></i>
+                            <h2 class="text-xl font-bold" :style="{'color': 'var(--primary-color)'}" style="color: var(--primary-color);">
+                              Additional Data
+                            </h2>
+                          </div>
+                          <div class="flex space-x-4 mt-4">
+                            <div class="flex-1">
+                              <div class="render-wrap"></div>
+                            </div>  
+                          </div>
+                        </div>
+                      @endif
                     </div>
                     <button
                       type="submit"

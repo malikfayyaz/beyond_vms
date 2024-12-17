@@ -101,12 +101,12 @@ class CareerOpportunitiesOfferController extends BaseController
     // Show the form for creating a new career opportunity offer
     public function create($id)
     {
-        // $formBuilderData = FormBuilder::get();
         $formBuilderData = FormBuilder::where('type', 3)
         ->where('status', 'active')
         ->first();
         
         $submission =  CareerOpportunitySubmission::findOrFail($id);
+        
         return view('admin.offer.create',[
             'submission'=>$submission,
             'formBuilderData' => $formBuilderData,
