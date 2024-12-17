@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Yajra\DataTables\Facades\DataTables;
+use App\Models\FormBuilder;
 
 class CareerOpportunitiesSubmissionController extends Controller
 {
@@ -129,6 +130,9 @@ class CareerOpportunitiesSubmissionController extends Controller
      */
     public function create($id)
     {
+        $formBuilderData = FormBuilder::where('type', 2)
+        ->where('status', 'active')
+        ->first();
         $career_opportunity = CareerOpportunity::findOrFail($id);
         $markup = Markup::whereIn('category_id', [$career_opportunity->cat_id])
                 ->orWhereIn('location_id', [$career_opportunity->location_id])
@@ -141,6 +145,7 @@ class CareerOpportunitiesSubmissionController extends Controller
         return view('vendor.submission.create',[
             'career_opportunity'=>$career_opportunity,
             'markup'=>$markupValue,
+            'formBuilderData'=>$formBuilderData,
             'location'=> $location,'vendor'=> $vendor ]);
     }
 
