@@ -189,6 +189,31 @@ class CareerOpportunitiesController extends BaseController
     public function store(Request $request)
     {
         try {
+                $dynamicRules = [];
+
+                foreach ($request->all() as $key => $value) {
+                    if (preg_match('/^text-/', $key)) {
+                        $dynamicRules[$key] = 'string'; // Rule for text inputs
+                    } elseif (preg_match('/^textarea-/', $key)) {
+                        $dynamicRules[$key] = 'string'; // Rule for textarea inputs
+                    } elseif (preg_match('/^checkbox-/', $key)) {
+                        $dynamicRules[$key] = 'string'; // Rule for checkboxes
+                    } elseif (preg_match('/^radio-/', $key)) {
+                        $dynamicRules[$key] = 'string'; // Rule for radio buttons
+                    } elseif (preg_match('/^select-/', $key)) {
+                        $dynamicRules[$key] = 'string'; // Rule for select dropdowns
+                    } elseif (preg_match('/^file-/', $key)) {
+                        $dynamicRules[$key] = 'file'; // Rule for file uploads
+                    } elseif (preg_match('/^number-/', $key)) {
+                        $dynamicRules[$key] = 'numeric'; // Rule for number inputs
+                    } elseif (preg_match('/^date-/', $key)) {
+                        $dynamicRules[$key] = 'date'; // Rule for date inputs
+                    } elseif (preg_match('/^email-/', $key)) {
+                        $dynamicRules[$key] = 'email'; // Rule for email inputs
+                    }
+                }
+
+                $validatednewData = $request->validate($dynamicRules);
 
                 $validatedData = $this->validateJobOpportunity($request);
 
@@ -203,6 +228,8 @@ class CareerOpportunitiesController extends BaseController
                 $mappedData = $this->mapJobData($validatedData, $jobTemplate, $request, $filename);
                // dd($mappedData);
                 $job = CareerOpportunity::create( $mappedData );
+                $job->job_details = $validatednewData; // Save the validated data as JSON
+                $job->save();
 
                 $this->syncBusinessUnits($request->input('businessUnits'), $job->id);
 
