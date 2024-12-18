@@ -154,6 +154,31 @@ class CareerOpportunitiesSubmissionController extends Controller
      */
     public function store(Request $request)
     {
+        $dynamicRules = [];
+
+        foreach ($request->all() as $key => $value) {
+            if (preg_match('/^text-/', $key)) {
+                $dynamicRules[$key] = 'string'; // Rule for text inputs
+            } elseif (preg_match('/^textarea-/', $key)) {
+                $dynamicRules[$key] = 'string'; // Rule for textarea inputs
+            } elseif (preg_match('/^checkbox-/', $key)) {
+                $dynamicRules[$key] = 'string'; // Rule for checkboxes
+            } elseif (preg_match('/^radio-/', $key)) {
+                $dynamicRules[$key] = 'string'; // Rule for radio buttons
+            } elseif (preg_match('/^select-/', $key)) {
+                $dynamicRules[$key] = 'string'; // Rule for select dropdowns
+            } elseif (preg_match('/^file-/', $key)) {
+                $dynamicRules[$key] = 'file'; // Rule for file uploads
+            } elseif (preg_match('/^number-/', $key)) {
+                $dynamicRules[$key] = 'numeric'; // Rule for number inputs
+            } elseif (preg_match('/^date-/', $key)) {
+                $dynamicRules[$key] = 'date'; // Rule for date inputs
+            } elseif (preg_match('/^email-/', $key)) {
+                $dynamicRules[$key] = 'email'; // Rule for email inputs
+            }
+        }
+
+        $validatednewData = $request->validate($dynamicRules);
 
         // Define your validation rules
         $rules = [
@@ -201,7 +226,7 @@ class CareerOpportunitiesSubmissionController extends Controller
             'additionaldoc' => 'nullable|file|mimes:doc,docx,pdf|max:5120', // Optional, PDF, DOC, DOCX, max 5MB
         ];
 
-    // Custom error messages (optional)
+        // Custom error messages (optional)
         $messages = [
             'resumeUpload.required' => 'Please upload your resume.',
             'resumeUpload.mimes' => 'The resume must be a file of type: pdf, doc, docx.',
@@ -263,22 +288,24 @@ class CareerOpportunitiesSubmissionController extends Controller
         // Assign processed values to individual variables, if needed
 
 
-         $submission = new CareerOpportunitySubmission();
+        $submission = new CareerOpportunitySubmission();
 
-         $submission_resume =  handleFileUpload($request, 'resumeUpload', 'submission_resume');
+        $submission_resume =  handleFileUpload($request, 'resumeUpload', 'submission_resume');
 
-         // Handle the file upload for additional documents, use the existing document if it's not uploaded
-         $submission_additional_doc =  handleFileUpload($request, 'additionaldoc', 'submission_additional_doc');
+        // Handle the file upload for additional documents, use the existing document if it's not uploaded
+        $submission_additional_doc =  handleFileUpload($request, 'additionaldoc', 'submission_additional_doc');
 
-         $mappedSubmissionData = $this->mapSubmissionData($validator->validated(), $submission, $request,$processedValues,$mappedData,$submission_resume, $submission_additional_doc);
-         $submissionCreate = CareerOpportunitySubmission::create( $mappedSubmissionData );
-         session()->flash('success', 'Submission saved successfully!');
-                return response()->json([
-                    'success' => true,
-                    'message' => 'Submission saved successfully!',
-                    'redirect_url' => route('vendor.submission.index') // Redirect back URL for AJAX
-                ]);
-        }
+        $mappedSubmissionData = $this->mapSubmissionData($validator->validated(), $submission, $request,$processedValues,$mappedData,$submission_resume, $submission_additional_doc);
+        $submissionCreate = CareerOpportunitySubmission::create( $mappedSubmissionData );
+        $submissionCreate->submission_details = $validatednewData; // Save the validated data as JSON
+        $submissionCreate->save();
+        session()->flash('success', 'Submission saved successfully!');
+        return response()->json([
+            'success' => true,
+            'message' => 'Submission saved successfully!',
+            'redirect_url' => route('vendor.submission.index') // Redirect back URL for AJAX
+        ]);
+    }
 
 
     /**

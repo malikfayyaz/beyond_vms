@@ -782,6 +782,20 @@ export default function addSubWizarForm() {
         }
         formData.append("resume", this.formData.resumeUpload);
         const url = "/vendor/submission/store";
+
+        const dynamicFields = document.querySelectorAll(".render-wrap [name]");
+        dynamicFields.forEach((field) => {
+          const fieldName = field.name;
+          const fieldValue = field.type === "checkbox" || field.type === "radio" ? field.checked : field.value;
+          formData.append(fieldName, fieldValue);
+        });
+
+        // Debugging: Log all form data entries
+        // console.log("Final FormData:");
+        // for (let [key, value] of formData.entries()) {
+        //   console.log(`${key}: ${value}`);
+        // }
+
         ajaxCall(url, 'POST', [[onSuccess, ['response']]], formData);
         // this.showSuccessMessage = true;
 
