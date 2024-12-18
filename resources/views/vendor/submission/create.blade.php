@@ -350,7 +350,7 @@
                      type="text"
                      x-model="formData.dobDate"
                      placeholder="Select DOB date"
-                     readonly 
+                     readonly
                    />
                    <p
                      x-show="showErrors && !isFieldValid('dobDate')"
@@ -455,7 +455,7 @@
                        x-model="formData.adjustedMarkup"
                        id="adjustedMarkup"
                        name="adjustedMarkup"
-                        
+
                        disabled
                        class="w-full h-12 px-4 text-gray-500 border border-gray-300 rounded-md shadow-sm focus:outline-none"
                      />
@@ -518,7 +518,7 @@
                          x-model="formData.exceedBillRate"
                          @input="formatExceedBillRate($event.target.value)"
                          @focus="$event.target.setSelectionRange(0, $event.target.value.length)"
-                         class="bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                         class="bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 pl-6"
                          placeholder="75.00"
                          x-bind:disabled="true"
                        />
@@ -540,13 +540,13 @@
                            x-model="formData.payRate"
                            @input="formatPayRate($event.target.value)"
                            @focus="$event.target.setSelectionRange(0, $event.target.value.length)"
-                           class="bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                           class="bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 pl-6"
                            placeholder="0.00"
                          />
                          <p
                            x-show="errors.payRate"
                            x-text="errors.payRate"
-                           class="text-red-500 text-sm mt-1"
+                           class="text-red-500 text-sm mt-1 absolute left-0"
                          ></p>
                        </div>
                      </div>
@@ -567,13 +567,13 @@
                            x-model="formData.billRate"
                            @input="formatBillRate($event.target.value)"
                            @focus="$event.target.setSelectionRange(0, $event.target.value.length)"
-                           class="bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                           class="bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 pl-6"
                            placeholder="0.00"
                          />
                          <p
                            x-show="errors.billRate"
                            x-text="errors.billRate"
-                           class="text-red-500 text-sm mt-1"
+                           class="text-red-500 text-sm mt-1 absolute left-0"
                          ></p>
                        </div>
                      </div>
