@@ -789,6 +789,25 @@
                             value="0 Weeks 1 Days" disabled />
                     </div>
                 </div>
+
+                @if(!empty($formBuilderData))
+                    <div class="p-[30px] rounded border my-4">
+                        <div class="mb-4 flex items-center gap-2">
+                        <i
+                            class="fa-solid fa-server"
+                            :style="{'color': 'var(--primary-color)'}"
+                        ></i>
+                        <h2 class="text-xl font-bold" :style="{'color': 'var(--primary-color)'}" style="color: var(--primary-color);">
+                            Additional Data
+                        </h2>
+                        </div>
+                        <div class="flex space-x-4 mt-4">
+                        <div class="flex-1">
+                            <div class="render-wrap"></div>
+                        </div>  
+                        </div>
+                    </div>
+                @endif
                 <!-- Step 4: Accept terms and conditions -->
                 <div class="mb-4">
                     <label class="block mb-2" :class="{'text-red-500': showErrors && !formData.termsAccepted}">
@@ -818,5 +837,19 @@
         </form>
     </div>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+      if (window.$) {
+        // Dynamically load jQuery UI
+        const formData = @json($formBuilderData);
+        const parsedData = JSON.parse(formData.data);
+        // console.log(parsedData);
+        $(".render-wrap").formRender({
+          formData: parsedData
+        });
+      };
+    });
+</script>
 
 @endsection

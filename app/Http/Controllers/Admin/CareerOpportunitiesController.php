@@ -29,6 +29,7 @@ use App\Models\User;
 use App\Models\AdminTeamJob;
 use App\Models\JobTeamMember;
 use App\Models\Client;
+use App\Models\FormBuilder;
 use App\Facades\Rateshelper as Rateshelper;
 
 class CareerOpportunitiesController extends BaseController
@@ -169,11 +170,16 @@ class CareerOpportunitiesController extends BaseController
      */
     public function create()
     {
+        $formBuilderData = FormBuilder::where('type', 1)
+        ->where('status', 'active')
+        ->first();
+       
         $careerOpportunity ="";
         $businessUnitsData = "";
         return view('admin.career_opportunities.create', [
             'careerOpportunity' => $careerOpportunity,
             'businessUnitsData' => $businessUnitsData,
+            'formBuilderData' => $formBuilderData,
         ] );
     }
 
