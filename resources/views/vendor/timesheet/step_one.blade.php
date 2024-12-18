@@ -17,13 +17,13 @@ $submittedTimesheets = [];
             <div class="container mx-auto p-4">
                 <div class="flex flex-wrap mb-4">
                     <div class="w-1/2 pr-2">
-                        <label for="timesheet_duration" class="block mb-2">Select Month & Week <span class="text-red-500">*</span></label>
+                        <label for="timesheet_duration" class="block mb-2">{{translate('Select Month & Week')}} <span class="text-red-500">*</span></label>
                         <select id="timesheet_duration" name="timesheet_duration" class="w-full p-2 border rounded h-10 bg-white"
                             x-model="formData.timesheet_duration">
-                            <option value="" disabled>Select Month & Week</option>
-                            <?php 
+                            <option value="" disabled>{{translate('Select Month & Week')}}</option>
+                            <?php
                             for($i=0; $i<=9; $i++){
-                          
+
                                 $y = ($i * 7);
                                 $weekNumber = date('W',strtotime('-'.$i.' week'));
                                 if($weekNumber==53){
@@ -71,7 +71,7 @@ $submittedTimesheets = [];
                         <p class="text-red-500 text-sm mt-1" x-text="timesheet_durationError"></p>
                     </div>
                     <div class="flex mb-4">
-                        <button @click="submitData1()" class="bg-blue-500 text-white px-4 py-2 rounded mr-2">Continue
+                        <button @click="submitData1()" class="bg-blue-500 text-white px-4 py-2 rounded mr-2">{{translate('Continue')}}
                         </button>
                     </div>
                 </div>
@@ -84,7 +84,7 @@ $submittedTimesheets = [];
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     if (window.$) {
-       
+
     }
 });
 
@@ -118,7 +118,7 @@ function contractor(editIndex) {
                 let formData = new FormData();
                 formData.append('timesheet_duration', this.formData.timesheet_duration);
                 formData.append('contract_id', this.formData.contract_id);
-                
+
                 url = '{{ route("vendor.timesheet.step_one_store") }}';
 
                 ajaxCall(url, 'POST', [

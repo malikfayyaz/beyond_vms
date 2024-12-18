@@ -8,7 +8,7 @@
         <div class="bg-white mx-4 my-8 rounded p-8" x-data="{ jobDetails: null}" @job-details-updated.window="jobDetails = $event.detail">
             <div >
                 <div class="flex justify-between items-center mb-6">
-                    <h2 class="text-2xl font-bold">Jobs</h2>
+                    <h2 class="text-2xl font-bold">{{translate('Jobs')}}</h2>
                     <div class="flex space-x-2">
                         {{--<button
                             type="button"
@@ -23,7 +23,7 @@
                  <ul
                      class="grid grid-flow-col text-center text-gray-500 bg-gray-100 rounded-lg p-1"
                  >
-                
+
                     <li class="flex justify-center">
                         <a
                             href="#active"
@@ -31,13 +31,13 @@
                             data-type="active"
                         >
                             <i class="fa-regular fa-file-lines"></i>
-                            <span class="capitalize">Active Jobs</span>
+                            <span class="capitalize">{{translate('Active Jobs')}}</span>
                             <div class="px-1 py-1 flex items-center justify-center bg-gray-500 text-white rounded-lg">
                                 <span class="text-[10px]">{{ $counts['active'] }}</span>
                             </div>
                         </a>
                     </li>
-                    
+
                     <li class="flex justify-center">
                         <a
                             href="#filled"
@@ -45,7 +45,7 @@
                             data-type="filled"
                         >
                             <i class="fa-solid fa-fill"></i>
-                            <span class="capitalize">Filled Jobs</span>
+                            <span class="capitalize">{{translate('Filled Jobs')}}</span>
                             <div class="px-1 py-1 flex items-center justify-center bg-gray-500 text-white rounded-lg">
                                 <span class="text-[10px]">{{ $counts['filled'] }}</span>
                             </div>
@@ -60,14 +60,14 @@
                             data-type="closed"
                         >
                             <i class="fa-solid fa-fill"></i>
-                            <span class="capitalize">Closed Jobs</span>
+                            <span class="capitalize">{{translate('Closed Jobs')}}</span>
                             <div class="px-1 py-1 flex items-center justify-center bg-gray-500 text-white rounded-lg">
                                 <span class="text-[10px]">{{ $counts['closed'] }}</span>
                             </div>
                         </a>
                     </li>
-                    
-                    
+
+
                     <li class="flex justify-center">
                         <a
                             href="#all_jobs"
@@ -75,7 +75,7 @@
                             data-type="all_jobs"
                         >
                             <i class="fa-solid fa-fill"></i>
-                            <span class="capitalize">All Jobs</span>
+                            <span class="capitalize">{{translate('All Jobs')}}</span>
                             <div class="px-1 py-1 flex items-center justify-center bg-gray-500 text-white rounded-lg">
                                 <span class="text-[10px]">{{ $counts['all_jobs'] }}</span>
                             </div>
@@ -93,57 +93,57 @@
                         <th
                             class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                         >
-                            Status
+                            {{translate('Status')}}
                         </th>
                         <!-- User -->
                         <th
                             class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                         >
-                            Job ID
+                            {{translate('Job ID')}}
                         </th>
                         <!-- job -->
                         <th
                             class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                         >
-                            Job title
+                            {{translate('Job title')}}
                         </th>
                         <th
                             class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                         >
-                            Job Title for Email Signature
+                            {{translate('Job Title for Email Signature')}}
                         </th>
+
+                        <th
+                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                        >
+                            {{translate('Hiring Manager')}}
+                        </th>
+                        <th
+                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                        >
+                            {{translate('Job Duration')}}
+                        </th>
+                        <th
+                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                        >
+                            {{translate('Submissions')}}
+                        </th>
+                        <th
+                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                        >
+                            {{translate('Position')}}
+                        </th>
+
 
                         <th
                             class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                         >
-                            Hiring Manager
-                        </th>
-                        <th
-                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                        >
-                            Job Duration
-                        </th>
-                        <th
-                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                        >
-                            Submissions
-                        </th>
-                        <th
-                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                        >
-                            Position
-                        </th>
-
-
-                        <th
-                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                        >
-                            Worker Type
+                            {{translate('Worker Type')}}
                         </th>
                         <th style="width: 80px"
                             class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                         >
-                            Action
+                            {{translate('Action')}}
                         </th>
                     </tr>
                     </thead>
@@ -160,7 +160,7 @@
 document.addEventListener('DOMContentLoaded', function() {
     console.log(window.$);
     let currentType = 'active'; // Default type
-    let table; 
+    let table;
 
     if (window.$) {
         // Initialize DataTable and assign it to 'table'

@@ -2,20 +2,20 @@
     <div class="bg-white mx-4 my-8 rounded p-8">
         <div>
             <div class="flex justify-between items-center mb-6">
-                <h2 class="text-2xl font-bold">Contract BU</h2>
+                <h2 class="text-2xl font-bold">{{translate('Contract BU')}}</h2>
             </div>
             <table class="min-w-full divide-y divide-gray-200" id="listing">
                 <thead class="bg-gray-200">
                 <tr>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Business Unit</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Business Percentage</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Created Date</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{{translate('Business Unit')}}</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{{translate('Business Percentage')}}</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{{translate('Created Date')}}</th>
                     <th
                         class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                     >
-                        Contract Start Date
+                        {{translate('Contract Start Date')}}
                     </th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{{translate('Status')}}</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -55,12 +55,12 @@
                 height="100%"
             >
                 <p>
-                    Alternative text - include a link
+                    {{translate('Alternative text - include a link')}}
                     <a href="{{ asset('storage/submission_resume/' . $contract->submission->resume) }}">to the PDF!</a>
                 </p>
             </object>
         @else
-            <p>No resume available.</p>
+            <p>{{translate('No resume available.')}}</p>
         @endif
     </div>
 </div>

@@ -22,13 +22,13 @@
                                 :style="{'color': 'var(--primary-color)'}"
                             ></i>
                             <span :style="{'color': 'var(--primary-color)'}"
-                            >WorkOrder information</span
+                            >{{translate('WorkOrder information')}}</span
                             >
                         </h3>
                         <div class="flex flex-col">
                             <div class="flex items-center justify-between py-4 border-t">
                                 <div class="w-2/4">
-                                    <h4 class="font-medium">Contractor Name:</h4>
+                                    <h4 class="font-medium">{{translate('Contractor Name:')}}</h4>
                                 </div>
                                 <div class="w-2/4">
                                     <p class="font-light">{{$workorder->consultant->full_name}}</p>
@@ -36,7 +36,7 @@
                             </div>
                             <div class="flex items-center justify-between py-4 border-t">
                                 <div class="w-2/4">
-                                    <h4 class="font-medium">WorkOrder Status:</h4>
+                                    <h4 class="font-medium">{{translate('WorkOrder Status:')}}</h4>
                                 </div>
                                 <div class="w-2/4">
                                     <p class="font-light">
@@ -49,7 +49,7 @@
                             </div>
                             <div class="flex items-center justify-between py-4 border-t">
                                 <div class="w-2/4">
-                                    <h4 class="font-medium">Job ID:</h4>
+                                    <h4 class="font-medium">{{translate('Job ID:')}}</h4>
                                 </div>
                                 <div class="w-2/4">
                                     <p class="font-light">{{$workorder->careeropportunity->id}}</p>
@@ -57,7 +57,7 @@
                             </div>
                             <div class="flex items-center justify-between py-4 border-t">
                                 <div class="w-2/4">
-                                    <h4 class="font-medium">Job Profile:</h4>
+                                    <h4 class="font-medium">{{translate('Job Profile:')}}</h4>
                                 </div>
                                 <div class="w-2/4" x-data="{ jobDetails: null}" @job-details-updated.window="jobDetails = $event.detail">
                                     <p class="font-light">
@@ -71,7 +71,7 @@
                             </div>
                             <div class="flex items-center justify-between py-4 border-t">
                                 <div class="w-2/4">
-                                    <h4 class="font-medium">Location of Work:</h4>
+                                    <h4 class="font-medium">{{translate('Location of Work:')}}</h4>
                                 </div>
                                 <div class="w-2/4">
                                     <p class="font-light">
@@ -81,7 +81,7 @@
                             </div>
                             <div class="flex items-center justify-between py-4 border-t">
                                 <div class="w-2/4">
-                                    <h4 class="font-medium">Start Date:</h4>
+                                    <h4 class="font-medium">{{translate('Start Date:')}}</h4>
                                 </div>
                                 <div class="w-2/4">
                                     <p class="font-light">{{$workorder->start_date}}</p>
@@ -89,7 +89,7 @@
                             </div>
                             <div class="flex items-center justify-between py-4 border-t">
                                 <div class="w-2/4">
-                                    <h4 class="font-medium">End Date:</h4>
+                                    <h4 class="font-medium">{{translate('End Date:')}}</h4>
                                 </div>
                                 <div class="w-2/4">
                                     <p class="font-light">{{$workorder->end_date}}</p>
@@ -97,7 +97,7 @@
                             </div>
                             <div class="flex items-center justify-between py-4 border-t">
                                 <div class="w-2/4">
-                                    <h4 class="font-medium">Location Tax:</h4>
+                                    <h4 class="font-medium">{{translate('Location Tax:')}}</h4>
                                 </div>
                                 <div class="w-2/4">
                                     <p class="font-light">N/A</p>
@@ -126,20 +126,20 @@
                             ><span
                                 class="capitalize"
                                 :style="{'color': 'var(--primary-color)'}"
-                            >Onboarding document background screening</span
+                            >{{translate('Onboarding document background screening')}}</span
                             >
                         </h3>
                         <div class="flex items-center justify-between py-4 border-t">
                             <div class="">
                                 <h4 class="font-medium capitalize mb-4">
-                                    Gallagher - Contingent Worker acknowledgements
+                                    {{translate('Gallagher - Contingent Worker acknowledgements')}}
                                     (<span>isrvr.com</span>)
                                 </h4>
                                 <a
                                     href="#"
                                     class="capitalize text-blue-400 hover:text-blue-500"
-                                >click here for the contingent worker compliance
-                                    acknowledgement!</a
+                                >{{translate('click here for the contingent worker compliance
+                                    acknowledgement!')}}</a
                                 >
                             </div>
                         </div>
@@ -158,7 +158,7 @@
                             >
                                 <div class="flex space-x-4 mb-4">
                                     <div class="flex-1">
-                                        <label class="block mb-2">First Name</label>
+                                        <label class="block mb-2">{{translate('First Name')}}</label>
                                         <input
                                          x-model="formData.first_name"
                                             type="text"
@@ -169,7 +169,7 @@
                                         />
                                     </div>
                                     <div class="flex-1">
-                                        <label class="block mb-2">Middle Name</label>
+                                        <label class="block mb-2">{{translate('Middle Name')}}</label>
                                         <input
                                             x-model="formData.middle_name"
                                             type="text"
@@ -179,7 +179,7 @@
                                         />
                                     </div>
                                     <div class="flex-1">
-                                        <label class="block mb-2">Last Name</label>
+                                        <label class="block mb-2">{{translate('Last Name')}}</label>
                                         <input
                                             x-model="formData.last_name"
                                             type="text"
@@ -193,7 +193,7 @@
                                 <div class="flex space-x-4 mb-4">
                                     <div class="flex-1">
                                         <label class="block mb-2 capitalize"
-                                        >personal email address
+                                        >{{translate('personal email address')}}
                                             <span class="text-red-500">*</span></label
                                         >
                                         <input
@@ -217,7 +217,7 @@
                                 <div class="flex space-x-4 mb-4">
                                     <div class="flex-1">
                                         <label class="block mb-2"
-                                        >Account Manager
+                                        >{{translate('Account Manager')}}
                                             <span class="text-red-500">*</span></label
                                         >
                                         <select
@@ -228,7 +228,7 @@
                                             :disabled="isDisabled"
                                         >
 
-                                            <option value="">Select Account Manager</option>
+                                            <option value="">{{translate('Select Account Manager')}}</option>
 
                                             @isset($workorder->vendor)
                                             <option value="{{ $workorder->vendor->id }}"
@@ -252,7 +252,7 @@
                                     </div>
                                     <div class="flex-1">
                                         <label class="block mb-2"
-                                        >Recruitment Manager
+                                        >{{translate('Recruitment Manager')}}
                                             <span class="text-red-500">*</span></label
                                         >
                                         <select
@@ -262,7 +262,7 @@
                                             id="recruitmentManager"
                                              :disabled="isDisabled"
                                         >
-                                            <option value="">Select Recruitment Manager</option>
+                                            <option value="">{{translate('Select Recruitment Manager')}}</option>
                                             @isset($workorder->vendor)
                                             <option value="{{ $workorder->vendor->id }}"
                                                >
@@ -285,7 +285,7 @@
                                 </div>
                                 <div class="flex space-x-4 mb-4">
                                     <div class="flex-1">
-                                        <label class="block mb-2 capitalize">location tax</label>
+                                        <label class="block mb-2 capitalize">{{translate('location tax')}}</label>
                                         <input
                                             type="number"
                                             x-model="formData.locationTax"
@@ -300,12 +300,12 @@
                                 <div class="flex items-center justify-between py-4 border-t">
                                     <div class="">
                                         <h4 class="font-medium capitalize mb-2">
-                                            background screening
+                                            {{translate('background screening')}}
                                         </h4>
                                         <p>
-                                            By clicking the boxes below i certify that the worker
+                                            {{translate('By clicking the boxes below i certify that the worker
                                             has met all compliance related items and is eligible to
-                                            begin assignment at Gallagher
+                                            begin assignment at Gallagher')}}
                                         </p>
                                     </div>
                                 </div>
@@ -322,7 +322,7 @@
                                                     class="form-checkbox h-5 w-5 text-blue-600 rounded focus:ring-blue-500 border-gray-300 cursor-pointer"
                                                 />
                                                 <span class="text-gray-700"
-                                                >Code of Conduct
+                                                >{{translate('Code of Conduct')}}
                             <span class="text-red-500">*</span></span
                                                 >
                                                 <p
@@ -343,7 +343,7 @@
                                                     class="form-checkbox h-5 w-5 text-blue-600 rounded focus:ring-blue-500 border-gray-300 cursor-pointer"
                                                 />
                                                 <span class="text-gray-700"
-                                                >Data Privacy / Data Handling<span
+                                                >{{translate('Data Privacy / Data Handling')}}<span
                                                         class="text-red-500"
                                                     >*</span
                                                     ></span
@@ -366,7 +366,7 @@
                                                     class="form-checkbox h-5 w-5 text-blue-600 rounded focus:ring-blue-500 border-gray-300 cursor-pointer"
                                                 />
                                                 <span class="text-gray-700"
-                                                >Non-Disclosure<span class="text-red-500"
+                                                >{{translate('Non-Disclosure')}}<span class="text-red-500"
                                                     >*</span
                                                     ></span
                                                 >
@@ -388,7 +388,7 @@
                                                     class="form-checkbox h-5 w-5 text-blue-600 rounded focus:ring-blue-500 border-gray-300 cursor-pointer"
                                                 />
                                                 <span class="text-gray-700"
-                                                >Criminal Background<span class="text-red-500"
+                                                >{{translate('Criminal Background')}}<span class="text-red-500"
                                                     >*</span
                                                     ></span
                                                 >
@@ -406,7 +406,7 @@
                                         <label
                                             for="document"
                                             class="block text-sm font-medium text-gray-700 mb-2"
-                                        >Document</label
+                                        >{{translate('Document')}}</label
                                         >
                                         <input
                                          :disabled="isDisabled"
@@ -423,26 +423,26 @@
                                     <table class="w-full border-collapse border">
                                         <thead>
                                             <tr class="bg-gray-100">
-                                                <th class="border p-2">Document Check List</th>
-                                                <th class="border p-2">Date</th>
+                                                <th class="border p-2">{{translate('Document Check List')}}</th>
+                                                <th class="border p-2">{{translate('Date')}}</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             <tr>
-                                                <td class="border p-2">Code of Conduct</td>
+                                                <td class="border p-2">{{translate('Code of Conduct')}}</td>
                                                 <td class="border p-2">{{formatDate($workorder->workorderbackground->created_at) }}
                                                 </td>
                                             </tr>
                                             <tr>
-                                                <td class="border p-2">Data Privacy / Data Handling</td>
+                                                <td class="border p-2">{{translate('Data Privacy / Data Handling')}}</td>
                                                 <td class="border p-2">{{formatDate($workorder->workorderbackground->created_at) }}</td>
                                             </tr>
                                             <tr>
-                                                <td class="border p-2">Non-Disclosure</td>
+                                                <td class="border p-2">{{translate('Non-Disclosure')}}</td>
                                                 <td class="border p-2">{{formatDate($workorder->workorderbackground->created_at) }}</td>
                                             </tr>
                                             <tr>
-                                                <td class="border p-2">Criminal Background</td>
+                                                <td class="border p-2">{{translate('Criminal Background')}}</td>
                                                 <td class="border p-2">{{formatDate($workorder->workorderbackground->created_at) }}</td>
                                             </tr>
                                         </tbody>
@@ -453,15 +453,15 @@
                                     <table class="w-full border-collapse border">
                                         <thead>
                                             <tr class="bg-gray-100">
-                                                <th class="border p-2">Document Type</th>
-                                                <th class="border p-2">Document List</th>
-                                                <th class="border p-2">Action</th>
+                                                <th class="border p-2">{{translate('Document Type')}}</th>
+                                                <th class="border p-2">{{translate('Document List')}}</th>
+                                                <th class="border p-2">{{translate('Action')}}</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             @if ($workorder->workorderbackground->file)
                                             <tr>
-                                                <td class="border p-2">Document</td>
+                                                <td class="border p-2">{{translate('Document')}}</td>
                                                 <td class="border p-2"><a href="#">{{$workorder->workorderbackground->file }}</a></td>
                                                 <td class="border p-2">
                                                     <a href="{{ asset('storage/background_verify/' . $workorder->workorderbackground->file) }}" class="text-blue-500 hover:text-blue-700" download>
@@ -490,7 +490,7 @@
                                         type="submit"
                                         class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
                                     >
-                                        Save
+                                        {{translate('Save')}}
                                     </button>
                                     <button
                                     :disabled="isDisabled"
@@ -498,7 +498,7 @@
                                         type="button"
                                         class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
                                     >
-                                        Save & Submit
+                                        {{translate('Save & Submit')}}
                                     </button>
                                 </div>
                             </form>
@@ -518,7 +518,7 @@
                         class="text-xl font-bold"
                         :style="{'color': 'var(--primary-color)'}"
                     >
-                        Workorder History
+                        {{translate('Workorder History')}}
                     </h2>
                     </div>
                     <div x-data="workOrderHistory()" style="overflow: scroll;">
@@ -527,12 +527,12 @@
                     >
                         <thead class="bg-gray-200 text-gray-700">
                         <tr>
-                            <th class="py-3 px-4 text-left">Status</th>
+                            <th class="py-3 px-4 text-left">Status')}}</th>
                             <th
                             @click="sort('workOrID')"
                             class="py-3 px-4 text-left cursor-pointer"
                             >
-                            Workorder ID
+                                {{translate('Workorder ID')}}
                             <span class="ml-1">
                                 <i
                                 class="fas fa-sort-up"
@@ -548,7 +548,7 @@
                             @click="sort('candidate')"
                             class="py-3 px-4 text-left cursor-pointer"
                             >
-                            Contractor Name
+                                {{translate('Contractor Name')}}
                             <span class="ml-1">
                                 <i
                                 class="fas fa-sort-up"
@@ -564,7 +564,7 @@
                             @click="sort('jobID')"
                             class="py-3 px-4 text-left cursor-pointer"
                             >
-                            Job ID
+                                {{translate('Job ID')}}
                             <span class="ml-1">
                                 <i
                                 class="fas fa-sort-up"
@@ -580,7 +580,7 @@
                             @click="sort('hiringManager')"
                             class="py-3 px-4 text-left cursor-pointer"
                             >
-                            Hiring Manager
+                                {{translate('Hiring Manager')}}
                             <span class="ml-1">
                                 <i
                                 class="fas fa-sort-up"
@@ -596,7 +596,7 @@
                             @click="sort('vendor')"
                             class="py-3 px-4 text-left cursor-pointer"
                             >
-                            Vendor
+                                {{translate('Vendor')}}
                             <span class="ml-1">
                                 <i
                                 class="fas fa-sort-up"
@@ -612,7 +612,7 @@
                             @click="sort('date')"
                             class="py-3 px-4 text-left cursor-pointer"
                             >
-                            Start Date
+                                {{translate('Start Date')}}
                             <span class="ml-1">
                                 <i
                                 class="fas fa-sort-up"
@@ -628,7 +628,7 @@
                             @click="sort('endDate')"
                             class="py-3 px-4 text-left cursor-pointer"
                             >
-                            End Date
+                                {{translate('End Date')}}
                             <span class="ml-1">
                                 <i
                                 class="fas fa-sort-up"
@@ -644,7 +644,7 @@
                             @click="sort('billRate')"
                             class="py-3 px-4 text-left cursor-pointer"
                             >
-                            Bill Rate
+                                {{translate('Bill Rate')}}
                             <span class="ml-1">
                                 <i
                                 class="fas fa-sort-up"
@@ -661,7 +661,7 @@
                             @click="sort('jobType')"
                             class="py-3 px-4 text-left cursor-pointer"
                             >
-                            Worker Type
+                                {{translate('Worker Type')}}
                             <span class="ml-1">
                                 <i
                                 class="fas fa-sort-up"
@@ -673,7 +673,7 @@
                                 ></i>
                             </span>
                             </th>
-                            <th class="py-3 px-4 text-left">Action</th>
+                            <th class="py-3 px-4 text-left">{{translate('Action')}}</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -925,15 +925,15 @@
           items: logs.map(log => ({
                 id: log.id,  // Log ID
                 status: log.properties.attributes.status_name,
-                workOrID: log.properties.attributes.id, 
-                candidate: log.properties.attributes.candidate_name, 
-                jobID: log.properties.attributes.career_opportunity_id, 
-                hiringManager: log.properties.attributes.hiring_manager_name, 
-                vendor: log.properties.attributes.vendor_name, 
-                date: log.properties.attributes.start_date_formatted, 
-                endDate: log.properties.attributes.end_date_formatted, 
-                billRate: log.properties.attributes.wo_bill_rate, 
-                jobType: log.properties.attributes.job_type_title, 
+                workOrID: log.properties.attributes.id,
+                candidate: log.properties.attributes.candidate_name,
+                jobID: log.properties.attributes.career_opportunity_id,
+                hiringManager: log.properties.attributes.hiring_manager_name,
+                vendor: log.properties.attributes.vendor_name,
+                date: log.properties.attributes.start_date_formatted,
+                endDate: log.properties.attributes.end_date_formatted,
+                billRate: log.properties.attributes.wo_bill_rate,
+                jobType: log.properties.attributes.job_type_title,
             })),
 
             sortColumn: "id",
@@ -945,7 +945,7 @@
               const end = start + this.itemsPerPage;
               return this.items.slice(start, end);
             },
-            
+
             deleteItem(id) {
             //  alert(id);
             },
@@ -962,7 +962,7 @@
         };
       }
 
-    
+
       function openJobDetailsModal(jobId) {
         fetch(`/job-details/${jobId}`)
           .then(response => response.json())
@@ -973,10 +973,10 @@
                       composed: true
                   });
                   // console.log(event.detail.data);
-                  
+
                   document.dispatchEvent(event);
           })
           .catch(error => console.error('Error:', error));
       }
-    
+
     </script>

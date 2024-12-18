@@ -8,7 +8,7 @@
         <div class="bg-white mx-4 my-8 rounded p-8" x-data="{ jobDetails: null}" @job-details-updated.window="jobDetails = $event.detail">
             <div >
                 <div class="flex justify-between items-center mb-6">
-                    <h2 class="text-2xl font-bold">Interviews</h2>
+                    <h2 class="text-2xl font-bold">{{translate('Interviews')}}</h2>
                 </div>
 
                 <x-job-details />
@@ -20,71 +20,71 @@
                         <th
                             class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                         >
-                            S. no.
+                            {{translate('S. no.')}}
                         </th>
                         <th
                             class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                         >
-                            Status
+                            {{translate('Status')}}
                         </th>
                         <!-- User -->
                         <th
                             class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                         >
-                            Type
+                            {{translate('Type')}}
                         </th>
                         <th
                             class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                         >
-                            ID
+                            {{translate('ID')}}
                         </th>
                         <!-- job -->
                         <th
                             class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                         >
-                            Contractor Name
+                            {{translate('Contractor Name')}}
                         </th>
                         <th
                             class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                         >
-                            Job Profile 
+                            {{translate('Job Profile ')}}
                         </th>
                         <th
                             class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                         >
-                            Hiring Manger
+                            {{translate('Hiring Manger')}}
                         </th>
                         <th
                             class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                         >
-                            Vendor
+                            {{translate('Vendor')}}
                         </th>
                         <th
                             class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                         >
-                            Date
+                            {{translate('Date')}}
                         </th>
                         <th
                             class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                         >
-                            Start Time
+                            {{translate('Start Time')}}
                         </th>
                         <th
                             class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                         >
-                            End Time
+                            {{translate('End Time')}}
                         </th>
                         <th
                             class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                         >
-                            Woker Type
+                            {{translate('Woker Type')}}
                         </th>
                         <th style="width: 80px"
                             class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                         >
-                            Action
+                            {{translate('Action')}}
                         </th>
-                        
+
                     </tr>
                     </thead>
                     <tbody>
@@ -100,9 +100,9 @@
     document.addEventListener('DOMContentLoaded', function() {
         if (window.$) {
             initializeDataTable('#listing', '/vendor/interview/index', [
-                { 
-                data: null, 
-                    name: 'serial', 
+                {
+                data: null,
+                    name: 'serial',
                     render: function (data, type, full, meta) {
                         return meta.row + 1;  // Display the row index (1-based)
                     }
@@ -128,7 +128,7 @@
             });
 
             function openJobDetailsModal(jobId) {
-                
+
                 fetch(`/job-details/${jobId}`)
                         .then(response => response.json())
                         .then(data => {
@@ -138,7 +138,7 @@
                                     composed: true
                                 });
                                 console.log(event.detail.data);
-                                
+
                                 document.dispatchEvent(event);
                         })
                         .catch(error => console.error('Error:', error));

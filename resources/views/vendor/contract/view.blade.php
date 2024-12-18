@@ -19,7 +19,7 @@
                             :style="{'color': activePage === 'tab1' ? 'var(--primary-color)' : ''}"
                         >
                             <i class="fa-regular fa-file-lines"></i>
-                            <span class="capitalize">Contract Info</span>
+                            <span class="capitalize">{{translate('Contract Info')}}</span>
                             <div class="px-1 py-1 flex items-center justify-center text-white rounded-lg"
                                  :style="{'background-color': activePage === 'tab1' ? 'var(--primary-color)' : 'bg-gray-500'}"
                             >
@@ -36,7 +36,7 @@
                             :style="{'color': activePage === 'tab2' ? 'var(--primary-color)' : ''}"
                         >
                             <i class="fa-regular fa-registered"></i>
-                            <span class="capitalize">Budget</span>
+                            <span class="capitalize">{{translate('Budget</span>
                             <div class="px-1 py-1 flex items-center justify-center text-white rounded-lg"
                                  :style="{'background-color': activePage === 'tab2' ? 'var(--primary-color)' : 'bg-gray-500'}"
                             >
@@ -53,7 +53,7 @@
                             :style="{'color': activePage === 'tab3' ? 'var(--primary-color)' : ''}"
                         >
                             <i class="fa-solid fa-fill"></i>
-                            <span class="capitalize">BU</span>
+                            <span class="capitalize">{{translate('BU')}}</span>
                             <div class="px-1 py-1 flex items-center justify-center text-white rounded-lg"
                                  :style="{'background-color': activePage === 'tab3' ? 'var(--primary-color)' : 'bg-gray-500'}"
                             >
@@ -89,7 +89,7 @@
                             :style="{'color': activePage === 'tab5' ? 'var(--primary-color)' : ''}"
                         >
                             <i class="fa-solid fa-briefcase"></i>
-                            <span class="capitalize">Resume</span>
+                            <span class="capitalize">{{translate('Resume')}}</span>
                             <div class="px-1 py-1 flex items-center justify-center text-white rounded-lg"
                                  :style="{'background-color': activePage === 'tab5' ? 'var(--primary-color)' : 'bg-gray-500'}"
                             >

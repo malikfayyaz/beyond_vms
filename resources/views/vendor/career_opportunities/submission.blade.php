@@ -1,5 +1,5 @@
 <div class="rounded border p-[30px]">
-	
+
    <div
           class="w-100 p-[30px] rounded border"
           :style="{'border-color': 'var(--primary-color)'}">
@@ -7,45 +7,45 @@
             <thead class="bg-gray-50">
               <tr>
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Status
+                    {{translate('Status')}}
                 </th>
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Submission ID
+                    {{translate('Submission ID')}}
                 </th>
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Candidate Name
+                    {{translate('Candidate Name')}}
                 </th>
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Vendor
-                </th>
-
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Status
+                    {{translate('Vendor')}}
                 </th>
 
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Flag
+                    {{translate('Status')}}
                 </th>
 
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Bill Rate
+                    {{translate('Flag')}}
                 </th>
 
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Unique ID
+                    {{translate('Bill Rate')}}
                 </th>
 
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Action
+                    {{translate('Unique ID')}}
+                </th>
+
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    {{translate('Action')}}
                 </th>
               </tr>
             </thead>
             <tbody>
-             
+
             </tbody>
           </table>
       </div>
-	
+
 
 
 </div>

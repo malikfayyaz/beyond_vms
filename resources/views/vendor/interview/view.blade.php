@@ -16,7 +16,7 @@
                       type="button"
                       class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 capitalize"
                   >
-                      Back to Interview
+                      {{translate('Back to Interview')}}
                   </button>
               </a>
 
@@ -72,7 +72,7 @@
                       role="tab"
                     >
                       <i class="fa-regular fa-thumbs-up"></i>
-                      <span class="capitalize">Summary</span>
+                      <span class="capitalize">{{translate('Summary')}}</span>
                     </button>
                   </li>
 
@@ -90,7 +90,7 @@
                       role="tab"
                     >
                       <i class="fa fa-calendar"></i>
-                      <span class="capitalize"> Date & Time</span>
+                      <span class="capitalize"> {{translate('Date & Time')}}</span>
                     </button>
                   </li>
                 </ul>
@@ -113,7 +113,7 @@
                       <div class="divide-y divide-gray-200">
                           <!-- Update each field accordingly -->
                         <div class="flex justify-between py-3 px-4">
-                        <span class="text-gray-600">Status:</span>
+                        <span class="text-gray-600">{{translate('Status:')}}</span>
                         <span
                             class="bg-green-500 text-white px-2 py-1 rounded-full text-sm"
                             >{{$interview->status}}</span>
@@ -121,43 +121,43 @@
                         @if($interview->status == 3)
                           <div class="flex justify-between py-3 px-4">
                             <p class="font-bold text-red-400">
-                              <i class="fas fa-clipboard"></i> Cancel Reason
+                              <i class="fas fa-clipboard"></i> {{translate('Cancel Reason')}}
                             </p>
                           </div>
                           <div class="flex justify-between py-3 px-4">
-                            <span class="text-gray-600">Reason for Cancel::</span>
+                            <span class="text-gray-600">{{translate('Reason for Cancel::')}}</span>
                             <span class="font-semibold">{{$interview->reasonRejection->title}}</span>
                           </div>
                           <div class="flex justify-between py-3 px-4">
-                            <span class="text-gray-600">Cancel Notes:</span>
+                            <span class="text-gray-600">{{translate('Cancel Notes:')}}</span>
                             <span class="font-semibold">{{$interview->notes}}</span>
                           </div>
                           <div class="flex justify-between py-3 px-4">
-                            <span class="text-gray-600">Cancel By:</span>
+                            <span class="text-gray-600">{{translate('Cancel By:')}}</span>
                             <span class="font-semibold">{{$interview->rejectedBy->name}}</span>
                           </div>
                           <div class="flex justify-between py-3 px-4">
-                            <span class="text-gray-600">Date & Time:</span>
+                            <span class="text-gray-600">{{translate('Date & Time:')}}</span>
                             <span class="font-semibold">{{$interview->formatted_interview_cancellation_date}}</span>
                           </div>
                         @endif
                         <div class="flex justify-between py-3 px-4">
                           <p class="font-bold text-blue-400">
-                              <i class="fas fa-user"></i> Candidate Info
+                              <i class="fas fa-user"></i> {{translate('Candidate Info')}}
                           </p>
                         </div>
                         <div class="flex justify-between py-3 px-4">
-                            <span class="text-gray-600">Candidate Name:</span>
+                            <span class="text-gray-600">{{translate('Candidate Name:')}}</span>
                             <span class="font-semibold">{{$interview->consultant->full_name}}</span>
                         </div>
                         <div class="flex justify-between py-3 px-4">
-                            <span class="text-gray-600">Vendor Name:</span>
+                            <span class="text-gray-600">{{translate('Vendor Name:')}}</span>
                             <span
                             class="font-semibold"
                             >{{$interview->consultant->vendor->full_name}}</span>
                         </div>
                         <div class="flex justify-between py-3 px-4">
-                          <span class="text-gray-600">Division</span>
+                          <span class="text-gray-600">{{translate('Division')}}</span>
                           <span
                             class="font-semibold"
                           >{{$interview->careerOpportunity->division->name}}</span>
@@ -165,7 +165,7 @@
                         @isset($interview->offer)
                         <div class="flex justify-between py-3 px-4">
                           <span class="text-gray-600"
-                            >Offer ID:</span
+                            >{{translate('Offer ID:')}}</span
                           >
                           <span
                             class="font-semibold"
@@ -174,12 +174,12 @@
                         @endisset
                         <div class="flex justify-between py-3 px-4">
                           <p class="font-bold text-blue-400">
-                              <i class="fas fa-comments"></i> Interview Details
+                              <i class="fas fa-comments"></i> {{translate('Interview Details')}}
                           </p>
                         </div>
                         <div class="flex justify-between py-3 px-4">
                           <span class="text-gray-600"
-                            >Type of Interview:</span
+                            >{{translate('Type of Interview:')}}</span
                           >
                           <span
                             class="font-semibold"
@@ -187,25 +187,25 @@
                         </div>
                         @if (!empty($interview->interview_instructions))
                             <div class="flex justify-between py-3 px-4">
-                                <span class="text-gray-600">Interview Instruction:</span>
+                                <span class="text-gray-600">{{translate('Interview Instruction:')}}</span>
                                 <span class="font-semibold">{{ $interview->interview_instructions }}</span>
                             </div>
                         @endif
 
                         @if (!empty($interview->interview_detail))
                             <div class="flex justify-between py-3 px-4">
-                                <span class="text-gray-600">Interview Detail:</span>
+                                <span class="text-gray-600">{{translate('Interview Detail:')}}</span>
                                 <span class="font-semibold">{{ $interview->interview_detail }}</span>
                             </div>
                         @endif
                         <div class="flex justify-between py-3 px-4">
-                          <span class="text-gray-600">Location:</span>
+                          <span class="text-gray-600">{{translate('Location:')}}</span>
                           <span
                             class="font-semibold"
                           >{{ $interview->location->LocationDetails }}</span>
                         </div>
                         <div class="flex justify-between py-3 px-4" x-data="{ jobDetails: null}" @job-details-updated.window="jobDetails = $event.detail">
-                          <span class="text-gray-600">Job Profile:</span>
+                          <span class="text-gray-600">{{translate('Job Profile:')}}</span>
                           <span
                             class="font-semibold"
                           ><a class="text-blue-400 font-semibold cursor-pointer"
@@ -216,7 +216,7 @@
                           <x-job-details />
                         </div>
                         <div class="flex justify-between py-3 px-4">
-                          <span class="text-gray-600">Timezone:</span>
+                          <span class="text-gray-600">{{translate('Timezone:')}}</span>
                           <span
                             class="font-semibold"
                           >{{ $interview->timezone->title }}</span>
@@ -224,11 +224,11 @@
 
                         <div class="flex justify-between py-3 px-4">
                           <p class="font-bold text-blue-400">
-                              <i class="fa fa-calendar"></i> Interview Date
+                              <i class="fa fa-calendar"></i> {{translate('Interview Date')}}
                           </p>
                         </div>
                         <div class="flex justify-between py-3 px-4">
-                          <span class="text-gray-600">Date of Interview:</span>
+                          <span class="text-gray-600">{{translate('Date of Interview:')}}</span>
                           <span
                             class="font-semibold"
                           >
@@ -237,12 +237,12 @@
                         @if (!empty($interview->job_attachment))
                           <div class="flex justify-between py-3 px-4">
                             <p class="font-bold text-blue-400">
-                            <i class="fa fa-plus-square"></i> Additional Details
+                            <i class="fa fa-plus-square"></i> {{translate('Additional Details')}}
                             </p>
                           </div>
 
                           <div class="flex justify-between py-3 px-4">
-                            <span class="text-gray-600">Resume:</span>
+                            <span class="text-gray-600">{{translate('Resume:')}}</span>
                             <span
                               class="font-semibold"
                               >{{ $interview->job_attachment }} <a href="{{ asset('storage/interview_resume/' . $interview->job_attachment) }}" class="text-blue-500 hover:text-blue-700" download>
@@ -253,13 +253,13 @@
                         @endif
                         <div class="flex justify-between py-3 px-4">
                           <p class="font-bold text-blue-400">
-                          <i class="fa fa-user-plus"></i> Interviewer(s)
+                          <i class="fa fa-user-plus"></i> {{translate('Interviewer(s)')}}
                           </p>
                         </div>
                         @if($interview->interviewMembers)
                         @foreach($interview->interviewMembers as $member)
                         <div class="flex justify-between py-3 px-4">
-                          <span class="text-gray-600">Interviewer:</span>
+                          <span class="text-gray-600">{{translate('Interviewer:')}}</span>
                           <span
                             class="font-semibold"
                           >{{$member->member->full_name}}</span>
@@ -281,7 +281,7 @@
                     >
                       <div class="p-6 space-y-4">
                         <div class="flex justify-between items-center">
-                          <span class="text-gray-600">Date & Time:</span>
+                          <span class="text-gray-600">{{translate('Date & Time:')}}</span>
                         </div>
                         @foreach($interview->interviewDates as $dates)
                         <div class="bg-blue-50 p-3 rounded-md">
@@ -310,7 +310,7 @@
                             :style="{'color': activePage === 'tab1' ? 'var(--primary-color)' : ''}"
                         >
                             <i class="fa-regular fa-clock"></i>
-                            <span class="capitalize">Time</span>
+                            <span class="capitalize">{{translate('Time')}}</span>
                             <div class="px-1 py-1 flex items-center justify-center text-white rounded-lg"
                                 :style="{'background-color': activePage === 'tab1' ? 'var(--primary-color)' : 'bg-gray-500'}"
                             >
@@ -327,7 +327,7 @@
                             :style="{'color': activePage === 'tab2' ? 'var(--primary-color)' : ''}"
                         >
                             <i class="fa-regular fa-file-lines"></i>
-                            <span class="capitalize">Resume</span>
+                            <span class="capitalize">{{translate('Resume')}}</span>
                             <div class="px-1 py-1 flex items-center justify-center text-white rounded-lg"
                                 :style="{'background-color': activePage === 'tab2' ? 'var(--primary-color)' : 'bg-gray-500'}"
                             >
@@ -345,10 +345,10 @@
                               <table class="min-w-full bg-white border rounded-lg shadow-md text-sm">
                                   <thead class="bg-blue-400 text-white">
                                       <tr>
-                                          <th class="py-3 px-4 text-left">Date <i class="fa fa-asterisk text-red-600"></i></th>
-                                          <th class="py-3 px-4 text-left">Start Time</th>
-                                          <th class="py-3 px-4 text-left">End Time</th>
-                                          <th class="py-3 px-4 text-left" colspan="2">Timezone</th>
+                                          <th class="py-3 px-4 text-left">{{translate('Date')}} <i class="fa fa-asterisk text-red-600"></i></th>
+                                          <th class="py-3 px-4 text-left">{{translate('Start Time')}}</th>
+                                          <th class="py-3 px-4 text-left">{{translate('End Time')}}</th>
+                                          <th class="py-3 px-4 text-left" colspan="2">{{translate('Timezone')}}</th>
                                       </tr>
                                   </thead>
                                   <tbody x-data="{ status: {{ $interview->status }} }">
@@ -359,8 +359,8 @@
                                             <td class="py-3 px-4">
                                               <div class="flex items-center" x-data="{ check: 'check' }">
                                                   <input type="radio" x-model="check" value="check" class="mr-2">
-                                                  <p class="font-bold">{{ $interviewDate->formatted_schedule_date }} 
-                                                    
+                                                  <p class="font-bold">{{ $interviewDate->formatted_schedule_date }}
+
                                                   </p>
                                               </div>
                                             </td>
@@ -376,16 +376,16 @@
                                           <td class="py-3 px-4">
                                               <div class="flex items-center">
                                                   <input type="radio" x-model="formData.interviewTiming" value="{{ $interviewDate->formatted_schedule_date }}" class="mr-2"
-                                                  :disabled="status == 3 || status == 5" 
+                                                  :disabled="status == 3 || status == 5"
                                                   :class="{ 'opacity-50 pointer-events-none': status == 3 || status == 5}"
                                                   >
-                                                  <p class="font-bold">{{ $interviewDate->formatted_schedule_date }} 
+                                                  <p class="font-bold">{{ $interviewDate->formatted_schedule_date }}
                                                   @if($loop->first)
                                                       (Recommended)
                                                   @endif
                                                   </p>
                                               </div>
-                                              
+
                                           </td>
                                           <td class="py-3 px-4 font-bold">{{ $interviewDate->formatted_start_time }}</td>
                                           <td class="py-3 px-4 font-bold">{{ $interviewDate->formatted_end_time }}</td>
@@ -399,30 +399,30 @@
                                         </td>
                                       </tr>
                                       <tr class="border-b">
-                                          <td class="py-3 px-4">Candidate Phone Number:</td>
+                                          <td class="py-3 px-4">{{translate('Candidate Phone Number:')}}</td>
                                           <td class="py-3 px-4" colspan="3">
                                               <input type="tel" x-model="formData.can_phone" x-on:input="formatPhoneNumber($event.target)" name="can_phone" class="w-full h-12 px-4 text-gray-500 border border-gray-300 rounded-md shadow-sm focus:outline-none"
                                               placeholder="(XXXX) XXX-XXXX"
-                                              :disabled="status == 3 || status == 5" 
+                                              :disabled="status == 3 || status == 5"
                                               :class="{ 'opacity-50 pointer-events-none': status == 3 || status == 5 }"
                                               >
-                                
+
                                           </td>
                                       </tr>
                                       <tr class="border-b">
-                                          <td class="py-3 px-4">Ext No:</td>
+                                          <td class="py-3 px-4">{{translate('Ext No:')}}</td>
                                           <td class="py-3 px-2">
                                               <input type="number" x-model="formData.phone_ext" name="phone_ext" max="99" min="0" class="w-full p-2 text-gray-500 border rounded-md shadow-sm focus:outline-none"
-                                              :disabled="status == 3 || status == 5" 
+                                              :disabled="status == 3 || status == 5"
                                               :class="{ 'opacity-50 pointer-events-none': status == 3 || status == 5 }"
                                               >
                                           </td>
                                       </tr>
                                       <tr class="border-b">
                                           <td class="py-3 px-4" colspan="5">
-                                              <label for="vendor_note" class="block font-bold">Note <i class="fa fa-asterisk text-red-600"></i>:</label>
+                                              <label for="vendor_note" class="block font-bold">{{translate('Note')}} <i class="fa fa-asterisk text-red-600"></i>:</label>
                                               <textarea x-model="formData.vendor_note" id="vendor_note" name="vendor_note" placeholder="Enter Note..." class="w-full p-2 mt-2 text-gray-500 border rounded-md shadow-sm focus:outline-none min-h-[150px]"
-                                              :disabled="status == 3 || status == 5" 
+                                              :disabled="status == 3 || status == 5"
                                               :class="{ 'opacity-50 pointer-events-none': status == 3 || status == 5}"
                                               ></textarea>
                                               <p x-show="errors.vendor_note" class="text-red-500 text-xs italic" x-text="errors.vendor_note"
@@ -435,26 +435,26 @@
                           <div class="">
                             @if($interview->status == 1)
                               <button type="submit" name="acceptinterview" class="bg-green-600 text-white py-2 px-4 rounded hover:bg-green-500 cursor-pointer">
-                                Accept Interview
+                                  {{translate('Accept Interview')}}
                               </button>
                             @endif
                           </div>
                       </form>
                       <div x-data="{ showModal: false, status: {{ $interview->status }} }">
-                              <a href="javascript:void(0);" 
-                                class="btn bg-red-600 text-white py-2 px-4 rounded hover:bg-red-500" 
+                              <a href="javascript:void(0);"
+                                class="btn bg-red-600 text-white py-2 px-4 rounded hover:bg-red-500"
                                 @click="showModal = true"
                                 x-bind:disabled="status == 3"
                                 :class="{ 'opacity-50 pointer-events-none': status == 3 }">
-                                Reschedule/Cancel Interview
+                                  {{translate('Reschedule/Cancel Interview')}}
                               </a>
                               <!-- The Modal -->
-                              <div x-show="showModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50" 
+                              <div x-show="showModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
                                   @click.away="showModal = false">
                                   <div class="bg-white w-full max-w-lg rounded-lg shadow-lg">
                                       <!-- Modal Header -->
                                       <div class="flex justify-between items-center p-4 border-b">
-                                          <h4 class="text-lg font-semibold">Reschedule/Cancel Interview</h4>
+                                          <h4 class="text-lg font-semibold">{{translate('Reschedule/Cancel Interview')}}</h4>
                                           <button type="button" class="text-gray-500 hover:text-gray-700 bg-transparent" @click="showModal = false">&times;</button>
                                       </div>
 
@@ -463,10 +463,10 @@
                                         <form x-data="rejectInterview()" @submit.prevent="submitData()" class="reject-form space-y-4">
                                         @csrf
                                         <div class="mb-4">
-                                            <label class="block text-sm font-medium text-gray-700">Reschedule Reason:</label>
-                                            <select 
+                                            <label class="block text-sm font-medium text-gray-700">{{translate('Reschedule Reason:')}}</label>
+                                            <select
                                                 x-model="formData.reschedule_reason"
-                                                id="reschedule_reason" 
+                                                id="reschedule_reason"
                                                 name="reschedule_reason"
                                                 class="w-full px-3 py-2 border rounded-md"
                                                 :class="{'border-red-500': errors.reschedule_reason}">
@@ -477,12 +477,12 @@
                                             </select>
                                             <p x-show="errors.reschedule_reason" class="text-red-500 text-xs italic" x-text="errors.reschedule_reason"></p>
                                         </div>
-                                        
+
                                         <div>
-                                            <label class="block text-sm font-medium text-gray-700">Note <i class="fa fa-asterisk text-red-600"></i>:</label>
-                                            <textarea 
+                                            <label class="block text-sm font-medium text-gray-700">{{translate('Note')}} <i class="fa fa-asterisk text-red-600"></i>:</label>
+                                            <textarea
                                                 x-model="formData.rejection_note"
-                                                name="rejection_note" 
+                                                name="rejection_note"
                                                 class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
                                                 :class="{'border-red-500': errors.rejection_note}">
                                             </textarea>
@@ -491,8 +491,8 @@
 
                                         <!-- Submit Button -->
                                         <div class="flex justify-end space-x-4 mt-2">
-                                            <button type="submit" class="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-500">Submit</button>
-                                            <button type="button" class="bg-gray-600 text-white py-2 px-4 rounded hover:bg-gray-500" @click="showModal = false">Cancel</button>
+                                            <button type="submit" class="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-500">{{translate('Submit')}}</button>
+                                            <button type="button" class="bg-gray-600 text-white py-2 px-4 rounded hover:bg-gray-500" @click="showModal = false">{{translate('Cancel')}}</button>
                                         </div>
                                     </form>
                                       </div>
@@ -511,15 +511,15 @@
                             height="100%"
                           >
                             <p>
-                              Alternative text - include a link
+                                {{translate('Alternative text - include a link')}}
                               <a href="{{ asset('storage/interview_resume/' . $interview->job_attachment) }}">to the PDF!</a>
                             </p>
                           </object>
                         @else
-                          <p>No resume available.</p>
+                          <p>{{translate('No resume available.')}}</p>
                         @endif
                     </div>
-                  </div>  
+                  </div>
               </div>
             </div>
           </div>
@@ -645,10 +645,10 @@ function openJobDetailsModal(jobId) {
                 composed: true
             });
             // console.log(event.detail.data);
-            
+
             document.dispatchEvent(event);
     })
     .catch(error => console.error('Error:', error));
 }
-   
+
 </script>

@@ -6,40 +6,40 @@
       <thead class="bg-gray-50">
         <tr>
           <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-            Status
-          </th>
-          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-            Offer ID
-          </th>
-          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-            Contractor Name
-          </th>
-          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-            Offer Date
-          </th>
+              {{translate('Status')}}
+            </th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              {{translate('Offer ID')}}
+            </th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+             {{translate(' Contractor Name')}}
+            </th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              {{translate('Offer Date')}}
+            </th>
 
-          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-            Bill Rate
-          </th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              {{translate('Bill Rate')}}
+            </th>
 
-          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-            Action
-          </th>
-        </tr>
-      </thead>
-      <tbody>
-       
-      </tbody>
-    </table>
-</div>
-	
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              {{translate('Action')}}
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+
+        </tbody>
+      </table>
+  </div>
 
 
-</div>
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    if (window.$) {
-        initializeDataTable('#workorderTable', `{{ route('vendor.jobWorkorder' ,  $job->id ) }}`, [
+
+  </div>
+  <script>
+  document.addEventListener('DOMContentLoaded', function() {
+      if (window.$) {
+          initializeDataTable('#workorderTable', `{{ route('vendor.jobWorkorder' ,  $job->id ) }}`, [
 		    { data: 'status', name: 'status' },
 		    { data: 'id', name: 'id' },
 		    { data: 'consultant_name', name: 'consultant_name' },
