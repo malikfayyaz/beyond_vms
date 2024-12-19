@@ -258,7 +258,7 @@
                 { data: 'location_name', name: 'location_name' }, // Location name
                 { data: 'worker_type', name: 'worker_type' },
                 { data: 'action', name: 'action', orderable: false, searchable: false }
-            ], () => currentType);
+            ], () => ({currentType}));
 
             $(document).on('click', '.job-detail-trigger', function (e) {
                 e.preventDefault();

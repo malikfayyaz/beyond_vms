@@ -140,6 +140,8 @@
     document.addEventListener('DOMContentLoaded', function() {
         if (window.$) {
             let currentType = 'all_offers';
+            let currentId = '';
+            let subId = '';
             let table = initializeDataTable('#listing', '/vendor/offer/index', [
                 { data: 'status', name: 'status' },
                 { data: 'id', name: 'id' },

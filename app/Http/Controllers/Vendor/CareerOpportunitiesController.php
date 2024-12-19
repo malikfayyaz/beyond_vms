@@ -22,57 +22,58 @@ class CareerOpportunitiesController extends Controller
     public function index(Request $request)
     {
         $vendorid = Vendor::getVendorIdByUserId(\Auth::id());
+     
         $counts = [
             'all_jobs' => CareerOpportunity::whereHas('VendorJobRelease', function ($query) use ($vendorid) {
-                                $query->where('user_id', $vendorid);
+                                $query->where('vendor_id', $vendorid);
                             })->count(),
 
             'open' => CareerOpportunity::whereHas('VendorJobRelease', function ($query) use ($vendorid) {
-                                $query->where('user_id', $vendorid);
+                                $query->where('vendor_id', $vendorid);
                             })->where('jobStatus', 3)->count(),
 
             'filled' => CareerOpportunity::whereHas('VendorJobRelease', function ($query) use ($vendorid) {
-                                $query->where('user_id', $vendorid);
+                                $query->where('vendor_id', $vendorid);
                             })->where('jobStatus', 4)->count(),
 
             'new' => CareerOpportunity::whereHas('VendorJobRelease', function ($query) use ($vendorid) {
-                                $query->where('user_id', $vendorid);
+                                $query->where('vendor_id', $vendorid);
                             })->where('jobStatus', 11)->count(),
 
             'closed' => CareerOpportunity::whereHas('VendorJobRelease', function ($query) use ($vendorid) {
-                                $query->where('user_id', $vendorid);
+                                $query->where('vendor_id', $vendorid);
                             })->where('jobStatus', 12)->count(),
 
             'pending' => CareerOpportunity::whereHas('VendorJobRelease', function ($query) use ($vendorid) {
-                                $query->where('user_id', $vendorid);
+                                $query->where('vendor_id', $vendorid);
                             })->where('jobStatus', 1)->count(),
 
             'sourcing' => CareerOpportunity::whereHas('VendorJobRelease', function ($query) use ($vendorid) {
-                                $query->where('user_id', $vendorid);
+                                $query->where('vendor_id', $vendorid);
                             })->where('jobStatus', 13)->count(),
 
             'pendingpmo' => CareerOpportunity::whereHas('VendorJobRelease', function ($query) use ($vendorid) {
-                                $query->where('user_id', $vendorid);
+                                $query->where('vendor_id', $vendorid);
                             })->where('jobStatus', 22)->count(),
 
             'open_pending_release' => CareerOpportunity::whereHas('VendorJobRelease', function ($query) use ($vendorid) {
-                                $query->where('user_id', $vendorid);
+                                $query->where('vendor_id', $vendorid);
                             })->whereIn('jobStatus', [3, 23])->count(),
 
             'pending_hm' => CareerOpportunity::whereHas('VendorJobRelease', function ($query) use ($vendorid) {
-                                $query->where('user_id', $vendorid);
+                                $query->where('vendor_id', $vendorid);
                             })->whereIn('jobStatus', [1, 23, 24])->count(),
 
             'quick_create' => CareerOpportunity::whereHas('VendorJobRelease', function ($query) use ($vendorid) {
-                                $query->where('user_id', $vendorid);
+                                $query->where('vendor_id', $vendorid);
                             })->whereIn('jobStatus', [1, 3, 13])->count(),
 
             'draft' => CareerOpportunity::whereHas('VendorJobRelease', function ($query) use ($vendorid) {
-                                $query->where('user_id', $vendorid);
+                                $query->where('vendor_id', $vendorid);
                             })->where('jobStatus', 2)->count(),
 
             'active' => CareerOpportunity::whereHas('VendorJobRelease', function ($query) use ($vendorid) {
-                                $query->where('user_id', $vendorid);
+                                $query->where('vendor_id', $vendorid);
                             })->whereIn('jobStatus', [1, 3, 6, 13, 23, 24])->count(),
         ];
 
@@ -81,7 +82,7 @@ class CareerOpportunitiesController extends Controller
             $data = CareerOpportunity::with('hiringManager', 'workerType')
                 ->withCount('submissions')
                 ->orWhereHas('VendorJobRelease', function ($query) use ($vendorid) {
-                    $query->where('user_id', $vendorid);
+                    $query->where('vendor_id', $vendorid);
                 })->orderby('id', 'desc');
 
             // Apply filtering based on request 'type'
