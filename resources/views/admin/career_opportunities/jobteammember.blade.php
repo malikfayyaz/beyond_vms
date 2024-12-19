@@ -15,9 +15,8 @@
             >
                 <option value="" disabled>{{translate('Select Team Member')}}</option>
                 @foreach($clients as $data)
-                    <option value="{{ $data->id }}">{{ $data->first_name }} {{ $data->last_name}}</option>
+                        <option value="{{ $data->id }}">{{ $data->first_name }} {{ $data->last_name}}</option>
                 @endforeach
-
             </select>
             <p class="text-red-500 text-sm mt-1" x-text="user_idError"></p>
         </div>
@@ -25,7 +24,7 @@
         <div class="flex mb-4">
           <button
               @click="submitData1()"
-              class="bg-blue-500 text-white px-4 py-2 rounded mr-2"
+              class="bg-blue-500 text-white px-4 py-2 rounded mr-2 mt-[30px]"
           >{{translate('Add')}}
           </button>
       </div>

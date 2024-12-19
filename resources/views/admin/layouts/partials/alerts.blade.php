@@ -8,7 +8,7 @@
 
         @if (session('message') || session('success'))
             <div class="p-4 mb-4 text-sm text-green-700 bg-green-100 rounded-lg dark:bg-green-900 dark:text-green-300" role="alert">
-                <span class="font-medium">Success:</span> 
+                <span class="font-medium">Success:</span>
                 {{ session('success') ?? session('message') }}
             </div>
         @endif

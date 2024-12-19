@@ -179,4 +179,8 @@ class CareerOpportunity extends Model
     {
         return $this->hasMany(Activity::class, 'subject_id', 'id');
     }
+    public function teamMembers()
+    {
+        return $this->hasMany(JobTeamMember::class, 'career_opportunity_id');
+    }
 }

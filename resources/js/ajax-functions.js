@@ -4,10 +4,10 @@ function initializeDataTable(tableId, ajaxUrl, columns,getType) {
     return $(tableId).DataTable({
       processing: true,
       serverSide: true,
-     
+
       ajax: {
         url: ajaxUrl,
-       
+
         data: function(d) {
             if (getType) {
                     const typeData = getType(); // Retrieve the object with currentType, currentId, and subId
@@ -17,11 +17,11 @@ function initializeDataTable(tableId, ajaxUrl, columns,getType) {
                 }
         }
     },
-     
+
       columns: columns,
       order: [[1, 'desc']]
     });
-     
+
   }
 
   function ajaxCall(url, method, functionsOnSuccess = [], form = null) {
@@ -92,7 +92,7 @@ function initializeDataTable(tableId, ajaxUrl, columns,getType) {
                 }
 
                 $('.error-messages').css('display', 'block');
-               
+
             }
         });
     }

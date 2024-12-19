@@ -105,7 +105,7 @@ class CareerOpportunitiesController extends BaseController
                         case 'active':
                             $query->whereIn('jobStatus', [1, 3, 6, 13, 23, 24]);
                             break;
-                       
+
                         default:
                             // No filtering for unknown actions
                             break;
@@ -562,7 +562,7 @@ class CareerOpportunitiesController extends BaseController
         return response()->json([
             'success' => true,
             'message' => $successMessage,
-            'redirect_url' =>  url("admin/career-opportunities", $request->job_id) 
+            'redirect_url' =>  url("admin/career-opportunities", $request->job_id)
         ]);
 
     }
@@ -575,7 +575,7 @@ class CareerOpportunitiesController extends BaseController
         return response()->json([
             'success' => true,
             'message' => $successMessage,
-            'redirect_url' =>  url("admin/career-opportunities", $request->job_id) 
+            'redirect_url' =>  url("admin/career-opportunities", $request->job_id)
         ]);
 
     }
@@ -590,7 +590,7 @@ class CareerOpportunitiesController extends BaseController
         return response()->json([
             'success' => true,
             'message' => $successMessage,
-            'redirect_url' =>  url("admin/career-opportunities", $id) 
+            'redirect_url' =>  url("admin/career-opportunities", $id)
         ]);
 
     }
@@ -603,7 +603,7 @@ class CareerOpportunitiesController extends BaseController
         return response()->json([
             'success' => true,
             'message' => $successMessage,
-            'redirect_url' =>  url("admin/career-opportunities", $id) 
+            'redirect_url' =>  url("admin/career-opportunities", $id)
         ]);
     }
 
@@ -639,12 +639,12 @@ class CareerOpportunitiesController extends BaseController
         return response()->json([
             'success' => true,
             'message' => $successMessage,
-            'redirect_url' =>  url("admin/career-opportunities", $request->job_id) 
+            'redirect_url' =>  url("admin/career-opportunities", $request->job_id)
         ]);
 
     }
 
-    
+
      public function releaseJobVendor(Request $request){
 
         $user = \Auth::user();
@@ -678,19 +678,19 @@ class CareerOpportunitiesController extends BaseController
         return response()->json([
             'success' => true,
             'message' => $successMessage,
-            'redirect_url' =>  url("admin/career-opportunities", $request->job_id) 
+            'redirect_url' =>  url("admin/career-opportunities", $request->job_id)
         ]);
     }
 
     public function jobSubmission(String $id ){
         $submissions = CareerOpportunitySubmission::with(['consultant','vendor','careerOpportunity.hiringManager','location'])->where('career_opportunity_id', $id);
-        
+
         return DataTables::of($submissions)
             ->addColumn('status', function ($row) {
                 return CareerOpportunitySubmission::getSubmissionStatus($row->resume_status);
             })
             ->addColumn('submissionID', function($row) {
-                return '<span class="submission-detail-trigger text-blue-500 cursor-pointer" data-id="' 
+                return '<span class="submission-detail-trigger text-blue-500 cursor-pointer" data-id="'
                     . $row->id . '">' . $row->resume_status . '</span>';
             })
             ->addColumn('candidateName', function($row) {
@@ -729,7 +729,7 @@ class CareerOpportunitiesController extends BaseController
                 $query->whereDate('schedule_date', date('Y-m-d') );
             })
             ->orderBy('id', 'desc');
-          
+
             return DataTables::of($interview)
             ->addColumn('type', function($row) {
                 return $row->interviewtype ? $row->interviewtype->title : 'N/A';
@@ -749,13 +749,13 @@ class CareerOpportunitiesController extends BaseController
             })
             ->addColumn('start_time', function($row) {
                 $primaryDate = $row->interviewDates->where('schedule_date_order', 1)->first();
-                
-                return $primaryDate ? $primaryDate->formatted_start_time : 'N/A'; 
+
+                return $primaryDate ? $primaryDate->formatted_start_time : 'N/A';
             })
             ->addColumn('end_time', function($row) {
                 $primaryDate = $row->interviewDates->where('schedule_date_order', 1)->first();
-                
-                return $primaryDate ? $primaryDate->formatted_end_time : 'N/A'; 
+
+                return $primaryDate ? $primaryDate->formatted_end_time : 'N/A';
             })
             ->addColumn('location', function($row) {
                 return $row->location ? $row->location->name : 'N/A';
@@ -784,7 +784,7 @@ class CareerOpportunitiesController extends BaseController
                 $query->whereDate('schedule_date','!=', date('Y-m-d') );
             })
             ->orderBy('id', 'desc');
-          
+
             return DataTables::of($interview)
             ->addColumn('type', function($row) {
                 return $row->interviewtype ? $row->interviewtype->title : 'N/A';
@@ -804,13 +804,13 @@ class CareerOpportunitiesController extends BaseController
             })
             ->addColumn('start_time', function($row) {
                 $primaryDate = $row->interviewDates->where('schedule_date_order', 1)->first();
-                
-                return $primaryDate ? $primaryDate->formatted_start_time : 'N/A'; 
+
+                return $primaryDate ? $primaryDate->formatted_start_time : 'N/A';
             })
             ->addColumn('end_time', function($row) {
                 $primaryDate = $row->interviewDates->where('schedule_date_order', 1)->first();
-                
-                return $primaryDate ? $primaryDate->formatted_end_time : 'N/A'; 
+
+                return $primaryDate ? $primaryDate->formatted_end_time : 'N/A';
             })
             ->addColumn('location', function($row) {
                 return $row->location ? $row->location->name : 'N/A';
@@ -959,24 +959,40 @@ class CareerOpportunitiesController extends BaseController
             ->make(true);
     }
 
-    public function pmoteammember(Request $request, $id){
-        if(isset($request->user_id)){
+    public function pmoteammember(Request $request, $id)
+    {
+        if (isset($request->user_id)) {
+            $existingMember = AdminTeamJob::where('career_opportunity_id', $id)
+                ->where('user_id', $request->user_id)
+                ->first();
+            if ($existingMember) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'User already added as a PMO team member!',
+                ], 409);
+            }
             $data = new AdminTeamJob;
             $data->career_opportunity_id = $id;
             $data->user_id = $request->user_id;
             $data->save();
+            return response()->json([
+                'success' => true,
+                'message' => 'PMO Team member Added successfully!',
+            ], status: 201);
         }
-        $query = AdminTeamJob::where('career_opportunity_id', $id)->where('status','!=',2)->get();
-        return DataTables::of($query)
-            //->addIndexColumn()
-            ->addColumn('name', function($row) {
-                return $row->user ? $row->user->name: 'N/A';
-            })
-            ->addColumn('email', function($row) {
-                return $row->user ? $row->user->email  : 'N/A';
-            })
-            ->addColumn('action', function ($row) {
-               $btn = "<div x-data=\"{
+
+        // For DataTables AJAX request
+        if ($request->ajax()) {
+            $query = AdminTeamJob::where('career_opportunity_id', $id)->with('user')->get();
+            return DataTables::of($query)
+                ->addColumn('name', function ($row) {
+                    return $row->user ? $row->user->name : 'N/A';
+                })
+                ->addColumn('email', function ($row) {
+                    return $row->user ? $row->user->email : 'N/A';
+                })
+                ->addColumn('action', function ($row) {
+                    $btn = "<div x-data=\"{
                     deleteRecord(id) {
                         if (confirm('Are you sure?')) {
                             fetch('" . route('admin.pmoteammemberDelete', $row->id) . "', {
@@ -999,37 +1015,58 @@ class CareerOpportunitiesController extends BaseController
                         <i class=\"fas fa-trash\"></i>
                     </button>
                 </div>";
-                return $btn;
-            })
-            ->rawColumns(['action'])
-            ->make(true);
+                    return $btn;
+                })
+                ->rawColumns(['action'])
+                ->make(true);
+        }
     }
 
-    public function jobteammember(Request $request, $id){
 
-        if(isset($request->user_id)){
+    public function jobteammember(Request $request, $id)
+    {
+        // Handle saving new team member
+        if (isset($request->user_id)) {
+            // Check if the user is already added as a team member for this job
+            $existingTeamMember = JobTeamMember::where('career_opportunity_id', $id)
+                ->where('user_id', $request->user_id)
+                ->first();
+
+            if ($existingTeamMember) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'User already added as a team member!',
+                ], 409);
+            }
+
+            // Add new team member if not already added
             $data = new JobTeamMember;
             $data->career_opportunity_id = $id;
             $data->user_id = $request->user_id;
             $data->status = 0;
             $data->save();
-            
+
             return response()->json([
-                    'success' => true,
-                    'message' => 'Data saved successfully!',
-                ]);
+                'success' => true,
+                'message' => 'Team member Added successfully!',
+            ], status: 201);
         }
-        $query = JobTeamMember::where('career_opportunity_id', $id)->where('status', '!=',2)->get();
-        return DataTables::of($query)
-           // ->addIndexColumn()
-            ->addColumn('name', function($row) {
-                return $row->user ? $row->user->name: 'N/A';
-            })
-            ->addColumn('email', function($row) {
-                return $row->user ? $row->user->email  : 'N/A';
-            })
-            ->addColumn('action', function ($row) {
-                $btn = "<div x-data=\"{
+
+        // If the request is an AJAX call, return the DataTable response
+        if ($request->ajax()) {
+            $query = JobTeamMember::where('career_opportunity_id', $id)
+                ->where('status', '!=', 2)
+                ->get();
+
+            return DataTables::of($query)
+                ->addColumn('name', function($row) {
+                    return $row->user ? $row->user->name : 'N/A';
+                })
+                ->addColumn('email', function($row) {
+                    return $row->user ? $row->user->email : 'N/A';
+                })
+                ->addColumn('action', function ($row) {
+                    $btn = "<div x-data=\"{
                     deleteRecord(id) {
                         if (confirm('Are you sure?')) {
                             fetch('" . route('admin.jobteammemberDelete', $row->id) . "', {
@@ -1053,11 +1090,13 @@ class CareerOpportunitiesController extends BaseController
                     </button>
                 </div>";
 
-                return $btn;
-            })
-            ->rawColumns(['action'])
-            ->make(true);
+                    return $btn;
+                })
+                ->rawColumns(['action'])
+                ->make(true);
+        }
     }
+
 
     public function jobteammemberDelete($id){
         $data =  JobTeamMember::find($id);
