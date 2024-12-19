@@ -175,8 +175,8 @@ document.addEventListener('DOMContentLoaded', function() {
             { data: 'num_openings', name: 'num_openings' },
             { data: 'worker_type', name: 'worker_type' },
             { data: 'action', name: 'action', orderable: false, searchable: false }
-        ], () => currentType); // Ensure 'currentType' is sent with the request
-
+        ], () => ({currentType})); // Ensure 'currentType' is sent with the request
+        
         // Event listener for job detail modal trigger
         $(document).on('click', '.job-detail-trigger', function (e) {
             e.preventDefault();

@@ -127,7 +127,7 @@
 
                 </a>
               </li>
-               <li class="flex justify-center" x-data="{ status: {{ $job->jobStatus }} }" x-show="status === 3 || status === 11">
+               <li class="flex justify-center" x-data="{ status: {{ $job->jobStatus }} }" x-show="status === 3 || status === 11 || status === 13">
                 <a
                 @click="tab = 'vendorrelease'"
                 :class="{ 'border-blue-500 text-blue-500': tab === 'vendorrelease' }"
