@@ -844,9 +844,21 @@
         // Dynamically load jQuery UI
         const formData = @json($formBuilderData);
         const parsedData = JSON.parse(formData.data);
-        // console.log(parsedData);
+        const oldFormData = @json($oldFormData);
+        
+        // console.log(oldFormData);
         $(".render-wrap").formRender({
           formData: parsedData
+        });
+        Object.keys(oldFormData).forEach((fieldName) => {
+            const field = document.querySelector(`.render-wrap [name="${fieldName}"]`);
+            if (field) {
+                if (field.type === "checkbox" || field.type === "radio") {
+                    field.checked = oldFormData[fieldName] === true || oldFormData[fieldName] === "true";
+                } else {
+                    field.value = oldFormData[fieldName];
+                }
+            }
         });
       };
     });
