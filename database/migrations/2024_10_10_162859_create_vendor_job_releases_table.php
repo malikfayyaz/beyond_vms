@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('vendor_job_releases', function (Blueprint $table) {
             $table->id();
 
-            $table->foreignId('vendor_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreignId('vendor_id')->references('id')->on('vendors')->onDelete('cascade');
             $table->integer('created_by');
             $table->string('created_by_type')->nullable();
             $table->integer('group_id')->nullable();
