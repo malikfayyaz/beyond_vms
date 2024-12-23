@@ -35,7 +35,7 @@
                     <h4 class="font-medium">{{translate('Contract Start Date:')}}</h4>
                 </div>
                 <div class="w-2/4">
-                    <p class="font-light">{{$contract->start_date}}</p>
+                    <p class="font-light">{{formatDate($contract->start_date)}}</p>
                 </div>
             </div>
             <div class="flex items-center justify-between py-4 border-t">
@@ -43,7 +43,7 @@
                     <h4 class="font-medium">{{translate('Contract End Date:')}}</h4>
                 </div>
                 <div class="w-2/4">
-                    <p class="font-light">{{$contract->end_date}}</p>
+                    <p class="font-light">{{formatDate($contract->end_date)}}</p>
                 </div>
             </div>
             <div class="flex items-center justify-between py-4 border-t">
@@ -400,7 +400,7 @@
                 <h4 class="font-medium">{{translate('Onboarding Start Date:')}}</h4>
             </div>
             <div class="w-2/4">
-                <p class="font-light">{{ $contract->workOrder->onboard_change_start_date ?? 'N/A' }}</p>
+                <p class="font-light">{{ formatDate($contract->workOrder->onboard_change_start_date) ?? 'N/A' }}</p>
             </div>
         </div>
         <div class="flex items-center justify-between py-4 border-t">
@@ -408,7 +408,7 @@
                 <h4 class="font-medium">{{translate('Onboarding End Date:')}}</h4>
             </div>
             <div class="w-2/4">
-                <p class="font-light">{{ $contract->workOrder->onboard_changed_end_date ?? 'N/A' }}</p>
+                <p class="font-light">{{ formatDate($contract->workOrder->onboard_changed_end_date) ?? 'N/A' }}</p>
             </div>
         </div>
         <div class="flex items-center justify-between py-4 border-t">

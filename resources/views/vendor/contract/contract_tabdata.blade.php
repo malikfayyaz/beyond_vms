@@ -28,10 +28,10 @@
                             {{ $record->percentage }}%
                         </td>
                         <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                            {{ $record->created_at }}
+                            {{ formatDateTime($record->created_at) }}
                         </td>
                         <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                            {{ $contract->start_date }}
+                            {{ formatDate($contract->start_date) }}
                         </td>
                         <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                             {{ $contract->getContractStatus($contract->status)  }}

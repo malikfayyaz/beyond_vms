@@ -75,7 +75,7 @@
                                     <h4 class="font-medium">{{translate('Start Date:')}}</h4>
                                 </div>
                                 <div class="w-2/4">
-                                    <p class="font-light">{{$workorder->start_date}}</p>
+                                    <p class="font-light">{{formatDate($workorder->start_date)}}</p>
                                 </div>
                             </div>
                             <div class="flex items-center justify-between py-4 border-t">
@@ -83,7 +83,7 @@
                                     <h4 class="font-medium">{{translate('End Date:')}}</h4>
                                 </div>
                                 <div class="w-2/4">
-                                    <p class="font-light">{{$workorder->end_date}}</p>
+                                    <p class="font-light">{{formatDate($workorder->end_date)}}</p>
                                 </div>
                             </div>
                             <div class="flex items-center justify-between py-4 border-t">

@@ -22,7 +22,7 @@ class CareerOpportunitiesController extends Controller
     public function index(Request $request)
     {
         $vendorid = Vendor::getVendorIdByUserId(\Auth::id());
-     
+
         $counts = [
             'all_jobs' => CareerOpportunity::whereHas('VendorJobRelease', function ($query) use ($vendorid) {
                                 $query->where('vendor_id', $vendorid);
@@ -174,13 +174,13 @@ class CareerOpportunitiesController extends Controller
 
     public function jobSubmission(String $id ){
         $submissions = CareerOpportunitySubmission::with(['consultant','vendor','careerOpportunity.hiringManager','location'])->where('career_opportunity_id', $id);
-        
+
         return DataTables::of($submissions)
             ->addColumn('status', function ($row) {
                 return CareerOpportunitySubmission::getSubmissionStatus($row->resume_status);
             })
             ->addColumn('submissionID', function($row) {
-                return '<span class="submission-detail-trigger text-blue-500 cursor-pointer" data-id="' 
+                return '<span class="submission-detail-trigger text-blue-500 cursor-pointer" data-id="'
                     . $row->id . '">' . $row->resume_status . '</span>';
             })
             ->addColumn('candidateName', function($row) {
@@ -190,7 +190,7 @@ class CareerOpportunitiesController extends Controller
                 return $row->vendor ? $row->vendor->full_name : 'N/A';
             })
             ->addColumn('startDate', function($row) {
-                return $row->estimate_start_date ? date('Y-m-d', strtotime($row->estimate_start_date)) : 'N/A';
+                return $row->estimate_start_date ? formatDate($row->estimate_start_date) : 'N/A';
             })
             ->addColumn('flag', function($row) {
                 return 'N/A';
@@ -219,7 +219,7 @@ class CareerOpportunitiesController extends Controller
                 $query->whereDate('schedule_date', date('Y-m-d') );
             })
             ->orderBy('id', 'desc');
-          
+
             return DataTables::of($interview)
             ->addColumn('type', function($row) {
                 return $row->interviewtype ? $row->interviewtype->title : 'N/A';
@@ -239,13 +239,13 @@ class CareerOpportunitiesController extends Controller
             })
             ->addColumn('start_time', function($row) {
                 $primaryDate = $row->interviewDates->where('schedule_date_order', 1)->first();
-                
-                return $primaryDate ? $primaryDate->formatted_start_time : 'N/A'; 
+
+                return $primaryDate ? $primaryDate->formatted_start_time : 'N/A';
             })
             ->addColumn('end_time', function($row) {
                 $primaryDate = $row->interviewDates->where('schedule_date_order', 1)->first();
-                
-                return $primaryDate ? $primaryDate->formatted_end_time : 'N/A'; 
+
+                return $primaryDate ? $primaryDate->formatted_end_time : 'N/A';
             })
             ->addColumn('location', function($row) {
                 return $row->location ? $row->location->name : 'N/A';
@@ -274,7 +274,7 @@ class CareerOpportunitiesController extends Controller
                 $query->whereDate('schedule_date','!=', date('Y-m-d') );
             })
             ->orderBy('id', 'desc');
-          
+
             return DataTables::of($interview)
             ->addColumn('type', function($row) {
                 return $row->interviewtype ? $row->interviewtype->title : 'N/A';
@@ -294,13 +294,13 @@ class CareerOpportunitiesController extends Controller
             })
             ->addColumn('start_time', function($row) {
                 $primaryDate = $row->interviewDates->where('schedule_date_order', 1)->first();
-                
-                return $primaryDate ? $primaryDate->formatted_start_time : 'N/A'; 
+
+                return $primaryDate ? $primaryDate->formatted_start_time : 'N/A';
             })
             ->addColumn('end_time', function($row) {
                 $primaryDate = $row->interviewDates->where('schedule_date_order', 1)->first();
-                
-                return $primaryDate ? $primaryDate->formatted_end_time : 'N/A'; 
+
+                return $primaryDate ? $primaryDate->formatted_end_time : 'N/A';
             })
             ->addColumn('location', function($row) {
                 return $row->location ? $row->location->name : 'N/A';
@@ -362,6 +362,9 @@ class CareerOpportunitiesController extends Controller
         })
         ->addColumn('consultant_name', function($row) {
             return $row->consultant ? $row->consultant->full_name : 'N/A';
+        })
+        ->addColumn('start_date', function ($row) {
+            return $row->start_date ? formatDateTime($row->start_date) : 'N/A';
         })
         ->addColumn('bill_rate', function ($row) {
             return $row->wo_bill_rate ? $row->wo_bill_rate : 'N/A';

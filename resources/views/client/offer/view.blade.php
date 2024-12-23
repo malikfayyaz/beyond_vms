@@ -83,7 +83,7 @@
                                         <td class="py-4 px-4 text-center text-sm">{{ $workflow->hiringManager->full_name }}</td>
                                         <td class="py-4 px-4 text-center text-sm">{{ $workflow->approve_reject_type }}</td>
                                         <td class="py-4 px-4 text-center text-sm">{{ $workflow->approve_reject_by ?? 'N/A' }}</td>
-                                        <td class="py-4 px-4 text-center text-sm">{{ $workflow->approved_datetime ?? 'N/A' }}</td>
+                                        <td class="py-4 px-4 text-center text-sm">{{ formatDateTime($workflow->approved_datetime) ?? 'N/A' }}</td>
                                         <td class="py-4 px-4 text-center text-sm">{{ $workflow->approval_notes ?? 'N/A' }}</td>
                                         <td class="py-4 px-4 text-center text-sm">{{ $workflow->approval_doc ?? 'N/A' }}</td>
                                         <td class="py-4 px-4 text-center text-sm">{{ $workflow->status }}</td>
@@ -300,7 +300,7 @@
                         <h4 class="font-medium">{{translate('Start Date:')}}</h4>
                       </div>
                       <div class="w-2/4">
-                        <p class="font-light"> {{$offer->start_date}} </p>
+                        <p class="font-light"> {{formatDate($offer->start_date)}} </p>
                       </div>
                     </div>
                     <div
@@ -310,7 +310,7 @@
                         <h4 class="font-medium">{{translate('End Date:')}}</h4>
                       </div>
                       <div class="w-2/4">
-                        <p class="font-light"> {{$offer->end_date}} </p>
+                        <p class="font-light"> {{formatDate($offer->end_date)}} </p>
                       </div>
                     </div>
                     <div

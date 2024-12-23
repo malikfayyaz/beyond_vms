@@ -43,18 +43,18 @@ class CareerOpportunitiesInterviewController extends Controller
             })
             ->addColumn('primary_date', function($row) {
                 $primaryDate = $row->interviewDates->where('schedule_date_order', 1)->first();
-                
-                return $primaryDate ? $primaryDate->formatted_schedule_date : 'N/A'; 
+
+                return $primaryDate ? formatDate($primaryDate->formatted_schedule_date) : 'N/A';
             })
             ->addColumn('primary_start_time', function($row) {
                 $primaryDate = $row->interviewDates->where('schedule_date_order', 1)->first();
-                
-                return $primaryDate ? $primaryDate->formatted_start_time : 'N/A'; 
+
+                return $primaryDate ? $primaryDate->formatted_start_time : 'N/A';
             })
             ->addColumn('primary_end_time', function($row) {
                 $primaryDate = $row->interviewDates->where('schedule_date_order', 1)->first();
-                
-                return $primaryDate ? $primaryDate->formatted_end_time : 'N/A'; 
+
+                return $primaryDate ? $primaryDate->formatted_end_time : 'N/A';
             })
             ->addColumn('worker_type', function($row) {
                 return $row->careerOpportunity && $row->careerOpportunity->workerType
@@ -81,7 +81,7 @@ class CareerOpportunitiesInterviewController extends Controller
     public function create($id)
     {
         $submission =  CareerOpportunitySubmission::findOrFail($id);
-        
+
         return view('admin.interview.create', compact('submission',));
     }
 
@@ -197,11 +197,11 @@ class CareerOpportunitiesInterviewController extends Controller
         where('interview_id', $id)
         ->orderBy('schedule_date_order', 'asc')
         ->get();
-        
+
             $selectedTimeSlots = [];
 
             foreach ($schedules as $schedule) {
-               
+
 
                 // Format the time slot (start_time - end_time)
                 $timeSlot = date('h:i A', strtotime($schedule->start_time)) . ' - ' . date('h:i A', strtotime($schedule->end_time));
@@ -359,7 +359,7 @@ class CareerOpportunitiesInterviewController extends Controller
     {
         $interview = CareerOpportunitiesInterview::findOrFail($id);
         $offer = CareerOpportunitiesOffer::where('submission_id', $interview->submission_id)->first();
-       
+
         return view('admin.interview.view', compact('interview','offer'));
     }
 

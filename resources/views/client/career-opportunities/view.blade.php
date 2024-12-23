@@ -650,8 +650,8 @@
                 <td class="py-4 px-4 text-center text-sm">{{ $workflow->approval_required ?? 'N/A' }}</td>
                 <td class="py-4 px-4 text-center text-sm">{{ isset($workflow->approve_reject_by) ? ($workflow->approveRejectBy->name ?? 'N/A') : 'N/A' }}</td>
 
-                <td class="py-4 px-4 text-center text-sm">{{ isset($workflow->created_at) ? date('Y-m-d H:i:s',strtotime($workflow->created_at)) : 'N/A' }}</td>
-                <td class="py-4 px-4 text-center text-sm">{{ $workflow->approved_datetime ?? 'N/A' }}</td>
+                <td class="py-4 px-4 text-center text-sm">{{ isset($workflow->created_at) ? formatDateTime($workflow->created_at) : 'N/A' }}</td>
+                <td class="py-4 px-4 text-center text-sm">{{ formatDateTime($workflow->approved_datetime) ?? 'N/A' }}</td>
                 <td class="py-4 px-4 text-center text-sm">{{ $workflow->approval_notes ?? 'N/A' }}</td>
                 <td class="py-4 px-4 text-center text-sm">
                     <div x-data="{

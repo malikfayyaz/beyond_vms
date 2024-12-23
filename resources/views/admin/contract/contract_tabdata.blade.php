@@ -28,10 +28,10 @@
                             {{ $record->percentage }}%
                         </td>
                         <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                            {{ $record->created_at }}
+                            {{ formatDateTime($record->created_at) }}
                         </td>
                         <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                            {{ $contract->start_date }}
+                            {{ formatDateTime($contract->start_date) }}
                         </td>
                         <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                             {{ $contract->getContractStatus($contract->status)  }}
@@ -100,7 +100,7 @@
                                                 {{translate('Name:')}}' {{ Auth::user()->name }}
                                             </p>
                                             <p class="meta-inner pull-left" style="color: #8b92ca;">
-                                                {{ $note->created_at->format('m/d/Y') }} at {{ $note->created_at->format('H:i A') }}
+                                                {{ formatDateTime($note->created_at)}}
                                             </p>
                                         </div>
                                     </div>

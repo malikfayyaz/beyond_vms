@@ -21,7 +21,9 @@
           <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
               {{translate(' Bill Rate')}}
           </th>
-
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                {{translate('Location')}}
+            </th>
           <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
               {{translate('Action')}}
           </th>
@@ -43,7 +45,8 @@ document.addEventListener('DOMContentLoaded', function() {
 		    { data: 'status', name: 'status' },
 		    { data: 'id', name: 'id' },
 		    { data: 'consultant_name', name: 'consultant_name' },
-		    { data: 'bill_rate', name: 'bill_rate' },
+            { data: 'start_date', name: 'start_date' },
+            { data: 'bill_rate', name: 'bill_rate' },
 		    { data: 'location', name: 'location' },
 		    { data: 'action', name: 'action', orderable: false, searchable: false }
 		]);

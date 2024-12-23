@@ -180,7 +180,7 @@
                             :style="{'color': activePage === 'tab3' ? 'var(--primary-color)' : ''}"
                         >
                             <i class="fa-solid fa-fill"></i>
-                            <span class="capitalize">{{translate('BU')}}</span>
+                            <span class="capitalize">{{translate('Business Unit')}}</span>
                             <div class="px-1 py-1 flex items-center justify-center text-white rounded-lg"
                                  :style="{'background-color': activePage === 'tab3' ? 'var(--primary-color)' : 'bg-gray-500'}"
                             >

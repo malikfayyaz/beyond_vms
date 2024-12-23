@@ -52,7 +52,7 @@ class CareerOpportunitiesOfferController extends Controller
                     case 'rejected':
                         $offers->where('status', 2);
                         break;
-                    
+
 
                     // Add additional cases as needed
                     default:
@@ -82,7 +82,7 @@ class CareerOpportunitiesOfferController extends Controller
                     return CareerOpportunitiesOffer::getOfferStatus($row->status);
                 })
                 ->addColumn('created_at', function($row) {
-                    return $row->created_at ? $row->created_at->format('Y-m-d') : 'N/A';
+                    return $row->created_at ? formatDateTime($row->created_at) : 'N/A';
                 })
                 ->addColumn('wo_status', function($row) {
                     return  '';
@@ -209,7 +209,7 @@ class CareerOpportunitiesOfferController extends Controller
         $candidateIds = $logs->pluck('properties.attributes.candidate_id')->unique();
         $hiringManagerIds = $logs->pluck('properties.attributes.hiring_manager_id')->unique();
         $vendorIds = $logs->pluck('properties.attributes.vendor_id')->unique();
-    
+
         // Load all relevant consultants, clients, and vendors
         $candidates = Consultant::whereIn('id', $candidateIds)->get()->keyBy('id');
         $hiringManagers = Client::whereIn('id', $hiringManagerIds)->get()->keyBy('id');
@@ -244,7 +244,7 @@ class CareerOpportunitiesOfferController extends Controller
                 $attributes['status_name'] = $status_name;
             }
             $log->properties = array_merge($log->properties->toArray(), ['attributes' => $attributes]); // Update properties
-        
+
         }
         $workflows = OfferWorkFlow::where('offer_id', $id)->get();
         $offer = CareerOpportunitiesOffer::findOrFail($id);

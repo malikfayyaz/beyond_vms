@@ -239,7 +239,7 @@
                           <span class="text-gray-600">{{translate('Availability Date:')}}</span>
                           <span
                             class="font-semibold"
-                          >{{$submission->estimate_start_date}}</span>
+                          >{{formatDate($submission->estimate_start_date)}}</span>
                         </div>
                         <div class="flex justify-between py-3 px-4" x-data="{ jobDetails: null}" @job-details-updated.window="jobDetails = $event.detail">
                           <span class="text-gray-600">{{translate('Job Profile:')}}</span>
@@ -349,7 +349,7 @@
                           <span class="text-gray-600">{{translate('Submission Date:')}}</span>
                           <span
                             class="font-semibold"
-                          >{{$submission->formatted_created_at}}</span>
+                          >{{formatDate($submission->formatted_created_at)}}</span>
                         </div>
                       </div>
                     </div>

@@ -54,7 +54,7 @@ class CareerOpportunitiesOfferController extends BaseController
                     case 'rejected':
                         $offers->where('status', 2);
                         break;
-                    
+
 
                     // Add additional cases as needed
                     default:
@@ -65,7 +65,7 @@ class CareerOpportunitiesOfferController extends BaseController
                 $offers->where('submission_id', $subId)
                        ->where('id', '!=', $currentId);
             }
-            
+
             return DataTables::of($offers)
                 ->addColumn('consultant_name', function($row) {
                     return $row->consultant ? $row->consultant->full_name : 'N/A';
@@ -83,7 +83,7 @@ class CareerOpportunitiesOfferController extends BaseController
                     return $row->vendor ? $row->vendor->full_name : 'N/A';
                 })
                 ->addColumn('created_at', function($row) {
-                    return $row->created_at ? $row->created_at->format('Y-m-d') : 'N/A';
+                    return $row->created_at ? formatDate($row->created_at) : 'N/A';
                 })
                 ->addColumn('wo_status', function($row) {
                     return  '';
@@ -206,7 +206,7 @@ class CareerOpportunitiesOfferController extends BaseController
 
     // Show a specific career opportunity offer
     public function show($id)
-    { 
+    {
         $logs = Activity::where('subject_id', $id)->where('log_name', 'offer')->latest()->get();
         $candidateIds = $logs->pluck('properties.attributes.candidate_id')->unique();
         $hiringManagerIds = $logs->pluck('properties.attributes.hiring_manager_id')->unique();
@@ -220,7 +220,7 @@ class CareerOpportunitiesOfferController extends BaseController
             $wo_type = 'No Work Order Found';
             $wo_statusName = 'No Status Available';
         }
-        
+
         // Load all relevant consultants, clients, and vendors
         $candidates = Consultant::whereIn('id', $candidateIds)->get()->keyBy('id');
         $hiringManagers = Client::whereIn('id', $hiringManagerIds)->get()->keyBy('id');
@@ -255,7 +255,7 @@ class CareerOpportunitiesOfferController extends BaseController
                 $attributes['status_name'] = $status_name;
             }
             $log->properties = array_merge($log->properties->toArray(), ['attributes' => $attributes]); // Update properties
-        
+
         }
         $rejectionreason = checksetting(17);
         $workflows = OfferWorkFlow::where('offer_id', $id)->get();
@@ -297,7 +297,7 @@ class CareerOpportunitiesOfferController extends BaseController
         return redirect()->route('admin.offer.index')->with('success', 'Career opportunity offer deleted successfully.');
     }
 
-   
+
     public function numberFormat($data)
     {
         return number_format($data, 2);
@@ -350,6 +350,6 @@ class CareerOpportunitiesOfferController extends BaseController
         ]);
 
 
-    }    
+    }
 
 }

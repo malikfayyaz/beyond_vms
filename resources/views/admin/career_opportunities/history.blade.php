@@ -19,7 +19,7 @@
                     </div>
                     <!-- Content -->
                     <div class="flex-1">
-                        <div class="text-sm text-gray-500 mb-1">{{ $log['created_at']}}</div>
+                        <div class="text-sm text-gray-500 mb-1">{{ formatDateTime($log['created_at'])}}</div>
                         <div class="flex items-center gap-2 mb-1">
                             <div class="font-medium text-gray-900">{{translate('Job History')}}</div>
                             <div class="font-medium text-gray-900">{{ $log['title'] }}</div>

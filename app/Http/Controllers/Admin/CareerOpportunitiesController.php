@@ -247,7 +247,13 @@ class CareerOpportunitiesController extends BaseController
         $jobWorkFlow = JobWorkFlow::where('job_id', $id)->orderby('approval_number', 'ASC')->get();
         $rejectReasons =  Setting::where('category_id', 9)->get();
         $vendors = Vendor::all();
-        $vendorRelease = VendorJobRelease::with('vendorName')->where('job_id', $id)->get();
+        $vendorRelease = VendorJobRelease::with('vendorName')
+            ->where('job_id', $id)
+            ->get()
+            ->map(function ($release) {
+                $release->formatted_job_released_time = formatDateTime($release->job_released_time);
+                return $release;
+            });
         $admins = Admin::all();
         $clients = Client::all();
         $activityLogs = $job->activities()->with('createdBy')->get();
@@ -525,10 +531,10 @@ class CareerOpportunitiesController extends BaseController
                 return $row->approve_reject_by ? $row->approve_reject_by : 'N/A';
             })
             ->addColumn('created_at', function($row) {
-                return $row->created_at ? date('Y-m-d H:i:s',strtotime($row->created_at)) : 'N/A';
+                return $row->created_at ? formatDateTime($row->created_at) : 'N/A';
             })
             ->addColumn('approved_datetime', function($row) {
-                return $row->approved_datetime ? $row->approved_datetime : 'N/A';
+                return $row->approved_datetime ? formatDateTime($row->approved_datetime) : 'N/A';
             })
             ->addColumn('approval_notes', function($row) {
                 return $row->approval_notes ? $row->approval_notes : 'N/A';
@@ -700,7 +706,7 @@ class CareerOpportunitiesController extends BaseController
                 return $row->vendor ? $row->vendor->full_name : 'N/A';
             })
             ->addColumn('startDate', function($row) {
-                return $row->estimate_start_date ? date('Y-m-d', strtotime($row->estimate_start_date)) : 'N/A';
+                return $row->estimate_start_date ? formatDateTime($row->estimate_start_date) : 'N/A';
             })
             ->addColumn('flag', function($row) {
                 return 'N/A';
@@ -745,7 +751,7 @@ class CareerOpportunitiesController extends BaseController
             })
             ->addColumn('date', function ($row) {
                 $primaryDate = $row->interviewDates->where('schedule_date_order', 1)->first();
-                return $primaryDate ? $primaryDate->formatted_schedule_date : 'N/A';
+                return $primaryDate ? formatDateTime($primaryDate->formatted_schedule_date) : 'N/A';
             })
             ->addColumn('start_time', function($row) {
                 $primaryDate = $row->interviewDates->where('schedule_date_order', 1)->first();
@@ -800,7 +806,7 @@ class CareerOpportunitiesController extends BaseController
             })
             ->addColumn('date', function ($row) {
                 $primaryDate = $row->interviewDates->where('schedule_date_order', 1)->first();
-                return $primaryDate ? $primaryDate->formatted_schedule_date : 'N/A';
+                return $primaryDate ? formatDateTime($primaryDate->formatted_schedule_date) : 'N/A';
             })
             ->addColumn('start_time', function($row) {
                 $primaryDate = $row->interviewDates->where('schedule_date_order', 1)->first();
@@ -848,7 +854,7 @@ class CareerOpportunitiesController extends BaseController
                     return $row->offer_bill_rate ? $row->offer_bill_rate : 'N/A';
                 })
                 ->addColumn('offer_date', function($row) {
-                    return $row->offer_accept_date ? $row->offer_accept_date : 'N/A';
+                    return $row->offer_accept_date ? formatDateTime($row->offer_accept_date) : 'N/A';
                 })
                 ->addColumn('action', function($row) {
                     return '<a href="' . route('admin.offer.show', $row->id) . '"
@@ -872,6 +878,9 @@ class CareerOpportunitiesController extends BaseController
             })
             ->addColumn('consultant_name', function($row) {
                 return $row->consultant ? $row->consultant->full_name : 'N/A';
+            })
+            ->addColumn('start_date', function ($row) {
+                return $row->start_date ? formatDateTime($row->start_date) : 'N/A';
             })
             ->addColumn('bill_rate', function ($row) {
                 return $row->wo_bill_rate ? $row->wo_bill_rate : 'N/A';

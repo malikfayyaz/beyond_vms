@@ -36,11 +36,11 @@ class CareerOpportunitiesWorkOrderController extends Controller
             'pending_approval' => CareerOpportunitiesWorkorder::where('status', 7)->count(),
             'cancelled' => CareerOpportunitiesWorkorder::where('status', 14)->count(),
         ];
-        
+
         if ($request->ajax()) {
-            
+
             $data = CareerOpportunitiesWorkorder::with('hiringManager','vendor','careerOpportunity');
-            
+
             if ($request->has('type')) {
                 $type = $request->input('type');
                 switch ($type) {
@@ -70,14 +70,14 @@ class CareerOpportunitiesWorkOrderController extends Controller
                     case 'pending_approval':
                         $data->where('status', 7);
                         break;
-                    
+
 
                     // Add additional cases as needed
                     default:
                         break; // Show all submissions if no type is specified
                 }
             }
-            
+
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('hiring_manager', function ($row) {
@@ -96,9 +96,7 @@ class CareerOpportunitiesWorkOrderController extends Controller
                     return $row->vendor ? $row->vendor->full_name : 'N/A';
                 })
                 ->addColumn('duration', function ($row) {
-                    return $row->workOrder && $row->workOrder->date_range
-                        ? $row->workOrder->date_range
-                        : 'N/A';
+                    return $row->date_range ? $row->date_range : 'N/A';
                 })
                 ->addColumn('submissions', function ($row) {
                     return $row->submissions_count;
@@ -130,7 +128,7 @@ class CareerOpportunitiesWorkOrderController extends Controller
         $candidateIds = $logs->pluck('properties.attributes.candidate_id')->unique();
         $hiringManagerIds = $logs->pluck('properties.attributes.hiring_manager_id')->unique();
         $vendorIds = $logs->pluck('properties.attributes.vendor_id')->unique();
-    
+
         // Load all relevant consultants, clients, and vendors
         $candidates = Consultant::whereIn('id', $candidateIds)->get()->keyBy('id');
         $hiringManagers = Client::whereIn('id', $hiringManagerIds)->get()->keyBy('id');
@@ -178,11 +176,11 @@ class CareerOpportunitiesWorkOrderController extends Controller
             if (isset($attributes['end_date']) && $attributes['end_date']) {
                 $attributes['end_date_formatted'] = Carbon::parse($attributes['end_date'])->format('m/d/Y');
             }
-            
-            $log->properties = array_merge($log->properties->toArray(), ['attributes' => $attributes]); 
+
+            $log->properties = array_merge($log->properties->toArray(), ['attributes' => $attributes]);
         }
         $workorder = CareerOpportunitiesWorkorder::findOrFail($id);
-        $rejectReasons =  Setting::where('category_id', 27)->get();        
+        $rejectReasons =  Setting::where('category_id', 27)->get();
         return view('admin.workorder.view', compact('workorder','rejectReasons','logs'));
     }
 public function withdrawWorkorder(Request $request)
@@ -196,10 +194,10 @@ public function withdrawWorkorder(Request $request)
         $vendorSubmission->note_for_rejection = $request->note;
         $vendorSubmission->notes = $request->note;
         $vendorSubmission->reason_for_rejection = $request->reason;
-        $vendorSubmission->date_rejected = now();        
+        $vendorSubmission->date_rejected = now();
         $vendorSubmission->Update(); // Save the changes
     }
-    $offer = CareerOpportunitiesOffer::where('id', $workorder->offer_id)->first();                
+    $offer = CareerOpportunitiesOffer::where('id', $workorder->offer_id)->first();
     if ($offer) {
         $offer->status = 13;
         $offer->withdraw_reason = $request->reason;
