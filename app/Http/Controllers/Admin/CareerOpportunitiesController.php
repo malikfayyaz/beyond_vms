@@ -180,6 +180,7 @@ class CareerOpportunitiesController extends BaseController
             'careerOpportunity' => $careerOpportunity,
             'businessUnitsData' => $businessUnitsData,
             'formBuilderData' => $formBuilderData,
+            'oldFormData' => [],
         ] );
     }
 
