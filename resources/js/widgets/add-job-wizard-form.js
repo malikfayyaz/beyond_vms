@@ -118,8 +118,10 @@ export default function wizardForm(careerOpportunity = null,businessUnitsData = 
         $("#ledger_code").prop('required', isLedgerCodeRequired);
         $(".ledger_code_").toggleClass('fa-asterisk', isLedgerCodeRequired);
 
-        $("#ledger_type").on('change').on('change', () => {
-          var isLedgerCodeRequired = $(this).val() === "33";
+        $("#ledger_type").on('change', function () {
+          // console.log($(this));
+
+          var isLedgerCodeRequired = $(this).val() === 33;
           $("#ledger_code").prop('required', isLedgerCodeRequired);
           $(".ledger_code_").toggleClass('fa-asterisk', isLedgerCodeRequired);
           $(".ledger_code__").toggle(isLedgerCodeRequired);
@@ -149,7 +151,7 @@ export default function wizardForm(careerOpportunity = null,businessUnitsData = 
              this.formData.billRate =  $('#billRate').val();
              this.formData.maxBillRate = $('#maxBillRate').val();
              this.formData.currency = $('#currency').val();
-            }, 500);
+            }, 1000);
           }
         };
 
@@ -296,7 +298,7 @@ export default function wizardForm(careerOpportunity = null,businessUnitsData = 
                 ajaxCall(url,  'POST', [[updateElements, ['response', updates]]], data);
       this.selectedBusinessUnit = "";
       this.budgetPercentage = "";
-      $(this.$refs.businessUnitSelect).val("").trigger("change");
+      // $(this.$refs.businessUnitSelect).val("").trigger("change");
       this.showErrors = false;
       this.businessUnitErrorMessage = "";
     },
@@ -748,18 +750,6 @@ export default function wizardForm(careerOpportunity = null,businessUnitsData = 
                   : "/client/career-opportunities";
           }
 
-          const dynamicFields = document.querySelectorAll(".render-wrap [name]");
-          dynamicFields.forEach((field) => {
-              const fieldName = field.name;
-              const fieldValue = field.type === "checkbox" || field.type === "radio" ? field.checked : field.value;
-              formData.append(fieldName, fieldValue);
-          });
-
-          // Debugging: Log all form data entries
-          // console.log("Final FormData:");
-          // for (let [key, value] of formData.entries()) {
-          //     console.log(`${key}: ${value}`);
-          // }
         ajaxCall(url,methodtype, [[onSuccess, ['response']]], formData);
         this.showSuccessMessage = true;
         // this.resetForm();
