@@ -21,6 +21,7 @@ export default function wizardForm(careerOpportunity = null,businessUnitsData = 
       return isFieldValid(id, this.formData, {
         isBusinessUnitValid: () => this.isBusinessUnitValid,
         isValidBillRate: (value) => this.isValidBillRate(value),
+        isValidMaxBillRate: (value) => this.isValidMaxBillRate(value),
         isValidPhone: (value) => this.isValidPhone(value),
         isValidEmail: (value) => this.isValidEmail(value),
       });
@@ -117,10 +118,8 @@ export default function wizardForm(careerOpportunity = null,businessUnitsData = 
         $("#ledger_code").prop('required', isLedgerCodeRequired);
         $(".ledger_code_").toggleClass('fa-asterisk', isLedgerCodeRequired);
 
-        $("#ledger_type").on('change', function () {
-          // console.log($(this));
-
-          var isLedgerCodeRequired = $(this).val() === 33;
+        $("#ledger_type").on('change').on('change', () => {
+          var isLedgerCodeRequired = $(this).val() === "33";
           $("#ledger_code").prop('required', isLedgerCodeRequired);
           $(".ledger_code_").toggleClass('fa-asterisk', isLedgerCodeRequired);
           $(".ledger_code__").toggle(isLedgerCodeRequired);
@@ -150,7 +149,7 @@ export default function wizardForm(careerOpportunity = null,businessUnitsData = 
              this.formData.billRate =  $('#billRate').val();
              this.formData.maxBillRate = $('#maxBillRate').val();
              this.formData.currency = $('#currency').val();
-            }, 1000);
+            }, 500);
           }
         };
 
@@ -288,7 +287,6 @@ export default function wizardForm(careerOpportunity = null,businessUnitsData = 
                 data.append('bu_id', this.selectedBusinessUnit);
 
                 const updates = {
-
                     '#regionZone': { type: 'select2append', field: 'zone' },
                     '#branch': { type: 'select2append', field: 'branch' },
                     '#division': { type: 'select2append', field: 'division' },
@@ -298,7 +296,7 @@ export default function wizardForm(careerOpportunity = null,businessUnitsData = 
                 ajaxCall(url,  'POST', [[updateElements, ['response', updates]]], data);
       this.selectedBusinessUnit = "";
       this.budgetPercentage = "";
-     // $(this.$refs.businessUnitSelect).val("").trigger("change");
+      $(this.$refs.businessUnitSelect).val("").trigger("change");
       this.showErrors = false;
       this.businessUnitErrorMessage = "";
     },
@@ -613,7 +611,9 @@ export default function wizardForm(careerOpportunity = null,businessUnitsData = 
             this.formData.workLocation !== "" &&
             this.formData.currency !== "" &&
             this.formData.billRate !== "" &&
-            this.formData.maxBillRate !== ""
+            this.formData.maxBillRate !== "" &&
+            this.isValidBillRate(this.formData.billRate) &&  
+            this.isValidMaxBillRate(this.formData.maxBillRate) 
           );
         case 2:
           return (
@@ -747,6 +747,19 @@ export default function wizardForm(careerOpportunity = null,businessUnitsData = 
                   ? `/client/career-opportunities/${careerOpportunity.id}`
                   : "/client/career-opportunities";
           }
+
+          const dynamicFields = document.querySelectorAll(".render-wrap [name]");
+          dynamicFields.forEach((field) => {
+              const fieldName = field.name;
+              const fieldValue = field.type === "checkbox" || field.type === "radio" ? field.checked : field.value;
+              formData.append(fieldName, fieldValue);
+          });
+
+          // Debugging: Log all form data entries
+          // console.log("Final FormData:");
+          // for (let [key, value] of formData.entries()) {
+          //     console.log(`${key}: ${value}`);
+          // }
         ajaxCall(url,methodtype, [[onSuccess, ['response']]], formData);
         this.showSuccessMessage = true;
         // this.resetForm();

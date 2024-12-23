@@ -6,7 +6,7 @@ export const errorMessages = {
   workLocation: "Please select work location.",
   currency: "Please select currency.",
   billRate: "Please enter valid minimum bill rate.",
-  maxBillRate: "Please enter valid maximum bill rate.",
+  maxBillRate: "Maximum bill rate must be greater than or equal to minimum bill rate.",
   preIdentifiedCandidate:
     "Please select if there's a pre-identified candidate.",
   candidateFirstName: "Please enter candidate's first name.",
@@ -48,7 +48,6 @@ export const errorMessages = {
   preferredName: "Please enter preferred name.",
   gender: "Please select option in gender.",
   race: "Please select race.",
-  workLocation: "Please work location.",
   availableDate: "Please select an available date",
   needSponsorship: "Please select whether the worker needs sponsorship",
   workedForGallagher:
@@ -152,11 +151,20 @@ export function isFieldValid(id, formData, validationFunctions) {
     return validationFunctions.isBusinessUnitValid();
   }
   if (
-    ["billRate", "maxBillRate", "estimatedExpense", "workerPayRate"].includes(
+    ["billRate", "estimatedExpense", "workerPayRate"].includes(
       formDataKey
     )
   ) {
     return validationFunctions.isValidBillRate(formData[formDataKey]);
+  }
+  if (formDataKey === "maxBillRate") {
+    const minRate = parseFloat(formData.billRate || 0);
+    const maxRate = parseFloat(formData.maxBillRate || 0);
+    
+    return (
+      validationFunctions.isValidMaxBillRate(formData[formDataKey]) &&
+      maxRate >= minRate
+    );
   }
   if (formDataKey === "candidatePhone") {
     return validationFunctions.isValidPhone(formData[formDataKey]);
