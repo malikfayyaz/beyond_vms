@@ -58,17 +58,17 @@
         </div>
     </div>
 
-    <script>
-        function extraData(initialData = { formType: '', formStatus: '' }) {
-            return {
-                formTypeError: '',
-                formStatusError: '',
-                formMainError: '',
-                formType: initialData.formType || '', // Use initial value or default to empty
-                formStatus: initialData.formStatus || '', // Use initial value or default to empty
-                // Other Alpine.js properties or methods
-            };
-        }
+<script>
+    function extraData(initialData = { formType: '', formStatus: '' }) {
+        return {
+            formTypeError: '',
+            formStatusError: '',
+            formMainError: '',
+            formType: initialData.formType || '', // Use initial value or default to empty
+            formStatus: initialData.formStatus || '', // Use initial value or default to empty
+            // Other Alpine.js properties or methods
+        };
+    }
     document.addEventListener('DOMContentLoaded', function () {
         if (window.$) {
             // Dynamically load jQuery UI
@@ -90,7 +90,8 @@
                 // Set form builder options
                 var options = {
                     formData: savedData, // Load saved form data into the editor
-                   
+                    disableFields: ['button'],
+                    
                     onSave: function (evt, formData) {
 
                         const formType = document.getElementById('formType').value;
