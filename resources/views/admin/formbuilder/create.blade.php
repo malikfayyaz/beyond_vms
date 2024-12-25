@@ -87,10 +87,21 @@
                 // Get the saved data if in edit mode
                 let savedData = @json($formBuilder->data ?? '[]'); // Default to empty array if no data
 
+                // Define custom attributes for the number input type
+                const typeUserAttrs = {
+                    number: { 
+                        min: {
+                        label: 'Minimum Value',
+                        value: 0, 
+                        },
+                    }
+                };
+
                 // Set form builder options
                 var options = {
                     formData: savedData, // Load saved form data into the editor
                     disableFields: ['button'],
+                    typeUserAttrs: typeUserAttrs,
                     
                     onSave: function (evt, formData) {
 
@@ -125,10 +136,11 @@
                             errors = true;
                         }
 
-
                         if (errors) {
                             return; // Stop if validation fails
                         }
+
+                        
                         // Determine URL and HTTP method based on edit mode
                         let url = '{{ $editMode ? route("admin.formbuilder.update", $editIndex) : route("admin.formbuilder.save") }}';
                         let method = 'POST';
@@ -152,6 +164,7 @@
 
                 // Initialize form builder with options
                 $(fbTemplate).formBuilder(options);
+                
             });
         } else {
             console.error("jQuery is not loaded. Please load jQuery first.");
