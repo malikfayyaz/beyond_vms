@@ -1138,6 +1138,13 @@
       $(".render-wrap").formRender({
         formData: parsedData
       });
+      const dateFields = document.querySelectorAll('.render-wrap input[type="date"], .render-wrap .date-picker');
+      dateFields.forEach((field) => {
+          flatpickr(field, {
+              dateFormat: "m/d/Y", 
+              allowInput: true,
+          });
+      });
     };
   });
 </script>
