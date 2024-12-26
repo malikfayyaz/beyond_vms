@@ -856,12 +856,12 @@
                 if (field.type === "checkbox" || field.type === "radio") {
                     field.checked = oldFormData[fieldName] === true || oldFormData[fieldName] === "true";
                 } else if (field.type === "date" || field.classList.contains("date-picker")) {
-                // Initialize flatpickr for date fields
-                flatpickr(field, {
-                    dateFormat: "m/d/Y", // Desired date format
-                    allowInput: true,
-                    defaultDate: oldFormData[fieldName] || null, // Pre-fill with old data if available
-                });
+                    // Initialize flatpickr for date fields
+                    flatpickr(field, {
+                        dateFormat: "m/d/Y", // Desired date format
+                        allowInput: true,
+                        defaultDate: oldFormData[fieldName] || null, // Pre-fill with old data if available
+                    });
                 } else {
                     field.value = oldFormData[fieldName];
                 }

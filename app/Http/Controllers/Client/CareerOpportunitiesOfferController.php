@@ -133,7 +133,7 @@ class CareerOpportunitiesOfferController extends Controller
             } elseif (preg_match('/^number-/', $key)) {
                 $dynamicRules[$key] = 'numeric'; // Rule for number inputs
             } elseif (preg_match('/^date-/', $key)) {
-                $dynamicRules[$key] = 'date'; // Rule for date inputs
+                $dynamicRules[$key] = 'date_format:m/d/Y'; // Rule for date inputs
             } elseif (preg_match('/^email-/', $key)) {
                 $dynamicRules[$key] = 'email'; // Rule for email inputs
             }
