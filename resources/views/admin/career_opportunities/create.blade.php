@@ -855,10 +855,24 @@
             if (field) {
                 if (field.type === "checkbox" || field.type === "radio") {
                     field.checked = oldFormData[fieldName] === true || oldFormData[fieldName] === "true";
+                } else if (field.type === "date" || field.classList.contains("date-picker")) {
+                // Initialize flatpickr for date fields
+                flatpickr(field, {
+                    dateFormat: "m-d-Y", // Desired date format
+                    defaultDate: oldFormData[fieldName] || null, // Pre-fill with old data if available
+                });
                 } else {
                     field.value = oldFormData[fieldName];
                 }
             }
+        });
+
+         // Initialize flatpickr for all dynamically created date fields in the form
+        const dateFields = document.querySelectorAll('.render-wrap input[type="date"], .render-wrap .date-picker');
+        dateFields.forEach((field) => {
+            flatpickr(field, {
+                dateFormat: "m-d-Y", // Desired date format
+            });
         });
       };
     });
