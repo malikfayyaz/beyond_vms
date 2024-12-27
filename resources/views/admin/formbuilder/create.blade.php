@@ -165,31 +165,33 @@
                 // Initialize form builder with options
                 $(fbTemplate).formBuilder(options);
                 $(document).ready(function () {
-                    function initializeFlatpickr() {
-                        const dateFields = document.querySelectorAll('.form-wrap input[type="date"], .form-wrap .date-picker');
-                        dateFields.forEach((field) => {
-                            if (!field.classList.contains("flatpickr-input")) {
-                                flatpickr(field, {
-                                    dateFormat: "m/d/Y",
-                                    allowInput: false,
-                                });
-                            }
-                        });
-                    }
+                function initializeFlatpickr() {
+                    const dateFields = document.querySelectorAll('.form-wrap input[type="date"], .form-wrap .date-picker');
+                    dateFields.forEach((field) => {
+                        if (!field.classList.contains("flatpickr-input")) {
+                            flatpickr(field, {
+                                dateFormat: "Y-m-d", 
+                                altInput: true,     
+                                altFormat: "m/d/Y",  
+                                allowInput: false,
+                            });
+                        }
+                    });
+                }
 
-                    // Run once on page load
+                // Run once on page load
+                initializeFlatpickr();
+
+                // Observe DOM changes
+                const observer = new MutationObserver(() => {
                     initializeFlatpickr();
-
-                    // Observe DOM changes
-                    const observer = new MutationObserver(() => {
-                        initializeFlatpickr();
-                    });
-
-                    observer.observe(document.body, {
-                        childList: true,
-                        subtree: true,
-                    });
                 });
+
+                observer.observe(document.body, {
+                    childList: true,
+                    subtree: true,
+                });
+            });
             });
         } else {
             console.error("jQuery is not loaded. Please load jQuery first.");
