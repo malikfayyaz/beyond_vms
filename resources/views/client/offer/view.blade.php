@@ -418,7 +418,7 @@
                       </h3>
                     </div>
                     @foreach ($offerDetails as $key => $value)
-                      <div class="flex items-center justify-between py-4 border-y">
+                      <div class="flex items-center justify-between py-4 border-t">
                         <div class="w-2/4">
                           <h4 class="font-medium">{{ $key }}:</h4>
                         </div>
