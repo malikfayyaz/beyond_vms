@@ -123,7 +123,8 @@ class CareerOpportunitiesOfferController extends Controller
             } elseif (preg_match('/^textarea-/', $key)) {
                 $dynamicRules[$key] = 'string'; // Rule for textarea inputs
             } elseif (preg_match('/^checkbox-/', $key)) {
-                $dynamicRules[$key] = 'string'; // Rule for checkboxes
+                $dynamicRules[$key] = 'array'; // Validate as an array
+                $dynamicRules["{$key}.*"] = 'in:true,false'; // Rule for checkboxes
             } elseif (preg_match('/^radio-/', $key)) {
                 $dynamicRules[$key] = 'string'; // Rule for radio buttons
             } elseif (preg_match('/^select-/', $key)) {
