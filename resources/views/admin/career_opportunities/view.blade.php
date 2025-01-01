@@ -205,152 +205,152 @@
                   <h2 class="text-2xl font-bold"></h2>
 
                   <div class="flex space-x-2">
-                    <div x-data="{
-                      rejectModal1: false,
-                      jobId: '{{ $job->id }}',
-                      status: {{ $job->jobStatus }},
-                      reason: '',
-                      note: '',
-                      errors: {},
-                      validateForm() {
-                          this.errors = {};
-                          if (!this.reason.trim()) this.errors.reason = 'Please select a reason';
-                          return Object.keys(this.errors).length === 0;
-                      },
-                      submitForm() {
-                          if (this.validateForm()) {
-                              let formData = new FormData();
-                              formData.append('note', this.note);
-                              formData.append('job_id', this.jobId);
-                              formData.append('reason', this.reason);
-                              const url = '/admin/rejectAdminJob';
-                              ajaxCall(url, 'POST', [[onSuccess, ['response']]], formData);
-                              this.rejectModal1 = false;
-                          }
-                      },
-                      clearError(field) {
-                          delete this.errors[field];
-                      }
-                  }">
-                  <!-- Trigger Button -->
-                  <button
-                      x-show="status == 22"
-                      @click="rejectModal1 = true; currentRowId = '{{ $job->id }}'"
-                      class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 capitalize">
-                      Reject
-                  </button>
+                    <div class="flex space-x-2" x-data="{
+                        rejectModal1: false,
+                        jobId: '{{ $job->id }}',
+                        status: {{ $job->jobStatus }},
+                        reason: '',
+                        note: '',
+                        errors: {},
+                        validateForm() {
+                            this.errors = {};
+                            if (!this.reason.trim()) this.errors.reason = 'Please select a reason';
+                            return Object.keys(this.errors).length === 0;
+                        },
+                        submitForm() {
+                            if (this.validateForm()) {
+                                let formData = new FormData();
+                                formData.append('note', this.note);
+                                formData.append('job_id', this.jobId);
+                                formData.append('reason', this.reason);
+                                const url = '/admin/rejectAdminJob';
+                                ajaxCall(url, 'POST', [[onSuccess, ['response']]], formData);
+                                this.rejectModal1 = false;
+                            }
+                        },
+                        clearError(field) {
+                            delete this.errors[field];
+                        }
+                      }">
+                        <!-- Trigger Button -->
+                        <button
+                            x-show="status == 22"
+                            @click="rejectModal1 = true; currentRowId = '{{ $job->id }}'"
+                            class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 capitalize">
+                            Reject
+                        </button>
 
-                  <!-- Modal -->
-                  <div
-                      x-show="rejectModal1"
-                      @click.away="rejectModal1 = false"
-                      class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full"
-                      x-transition:enter="transition ease-out duration-300"
-                      x-transition:enter-start="opacity-0"
-                      x-transition:enter-end="opacity-100"
-                      x-transition:leave="transition ease-in duration-300"
-                      x-transition:leave-start="opacity-100"
-                      x-transition:leave-end="opacity-0"
-                  >
-                      <div
-                          class="relative top-20 mx-auto p-5 border w-[600px] shadow-lg rounded-md bg-white"
-                          @click.stop
-                      >
-                          <!-- Header -->
-                          <div class="flex items-center justify-between border-b p-4">
-                              <h2 class="text-xl font-semibold">Reject Workflow</h2>
-                              <button
-                                  @click="rejectModal1 = false"
-                                  class="text-gray-400 hover:text-gray-600 bg-transparent hover:bg-transparent"
-                              >
-                                  &times;
-                              </button>
-                          </div>
+                        <!-- Modal -->
+                        <div
+                            x-show="rejectModal1"
+                            @click.away="rejectModal1 = false"
+                            class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full"
+                            x-transition:enter="transition ease-out duration-300"
+                            x-transition:enter-start="opacity-0"
+                            x-transition:enter-end="opacity-100"
+                            x-transition:leave="transition ease-in duration-300"
+                            x-transition:leave-start="opacity-100"
+                            x-transition:leave-end="opacity-0"
+                          >
+                            <div
+                                class="relative top-20 mx-auto p-5 border w-[600px] shadow-lg rounded-md bg-white"
+                                @click.stop
+                            >
+                                <!-- Header -->
+                                <div class="flex items-center justify-between border-b p-4">
+                                    <h2 class="text-xl font-semibold">Reject Workflow</h2>
+                                    <button
+                                        @click="rejectModal1 = false"
+                                        class="text-gray-400 hover:text-gray-600 bg-transparent hover:bg-transparent"
+                                    >
+                                        &times;
+                                    </button>
+                                </div>
 
-                          <!-- Content -->
-                          <div class="p-4">
-                              <form @submit.prevent="submitForm" id="generalformwizard">
-                                  @csrf
-                                  <input type="hidden" name="workflow_id" id="workflow_id" x-model="workflow_id" :value="{{ $job->id }}">
-                                  <div class="mb-4">
-                                      <label for="reason" class="block text-sm font-medium text-gray-700 mb-1">
-                                          Reason for Rejection
-                                          <span class="text-red-500">*</span>
-                                      </label>
-                                      <select
-                                          id="reason"
-                                          x-model="reason"
-                                          @change="clearError('reason')"
-                                          :class="{'border-red-500': errors.reason}"
-                                          class="w-full border rounded-md shadow-sm"
-                                      >
-                                          <option value="">Select</option>
-                                          @foreach($rejectReasons as $reason)
-                                              <option value="{{ $reason->id }}">{{ $reason->title }}</option>
-                                          @endforeach
-                                      </select>
-                                      <p
-                                          x-show="errors.reason"
-                                          x-text="errors.reason"
-                                          class="text-red-500 text-xs mt-1"
-                                      ></p>
-                                  </div>
-                                  <div class="mb-4">
-                                      <label for="note" class="block text-sm font-medium text-gray-700 mb-1">
-                                          Note <span class="text-red-500">*</span>
-                                      </label>
-                                      <textarea
-                                          id="note"
-                                          rows="4"
-                                          class="w-full border border-gray-300 rounded-md shadow-sm"
-                                          x-model="note"
-                                      ></textarea>
-                                  </div>
-                              </form>
-                          </div>
+                                <!-- Content -->
+                                <div class="p-4">
+                                    <form @submit.prevent="submitForm" id="generalformwizard">
+                                        @csrf
+                                        <input type="hidden" name="workflow_id" id="workflow_id" x-model="workflow_id" :value="{{ $job->id }}">
+                                        <div class="mb-4">
+                                            <label for="reason" class="block text-sm font-medium text-gray-700 mb-1">
+                                                Reason for Rejection
+                                                <span class="text-red-500">*</span>
+                                            </label>
+                                            <select
+                                                id="reason"
+                                                x-model="reason"
+                                                @change="clearError('reason')"
+                                                :class="{'border-red-500': errors.reason}"
+                                                class="w-full border rounded-md shadow-sm"
+                                            >
+                                                <option value="">Select</option>
+                                                @foreach($rejectReasons as $reason)
+                                                    <option value="{{ $reason->id }}">{{ $reason->title }}</option>
+                                                @endforeach
+                                            </select>
+                                            <p
+                                                x-show="errors.reason"
+                                                x-text="errors.reason"
+                                                class="text-red-500 text-xs mt-1"
+                                            ></p>
+                                        </div>
+                                        <div class="mb-4">
+                                            <label for="note" class="block text-sm font-medium text-gray-700 mb-1">
+                                                Note <span class="text-red-500">*</span>
+                                            </label>
+                                            <textarea
+                                                id="note"
+                                                rows="4"
+                                                class="w-full border border-gray-300 rounded-md shadow-sm"
+                                                x-model="note"
+                                            ></textarea>
+                                        </div>
+                                    </form>
+                                </div>
 
-                          <!-- Footer -->
-                          <div class="flex justify-end space-x-2 border-t p-4">
-                              <button
-                                  type="button"
-                                  @click="rejectModal1 = false"
-                                  class="rounded-md bg-gray-200 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-300"
-                              >
-                                  Close
-                              </button>
-                              <button
-                                  type="button"
-                                  @click="submitForm"
-                                  class="rounded-md bg-green-500 px-4 py-2 text-sm font-medium text-white hover:bg-green-600"
-                              >
-                                  Save
-                              </button>
-                          </div>
+                                <!-- Footer -->
+                                <div class="flex justify-end space-x-2 border-t p-4">
+                                    <button
+                                        type="button"
+                                        @click="rejectModal1 = false"
+                                        class="rounded-md bg-gray-200 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-300"
+                                    >
+                                        Close
+                                    </button>
+                                    <button
+                                        type="button"
+                                        @click="submitForm"
+                                        class="rounded-md bg-green-500 px-4 py-2 text-sm font-medium text-white hover:bg-green-600"
+                                    >
+                                        Save
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+
+
+
+                      <div x-data="{
+                            jobId: '{{ $job->id }}',
+                            status: {{ $job->jobStatus }},
+                            submitApprove() {
+                                let formData = new FormData();
+                                const url = '{{ route('admin.jobApprove', $job->id) }}';
+                                ajaxCall(url, 'POST', [[onSuccess, ['response']]], formData);
+                            }
+                          }">
+                          <button
+                              type="button"
+                              class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 capitalize"
+                              x-show="status == 22"
+                              @click="submitApprove"
+                          >
+                              Approve
+                          </button>
                       </div>
-                  </div>
-
-
-
-
-                   <div x-data="{
-                      jobId: '{{ $job->id }}',
-                      status: {{ $job->jobStatus }},
-                      submitApprove() {
-                          let formData = new FormData();
-                          const url = '{{ route('admin.jobApprove', $job->id) }}';
-                          ajaxCall(url, 'POST', [[onSuccess, ['response']]], formData);
-                      }
-                  }">
-                      <button
-                          type="button"
-                          class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 capitalize"
-                          x-show="status == 22"
-                          @click="submitApprove"
-                      >
-                          Approve
-                      </button>
-                  </div>
-                </div>
+                    </div>
 
                       <form action="{{ route('admin.career-opportunities.copy', $job->id) }}" method="POST" style="display: inline-block;">
                           @csrf
@@ -967,11 +967,11 @@
                                 </form>
                             </div>
                             @foreach ($job->jobNotes as $note)
-                                <div class="uiv2-note-wrapper">
+                                <div class="uiv2-note-wrapper my-3">
                                     <div class="dialogbox">
                                         <div class="body">
                                             <span class="tip tip-up"></span>
-                                            <div class="message">
+                                            <div class="message break-all">
                                                 <p><strong>{{ $note->notes }}</strong></p>
                                             </div>
                                             <p class="postedby meta-inner pull-left">
