@@ -42,7 +42,7 @@
                     },-->
  <div class="mx-4 pt-0 pb-0 px-8 rounded">
     <div x-data="contractForm" class="w-full flex justify-end items-center gap-4">
-    @if (!in_array($offer->status, [13, 2]))
+    @if (!in_array($offer->status, [13, 2, 3]))
     <button
         @click="actionType = 'Reject'; openModal = true; currentRowId = {{ $offer->id }}; submitForm(currentRowId, actionType);"
         type="button"

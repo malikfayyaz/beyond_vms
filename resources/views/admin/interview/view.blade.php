@@ -409,7 +409,7 @@
 
                           <div class="flex justify-between items-center">
                             <span class="text-gray-600">  {{$dates->formatted_schedule_date}} <br> <small>{{$dates->formatted_start_time}} - {{$dates->formatted_end_time}}</small></span>
-                            <span class="bg-green-500 text-white px-2 py-1 rounded-full text-sm">{{$interview->status}}</span>
+{{--                            <span class="bg-green-500 text-white px-2 py-1 rounded-full text-sm">{{$interview->status}}</span>--}}
                             <span class="text-gray-600">{{ $interview->timezone->title }}</span>
                           </div>
                         </div>
