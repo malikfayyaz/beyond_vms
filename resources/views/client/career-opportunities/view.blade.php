@@ -615,7 +615,13 @@
                             <h4 class="font-medium">{{ $key }}:</h4>
                             </div>
                             <div class="w-2/4">
-                            <p class="font-light"> {{ $value }} </p>
+                                @if(is_array($value))
+                                    {{-- Handle array values --}}
+                                    <p class="font-light">{{ implode(', ', $value) }}</p>
+                                @else
+                                    {{-- Handle scalar values --}}
+                                    <p class="font-light">{{ $value }}</p>
+                                @endif
                             </div>
                         </div>
                         @endforeach
