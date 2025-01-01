@@ -100,7 +100,7 @@
                 // Set form builder options
                 var options = {
                     formData: savedData, // Load saved form data into the editor
-                    disableFields: ['button'],
+                    disableFields: ['button', 'file'],
                     typeUserAttrs: typeUserAttrs,
                     
                     onSave: function (evt, formData) {
