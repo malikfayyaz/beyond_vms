@@ -892,6 +892,38 @@
                     <p class="font-light">{{ $job->createdBy->name ?? 'N/A' }}</p>
                 </div>
               </div>
+              @if(!empty($job->job_details))
+                @php
+                  $jobDetails = json_decode($job->job_details, true); // Decode JSON into an array
+                @endphp
+                <div class="flex items-center justify-between py-4 border-t">
+                  <h3 class="flex items-center gap-2">
+                    <i
+                      class="fa-solid fa-cash-register"
+                      :style="{'color': 'var(--primary-color)'}"
+                    ></i
+                    ><span :style="{'color': 'var(--primary-color)'}"
+                      >Data</span
+                    >
+                  </h3>
+                </div>
+                @foreach ($jobDetails as $key => $value)
+                  <div class="flex items-center justify-between py-4 border-t">
+                    <div class="w-2/4">
+                      <h4 class="font-medium">{{ $key }}:</h4>
+                    </div>
+                    <div class="w-2/4">
+                      @if(is_array($value))
+                          {{-- Handle array values --}}
+                          <p class="font-light">{{ implode(', ', $value) }}</p>
+                      @else
+                          {{-- Handle scalar values --}}
+                          <p class="font-light">{{ $value }}</p>
+                      @endif
+                    </div>
+                  </div>
+                @endforeach
+              @endif
             </div>
           </div>
         </div>

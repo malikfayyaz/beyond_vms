@@ -1080,6 +1080,24 @@
                  </div>
                </div>
              </div>
+              @if(!empty($formBuilderData))
+                <div class="p-[30px] rounded border my-4">
+                  <div class="mb-4 flex items-center gap-2">
+                    <i
+                      class="fa-solid fa-server"
+                      :style="{'color': 'var(--primary-color)'}"
+                    ></i>
+                    <h2 class="text-xl font-bold" :style="{'color': 'var(--primary-color)'}" style="color: var(--primary-color);">
+                      Additional Data
+                    </h2>
+                  </div>
+                  <div class="flex space-x-4 mt-4">
+                    <div class="flex-1">
+                      <div class="render-wrap"></div>
+                    </div>  
+                  </div>
+                </div>
+              @endif
            </div>
            <!-- Navigation buttons -->
            <div class="flex justify-between mt-6">
@@ -1110,5 +1128,25 @@
          </form>
        </div>
      </div>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    if (window.$) {
+      // Dynamically load jQuery UI
+      const formData = @json($formBuilderData);
+      const parsedData = JSON.parse(formData.data);
+      // console.log(parsedData);
+      $(".render-wrap").formRender({
+        formData: parsedData
+      });
+      const dateFields = document.querySelectorAll('.render-wrap input[type="date"], .render-wrap .date-picker');
+      dateFields.forEach((field) => {
+          flatpickr(field, {
+              dateFormat: "m/d/Y", 
+              allowInput: true,
+          });
+      });
+    };
+  });
+</script>
       @endsection
 

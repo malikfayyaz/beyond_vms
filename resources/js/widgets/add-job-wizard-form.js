@@ -750,6 +750,18 @@ export default function wizardForm(careerOpportunity = null,businessUnitsData = 
                   : "/client/career-opportunities";
           }
 
+          const dynamicFields = document.querySelectorAll(".render-wrap [name]");
+          dynamicFields.forEach((field) => {
+              const fieldName = field.name;
+              const fieldValue = field.type === "checkbox" || field.type === "radio" ? field.checked : field.value;
+              formData.append(fieldName, fieldValue);
+          });
+
+          // Debugging: Log all form data entries
+          // console.log("Final FormData:");
+          // for (let [key, value] of formData.entries()) {
+          //     console.log(`${key}: ${value}`);
+          // }
         ajaxCall(url,methodtype, [[onSuccess, ['response']]], formData);
         this.showSuccessMessage = true;
         // this.resetForm();

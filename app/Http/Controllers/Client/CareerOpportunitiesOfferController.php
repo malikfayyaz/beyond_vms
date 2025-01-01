@@ -17,6 +17,7 @@ use Yajra\DataTables\Facades\DataTables;
 use Spatie\Activitylog\Models\Activity;
 use App\Models\Consultant;
 use App\Models\Vendor;
+use App\Models\FormBuilder;
 
 
 class CareerOpportunitiesOfferController extends Controller
@@ -106,14 +107,47 @@ class CareerOpportunitiesOfferController extends Controller
     // Show the form for creating a new career opportunity offer
     public function create($id)
     {
-       $submission =  CareerOpportunitySubmission::findOrFail($id);
-       return view('client.offer.create',[
-        'submission'=>$submission
-         ]);
+        $formBuilderData = FormBuilder::where('type', 3)
+        ->where('status', 'active')
+        ->first();
+        
+        $submission =  CareerOpportunitySubmission::findOrFail($id);
+        
+        return view('client.offer.create',[
+            'submission'=>$submission,
+            'formBuilderData'=>$formBuilderData
+        ]);
     }
 
     public function store(Request $request)
     {
+        $dynamicRules = [];
+
+        foreach ($request->all() as $key => $value) {
+            if (preg_match('/^text-/', $key)) {
+                $dynamicRules[$key] = 'string'; // Rule for text inputs
+            } elseif (preg_match('/^textarea-/', $key)) {
+                $dynamicRules[$key] = 'string'; // Rule for textarea inputs
+            } elseif (preg_match('/^checkbox-/', $key)) {
+                $dynamicRules[$key] = 'array'; // Validate as an array
+                $dynamicRules["{$key}.*"] = 'in:true,false'; // Rule for checkboxes
+            } elseif (preg_match('/^radio-/', $key)) {
+                $dynamicRules[$key] = 'string'; // Rule for radio buttons
+            } elseif (preg_match('/^select-/', $key)) {
+                $dynamicRules[$key] = 'string'; // Rule for select dropdowns
+            } elseif (preg_match('/^file-/', $key)) {
+                $dynamicRules[$key] = 'file'; // Rule for file uploads
+            } elseif (preg_match('/^number-/', $key)) {
+                $dynamicRules[$key] = 'numeric'; // Rule for number inputs
+            } elseif (preg_match('/^date-/', $key)) {
+                $dynamicRules[$key] = 'date_format:m/d/Y'; // Rule for date inputs
+            } elseif (preg_match('/^email-/', $key)) {
+                $dynamicRules[$key] = 'email'; // Rule for email inputs
+            }
+        }
+
+        $validatednewData = $request->validate($dynamicRules);
+        
          // Define your validation rules
          $rules = [
             'startDate' => 'required|date_format:Y/m/d',
@@ -189,6 +223,8 @@ class CareerOpportunitiesOfferController extends Controller
             ? Carbon::createFromFormat('Y/m/d', $validatedData['endDate'])->format('Y-m-d')  : null,
          ];
          $offerCreate = CareerOpportunitiesOffer::create( $mapedData );
+         $offerCreate->offer_details = $validatednewData; // Save the validated data as JSON
+         $offerCreate->save();
          Rateshelper::calculateVendorRates($offerCreate,$offerCreate->offer_bill_rate,$offerCreate->client_overtime,$offerCreate->client_doubletime);
          Rateshelper::calculateOfferEstimates($offerCreate,$jobData);
          offerHelper::createOfferWorkflow($offerCreate);

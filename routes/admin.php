@@ -15,6 +15,7 @@ use App\Http\Controllers\{
     Admin\CareerOpportunitiesSubmissionController,
     Admin\CareerOpportunitiesInterviewController,
     Admin\CareerOpportunitiesContractController,
+    Admin\FormBuilderController,
 };
 Route::middleware(['user_role:admin'])->group(function () {
     Route::resource('/admin/career-opportunities', CareerOpportunitiesController::class);
@@ -181,5 +182,12 @@ Route::middleware(['user_role:admin'])->group(function () {
 
         Route::POST('/career-opportunities/{id}/jobteammemberDelete', [CareerOpportunitiesController::class, 'jobteammemberDelete'])->name('jobteammemberDelete');
         Route::POST('/career-opportunities/pmoteammemberDelete/{id}', [CareerOpportunitiesController::class, 'pmoteammemberDelete'])->name('pmoteammemberDelete');
+
+        Route::match(['get', 'post'], 'formbuilder', [FormBuilderController::class, 'formBuilder'])->name('formbuilder');
+        Route::match(['get', 'post'], 'formbuilder/index', [FormBuilderController::class, 'index'])->name('formbuilder.index');
+        Route::post('formbuilder/save', [FormBuilderController::class, 'store'])->name('formbuilder.save');
+        Route::get('formbuilder/{id}/edit', [FormBuilderController::class, 'edit'])->name('formbuilder.edit');
+        Route::post('formbuilder/{id}/update', [FormBuilderController::class, 'update'])->name('formbuilder.update');
+
     });
 });

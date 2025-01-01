@@ -29,6 +29,7 @@ use App\Models\User;
 use App\Models\AdminTeamJob;
 use App\Models\JobTeamMember;
 use App\Models\Client;
+use App\Models\FormBuilder;
 use App\Facades\Rateshelper as Rateshelper;
 
 class CareerOpportunitiesController extends BaseController
@@ -169,11 +170,17 @@ class CareerOpportunitiesController extends BaseController
      */
     public function create()
     {
+        $formBuilderData = FormBuilder::where('type', 1)
+        ->where('status', 'active')
+        ->first();
+       
         $careerOpportunity ="";
         $businessUnitsData = "";
         return view('admin.career_opportunities.create', [
             'careerOpportunity' => $careerOpportunity,
             'businessUnitsData' => $businessUnitsData,
+            'formBuilderData' => $formBuilderData,
+            'oldFormData' => [],
         ] );
     }
 
@@ -183,6 +190,32 @@ class CareerOpportunitiesController extends BaseController
     public function store(Request $request)
     {
         try {
+                $dynamicRules = [];
+
+                foreach ($request->all() as $key => $value) {
+                    if (preg_match('/^text-/', $key)) {
+                        $dynamicRules[$key] = 'string'; // Rule for text inputs
+                    } elseif (preg_match('/^textarea-/', $key)) {
+                        $dynamicRules[$key] = 'string'; // Rule for textarea inputs
+                    } elseif (preg_match('/^checkbox-/', $key)) {
+                        $dynamicRules[$key] = 'array'; // Validate as an array
+                        $dynamicRules["{$key}.*"] = 'in:true,false'; // Rule for checkboxes
+                    } elseif (preg_match('/^radio-/', $key)) {
+                        $dynamicRules[$key] = 'string'; // Rule for radio buttons
+                    } elseif (preg_match('/^select-/', $key)) {
+                        $dynamicRules[$key] = 'string'; // Rule for select dropdowns
+                    } elseif (preg_match('/^file-/', $key)) {
+                        $dynamicRules[$key] = 'file'; // Rule for file uploads
+                    } elseif (preg_match('/^number-/', $key)) {
+                        $dynamicRules[$key] = 'numeric'; // Rule for number inputs
+                    } elseif (preg_match('/^date-/', $key)) {
+                        $dynamicRules[$key] = 'date_format:m/d/Y';
+                    } elseif (preg_match('/^email-/', $key)) {
+                        $dynamicRules[$key] = 'email'; // Rule for email inputs
+                    }
+                }
+
+                $validatednewData = $request->validate($dynamicRules);
 
                 $validatedData = $this->validateJobOpportunity($request);
 
@@ -197,6 +230,8 @@ class CareerOpportunitiesController extends BaseController
                 $mappedData = $this->mapJobData($validatedData, $jobTemplate, $request, $filename);
                // dd($mappedData);
                 $job = CareerOpportunity::create( $mappedData );
+                $job->job_details = $validatednewData; // Save the validated data as JSON
+                $job->save();
 
                 $this->syncBusinessUnits($request->input('businessUnits'), $job->id);
 
@@ -269,6 +304,11 @@ class CareerOpportunitiesController extends BaseController
         $sessionrole = session('selected_role');
         $careerOpportunity = CareerOpportunity::with('careerOpportunitiesBu')->findOrFail($id);
 
+        $formBuilderData = FormBuilder::where('type', 1)
+        ->where('status', 'active')
+        ->first();
+        $oldFormData = $careerOpportunity->job_details ? json_decode($careerOpportunity->job_details, true) : [];
+
         $businessUnitsData  = $careerOpportunity->careerOpportunitiesBu->map(function ($item) {
             return [
                 'id' => $item->buName->id,
@@ -280,6 +320,8 @@ class CareerOpportunitiesController extends BaseController
             'careerOpportunity' => $careerOpportunity,
             'businessUnitsData' => $businessUnitsData,
             'sessionrole' => $sessionrole,
+            'formBuilderData' => $formBuilderData,
+            'oldFormData' => $oldFormData,
         ] );
     }
 
@@ -325,6 +367,33 @@ class CareerOpportunitiesController extends BaseController
         // dd($request->input('businessUnits'));
         try {
 
+            $dynamicRules = [];
+
+            foreach ($request->all() as $key => $value) {
+                if (preg_match('/^text-/', $key)) {
+                    $dynamicRules[$key] = 'string'; // Rule for text inputs
+                } elseif (preg_match('/^textarea-/', $key)) {
+                    $dynamicRules[$key] = 'string'; // Rule for textarea inputs
+                } elseif (preg_match('/^checkbox-/', $key)) {
+                    $dynamicRules[$key] = 'array'; // Validate as an array
+                    $dynamicRules["{$key}.*"] = 'in:true,false';
+                } elseif (preg_match('/^radio-/', $key)) {
+                    $dynamicRules[$key] = 'string'; // Rule for radio buttons
+                } elseif (preg_match('/^select-/', $key)) {
+                    $dynamicRules[$key] = 'string'; // Rule for select dropdowns
+                } elseif (preg_match('/^file-/', $key)) {
+                    $dynamicRules[$key] = 'file'; // Rule for file uploads
+                } elseif (preg_match('/^number-/', $key)) {
+                    $dynamicRules[$key] = 'numeric'; // Rule for number inputs
+                } elseif (preg_match('/^date-/', $key)) {
+                    $dynamicRules[$key] = 'date_format:m/d/Y'; // Rule for date inputs
+                } elseif (preg_match('/^email-/', $key)) {
+                    $dynamicRules[$key] = 'email'; // Rule for email inputs
+                }
+            }
+
+            $validatednewData = $request->validate($dynamicRules);
+
             $validatedData = $this->validateJobOpportunity($request);
 
             $job = CareerOpportunity::findOrFail($id);
@@ -335,6 +404,8 @@ class CareerOpportunitiesController extends BaseController
             }
             $mappedData = $this->mapJobData($validatedData, $jobTemplate, $request, $filename,$job );
             $job->update($mappedData);
+            $job->job_details = $validatednewData; // Save the validated data as JSON
+            $job->save();
 
             $this->syncBusinessUnits($request->input('businessUnits'), $job->id);
             Rateshelper::calculateJobEstimates($job);

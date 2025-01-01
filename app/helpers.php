@@ -28,7 +28,14 @@ function userType(){
     return $array;
 }
 
-
+function formType() {
+    $array = array(
+        '1' => 'Job',
+        '2' => 'Submission',
+        '3' => 'Offer'
+    );
+    return $array;
+}
 
 
 function userRoles(){
