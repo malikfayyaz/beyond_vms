@@ -360,7 +360,7 @@ class CareerOpportunitiesController extends BaseController
     {
         // dd($request->input('businessUnits'));
         try {
-// dd($request->all());
+
             $dynamicRules = [];
 
             foreach ($request->all() as $key => $value) {
