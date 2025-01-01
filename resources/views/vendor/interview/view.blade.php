@@ -444,8 +444,8 @@
                               <a href="javascript:void(0);"
                                 class="btn bg-red-600 text-white py-2 px-4 rounded hover:bg-red-500"
                                 @click="showModal = true"
-                                x-bind:disabled="status == 3"
-                                :class="{ 'opacity-50 pointer-events-none': status == 3 }">
+                                x-bind:disabled="status == 3 || status == 5"
+                                :class="{ 'opacity-50 pointer-events-none': status == 3 || status == 5}">
                                   {{translate('Reschedule/Cancel Interview')}}
                               </a>
                               <!-- The Modal -->

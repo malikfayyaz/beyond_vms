@@ -24,7 +24,7 @@ class CareerOpportunitiesSubmissionController extends Controller
         ];
 
         if ($request->ajax()) {
-            $submissions = CareerOpportunitySubmission::with(['consultant','vendor','careerOpportunity.hiringManager','location']);
+            $submissions = CareerOpportunitySubmission::with(['consultant','vendor','careerOpportunity.hiringManager','location']) ->latest();
 
             if ($request->has('type')) {
                 $type = $request->input('type');
@@ -36,7 +36,7 @@ class CareerOpportunitiesSubmissionController extends Controller
                         break;
                     case 'interview':
                         $submissions->where('resume_status', 5);
-                        break;    
+                        break;
                     case 'rejected':
                         $submissions->where('resume_status', 6);
                         break;
@@ -61,7 +61,7 @@ class CareerOpportunitiesSubmissionController extends Controller
 
             return DataTables::of($submissions)
                 ->addColumn('id', function ($row) {
-                    return '<span class="submission-detail-trigger text-blue-500 cursor-pointer" data-id="' 
+                    return '<span class="submission-detail-trigger text-blue-500 cursor-pointer" data-id="'
                         . $row->id . '">' . $row->id . '</span>';
                 })
                 ->addColumn('consultant_name', function($row) {
