@@ -385,7 +385,7 @@
                           :style="{'color': 'var(--primary-color)'}"
                         ></i
                         ><span :style="{'color': 'var(--primary-color)'}"
-                          >Data</span
+                          >{{translate('Additional Data')}}</span
                         >
                       </h3>
                     </div>
