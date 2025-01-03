@@ -346,7 +346,7 @@
                         :style="{'color': 'var(--primary-color)'}"
                       ></i
                       ><span :style="{'color': 'var(--primary-color)'}"
-                        >{{translate('Bill Rate (For Vendor)')}}</span
+                        >{{translate('Bill Rate (For Client)')}}</span
                       >
                     </h3>
                   </div>
