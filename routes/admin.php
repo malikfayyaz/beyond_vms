@@ -189,5 +189,7 @@ Route::middleware(['user_role:admin'])->group(function () {
         Route::get('formbuilder/{id}/edit', [FormBuilderController::class, 'edit'])->name('formbuilder.edit');
         Route::post('formbuilder/{id}/update', [FormBuilderController::class, 'update'])->name('formbuilder.update');
 
+        Route::get('job/quick_create', [CareerOpportunitiesController::class, 'quickcreate'])->name('job.quickcreate');
+
     });
 });

@@ -1200,6 +1200,15 @@ class CareerOpportunitiesController extends BaseController
         ]);
     }
 
+    public function quickcreate(){
+        
+        $careerOpportunity ="";
+        $businessUnitsData = "";
 
+        return view('admin.career_opportunities.quickcreate', [
+            'careerOpportunity' => $careerOpportunity,
+            'businessUnitsData' => $businessUnitsData,
+        ]);
+    }
 
 }
