@@ -653,7 +653,7 @@ class CareerOpportunitiesContractController extends BaseController
         $model->history_id =  $editHist->id;
         $model->created_by =   Admin::getAdminIdByUserId(\Auth::id());
         $model->created_by_type =  1;
-        $model->reason_of_extension =  $post['reason_of_extension'];
+        $model->reason_of_extension =  $post['extension_reason'];
         $model->note_of_extension =  $post['additional_budget_notes'];
        // $model->hr_approver = $post['hr_approver'];
         

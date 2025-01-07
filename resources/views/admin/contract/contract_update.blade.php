@@ -294,7 +294,7 @@
                                     <label for="client_doubletime_bill_rate" 
                                         class="block text-sm font-medium text-gray-700 mb-2">Client Double Time Rate <span class="text-red-500">*</span></label>
                                     <input type="text"
-                                        class="w-full h-12 px-4 text-gray-500 border rounded-md shadow-sm focus:outline-none pl-7"
+                                        class="w-full h-12 px-4 text-gray-500 border rounded-md shadow-sm focus:outline-none pl-7 required"
                                         placeholder="00.00" id="client_doubletime_bill_rate" disabled name="client_doubletime_bill_rate" x-model="formFields.client_doubletime_bill_rate"
                                         @input="formatRate('client_doubletime_bill_rate', $event)" @blur="formatRate('client_doubletime_bill_rate', $event)" />
                                     <p x-show="errors.client_doubletime_bill_rate" x-text="errors.client_doubletime_bill_rate" class="text-red-500 text-xs mt-1">
@@ -307,7 +307,7 @@
                                     <label for="pay_rate" 
                                         class="block text-sm font-medium text-gray-700 mb-2">Pay Rate <span class="text-red-500">*</span></label>
                                     <input type="text"
-                                        class="w-full h-12 px-4 text-gray-500 border rounded-md shadow-sm focus:outline-none pl-7"
+                                        class="w-full h-12 px-4 text-gray-500 border rounded-md shadow-sm focus:outline-none pl-7 required"
                                         placeholder="00.00" id="pay_rate" name="pay_rate" x-model="formFields.pay_rate"
                                         @input="formatRate('pay_rate', $event)"   />
                                     <p x-show="errors.pay_rate" x-text="errors.pay_rate" class="text-red-500 text-xs mt-1">
@@ -366,25 +366,25 @@
                             </div>
                             <div class="flex space-x-4 mt-4"  x-show="selectedOption === '2'">
                                 <div class="flex-1">
-                                    <label class="block mb-2">
+                                    <label for="extension_reason" class="block mb-2">
                                     Extension Reason
                                         <span class="text-red-500">*</span></label>
-                                    <select class="w-full select2-single custom-style" name="reason_of_extension"
-                                        id="reason_of_extension">
+                                    <select class="w-full select2-single custom-style required" name="extension_reason"
+                                        id="extension_reason">
                                         <option value="">Select </option>
                                         @foreach (checksetting(26) as $key => $value)
                                         <option value="{{ $key }}">
                                             {{ $value }}</option>
                                         @endforeach
                                     </select>
-                                    <p x-show="errors.reason_of_extension" x-text="errors.reason_of_extension"
+                                    <p x-show="errors.extension_reason" x-text="errors.extension_reason"
                                         class="text-red-500 text-xs mt-1"></p>
                                 </div>
                                 <div class="flex-1">
-                                    <label for="extension_date" class="block mb-2">Assignment New End Date:
+                                    <label for="extension_date" class="block mb-2">Assignment New End Date
                                         <span class="text-red-500">*</span></label>
                                     <input id="extension_date" name="extension_date" x-model="formFields.extension_date"
-                                        class="w-full h-12 px-4 text-gray-500 border rounded-md shadow-sm focus:outline-none pl-7"
+                                        class="w-full h-12 px-4 text-gray-500 border rounded-md shadow-sm focus:outline-none pl-7 required"
                                         type="text" name="extension_date" placeholder="Select start date" />
                                     <p x-show="errors.extension_date" x-text="errors.extension_date"
                                         class="text-red-500 text-xs mt-1"></p>
@@ -396,7 +396,7 @@
                                     <label for="effective_date" class="block mb-2">Effective Date:
                                         <span class="text-red-500">*</span></label>
                                     <input id="effective_date" name="effective_date" x-model="formFields.effective_date"
-                                        class="w-full h-12 px-4 text-gray-500 border rounded-md shadow-sm focus:outline-none pl-7"
+                                        class="w-full h-12 px-4 text-gray-500 border rounded-md shadow-sm focus:outline-none pl-7 required" 
                                         type="text" name="effective_date" placeholder="Select start date" />
                                     <p x-show="errors.effective_date" x-text="errors.effective_date"
                                         class="text-red-500 text-xs mt-1"></p>
@@ -409,7 +409,7 @@
                                     <textarea id="additional_budget_notes" name="additional_budget_notes"
                                         x-model="formFields.additional_budget_notes"
                                         @input="clearFieldError('additional_budget_notes')"
-                                        class="w-full border rounded" rows="5"
+                                        class="w-full border rounded required" rows="5"
                                         :style="{'border-color': 'var(--primary-color)'}"
                                         placeholder="Enter Notes"></textarea>
                                     <p x-show="errors.additional_budget_notes" x-text="errors.additional_budget_notes"
