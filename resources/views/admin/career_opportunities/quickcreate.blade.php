@@ -5,8 +5,8 @@
     @include('admin.layouts.partials.dashboard_side_bar')
     <div class="ml-16">
         @include('admin.layouts.partials.header')
-        <div class="bg-white mx-4 my-8 rounded p-8" x-data='wizardForm()' x-init="mounted()">
-            <form @submit.prevent="submitForm" id="addjobformwizard" method="POST" enctype="multipart/form-data">
+        <div class="bg-white mx-4 my-8 rounded p-8" x-data='qjwizardForm()' x-init="mounted()">
+            <form @submit.prevent="submitForm" id="quickaddjob" method="POST">
                 <div>
                     <div class="my-4 border rounded shadow px-4 pt-4 pb-8">
                         <h3 class="text-xl font-bold p-2 mb-2 border-b">Basic Information</h3>
@@ -409,6 +409,12 @@
                             </div>
                         </div>
                     </div>
+                </div>
+                <div class="flex justify-between mt-6">
+                    <button x-show="currentStep === 4" type="submit"
+                        class="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600">
+                        Submit
+                    </button>
                 </div>
             </form>
         </div>  
