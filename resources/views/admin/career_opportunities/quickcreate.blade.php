@@ -5,7 +5,7 @@
     @include('admin.layouts.partials.dashboard_side_bar')
     <div class="ml-16">
         @include('admin.layouts.partials.header')
-        <div class="bg-white mx-4 my-8 rounded p-8" x-data='qjwizardForm()' x-init="mounted()">
+        <div class="bg-white mx-4 my-8 rounded p-8" x-data='wizardForm()' x-init="mounted()">
             <form @submit.prevent="submitForm" id="quickaddjob" method="POST">
                 <div>
                     <div class="my-4 border rounded shadow px-4 pt-4 pb-8">
