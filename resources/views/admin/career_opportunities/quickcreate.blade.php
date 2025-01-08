@@ -410,8 +410,8 @@
                         </div>
                     </div>
                 </div>
-                <div class="flex justify-between mt-6">
-                    <button x-show="currentStep === 4" type="submit"
+                <div class="flex justify-end mt-6">
+                    <button type="submit"
                         class="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600">
                         Submit
                     </button>
