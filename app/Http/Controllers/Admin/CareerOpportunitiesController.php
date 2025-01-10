@@ -1210,5 +1210,63 @@ class CareerOpportunitiesController extends BaseController
             'businessUnitsData' => $businessUnitsData,
         ]);
     }
+/*    public function saveDraft(Request $request)
+    {
+        \log::info('incoming data :',$request->all());
+        $validated = $request->validate([
+            'formData' => 'required|array',
+            'currentStep' => 'required|integer',
+            // You can add other validations as needed
+        ]);
+        dd($request);
+        // Retrieve the draft data
+        $formData = $validated['formData'];
+        $currentStep = $validated['currentStep'];
+
+        // Save the draft data to the database or session
+        // For example, you could store the draft in the session or database
+        session(['form_draft' => [
+            'formData' => $formData,
+            'currentStep' => $currentStep,
+        ]]);
+
+        return response()->json(['message' => 'Draft saved successfully']);
+    }*/
+public function saveDraft(Request $request)
+{
+            \Log::info('Received request data:', $request->all());
+    try {
+         // Log the incoming request data
+
+        // Validate the incoming request data
+        $validated = $request->validate([
+            'formData' => 'required|array',
+            'currentStep' => 'required|integer',
+        ]);
+
+        // Dump the validated request data (optional)
+        dd($validated); // This will stop the execution here and show the validated data
+
+        // Extract form data and current step
+        $formData = $validated['formData'];
+        $currentStep = $validated['currentStep'];
+
+        // Store the draft data in the session (or you can store it in the database)
+        session(['form_draft' => [
+            'formData' => $formData,
+            'currentStep' => $currentStep,
+        ]]);
+
+        // Return a success response
+        return response()->json(['message' => 'Draft saved successfully']);
+
+    } catch (\Exception $e) {
+        // Log the exception details
+        \Log::error('Error saving draft:', ['error' => $e->getMessage()]);
+
+        // Return a 500 error response with the error message
+        return response()->json(['message' => 'An error occurred while saving the draft.'], 500);
+    }
+}
 
 }

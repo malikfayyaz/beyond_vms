@@ -573,19 +573,21 @@ export default function wizardForm(careerOpportunity = null,businessUnitsData = 
     },
 
     nextStep() {
-      if (!this.formSubmitted) {
-        this.validateStep(this.currentStep);
-        if (this.isStepValid) {
-          this.showErrors = false;
-          this.currentStep++;
-          this.highestStepReached = Math.max(
-            this.highestStepReached,
-            this.currentStep
-          );
+        if (!this.formSubmitted) {
+            this.validateStep(this.currentStep);
+//            console.log(`Current Step (${this.currentStep}) Data:`, this.formData);
+            if (this.isStepValid) {
+                this.showErrors = false;
+                this.saveDraft();
+//                console.log('Draft saved:', localStorage.getItem('formDraft'));
+                this.currentStep++;
+                this.highestStepReached = Math.max(
+                    this.highestStepReached,
+                    this.currentStep
+                );
+            }
         }
-      }
     },
-
     validateStep(step) {
       this.showErrors = true;
     },
@@ -596,7 +598,68 @@ export default function wizardForm(careerOpportunity = null,businessUnitsData = 
         this.currentStep = step;
       }
     },
+saveDraft() {
+  // Save the current form data to a draft object
+  const draft = {
+    step: this.currentStep,
+    formData: this.formData,
+    attachmentFile: this.attachmentFile || null,
+  };
 
+  // Save the draft to localStorage
+  localStorage.setItem('formDraft', JSON.stringify(draft));
+  this.submitForm(draft);
+//  console.log('Draft saved:', localStorage.getItem('formDraft'));
+},
+postDraftToServer(draft) {
+  let formData = new FormData();
+  formData.append('_token', document.querySelector('meta[name="csrf-token"]').getAttribute('content'));
+  formData.append('step', draft.step);
+
+  // Loop through formData to append the form fields
+  Object.keys(draft.formData).forEach((key) => {
+    if (Array.isArray(draft.formData[key])) {
+      // Handle array items (like business units)
+      draft.formData[key].forEach((item, index) => {
+        formData.append(`${key}[${index}]`, JSON.stringify(item));
+      });
+    } else {
+      formData.append(key, draft.formData[key]);
+    }
+  });
+
+  // Add the file (if any)
+  if (draft.attachmentFile) {
+    formData.append('attachmentFile', draft.attachmentFile);
+  }
+
+  // Determine the correct method type and URL for the AJAX call
+  let url = '/admin/career-opportunities/save-draft';  // Change the URL as needed
+  let methodType = 'POST';  // Use 'PUT' if updating existing data
+
+  // Call your ajaxCall function with the necessary arguments
+  ajaxCall(url, methodType, [[this.onDraftSaveSuccess, ['response']]], formData);
+
+  // Optionally display a success message after calling
+  this.showSuccessMessage = true;
+},
+
+onDraftSaveSuccess(response) {
+  console.log('Draft successfully saved to server:', response);
+  // Add any other success handling code here
+},
+
+
+loadDraft() {
+  // Load the draft from localStorage (if it exists)
+  const draft = localStorage.getItem('formDraft');
+  if (draft) {
+    const parsedDraft = JSON.parse(draft);
+    this.currentStep = parsedDraft.step || 1;
+    this.formData = parsedDraft.formData || {};
+    this.attachmentFile = parsedDraft.attachmentFile || null;
+  }
+},
     isValidEmail(email) {
       const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       return re.test(email);
@@ -710,8 +773,55 @@ export default function wizardForm(careerOpportunity = null,businessUnitsData = 
         this.formData.termsAccepted
       );
     },
+    submitForm(draft) {
 
-    submitForm() {
+  this.showErrors = true;
+  console.log("Form submitted:", draft.formData.job_code);
+
+  const formData = new FormData();
+  Object.keys(draft.formData).forEach((key) => {
+    if (Array.isArray(draft.formData[key])) {
+      // If the key is an array (like businessUnits), handle each item
+      draft.formData[key].forEach((item, index) => {
+        formData.append(`${key}[${index}]`, JSON.stringify(item));
+      });
+    } else {
+      formData.append(key, draft.formData[key]);
+    }
+  });
+
+  formData.append("jobTitleEmailSignature", draft.formData.jobTitleEmailSignature);
+
+  // Append the file (if any)
+  if (draft.attachmentFile) {
+    formData.append("attachment", draft.attachmentFile);
+  }
+
+  // Determine method and URL based on session role and careerOpportunity ID
+  const methodType = careerOpportunity.id ? 'POST' : 'POST';
+ let url = 'admin/career-opportunities/save-draft';   // Append dynamic fields to form data
+  //const url = '{{ route('admin.career-opportunities.saveDraft') }}';
+  const dynamicFields = document.querySelectorAll(".render-wrap [name]");
+  dynamicFields.forEach((field) => {
+    const fieldName = field.name;
+    const fieldValue = field.type === "checkbox" || field.type === "radio" ? field.checked : field.value;
+    formData.append(fieldName, fieldValue);
+  });
+
+  // Debugging: Log all form data entries
+  console.log("Final FormData:");
+  for (let [key, value] of formData.entries()) {
+    console.log(`${key}: ${value}`);
+  }
+  console.log("Request URL:", url);
+
+  // Make the AJAX call
+  ajaxCall(url, 'POST', [[onSuccess, ['response']]], formData);
+
+  this.showSuccessMessage = true;
+    },
+
+/*    submitForm() {
 
       this.showErrors = true;
       if (this.isFormValid) {
@@ -758,10 +868,10 @@ export default function wizardForm(careerOpportunity = null,businessUnitsData = 
           });
 
           // Debugging: Log all form data entries
-          // console.log("Final FormData:");
-          // for (let [key, value] of formData.entries()) {
-          //     console.log(`${key}: ${value}`);
-          // }
+           console.log("Final FormData:");
+           for (let [key, value] of formData.entries()) {
+               console.log(`${key}: ${value}`);
+           }
         ajaxCall(url,methodtype, [[onSuccess, ['response']]], formData);
         this.showSuccessMessage = true;
         // this.resetForm();
@@ -774,6 +884,14 @@ export default function wizardForm(careerOpportunity = null,businessUnitsData = 
       } else {
         console.log("Form is invalid. Please check the errors.");
       }
+    },
+*/    autoSubmitDraft() {
+      window.addEventListener('beforeunload', (event) => {
+        if (!this.formSubmitted) {
+          // Call method to save the draft automatically
+          this.saveDraft();
+        }
+      });
     },
     resetForm() {
       this.currentStep = 1;
