@@ -1,3 +1,4 @@
+import { get } from "jquery";
 import {
   errorMessages,
   getErrorMessageById,
@@ -20,6 +21,7 @@ export default function wizardForm(careerOpportunity = null,businessUnitsData = 
     isFieldValid(id) {
       return isFieldValid(id, this.formData, {
         isBusinessUnitValid: () => this.isBusinessUnitValid,
+        isBusinessUnitSel: () => this.isBusinessUnitSel,
         isValidBillRate: (value) => this.isValidBillRate(value),
         isValidMaxBillRate: (value) => this.isValidMaxBillRate(value),
         isValidPhone: (value) => this.isValidPhone(value),
@@ -111,6 +113,10 @@ export default function wizardForm(careerOpportunity = null,businessUnitsData = 
         $('#jobTitle, #jobLevel').on('change', () => {
           this.loadBillRate();
           this.loadTemplate();
+        });
+
+        $('.businessUnitSel').on('change', () => {
+          this.selBU();
         });
 
         $("#ledger_type").find("option[value='31'], option[value='32']").remove();
@@ -253,6 +259,59 @@ export default function wizardForm(careerOpportunity = null,businessUnitsData = 
       const day = String(date.getDate()).padStart(2, '0');
       return `${year}/${month}/${day}`;
     },
+
+    selBU() {
+      this.$nextTick(() => {
+
+          if (!this.selectedBusinessUnit) {
+            this.businessUnitErrorMessage =
+              "Please select a Business Unit.";
+            return;
+          }
+          
+          this.budgetPercentage = 100;
+          // console.log('Selected Business Unit ID:', this.selectedBusinessUnit);
+          const newTotal =
+              this.getTotalPercentage() + parseFloat(this.budgetPercentage);
+          if (newTotal > 100 || newTotal < 100) {
+            this.businessUnitErrorMessage =
+              "Percentage value cannot be more or less than 100%";
+            return;
+          }
+
+          const selectedOption = this.$refs.businessUnitSelect.querySelector(
+            `option[value="${this.selectedBusinessUnit}"]`
+          );
+          const businessUnitText = selectedOption
+            ? selectedOption.textContent
+            : this.selectedBusinessUnit;
+            
+          this.formData.businessUnits.push({
+            id:this.selectedBusinessUnit,
+            unit:businessUnitText,
+            percentage: parseFloat(this.budgetPercentage),
+          });
+          
+          console.log(this.formData.businessUnits);
+
+          let url = `/division-load`;
+          let data = new FormData();
+          data.append('bu_id', this.selectedBusinessUnit);
+
+          const updates = {
+              '#regionZone': { type: 'select2append', field: 'zone' },
+              '#branch': { type: 'select2append', field: 'branch' },
+              '#division': { type: 'select2append', field: 'division' },
+              // '#currency': { type: 'value', field: 'currency_class' },
+              // Add more mappings as needed
+          };
+          
+          ajaxCall(url,  'POST', [[updateElements, ['response', updates]]], data);
+          
+          this.businessUnitErrorMessage = "";
+      });
+    },
+
     // Business unit script start from here
     addBusinessUnit() {
       if (!this.selectedBusinessUnit || !this.budgetPercentage) {
@@ -342,6 +401,12 @@ export default function wizardForm(careerOpportunity = null,businessUnitsData = 
 
     isValidPayRate(rate) {
       return this.isValidBillRate(rate);
+    },
+    get isBusinessUnitSel() {
+      if (!this.selectedBusinessUnit) {
+        this.businessUnitErrorMessage = "Please select a Business Unit.";
+        return false;
+      }
     },
     get isBusinessUnitValid() {
       const total = this.getTotalPercentage();
