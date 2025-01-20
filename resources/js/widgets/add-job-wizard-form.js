@@ -1,4 +1,4 @@
-import { get } from "jquery";
+// import { get } from "jquery";
 import {
   errorMessages,
   getErrorMessageById,
@@ -620,7 +620,7 @@ export default function wizardForm(careerOpportunity = null,businessUnitsData = 
 
     initFlatpickr() {
       flatpickr("#startDate", {
-        dateFormat: "Y/m/d",
+        dateFormat: "m/d/Y",
         defaultDate: this.formData.startDate || null,
         onChange: (selectedDates, dateStr) => {
           this.formData.startDate = dateStr;
@@ -629,7 +629,7 @@ export default function wizardForm(careerOpportunity = null,businessUnitsData = 
       });
 
       this.endDatePicker = flatpickr("#endDate", {
-        dateFormat: "Y/m/d",
+        dateFormat: "m/d/Y",
         defaultDate: this.formData.endDate || null,
         onChange: (selectedDates, dateStr) => {
           this.formData.endDate = dateStr;
