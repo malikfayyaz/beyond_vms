@@ -452,6 +452,7 @@ if (!function_exists('translate')) {
     function translate($text)
     {
         $locale = session('locale', 'en');
+        App::setLocale($locale);
         if ($locale === 'en') {
             return $text;
         }
@@ -465,7 +466,6 @@ if (!function_exists('translate')) {
         });
     }
 }
-
 
 
 
