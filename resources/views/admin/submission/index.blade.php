@@ -21,7 +21,7 @@
                     <li class="flex justify-center">
                         <a
                             href="#all_subs"
-                            class="tab-link w-full flex justify-center items-center gap-3 py-4 hover:bg-white hover:rounded-lg hover:shadow"
+                            class="tab-link w-full flex justify-center items-center gap-3 py-4 hover:bg-white hover:rounded-lg hover:shadow active-tab"
                             data-type="all_subs"
                         >
                             <i class="fa-solid fa-fill"></i>
@@ -138,7 +138,7 @@
                             </div>
                         </a>
                     </li>
-                    <li class="flex justify-center">
+                    <!-- <li class="flex justify-center">
                         <a
                             href="#withdraw"
                             class="tab-link w-full flex justify-center items-center gap-3 py-4 hover:bg-white hover:rounded-lg hover:shadow"
@@ -150,7 +150,7 @@
                                 <span class="text-[10px]">{{ $counts['withdraw'] }}</span>
                             </div>
                         </a>
-                    </li>
+                    </li> -->
 
 
                  </ul>
@@ -240,7 +240,13 @@
             </div>
         </div>
     </div>
-
+<style>
+.tab-link.active-tab {
+    background-color: rgb(13, 110, 253);
+    color: white;
+    border-radius: 0.5rem;
+}
+</style>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         if (window.$) {
@@ -312,9 +318,9 @@
                 e.preventDefault();
 
                 $('.tab-link').removeClass('active-tab');
-                $('.tab-link').removeClass('px-1 py-1 flex items-center justify-center text-white rounded-lg bg-primary');
-                $('.tab-link').addClass('w-full flex justify-center items-center gap-3 py-4 hover:bg-white hover:rounded-lg hover:shadow');
-                $(this).addClass('px-1 py-1 flex items-center justify-center text-white rounded-lg bg-primary');
+                // $('.tab-link').removeClass('px-1 py-1 flex items-center justify-center text-white rounded-lg bg-primary');
+                // $('.tab-link').addClass('w-full flex justify-center items-center gap-3 py-4 hover:bg-white hover:rounded-lg hover:shadow');
+                // $(this).addClass('px-1 py-1 flex items-center justify-center text-white rounded-lg bg-primary');
                 $(this).addClass('active-tab');
                 // Update currentType variable if needed
                 currentType = $(this).data('type');
