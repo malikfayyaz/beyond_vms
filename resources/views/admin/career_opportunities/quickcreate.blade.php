@@ -144,15 +144,14 @@
                         <div class="flex space-x-4 mt-4">
                             <div class="flex-1">
                                 <label class="block mb-2">Business Unit <span class="text-red-500">*</span></label>
-                                <select name="bu_id" @change="selBU" x-ref="businessUnitSelect"
-                                    x-model="selectedBusinessUnit"
-                                    class="w-full select2-single custom-style businessUnitSel" data-field="businessUnit">
+                                <select name="bu_id" x-ref="businessUnit" x-model="formData.businessUnit"
+                                    class="w-full select2-single custom-style" data-field="businessUnit">
                                     <option value="">Select Business Unit</option>
                                     @foreach (getActiveRecordsByType('busines-unit') as $record)
                                     <option value="{{ $record->id }}">{{ $record->name }}</option>
                                     @endforeach
                                 </select>
-                                <p x-show="showErrors && !isBusinessUnitSel" class="text-red-500 text-sm mt-1">
+                                <p x-show="showErrors && !isBusinessUnitValid" class="text-red-500 text-sm mt-1">
                                     <span x-text="businessUnitErrorMessage"></span>
                                 </p>
                             </div>
