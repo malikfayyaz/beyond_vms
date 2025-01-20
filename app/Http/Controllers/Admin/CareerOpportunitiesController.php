@@ -173,7 +173,7 @@ class CareerOpportunitiesController extends BaseController
         $formBuilderData = FormBuilder::where('type', 1)
         ->where('status', 'active')
         ->first();
-       
+
         $careerOpportunity ="";
         $businessUnitsData = "";
         return view('admin.career_opportunities.create', [
@@ -1201,7 +1201,7 @@ class CareerOpportunitiesController extends BaseController
     }
 
     public function quickcreate(){
-        
+
         $careerOpportunity ="";
         $businessUnitsData = "";
 

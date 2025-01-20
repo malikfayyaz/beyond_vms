@@ -452,7 +452,9 @@ if (!function_exists('translate')) {
     function translate($text)
     {
         $locale = session('locale', 'en');
-        App::setLocale($locale);
+        if ($locale === 'en') {
+            return $text;
+        }
         $cacheKey = "translation_{$locale}_" . md5($text);
         return Cache::remember($cacheKey, now()->addDays(30), function () use ($text, $locale) {
             try {
@@ -463,6 +465,7 @@ if (!function_exists('translate')) {
         });
     }
 }
+
 
 
 
