@@ -1,5 +1,14 @@
 <!-- resources/views/partials/alerts.blade.php -->
-
+@if(session('success'))
+    <div id="success-toast" class="fixed bottom-[20px] right-[40px] p-4 mb-4 text-sm text-green-700 bg-green-100 rounded-lg dark:bg-green-900 dark:text-green-300 z-[9999]" role="alert">
+        <span class="font-medium">Success:</span> {{ session('success') }}
+    </div>
+    <script>
+        setTimeout(function() {
+            document.getElementById('success-toast').style.display = 'none';
+        }, 5000); // Hide after 5 seconds
+    </script>
+@endif
 @if(session('status'))
     <div class="p-4 mb-4 text-sm text-green-700 bg-green-100 rounded-lg dark:bg-green-900 dark:text-green-300" role="alert">
         <span class="font-medium">Success:</span> {{ session('status') }}
