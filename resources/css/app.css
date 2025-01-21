@@ -2,6 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
+.tab-link.active-tab {
+        background-color: rgb(13, 110, 253);
+        color: white;
+        border-radius: 0.5rem;
+    }
 /* Add some padding to the input */
 .select2-container--default
     .select2-selection--single

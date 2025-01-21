@@ -203,13 +203,7 @@
             </div>
         </div>
     </div>
-    <style>
-        .tab-link.active-tab {
-            background-color: rgb(13, 110, 253);
-            color: white;
-            border-radius: 0.5rem;
-        }
-    </style>
+    
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             if (window.$) {
