@@ -2,7 +2,7 @@
 <div class="flex justify-center mb-8">
 {{--    <img src="{{ asset('images/logo.png') }}" alt="Company Logo" class="h-12" />--}}
 </div>
-@if(session('success'))
+@if (session('message') || session('success'))
     <div id="success-toast" class="fixed bottom-[20px] right-[40px] p-4 mb-4 text-sm text-green-700 bg-green-100 rounded-lg dark:bg-green-900 dark:text-green-300 z-[9999]" role="alert">
         <span class="font-medium">Success:</span> {{ session('success') }}
     </div>
@@ -17,12 +17,14 @@
                 <span class="font-medium">Success:</span> {{ session('status') }}
             </div>
         @endif
+{{--
 @if (session('message') || session('success'))
     <div class="p-4 mb-4 text-sm text-green-700 bg-green-100 rounded-lg dark:bg-green-900 dark:text-green-300" role="alert">
         <span class="font-medium">Success:</span>
         {{ session('success') ?? session('message') }}
     </div>
 @endif
+--}}
 @if($errors->any())
     <div class="p-4 mb-4 text-sm text-red-700 bg-red-100 rounded-lg dark:bg-red-900 dark:text-red-300" role="alert">
         @foreach ($errors->all() as $error)
