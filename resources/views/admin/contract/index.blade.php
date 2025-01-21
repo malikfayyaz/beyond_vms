@@ -19,7 +19,7 @@
                     <li class="flex justify-center">
                         <a
                             href="#active"
-                            class="tab-link w-full flex justify-center items-center gap-3 py-4 hover:bg-white hover:rounded-lg hover:shadow"
+                            class="tab-link w-full flex justify-center items-center gap-3 py-4 hover:bg-white hover:rounded-lg hover:shadow active-tab"
                             data-type="active"
                         >
                             <i class="fa-solid fa-fill"></i>
@@ -124,6 +124,7 @@
             </div>
         </div>
     </div>
+   
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -170,9 +171,9 @@
                     e.preventDefault();
 
                     $('.tab-link').removeClass('active-tab');
-                    $('.tab-link').removeClass('px-1 py-1 flex items-center justify-center text-white rounded-lg bg-primary');
-                    $('.tab-link').addClass('w-full flex justify-center items-center gap-3 py-4 hover:bg-white hover:rounded-lg hover:shadow');
-                    $(this).addClass('px-1 py-1 flex items-center justify-center text-white rounded-lg bg-primary');
+                    // $('.tab-link').removeClass('px-1 py-1 flex items-center justify-center text-white rounded-lg bg-primary');
+                    // $('.tab-link').addClass('w-full flex justify-center items-center gap-3 py-4 hover:bg-white hover:rounded-lg hover:shadow');
+                    // $(this).addClass('px-1 py-1 flex items-center justify-center text-white rounded-lg bg-primary');
                     $(this).addClass('active-tab');
                     // Update currentType variable if needed
                     currentType = $(this).data('type');

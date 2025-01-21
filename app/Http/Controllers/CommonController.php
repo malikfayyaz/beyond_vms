@@ -351,9 +351,9 @@ class CommonController extends Controller
         $id = $request->input('bu_id');
 
         $response = [
-            'zone' => '<option  value="" > Select Region/Zone</option>',
-            'branch' => '<option  value=""> Select Branch</option>',
-            'division' => '<option  value=""> Select Division</option>',
+            'zone' => '<option  value="" > Select Option</option>',
+            'branch' => '<option  value=""> Select Option</option>',
+            'division' => '<option  value=""> Select Option</option>',
         ];
 
         // Fetch job branches
@@ -368,7 +368,7 @@ class CommonController extends Controller
                 ->first();
 
             if ($jobBranch) {
-                $response['branch'] .= '<option selected data-id="' . $jobBranch->id . '" value="' . $jobBranch->id . '">' . $jobBranch->name . '</option>';
+                $response['branch'] .= '<option data-id="' . $jobBranch->id . '" value="' . $jobBranch->id . '">' . $jobBranch->name . '</option>';
             }
         }
 
@@ -384,7 +384,7 @@ class CommonController extends Controller
                 ->first();
 
             if ($jobZone) {
-                $response['zone'] .= '<option selected data-id="' . $jobZone->id . '" value="' . $jobZone->id . '">' . $jobZone->name . '</option>';
+                $response['zone'] .= '<option data-id="' . $jobZone->id . '" value="' . $jobZone->id . '">' . $jobZone->name . '</option>';
             }
         }
 
@@ -400,7 +400,7 @@ class CommonController extends Controller
                 ->first();
 
             if ($jobDivision) {
-                $response['division'] .= '<option selected data-id="' . $jobDivision->id . '" value="' . $jobDivision->id . '">' . $jobDivision->name . '</option>';
+                $response['division'] .= '<option data-id="' . $jobDivision->id . '" value="' . $jobDivision->id . '">' . $jobDivision->name . '</option>';
             }
         }
 

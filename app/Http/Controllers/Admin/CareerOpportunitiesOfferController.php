@@ -128,24 +128,24 @@ class CareerOpportunitiesOfferController extends BaseController
 
         foreach ($request->all() as $key => $value) {
             if (preg_match('/^text-/', $key)) {
-                $dynamicRules[$key] = 'string'; // Rule for text inputs
+                $dynamicRules[$key] = 'nullable|string'; // Rule for text inputs
             } elseif (preg_match('/^textarea-/', $key)) {
-                $dynamicRules[$key] = 'string'; // Rule for textarea inputs
+                $dynamicRules[$key] = 'nullable|string'; // Rule for textarea inputs
             } elseif (preg_match('/^checkbox-/', $key)) {
-                $dynamicRules[$key] = 'array'; // Validate as an array
+                $dynamicRules[$key] = 'nullable|array'; // Validate as an array
                 $dynamicRules["{$key}.*"] = 'in:true,false'; // Rule for checkboxes
             } elseif (preg_match('/^radio-/', $key)) {
-                $dynamicRules[$key] = 'string'; // Rule for radio buttons
+                $dynamicRules[$key] = 'nullable|string'; // Rule for radio buttons
             } elseif (preg_match('/^select-/', $key)) {
-                $dynamicRules[$key] = 'string'; // Rule for select dropdowns
+                $dynamicRules[$key] = 'nullable|string'; // Rule for select dropdowns
             } elseif (preg_match('/^file-/', $key)) {
-                $dynamicRules[$key] = 'file'; // Rule for file uploads
+                $dynamicRules[$key] = 'nullable|file'; // Rule for file uploads
             } elseif (preg_match('/^number-/', $key)) {
-                $dynamicRules[$key] = 'numeric'; // Rule for number inputs
+                $dynamicRules[$key] = 'nullable|numeric'; // Rule for number inputs
             } elseif (preg_match('/^date-/', $key)) {
-                $dynamicRules[$key] = 'date_format:m/d/Y'; // Rule for date inputs
+                $dynamicRules[$key] = 'nullable|date_format:m/d/Y'; // Rule for date inputs
             } elseif (preg_match('/^email-/', $key)) {
-                $dynamicRules[$key] = 'email'; // Rule for email inputs
+                $dynamicRules[$key] = 'nullable|email'; // Rule for email inputs
             }
         }
 

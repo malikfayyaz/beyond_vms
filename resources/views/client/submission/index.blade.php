@@ -20,7 +20,7 @@
                         <li class="flex justify-center">
                             <a
                                 href="#all_subs"
-                                class="tab-link w-full flex justify-center items-center gap-3 py-4 hover:bg-white hover:rounded-lg hover:shadow"
+                                class="tab-link w-full flex justify-center items-center gap-3 py-4 hover:bg-white hover:rounded-lg hover:shadow active-tab"
                                 data-type="all_subs"
                             >
                                 <i class="fa-solid fa-fill"></i>

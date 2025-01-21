@@ -19,7 +19,7 @@
                     <li class="flex justify-center">
                         <a
                             href="#active"
-                            class="tab-link w-full flex justify-center items-center gap-3 py-4 hover:bg-white hover:rounded-lg hover:shadow"
+                            class="tab-link w-full flex justify-center items-center gap-3 py-4 hover:bg-white hover:rounded-lg hover:shadow active-tab"
                             data-type="active"
                         >
                             <i class="fa-solid fa-fill"></i>
