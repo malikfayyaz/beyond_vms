@@ -432,7 +432,10 @@ class CareerOpportunitiesController extends BaseController
      */
     public function destroy(string $id)
     {
-        //
+        $job = CareerOpportunity::findOrFail($id);
+        $job->delete();
+        return redirect()->route('admin.career-opportunities.index')
+            ->with('success', 'Career opportunity deleted successfully!');
     }
 
     /**

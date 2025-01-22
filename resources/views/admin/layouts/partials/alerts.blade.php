@@ -11,7 +11,8 @@
     <script>
         setTimeout(function() {
             document.getElementById('success-toast').style.display = 'none';
-        }, 5000); // Hide after 5 seconds
+            sessionStorage.setItem('success-shown', 'true');
+        }, 3000);
     </script>
 @endif
 @if(session('status'))
