@@ -11,7 +11,7 @@
         <script>
             var sessionrole = "{{ $sessionrole }}";
         </script>
-        <div class="bg-white mx-4 my-8 rounded p-8" x-data='wizardForm()' x-init="mounted()">
+        <div class="bg-white mx-4 my-8 rounded p-8" x-data='quickcreate({!! json_encode($careerOpportunity, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP) !!})' x-init="mounted()">
             <form @submit.prevent="submitForm" id="quickaddjob" method="POST">
                 <div>
                     <div class="my-4 border rounded shadow px-4 pt-4 pb-8">
@@ -144,17 +144,17 @@
                         <div class="flex space-x-4 mt-4">
                             <div class="flex-1">
                                 <label class="block mb-2">Business Unit <span class="text-red-500">*</span></label>
-                                <select name="bu_id" x-ref="businessUnit" x-model="formData.businessUnit"
+                                <select name="bu_id" x-ref="businessUnitSelect" x-model="formData.businessUnit"
                                     class="w-full select2-single custom-style" data-field="businessUnit">
                                     <option value="">Select Business Unit</option>
                                     @foreach (getActiveRecordsByType('busines-unit') as $record)
                                     <option value="{{ $record->id }}">{{ $record->name }}</option>
                                     @endforeach
                                 </select>
-                                <p x-show="showErrors && !isBusinessUnitValid" class="text-red-500 text-sm mt-1">
-                                    <span x-text="businessUnitErrorMessage"></span>
-                                </p>
+                                <p x-show="showErrors && !isFieldValid('businessUnit')" class="text-red-500 text-sm mt-1"
+                                    x-text="getErrorMessageById('businessUnit')"></p>
                             </div>
+                            
 
                             <div class="flex-1">
                                 <label class="block mb-2">Division <span class="text-red-500">*</span></label>
@@ -206,6 +206,8 @@
                                     <option value="{{ $key }}">{{ $value }}</option>
                                     @endforeach
                                 </select>
+                                <p x-show="showErrors && !isFieldValid('workerType')" class="text-red-500 text-sm mt-1"
+                                x-text="getErrorMessageById('workerType')"></p>
                             </div>
                         </div>
                     </div>
@@ -425,4 +427,198 @@
             </form>
         </div>  
     </div>
+    <script>
+        function quickcreate(careerOpportunity = null) {
+            console.log('quickcreate');
+            return {
+                careerOpportunity,
+                showErrors: false,
+                
+                
+                formData: {
+                    jobLaborCategory: careerOpportunity?.cat_id || "",
+                    jobTitle: careerOpportunity?.template_id || "",
+                    hiringManager: careerOpportunity?.hiring_manager || "",
+                    jobLevel: careerOpportunity?.job_level || "",
+                    workLocation: careerOpportunity?.location_id || "",
+                    workLocation: careerOpportunity?.location_id || "",
+                    virtualRemote: careerOpportunity?.remote_option || "",
+                    division: careerOpportunity?.division_id || "",
+                    regionZone: careerOpportunity?.region_zone_id || "",
+                    branch: careerOpportunity?.branch_id || "",
+                    workerType: careerOpportunity?.worker_type_id || "",
+                    startDate: careerOpportunity?.start_date || "",
+                    endDate: careerOpportunity?.end_date || "",
+                    additionalRequirementEditor: careerOpportunity?.internal_notes || "",
+                    buJustification: careerOpportunity?.business_justification || "",
+                    corporate_legal: careerOpportunity?.corporate_legal || "",
+                    expectedCost: careerOpportunity?.expected_cost || "",
+                    acknowledgement: careerOpportunity?.acknowledgement || "",
+                    estimatedHoursPerDay: careerOpportunity?.hours_per_day || "",
+                    workDaysPerWeek: careerOpportunity?.day_per_week || "",
+                    numberOfPositions: careerOpportunity?.num_openings || "",
+                    preIdentifiedCandidate: careerOpportunity?.pre_candidate || "",
+                    candidateFirstName:careerOpportunity?.pre_name || "",
+                    candidateLastName: careerOpportunity?.pre_last_name || "",
+                    candidatePhone: careerOpportunity?.candidate_phone || "",
+                    candidateEmail: careerOpportunity?.candidate_email || "",
+                    businessUnit: "",
+                    buPercentage: 100,
+                
+                },
+
+                isFieldValid(fieldId) {
+                    return this.formData[fieldId]?.trim() !== "";
+                },
+
+                getErrorMessageById(fieldId) {
+                    const errorMessages = {
+                        jobLaborCategory: 'Job Labor Category is required.',
+                        jobTitle: 'Job Title is required.',
+                        hiringManager: 'Hiring Manager is required.',
+                        jobLevel: 'Job Level is required.',
+                        workLocation: 'Work Location is required.',
+                        virtualRemote: 'Virtual Candidate is required.',
+                        businessUnit: 'Business Unit is required.',
+                        division: 'Division is required.',
+                        regionZone: 'Region/Zone is required.',
+                        branch: 'Branch is required.',
+                        workerType: 'Worker Type is required.',
+                        startDate: 'Start Date is required.',
+                        endDate: 'End Date is required.',
+                        additionalRequirementEditor: 'Additional Requirement is required.',
+                        buJustification: 'Business Justification is required.',
+                        corporate_legal: 'Corporate Legal is required.',
+                        expectedCost: 'Expected Cost is required.',
+                        acknowledgement: 'Acknowledgement is required.',
+                        estimatedHoursPerDay: 'Estimated Hours per Day is required.',
+                        workDaysPerWeek: 'Work Days per Week is required.',
+                        numberOfPositions: 'Number of Positions is required.',
+                        preIdentifiedCandidate: 'Pre-Identified Candidate is required.',
+                        candidateFirstName: 'Candidate First Name is required.',
+                        candidateLastName: 'Candidate Last Name is required.',
+                        candidatePhone: 'Candidate Phone is required.',
+                        candidateEmail: 'Candidate Email is required.',
+                    };
+                    return errorMessages[fieldId] || 'This field is required.';
+                },
+
+                mounted() {
+                    console.log(window.$); // Verify jQuery is available
+                    if (window.$) {
+                        $('#jobLaborCategory').on('change', () => {
+                            var labour_type = $('#jobLaborCategory').val();
+                            var type = 10;
+                            let url = `/load-market-job-template/${labour_type}/${type}`;
+
+                            ajaxCall(url, 'GET', [[updateStatesDropdown, ['response', 'jobTitle']]]);
+                        });
+
+                        $('#jobTitle, #jobLevel').on('change', () => {
+                            
+                            this.loadTemplate();
+                        });
+
+                        this.loadTemplate = () => {
+                            var template_id = $('#jobTitle').find(':selected').val();
+
+                            let url = `/load-job-template/`;
+                            let data = new FormData();
+                            data.append('template_id', template_id);
+                            const updates = {
+                                // '#jobDescriptionEditor': { type: 'quill', field: 'job_description' },
+                                // '#job_family_value': { type: 'value', field: 'job_family_id' },
+                                // '#Job_worker_type': { type: 'disabled', value: true },
+                                '#Job_worker_type': { type: 'select2', field: 'worker_type' },
+                                // '#worker_type_value': { type: 'value', field: 'worker_type' },
+                                '#job_code': { type: 'value', field: 'job_code' },
+                                // Add more mappings as needed
+                            };
+                            ajaxCall(url, 'POST', [[updateElements, ['response', updates]]], data);
+                            setTimeout(() => {
+                                // this.formData.jobDescriptionEditor =  $('#jobDescriptionEditor').val();
+                                this.formData.workerType = $('#Job_worker_type').val();
+                                this.formData.job_code = $('#job_code').val();
+                            }, 500);
+                        };
+                        this.calculateRate = () => {
+                            var bill_rate = $('#billRate').val();
+                            var payment_type = $('#payment_type').val();
+                            var hours_per_week = $('#workDaysPerWeek').val();
+                            var Job_start_date = $('#startDate').val();
+                            var Job_end_date = $('#endDate').val();
+                            var openings = $("#num_openings").val();
+                            var hours_per_day = $("#hours_per_day").val();
+
+                            $("#job_duration").html(Job_start_date + ' - ' + Job_end_date);
+                            $("#job_duration1").html(Job_start_date + ' - ' + Job_end_date);
+
+                            var sumOfEstimates = 0;
+                            $('.addCost').each(function() {
+                                var addedValue = $(this).val().replace(/,/g, '');
+                                sumOfEstimates += (isNaN(parseFloat(addedValue))) ? 0.00 : parseFloat(addedValue);
+                            });
+                            let data = new FormData();
+                            data.append('bill_rate', bill_rate);
+                            data.append('other_amount_sum', sumOfEstimates);
+                            data.append('payment_type', payment_type);
+                            data.append('start_date', Job_start_date);
+                            data.append('end_date', Job_end_date);
+                            data.append('opening', openings);
+                            data.append('hours_per_day', hours_per_day);
+                            data.append('days_per_week', hours_per_week);
+                                let url;
+                                if (sessionrole === 'admin') {
+                                    url = `/admin/job-rates/`;
+                                } else if (sessionrole === 'client') {
+                                    url = `/client/job-rates/`;
+                                }
+                                else if (sessionrole === 'vendor') {
+                                    url = `/vendor/job-rates/`;
+                                }
+                                else if (sessionrole === 'consultant') {
+                                    url = `/consultant/job-rates/`;
+                                }
+                                /*          let url = `/admin/job-rates/`;*/
+                            const updates = {
+                                '#regular_cost': { type: 'value', field: 'regularBillRate' },
+                                '#single_resource_cost': { type: 'value', field: 'singleResourceCost' },
+                                '#all_resources_span': { type: 'value', field: 'regularBillRateAll'},
+                                '#all_resources_input': { type: 'value', field: 'allResourceCost' },
+                                '#regular_hours': { type: 'value', field: 'totalHours'},
+                                '#numOfWeeks': { type: 'value', field: 'numOfWeeks' }
+                            };
+                            ajaxCall(url, 'POST', [[updateElements, ['response', updates]]], data);
+                            setTimeout(() => {
+                                this.formData.regularCost =  $('#regular_cost').val();
+                                this.formData.singleResourceCost = $('#single_resource_cost').val();
+                                this.formData.allResourcesRegularCost = $('#all_resources_span').val();
+                                this.formData.regularHours =  $('#regular_hours').val();
+                                this.formData.allResourcesCost = $('#all_resources_input').val();
+                                this.formData.numberOfWeeks = $('#numOfWeeks').val();
+                            }, 500);
+                        };
+                    }
+                },
+
+                submitForm() {
+                    this.showErrors = true;
+
+                    for (const field in this.formData) {
+                        if (!this.isFieldValid(field)) {
+                            console.log(`Validation failed for ${field}`);
+                            return;
+                        }
+                    }
+                    // Debugging: Log all form data entries
+                    // console.log("Final FormData:");
+                    // for (let [key, value] of formData.entries()) {
+                    //     console.log(`${key}: ${value}`);
+                    // }
+                    console.log('Form submitted successfully');
+                },
+
+            };
+        }
+    </script>
 @endsection
