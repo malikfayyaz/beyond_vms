@@ -28,7 +28,7 @@
                     <li class="flex justify-center">
                         <a
                             href="#active"
-                            class="tab-link w-full flex justify-center items-center gap-3 hover:bg-white hover:rounded-lg hover:shadow py-4"
+                            class="tab-link w-full flex justify-center items-center gap-3 hover:bg-white hover:rounded-lg hover:shadow py-4 active-tab"
                             data-type="active"
                         >
                             <i class="fa-regular fa-file-lines"></i>
@@ -96,7 +96,7 @@
                     <li class="flex justify-center">
                         <a
                             href="#all_jobs"
-                            class="tab-link w-full flex justify-center items-center gap-3 py-4 hover:bg-white hover:rounded-lg hover:shadow active-tab"
+                            class="tab-link w-full flex justify-center items-center gap-3 py-4 hover:bg-white hover:rounded-lg hover:shadow"
                             data-type="all_jobs"
                         >
                             <i class="fa-solid fa-fill"></i>
