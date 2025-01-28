@@ -1214,23 +1214,79 @@ class CareerOpportunitiesController extends BaseController
         ]);
     }
 
-    public function quickjobStore(){
-        dd("here");
-        // $validatedData = $this->validateJobOpportunity(request());
-        // $jobTemplate = JobTemplate::find($validatedData['jobTitle']);
-        // $filename = null;
-        // if (request()->hasFile('attachment')) {
-        //     $filename = request()->file('attachment')->store('job_attachments');
-        // }
+    public function quickjobStore(Request $request){
+        $validatedData = $request->validate([
+            'jobLaborCategory' => 'required',
+            'jobTitle' => 'required',
+            'hiringManager' => 'required',
+            'jobLevel' => 'required',
+            'workLocation' => 'required',
+            'virtualRemote' => 'required',
+            'businessUnit' => 'required',
+            'division' => 'required',
+            'regionZone' => 'required',
+            'branch' => 'required',
+            'workerType' => 'required',
+            'startDate' => 'required|date',
+            'endDate' => 'required|date',
+            'additionalRequirementEditor' => 'required',
+            'buJustification' => 'required',
+            'corporate_legal' => 'required',
+            'expectedCost' => 'required_if:corporate_legal,Yes|nullable|numeric',
+            'acknowledgement' => 'required|in:true,false',
+            'estimatedHoursPerDay' => 'required|numeric',
+            'workDaysPerWeek' => 'required|numeric',
+            'numberOfPositions' => 'required|numeric',
+            'preIdentifiedCandidate' => 'required',
+            'candidateFirstName' => 'required_if:preIdentifiedCandidate,Yes|nullable|string',
+            'candidateLastName' => 'required_if:preIdentifiedCandidate,Yes|nullable|string',
+            'candidatePhone' => 'required_if:preIdentifiedCandidate,Yes|nullable|string',
+            'candidateEmail' => 'required_if:preIdentifiedCandidate,Yes|nullable|email',
+            'jobTitleEmailSignature' => 'nullable',
+        ]);
 
-        // $job = new CareerOpportunity();
-        // $job->fill($this->mapJobData($validatedData, $jobTemplate, request(), $filename));
-        // $job->save();
+        $jobTemplate = JobTemplates::findOrFail($validatedData['jobTitle']);
 
-        // $this->syncBusinessUnits(request()->businessUnits, $job->id);
+        $careerOpportunity = new CareerOpportunity();
+        $careerOpportunity->cat_id = $validatedData['jobLaborCategory'];
 
-        // session()->flash('success', 'Job Opportunity created successfully');
-        // return redirect()->route('admin.career-opportunities.index');
+        $careerOpportunity = new CareerOpportunity();
+        $careerOpportunity->cat_id = $validatedData['jobLaborCategory'];
+        $careerOpportunity->template_id = $validatedData['jobTitle'];
+        $careerOpportunity->hiring_manager = $validatedData['hiringManager'];
+        $careerOpportunity->job_level = $validatedData['jobLevel'];
+        $careerOpportunity->location_id = $validatedData['workLocation'];
+        $careerOpportunity->remote_option = $validatedData['virtualRemote'];
+        $careerOpportunity->division_id = $validatedData['division'];
+        $careerOpportunity->region_zone_id = $validatedData['regionZone'];
+        $careerOpportunity->branch_id = $validatedData['branch'];
+        $careerOpportunity->worker_type_id = $validatedData['workerType'];
+        $careerOpportunity->start_date = $validatedData['startDate'];
+        $careerOpportunity->end_date = $validatedData['endDate'];
+        $careerOpportunity->internal_notes = $validatedData['additionalRequirementEditor'];
+        $careerOpportunity->business_justification = $validatedData['buJustification'];
+        $careerOpportunity->corporate_legal = $validatedData['corporate_legal'];
+        $careerOpportunity->expected_cost = $validatedData['expectedCost'];
+        $careerOpportunity->acknowledgement = $validatedData['acknowledgement'];
+        $careerOpportunity->hours_per_day = $validatedData['estimatedHoursPerDay'];
+        $careerOpportunity->day_per_week = $validatedData['workDaysPerWeek'];
+        $careerOpportunity->num_openings = $validatedData['numberOfPositions'];
+        $careerOpportunity->pre_candidate = $validatedData['preIdentifiedCandidate'];
+        $careerOpportunity->pre_name = $validatedData['candidateFirstName'];
+        $careerOpportunity->pre_last_name = $validatedData['candidateLastName'];
+        $careerOpportunity->candidate_phone = $validatedData['candidatePhone'];
+        $careerOpportunity->candidate_email = $validatedData['candidateEmail'];
+        $careerOpportunity->alternative_job_title = $validatedData['jobTitleEmailSignature'];
+        $careerOpportunity->title = $jobTemplate->job_title;
+
+        $careerOpportunity->save();
+
+        session()->flash('success', 'Job saved successfully!');
+        return response()->json([
+            'success' => true,
+            'message' => 'Job saved successfully!',
+            'redirect_url' => route('admin.career-opportunities.index') // Redirect back URL for AJAX
+        ]);
     }
 
 }
