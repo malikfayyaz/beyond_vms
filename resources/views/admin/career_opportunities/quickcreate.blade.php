@@ -145,7 +145,7 @@
                             <div class="flex-1">
                                 <label class="block mb-2">Business Unit <span class="text-red-500">*</span></label>
                                 <select name="bu_id" x-ref="businessUnitSelect" x-model="formData.businessUnit"
-                                    class="w-full select2-single custom-style" data-field="businessUnit">
+                                    class="w-full select2-single custom-style businessUnitSel" data-field="businessUnit">
                                     <option value="">Select Business Unit</option>
                                     @foreach (getActiveRecordsByType('busines-unit') as $record)
                                     <option value="{{ $record->id }}">{{ $record->name }}</option>
@@ -463,6 +463,7 @@
                     candidatePhone: careerOpportunity?.candidate_phone || "",
                     candidateEmail: careerOpportunity?.candidate_email || "",
                     businessUnit: "",
+                    
                     buPercentage: 100,
                 
                 },
@@ -626,6 +627,9 @@
                                 this.formData.job_code = $('#job_code').val();
                             }, 500);
                         };
+                        $('.businessUnitSel').on('change', () => {
+                         this.selBU();
+                        });
                         this.calculateRate = () => {
                             // var bill_rate = $('#billRate').val();
                             // var payment_type = $('#payment_type').val();
@@ -724,6 +728,29 @@
                         console.log(`${key}: ${value}`);
                     }
                     console.log('Form submitted successfully');
+                },
+
+                selBU() {
+                    
+                    this.$nextTick(() => {
+                        
+                        // console.log('Selected Business Unit ID:', this.formData.businessUnit);
+                       
+                        let url = `/division-load`;
+                        let data = new FormData();
+                        data.append('bu_id', this.formData.businessUnit);
+
+                        const updates = {
+                            '#regionZone': { type: 'select2append', field: 'zone' },
+                            '#branch': { type: 'select2append', field: 'branch' },
+                            '#division': { type: 'select2append', field: 'division' },
+                            // '#currency': { type: 'value', field: 'currency_class' },
+                            // Add more mappings as needed
+                        };
+                        
+                        ajaxCall(url,  'POST', [[updateElements, ['response', updates]]], data);
+                        
+                    });
                 },
 
             };
