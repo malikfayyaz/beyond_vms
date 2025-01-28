@@ -462,10 +462,9 @@
                     candidateLastName: careerOpportunity?.pre_last_name || "",
                     candidatePhone: careerOpportunity?.candidate_phone || "",
                     candidateEmail: careerOpportunity?.candidate_email || "",
+                    // jobTitleEmailSignature:careerOpportunity?.alternative_job_title || "",
                     businessUnit: "",
                     
-                    buPercentage: 100,
-                
                 },
 
                 isFieldValid(fieldId) {
@@ -631,61 +630,62 @@
                          this.selBU();
                         });
                         this.calculateRate = () => {
-                            // var bill_rate = $('#billRate').val();
-                            // var payment_type = $('#payment_type').val();
-                            // var hours_per_week = $('#workDaysPerWeek').val();
-                            // var Job_start_date = $('#startDate').val();
-                            // var Job_end_date = $('#endDate').val();
-                            // var openings = $("#num_openings").val();
-                            // var hours_per_day = $("#hours_per_day").val();
+                            var bill_rate = 10;
+                            var payment_type = 1;
+                            var hours_per_week = $('#workDaysPerWeek').val();
+                            var Job_start_date = $('#startDate').val();
+                            var Job_end_date = $('#endDate').val();
+                            var openings = $("#num_openings").val();
+                            var hours_per_day = $("#hours_per_day").val();
 
-                            // $("#job_duration").html(Job_start_date + ' - ' + Job_end_date);
-                            // $("#job_duration1").html(Job_start_date + ' - ' + Job_end_date);
+                            $("#job_duration").html(Job_start_date + ' - ' + Job_end_date);
+                            $("#job_duration1").html(Job_start_date + ' - ' + Job_end_date);
+                            // console.log('hours_per_day', hours_per_day);
 
-                            // var sumOfEstimates = 0;
-                            // $('.addCost').each(function() {
-                            //     var addedValue = $(this).val().replace(/,/g, '');
-                            //     sumOfEstimates += (isNaN(parseFloat(addedValue))) ? 0.00 : parseFloat(addedValue);
-                            // });
-                            // let data = new FormData();
-                            // data.append('bill_rate', bill_rate);
-                            // data.append('other_amount_sum', sumOfEstimates);
-                            // data.append('payment_type', payment_type);
-                            // data.append('start_date', Job_start_date);
-                            // data.append('end_date', Job_end_date);
-                            // data.append('opening', openings);
-                            // data.append('hours_per_day', hours_per_day);
-                            // data.append('days_per_week', hours_per_week);
-                            //     let url;
-                            //     if (sessionrole === 'admin') {
-                            //         url = `/admin/job-rates/`;
-                            //     } else if (sessionrole === 'client') {
-                            //         url = `/client/job-rates/`;
-                            //     }
-                            //     else if (sessionrole === 'vendor') {
-                            //         url = `/vendor/job-rates/`;
-                            //     }
-                            //     else if (sessionrole === 'consultant') {
-                            //         url = `/consultant/job-rates/`;
-                            //     }
-                            //     /*          let url = `/admin/job-rates/`;*/
-                            // const updates = {
-                            //     '#regular_cost': { type: 'value', field: 'regularBillRate' },
-                            //     '#single_resource_cost': { type: 'value', field: 'singleResourceCost' },
-                            //     '#all_resources_span': { type: 'value', field: 'regularBillRateAll'},
-                            //     '#all_resources_input': { type: 'value', field: 'allResourceCost' },
-                            //     '#regular_hours': { type: 'value', field: 'totalHours'},
-                            //     '#numOfWeeks': { type: 'value', field: 'numOfWeeks' }
-                            // };
-                            // ajaxCall(url, 'POST', [[updateElements, ['response', updates]]], data);
-                            // setTimeout(() => {
-                            //     this.formData.regularCost =  $('#regular_cost').val();
-                            //     this.formData.singleResourceCost = $('#single_resource_cost').val();
-                            //     this.formData.allResourcesRegularCost = $('#all_resources_span').val();
-                            //     this.formData.regularHours =  $('#regular_hours').val();
-                            //     this.formData.allResourcesCost = $('#all_resources_input').val();
-                            //     this.formData.numberOfWeeks = $('#numOfWeeks').val();
-                            // }, 500);
+                            var sumOfEstimates = 0;
+                            $('.addCost').each(function() {
+                                var addedValue = $(this).val().replace(/,/g, '');
+                                sumOfEstimates += (isNaN(parseFloat(addedValue))) ? 0.00 : parseFloat(addedValue);
+                            });
+                            let data = new FormData();
+                            data.append('bill_rate', bill_rate);
+                            data.append('other_amount_sum', sumOfEstimates);
+                            data.append('payment_type', payment_type);
+                            data.append('start_date', Job_start_date);
+                            data.append('end_date', Job_end_date);
+                            data.append('opening', openings);
+                            data.append('hours_per_day', hours_per_day);
+                            data.append('days_per_week', hours_per_week);
+                                let url;
+                                if (sessionrole === 'admin') {
+                                    url = `/admin/job-rates/`;
+                                } else if (sessionrole === 'client') {
+                                    url = `/client/job-rates/`;
+                                }
+                                else if (sessionrole === 'vendor') {
+                                    url = `/vendor/job-rates/`;
+                                }
+                                else if (sessionrole === 'consultant') {
+                                    url = `/consultant/job-rates/`;
+                                }
+                                /*          let url = `/admin/job-rates/`;*/
+                            const updates = {
+                                // '#regular_cost': { type: 'value', field: 'regularBillRate' },
+                                // '#single_resource_cost': { type: 'value', field: 'singleResourceCost' },
+                                // '#all_resources_span': { type: 'value', field: 'regularBillRateAll'},
+                                // '#all_resources_input': { type: 'value', field: 'allResourceCost' },
+                                // '#regular_hours': { type: 'value', field: 'totalHours'},
+                                // '#numOfWeeks': { type: 'value', field: 'numOfWeeks' }
+                            };
+                            ajaxCall(url, 'POST', [[updateElements, ['response', updates]]], data);
+                            setTimeout(() => {
+                                // this.formData.regularCost =  $('#regular_cost').val();
+                                //  this.formData.singleResourceCost = $('#single_resource_cost').val();
+                                // this.formData.allResourcesRegularCost = $('#all_resources_span').val();
+                                // this.formData.regularHours =  $('#regular_hours').val();
+                                // this.formData.allResourcesCost = $('#all_resources_input').val();
+                                // this.formData.numberOfWeeks = $('#numOfWeeks').val();
+                            }, 500);
                         };
 
                         
@@ -727,7 +727,11 @@
                     for (let [key, value] of formData.entries()) {
                         console.log(`${key}: ${value}`);
                     }
-                    console.log('Form submitted successfully');
+                    // console.log('Form submitted successfully');
+                    const methodtype = 'POST';
+                    url = `/admin/quickjob-store`;
+                    ajaxCall(url,methodtype, [[onSuccess, ['response']]], formData);
+                    
                 },
 
                 selBU() {

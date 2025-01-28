@@ -1214,4 +1214,23 @@ class CareerOpportunitiesController extends BaseController
         ]);
     }
 
+    public function quickjobStore(){
+        dd("here");
+        // $validatedData = $this->validateJobOpportunity(request());
+        // $jobTemplate = JobTemplate::find($validatedData['jobTitle']);
+        // $filename = null;
+        // if (request()->hasFile('attachment')) {
+        //     $filename = request()->file('attachment')->store('job_attachments');
+        // }
+
+        // $job = new CareerOpportunity();
+        // $job->fill($this->mapJobData($validatedData, $jobTemplate, request(), $filename));
+        // $job->save();
+
+        // $this->syncBusinessUnits(request()->businessUnits, $job->id);
+
+        // session()->flash('success', 'Job Opportunity created successfully');
+        // return redirect()->route('admin.career-opportunities.index');
+    }
+
 }

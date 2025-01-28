@@ -190,6 +190,6 @@ Route::middleware(['user_role:admin'])->group(function () {
         Route::post('formbuilder/{id}/update', [FormBuilderController::class, 'update'])->name('formbuilder.update');
 
         Route::get('job/quick_create', [CareerOpportunitiesController::class, 'quickcreate'])->name('job.quickcreate');
-
+        Route::post('quickjob-store', [CareerOpportunitiesController::class, 'quickJobStore'])->name('quickjob.store');
     });
 });
