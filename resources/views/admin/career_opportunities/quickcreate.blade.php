@@ -631,7 +631,7 @@
                         });
                         this.calculateRate = () => {
                             var bill_rate = 10;
-                            var payment_type = 1;
+                            var payment_type = 35;
                             var hours_per_week = $('#workDaysPerWeek').val();
                             var Job_start_date = $('#startDate').val();
                             var Job_end_date = $('#endDate').val();
@@ -723,11 +723,11 @@
                     formData.append("jobTitleEmailSignature", this.formData.jobTitleEmailSignature);
 
                     // Debugging: Log all form data entries
-                    console.log("Final FormData:");
-                    for (let [key, value] of formData.entries()) {
-                        console.log(`${key}: ${value}`);
-                    }
-                    // console.log('Form submitted successfully');
+                    // console.log("Final FormData:");
+                    // for (let [key, value] of formData.entries()) {
+                    //     console.log(`${key}: ${value}`);
+                    // }
+                    
                     const methodtype = 'POST';
                     url = `/admin/quickjob-store`;
                     ajaxCall(url,methodtype, [[onSuccess, ['response']]], formData);

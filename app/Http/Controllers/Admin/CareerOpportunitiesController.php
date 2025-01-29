@@ -1243,6 +1243,8 @@ class CareerOpportunitiesController extends BaseController
             'candidatePhone' => 'required_if:preIdentifiedCandidate,Yes|nullable|string',
             'candidateEmail' => 'required_if:preIdentifiedCandidate,Yes|nullable|email',
             'jobTitleEmailSignature' => 'nullable',
+            'candidateMiddleName' => 'nullable',
+            'job_code' => 'nullable|numeric',
         ]);
 
         $jobTemplate = JobTemplates::findOrFail($validatedData['jobTitle']);
@@ -1252,6 +1254,7 @@ class CareerOpportunitiesController extends BaseController
         $careerOpportunity->template_id = $validatedData['jobTitle'];
         $careerOpportunity->hiring_manager = $validatedData['hiringManager'];
         $careerOpportunity->job_level = $validatedData['jobLevel'];
+        $careerOpportunity->job_code = $validatedData['job_code'];
         $careerOpportunity->location_id = $validatedData['workLocation'];
         $careerOpportunity->remote_option = $validatedData['virtualRemote'];
         $careerOpportunity->division_id = $validatedData['division'];
@@ -1273,17 +1276,21 @@ class CareerOpportunitiesController extends BaseController
         $careerOpportunity->pre_last_name = $validatedData['candidateLastName'];
         $careerOpportunity->candidate_phone = $validatedData['candidatePhone'];
         $careerOpportunity->candidate_email = $validatedData['candidateEmail'];
-        $careerOpportunity->alternative_job_title = $validatedData['jobTitleEmailSignature'];
+        // $careerOpportunity->alternative_job_title = $validatedData['jobTitleEmailSignature'];
         $careerOpportunity->title = $jobTemplate->job_title;
         $careerOpportunity->user_id = isset($job) ? $job->user_id  : Admin::getAdminIdByUserId(Auth::id());
         $careerOpportunity->user_type = isset($job) ? $job->user_type  : 1;
         $careerOpportunity->user_subclient_id = isset($job) ? $job->user_subclient_id  // If $job exists, use this
                 : Admin::getAdminIdByUserId(Auth::id());
-        $careerOpportunity->currency_id = 1;
-        $careerOpportunity->gl_code_id = 1;
-        $careerOpportunity->labour_type = 1;
-        $careerOpportunity->hire_reason_id = 1;
+        $careerOpportunity->currency_id = 2;
+        $careerOpportunity->gl_code_id = 15;
+        $careerOpportunity->hire_reason_id = 37;
         $careerOpportunity->jobStatus = 1;
+        $careerOpportunity->payment_type = 35;
+        $careerOpportunity->job_type = 10;
+        $careerOpportunity->labour_type = 30;
+        
+       
 
         $careerOpportunity->save();
 
