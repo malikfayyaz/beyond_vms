@@ -1249,9 +1249,6 @@ class CareerOpportunitiesController extends BaseController
 
         $careerOpportunity = new CareerOpportunity();
         $careerOpportunity->cat_id = $validatedData['jobLaborCategory'];
-
-        $careerOpportunity = new CareerOpportunity();
-        $careerOpportunity->cat_id = $validatedData['jobLaborCategory'];
         $careerOpportunity->template_id = $validatedData['jobTitle'];
         $careerOpportunity->hiring_manager = $validatedData['hiringManager'];
         $careerOpportunity->job_level = $validatedData['jobLevel'];
