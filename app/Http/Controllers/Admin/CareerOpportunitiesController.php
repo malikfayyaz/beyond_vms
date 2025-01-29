@@ -1264,10 +1264,10 @@ class CareerOpportunitiesController extends BaseController
         $careerOpportunity->start_date = $validatedData['startDate'];
         $careerOpportunity->end_date = $validatedData['endDate'];
         $careerOpportunity->internal_notes = $validatedData['additionalRequirementEditor'];
-        $careerOpportunity->business_justification = $validatedData['buJustification'];
-        $careerOpportunity->corporate_legal = $validatedData['corporate_legal'];
-        $careerOpportunity->expected_cost = $validatedData['expectedCost'];
-        $careerOpportunity->acknowledgement = $validatedData['acknowledgement'];
+        // $careerOpportunity->business_justification = $validatedData['buJustification'];
+        // $careerOpportunity->corporate_legal = $validatedData['corporate_legal'];
+        // $careerOpportunity->expected_cost = $validatedData['expectedCost'];
+        // $careerOpportunity->acknowledgement = $validatedData['acknowledgement'];
         $careerOpportunity->hours_per_day = $validatedData['estimatedHoursPerDay'];
         $careerOpportunity->day_per_week = $validatedData['workDaysPerWeek'];
         $careerOpportunity->num_openings = $validatedData['numberOfPositions'];
@@ -1278,6 +1278,15 @@ class CareerOpportunitiesController extends BaseController
         $careerOpportunity->candidate_email = $validatedData['candidateEmail'];
         $careerOpportunity->alternative_job_title = $validatedData['jobTitleEmailSignature'];
         $careerOpportunity->title = $jobTemplate->job_title;
+        $careerOpportunity->user_id = isset($job) ? $job->user_id  : Admin::getAdminIdByUserId(Auth::id());
+        $careerOpportunity->user_type = isset($job) ? $job->user_type  : 1;
+        $careerOpportunity->user_subclient_id = isset($job) ? $job->user_subclient_id  // If $job exists, use this
+                : Admin::getAdminIdByUserId(Auth::id());
+        $careerOpportunity->currency_id = 1;
+        $careerOpportunity->gl_code_id = 1;
+        $careerOpportunity->labour_type = 1;
+        $careerOpportunity->hire_reason_id = 1;
+        $careerOpportunity->jobStatus = 1;
 
         $careerOpportunity->save();
 
