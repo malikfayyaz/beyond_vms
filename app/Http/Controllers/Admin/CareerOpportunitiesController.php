@@ -1290,9 +1290,21 @@ class CareerOpportunitiesController extends BaseController
         $careerOpportunity->job_type = 10;
         $careerOpportunity->labour_type = 30;
         
-       
-
         $careerOpportunity->save();
+
+        $businessUnits = [
+            [
+                'id' => $validatedData['businessUnit'],  
+                'percentage' => 100,
+            ]
+        ];
+
+        $this->syncBusinessUnits($businessUnits, $careerOpportunity->id);
+        
+
+        Rateshelper::calculateJobEstimates($careerOpportunity);
+        $jobWorkflow = new JobWorkflowUpdate();
+        $jobWorkflow->createJobWorkflow($careerOpportunity);
 
         session()->flash('success', 'Job saved successfully!');
         return response()->json([
