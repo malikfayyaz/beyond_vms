@@ -1248,6 +1248,7 @@ class CareerOpportunitiesController extends BaseController
             'jobTitleEmailSignature' => 'nullable',
             'candidateMiddleName' => 'nullable',
             'job_code' => 'nullable|numeric',
+            'timeType' => 'required',
         ]);
 
         $jobTemplate = JobTemplates::findOrFail($validatedData['jobTitle']);
@@ -1286,7 +1287,13 @@ class CareerOpportunitiesController extends BaseController
         $careerOpportunity->user_type = isset($job) ? $job->user_type  : 1;
         $careerOpportunity->user_subclient_id = isset($job) ? $job->user_subclient_id  // If $job exists, use this
                 : Admin::getAdminIdByUserId(Auth::id());
+        
         $careerOpportunity->currency_id = 2;
+        
+        if ($validatedData['preIdentifiedCandidate'] == 'Yes') {
+            $careerOpportunity->pre_current_rate = 10.00;
+        }
+        
         $careerOpportunity->gl_code_id = 15;
         $careerOpportunity->hire_reason_id = 37;
         $careerOpportunity->jobStatus = 1;
@@ -1295,7 +1302,8 @@ class CareerOpportunitiesController extends BaseController
         $careerOpportunity->labour_type = 30;
         $careerOpportunity->min_bill_rate = $validatedData['billRate'];
         $careerOpportunity->max_bill_rate = $validatedData['maxBillRate'];
-       
+        $careerOpportunity->type_of_job = $validatedData['timeType'];
+    //    dd($careerOpportunity);
         $careerOpportunity->save();
 
         $businessUnits = [

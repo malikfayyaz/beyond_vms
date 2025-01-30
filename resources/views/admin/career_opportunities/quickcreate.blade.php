@@ -72,7 +72,7 @@
                             <div class="flex-1">
                                 <label for="jobTitleEmailSignature" class="block mb-2">Job Title for Email Signature</label>
                                 <div class="relative">
-                                    <input type="text"  x-ref="jobTitleEmailSignature" name="alternative_job_title" x-model="formData.jobTitleEmailSignature" id="jobTitleEmailSignature"
+                                    <input type="text"  x-ref="jobTitleEmailSignature" x-model="formData.jobTitleEmailSignature" id="jobTitleEmailSignature"
                                         name="jobTitleEmailSignature"
                                         class="w-full h-12 px-4 text-gray-500 border border-gray-300 rounded-md shadow-sm focus:outline-none" />
                                 </div>
@@ -146,6 +146,11 @@
                                 <input type="hidden" name="payment_type" x-model="formData.payment_type"
                                     value=35
                                     id="payment_type" />
+                                
+                                <input type="hidden" name="type_of_job" x-model="formData.timeType"
+                                    value=38
+                                    id="timeType" />
+
                             </div>
                     </div> 
                     
@@ -469,11 +474,12 @@
                     numberOfPositions: careerOpportunity?.num_openings || "",
                     preIdentifiedCandidate: careerOpportunity?.pre_candidate || "",
                     candidateFirstName:careerOpportunity?.pre_name || "",
-                    candidateMiddleName:careerOpportunity?.pre_middle_name || "",
+                    candidateMiddleName: "",
                     candidateLastName: careerOpportunity?.pre_last_name || "",
                     candidatePhone: careerOpportunity?.candidate_phone || "",
                     candidateEmail: careerOpportunity?.candidate_email || "",
-                    jobTitleEmailSignature:careerOpportunity?.alternative_job_title || "",
+                    jobTitleEmailSignature: "",
+                    timeType: 38,
                     businessUnit: "",
                     billRate: 10,
                     maxBillRate: 20,
@@ -483,7 +489,11 @@
 
                 isFieldValid(fieldId) {
                     const fieldValue = this.formData[fieldId];
-                    if (fieldId === 'candidateFirstName' || fieldId === 'candidateMiddleName'|| fieldId === 'candidateLastName' || fieldId === 'candidatePhone' || fieldId === 'candidateEmail') {
+                    
+                    if (['candidateMiddleName', 'jobTitleEmailSignature'].includes(fieldId)) {
+                        return true; 
+                    }
+                    if (fieldId === 'candidateFirstName' || fieldId === 'candidateLastName' || fieldId === 'candidatePhone' || fieldId === 'candidateEmail') {
                         if (this.formData.preIdentifiedCandidate !== 'Yes') {
                             return true;
                         }
