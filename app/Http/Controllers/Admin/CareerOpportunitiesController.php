@@ -1238,10 +1238,13 @@ class CareerOpportunitiesController extends BaseController
             'workDaysPerWeek' => 'required|numeric',
             'numberOfPositions' => 'required|numeric',
             'preIdentifiedCandidate' => 'required',
+            'billRate' => 'required',
+            'maxBillRate' => 'required',
             'candidateFirstName' => 'required_if:preIdentifiedCandidate,Yes|nullable|string',
             'candidateLastName' => 'required_if:preIdentifiedCandidate,Yes|nullable|string',
             'candidatePhone' => 'required_if:preIdentifiedCandidate,Yes|nullable|string',
             'candidateEmail' => 'required_if:preIdentifiedCandidate,Yes|nullable|email',
+            'payment_type' => 'required',
             'jobTitleEmailSignature' => 'nullable',
             'candidateMiddleName' => 'nullable',
             'job_code' => 'nullable|numeric',
@@ -1273,10 +1276,11 @@ class CareerOpportunitiesController extends BaseController
         $careerOpportunity->num_openings = $validatedData['numberOfPositions'];
         $careerOpportunity->pre_candidate = $validatedData['preIdentifiedCandidate'];
         $careerOpportunity->pre_name = $validatedData['candidateFirstName'];
+        $careerOpportunity->pre_middle_name = $validatedData['candidateMiddleName'];
         $careerOpportunity->pre_last_name = $validatedData['candidateLastName'];
         $careerOpportunity->candidate_phone = $validatedData['candidatePhone'];
         $careerOpportunity->candidate_email = $validatedData['candidateEmail'];
-        // $careerOpportunity->alternative_job_title = $validatedData['jobTitleEmailSignature'];
+        $careerOpportunity->alternative_job_title = $validatedData['jobTitleEmailSignature'];
         $careerOpportunity->title = $jobTemplate->job_title;
         $careerOpportunity->user_id = isset($job) ? $job->user_id  : Admin::getAdminIdByUserId(Auth::id());
         $careerOpportunity->user_type = isset($job) ? $job->user_type  : 1;
@@ -1286,10 +1290,12 @@ class CareerOpportunitiesController extends BaseController
         $careerOpportunity->gl_code_id = 15;
         $careerOpportunity->hire_reason_id = 37;
         $careerOpportunity->jobStatus = 1;
-        $careerOpportunity->payment_type = 35;
+        $careerOpportunity->payment_type = $validatedData['payment_type'];
         $careerOpportunity->job_type = 10;
         $careerOpportunity->labour_type = 30;
-        
+        $careerOpportunity->min_bill_rate = $validatedData['billRate'];
+        $careerOpportunity->max_bill_rate = $validatedData['maxBillRate'];
+       
         $careerOpportunity->save();
 
         $businessUnits = [

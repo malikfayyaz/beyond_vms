@@ -135,8 +135,18 @@
                                     x-text="getErrorMessageById('virtualRemote')"></p>
                             </div>
                         </div>
+                            <div class="hidden-fields"> 
+                                <input type="hidden" name="min_bill_rate" x-model="formData.billRate"
+                                    value=10
+                                    id="billRate" />
+                                <input type="hidden" name="max_bill_rate" x-model="formData.maxBillRate"
+                                    value=20
+                                    id="maxBillRate" />
                             
-                        
+                                <input type="hidden" name="payment_type" x-model="formData.payment_type"
+                                    value=35
+                                    id="payment_type" />
+                            </div>
                     </div> 
                     
                     <div class="my-4 border rounded shadow px-4 pt-4 pb-8">
@@ -320,7 +330,7 @@
                                     <span class="text-red-500">*</span></label>
                                 <input name="hours_per_day" type="number" x-model="formData.estimatedHoursPerDay"
                                     class="w-full h-12 px-4 text-gray-500 border border-gray-300 rounded-md shadow-sm focus:outline-none"
-                                    min="0" step="0.5" id="hours_per_day" x-on:change="calculateRate()"/>
+                                    min="0" step="0.5" max="8" id="hours_per_day" x-on:change="calculateRate()"/>
                                 <p x-show="showErrors && !isFieldValid('estimatedHoursPerDay')"
                                     class="text-red-500 text-sm mt-1" x-text="getErrorMessageById('estimatedHoursPerDay')"></p>
                             </div>
@@ -459,17 +469,21 @@
                     numberOfPositions: careerOpportunity?.num_openings || "",
                     preIdentifiedCandidate: careerOpportunity?.pre_candidate || "",
                     candidateFirstName:careerOpportunity?.pre_name || "",
+                    candidateMiddleName:careerOpportunity?.pre_middle_name || "",
                     candidateLastName: careerOpportunity?.pre_last_name || "",
                     candidatePhone: careerOpportunity?.candidate_phone || "",
                     candidateEmail: careerOpportunity?.candidate_email || "",
-                    // jobTitleEmailSignature:careerOpportunity?.alternative_job_title || "",
+                    jobTitleEmailSignature:careerOpportunity?.alternative_job_title || "",
                     businessUnit: "",
+                    billRate: 10,
+                    maxBillRate: 20,
+                    payment_type: 35,
                     
                 },
 
                 isFieldValid(fieldId) {
                     const fieldValue = this.formData[fieldId];
-                    if (fieldId === 'candidateFirstName' || fieldId === 'candidateLastName' || fieldId === 'candidatePhone' || fieldId === 'candidateEmail') {
+                    if (fieldId === 'candidateFirstName' || fieldId === 'candidateMiddleName'|| fieldId === 'candidateLastName' || fieldId === 'candidatePhone' || fieldId === 'candidateEmail') {
                         if (this.formData.preIdentifiedCandidate !== 'Yes') {
                             return true;
                         }
@@ -630,8 +644,8 @@
                          this.selBU();
                         });
                         this.calculateRate = () => {
-                            var bill_rate = 10;
-                            var payment_type = 35;
+                            var bill_rate =  $('#billRate').val();
+                            var payment_type =  $('#payment_type').val();
                             var hours_per_week = $('#workDaysPerWeek').val();
                             var Job_start_date = $('#startDate').val();
                             var Job_end_date = $('#endDate').val();
@@ -693,6 +707,23 @@
 
                     }
                 },
+
+                formatPhoneNumber(input) {
+                    let phoneNumber = input.value.replace(/\D/g, "");
+                    if (phoneNumber.length > 10) {
+                        phoneNumber = phoneNumber.slice(0, 10);
+                    }
+                    if (phoneNumber.length >= 6) {
+                        phoneNumber = `(${phoneNumber.slice(0, 4)}) ${phoneNumber.slice(
+                        4,
+                        7
+                        )}-${phoneNumber.slice(7)}`;
+                    } else if (phoneNumber.length >= 4) {
+                        phoneNumber = `(${phoneNumber.slice(0, 4)}) ${phoneNumber.slice(4)}`;
+                    }
+                    input.value = phoneNumber;
+                },
+
 
                 submitForm() {
                     this.showErrors = true;
