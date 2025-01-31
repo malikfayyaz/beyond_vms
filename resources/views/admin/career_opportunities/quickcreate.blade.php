@@ -624,9 +624,38 @@
                         });
 
                         $('#jobTitle, #jobLevel').on('change', () => {
-                            
+                            this.loadBillRate();
                             this.loadTemplate();
                         });
+
+                        this.loadBillRate = () => {
+                            var level_id = $('#jobLevel').find(':selected').val();
+                            var template_id = $('#jobTitle').find(':selected').val();
+
+                            $('#maxBillRate').val('');
+                            $('#billRate').val('');
+                            
+                            let url = `/load-job-template`;
+
+                            if (level_id != '' && template_id != '') {
+                                let data = new FormData();
+                                data.append('template_id', template_id);
+                                data.append('level_id', level_id);
+                                const updates = {
+                                '#maxBillRate': { type: 'value', field: 'max_bill_rate' },
+                                '#billRate': { type: 'value', field: 'min_bill_rate' },
+                                '#currency': { type: 'select2', field: 'currency' },
+                                // '#currency': { type: 'value', field: 'currency_class' },
+                                // Add more mappings as needed
+                                };
+                                ajaxCall(url, 'POST', [[updateElements, ['response', updates]]], data);
+                                setTimeout(() => {
+                                this.formData.billRate =  $('#billRate').val();
+                                this.formData.maxBillRate = $('#maxBillRate').val();
+                                this.formData.currency = $('#currency').val();
+                                }, 1000);
+                            }
+                        };
 
                         this.loadTemplate = () => {
                             var template_id = $('#jobTitle').find(':selected').val();
