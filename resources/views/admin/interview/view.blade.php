@@ -236,7 +236,7 @@
                         <span class="text-gray-600">{{translate('Status:')}}</span>
                         <span
                             class="bg-green-500 text-white px-2 py-1 rounded-full text-sm"
-                            >{{$interview->status}}</span>
+                            >{{$interview->getInterviewStatus($interview->status)}}</span>
                         </div>
                         @if($interview->status == 3)
                           <div class="flex justify-between py-3 px-4">
