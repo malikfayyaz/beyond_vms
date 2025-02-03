@@ -685,6 +685,8 @@
           },
 
           selectTimeSlot(date, slot) {
+            console.log(date);
+
             this.formData.selectedTimeSlots[date] = slot;
           },
 
@@ -708,8 +710,8 @@
                 formData.append("where", this.formData.where);
                 formData.append("interview_detail", this.formData.interview_detail);
                 formData.append("submissionid", {{$submission->id}});
-                formData.append("selectedTimeSlots", JSON.stringify(this.formData.selectedTimeSlots));
-                
+                formData.append("selectedTimeSlots", JSON.stringify({...this.formData.selectedTimeSlots}));
+
                 let url = '';
                 let method = 'POST'; // Default method is POST
 
