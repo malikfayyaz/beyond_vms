@@ -103,7 +103,7 @@
                             </div>
                           </div>
                         </div>
-                        
+
                         <!-- Job Rates Table-->
                         <div class="p-4 mb-2">
                           <div class="container mx-auto px-4">
@@ -182,8 +182,8 @@
                           </div>
                         </div>
 
-                       
-                        <div class="p-4 mb-2">
+
+{{--                        <div class="p-4 mb-2">
                           <div class="container mx-auto px-4">
                             <!-- Table Title -->
                             <div
@@ -204,7 +204,7 @@
                               >
                                 <tbody>
                                   <tr class="hover:bg-gray-100">
-                                    
+
                                     <td class="px-4 py-3 border-b" x-text="submissionDetails.data.contract_title"></td>
                                     <td class="px-4 py-3 border-b" x-text="submissionDetails.data.date_range"></td>
                                     <td class="px-4 py-3 border-b" x-text="submissionDetails.data.contract_status"></td>
@@ -213,9 +213,9 @@
                               </table>
                             </div>
                           </div>
-                        </div>
-                       
-                        
+                        </div>--}}
+
+
                       </div>
                     </template>
                     <!-- Add more user details here -->
