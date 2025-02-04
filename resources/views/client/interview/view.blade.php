@@ -462,13 +462,18 @@
                           <span class="text-gray-600">{{translate('Date & Time:')}}</span>
                         </div>
                         @foreach($interview->interviewDates as $dates)
-                        <div class="bg-blue-50 p-3 rounded-md">
-                          <div class="flex justify-between items-center">
-                            <span class="text-gray-600">  {{$dates->formatted_schedule_date}} <br> <small>{{$dates->formatted_start_time}} - {{$dates->formatted_end_time}}</small></span>
-{{--                            <span class="bg-green-500 text-white px-2 py-1 rounded-full text-sm">{{$interview->status}}</span>--}}
-                            <span class="text-gray-600">{{ $interview->timezone->title }}</span>
-                          </div>
-                        </div>
+                            <div class="p-3 rounded-md {{ $dates->schedule_date == $interview->interview_acceptance_date ? 'bg-green-100' : 'bg-blue-50' }}">
+                                <div class="flex justify-between items-center">
+                                    <span class="text-gray-600">
+                                        {{$dates->formatted_schedule_date}} <br>
+                                        <small>{{$dates->formatted_start_time}} - {{$dates->formatted_end_time}}</small>
+                                    </span>
+                                    @if($dates->schedule_date == $interview->interview_acceptance_date)
+                                        <span class="bg-green-500 text-white px-2 py-1 rounded-full text-sm">{{ $interview->getInterviewStatus($interview->status) }}</span>
+                                    @endif
+                                    <span class="text-gray-600">{{ $interview->timezone->title }}</span>
+                                </div>
+                            </div>
                         @endforeach
                       </div>
                     </div>
