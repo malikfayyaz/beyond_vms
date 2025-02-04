@@ -85,7 +85,7 @@ class CareerOpportunitiesInterviewController extends Controller
     {
         $validateData = $request->validate([
             'interviewTiming' => 'required',
-            'can_phone' => 'nullable|numeric',
+            'can_phone' => 'nullable|string',
             'vendor_note' => 'required',
             'phone_ext' => 'nullable|numeric',
         ]);
