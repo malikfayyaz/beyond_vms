@@ -397,7 +397,6 @@
                 <!-- Step 2: Fourth row - Text Editor -->
                 <div class="mt-4">
                     <label class="block mb-2">Qualifications/Skills
-                        <span class="text-red-500">*</span></label>
                     <div id="qualificationSkillsEditor" style="height: 300px"></div>
                     <p x-show="showErrors && !isFieldValid('qualificationSkillsEditor')"
                         class="text-red-500 text-sm mt-1" x-text="getErrorMessageById('qualificationSkillsEditor')"></p>
@@ -405,7 +404,6 @@
                 <!-- Step 2: Fifth row - Text Editor -->
                 <div class="mt-4">
                     <label class="block mb-2">Additional Requirements
-                        <span class="text-red-500">*</span></label>
                     <div id="additionalRequirementEditor" style="height: 300px"></div>
                     <p x-show="showErrors && !isFieldValid('additionalRequirementEditor')"
                         class="text-red-500 text-sm mt-1" x-text="getErrorMessageById('additionalRequirementEditor')">
@@ -804,7 +802,7 @@
                         <div class="flex space-x-4 mt-4">
                         <div class="flex-1">
                             <div class="render-wrap"></div>
-                        </div>  
+                        </div>
                         </div>
                     </div>
                 @endif
@@ -845,7 +843,7 @@
         const formData = @json($formBuilderData);
         const parsedData = JSON.parse(formData.data);
         const oldFormData = @json($oldFormData);
-        
+
         // console.log(oldFormData);
         $(".render-wrap").formRender({
           formData: parsedData
@@ -872,7 +870,7 @@
         const dateFields = document.querySelectorAll('.render-wrap input[type="date"], .render-wrap .date-picker');
         dateFields.forEach((field) => {
             flatpickr(field, {
-                dateFormat: "m/d/Y", 
+                dateFormat: "m/d/Y",
                 allowInput: true,
             });
         });

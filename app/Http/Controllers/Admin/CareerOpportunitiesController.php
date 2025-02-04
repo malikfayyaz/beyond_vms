@@ -226,6 +226,7 @@ class CareerOpportunitiesController extends BaseController
                 // Handle file upload
 
                 $filename = handleFileUpload($request, 'attachment', 'career_opportunities');
+                //dd($validatedData);
                 // Mapping form fields to database column names
                 $mappedData = $this->mapJobData($validatedData, $jobTemplate, $request, $filename);
                // dd($mappedData);
@@ -1287,13 +1288,13 @@ class CareerOpportunitiesController extends BaseController
         $careerOpportunity->user_type = isset($job) ? $job->user_type  : 1;
         $careerOpportunity->user_subclient_id = isset($job) ? $job->user_subclient_id  // If $job exists, use this
                 : Admin::getAdminIdByUserId(Auth::id());
-        
+
         $careerOpportunity->currency_id = 2;
-        
+
         if ($validatedData['preIdentifiedCandidate'] == 'Yes') {
             $careerOpportunity->pre_current_rate = 10.00;
         }
-        
+
         $careerOpportunity->gl_code_id = 15;
         $careerOpportunity->hire_reason_id = 37;
         $careerOpportunity->jobStatus = 1;
@@ -1308,13 +1309,13 @@ class CareerOpportunitiesController extends BaseController
 
         $businessUnits = [
             [
-                'id' => $validatedData['businessUnit'],  
+                'id' => $validatedData['businessUnit'],
                 'percentage' => 100,
             ]
         ];
 
         $this->syncBusinessUnits($businessUnits, $careerOpportunity->id);
-        
+
 
         Rateshelper::calculateJobEstimates($careerOpportunity);
         $jobWorkflow = new JobWorkflowUpdate();

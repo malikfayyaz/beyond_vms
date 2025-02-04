@@ -61,8 +61,8 @@ export default function wizardForm(careerOpportunity = null,businessUnitsData = 
       startDate: careerOpportunity?.start_date || "",
       endDate: careerOpportunity?.end_date || "",
       jobDescriptionEditor: careerOpportunity?.description || "",
-      qualificationSkillsEditor: careerOpportunity?.skills || "",
-      additionalRequirementEditor: careerOpportunity?.internal_notes || "",
+      qualificationSkillsEditor: careerOpportunity?.skills ?? null,
+      additionalRequirementEditor: careerOpportunity?.internal_notes ?? null,
       division: careerOpportunity?.division_id || "",
       regionZone: careerOpportunity?.region_zone_id || "",
       branch: careerOpportunity?.branch_id || "",
@@ -615,8 +615,8 @@ export default function wizardForm(careerOpportunity = null,businessUnitsData = 
             this.formData.currency !== "" &&
             this.formData.billRate !== "" &&
             this.formData.maxBillRate !== "" &&
-            this.isValidBillRate(this.formData.billRate) &&  
-            this.isValidMaxBillRate(this.formData.maxBillRate) 
+            this.isValidBillRate(this.formData.billRate) &&
+            this.isValidMaxBillRate(this.formData.maxBillRate)
           );
         case 2:
           return (
@@ -632,8 +632,10 @@ export default function wizardForm(careerOpportunity = null,businessUnitsData = 
             this.formData.startDate.trim() !== "" &&
             this.formData.endDate.trim() !== "" &&
             this.formData.jobDescriptionEditor.trim() !== "" &&
-            this.formData.qualificationSkillsEditor.trim() !== "" &&
-            this.formData.additionalRequirementEditor.trim() !== ""
+            (this.formData.qualificationSkillsEditor === null ||
+                this.formData.qualificationSkillsEditor.trim() !== "") &&
+            (this.formData.additionalRequirementEditor === null ||
+                this.formData.additionalRequirementEditor.trim() !== "")
           );
         case 3:
           return (
@@ -683,8 +685,10 @@ export default function wizardForm(careerOpportunity = null,businessUnitsData = 
         this.formData.preIdentifiedCandidate !== "" &&
         this.formData.laborType !== "" &&
         this.formData.jobDescriptionEditor.trim() !== "" &&
-        this.formData.qualificationSkillsEditor.trim() !== "" &&
-        this.formData.additionalRequirementEditor.trim() !== "" &&
+          (this.formData.qualificationSkillsEditor === null ||
+              this.formData.qualificationSkillsEditor.trim() !== "") &&
+          (this.formData.additionalRequirementEditor === null ||
+              this.formData.additionalRequirementEditor.trim() !== "") &&
         this.formData.division !== "" &&
         this.formData.regionZone !== "" &&
         this.formData.branch !== "" &&
