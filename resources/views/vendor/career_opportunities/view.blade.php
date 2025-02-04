@@ -208,7 +208,7 @@
                             <p class="color-[#202124] font-light">{{translate('Internal Notes')}}</p>
                             <div class="mt-4">
                                 <ul class="color-[#202124] font-light">
-                                    {{ $job->internal_notes }}
+                                    {!! $job->internal_notes !!}
                                 </ul>
                             </div>
                         </div>
@@ -216,7 +216,7 @@
                             <p class="color-[#202124] font-light">{{translate('Skills')}}</p>
                             <div class="mt-4">
                                 <ul class="color-[#202124] font-light">
-                                    {{ $job->skills }}
+                                    {!! $job->skills !!}
                                 </ul>
                             </div>
                         </div>
@@ -549,8 +549,7 @@
                                 <p class="font-light">{{ $job->createdBy->name ?? 'N/A' }}</p>
                             </div>
                         </div>
-                    </div>
-                    @if(!empty($job->job_details))
+                        @if(!empty($job->job_details))
                         @php
                         $jobDetails = json_decode($job->job_details, true); // Decode JSON into an array
                         @endphp
@@ -582,6 +581,7 @@
                         </div>
                         @endforeach
                     @endif
+                    </div>
                 </div>
             </div>
 
