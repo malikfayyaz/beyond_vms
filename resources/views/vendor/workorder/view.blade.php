@@ -527,7 +527,7 @@
                     >
                         <thead class="bg-gray-200 text-gray-700">
                         <tr>
-                            <th class="py-3 px-4 text-left">Status')}}</th>
+                            <th class="py-3 px-4 text-left">{{translate('Status')}}</th>
                             <th
                             @click="sort('workOrID')"
                             class="py-3 px-4 text-left cursor-pointer"
