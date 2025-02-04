@@ -398,7 +398,7 @@
                         class="text-xl font-semibold"
                         x-text="getDayName(date)"
                         ></h3>
-                        <p x-text="date"></p>
+                        <p x-text="formatDate(date)"></p>
                     </div>
                     </div>
                 </div>
@@ -503,6 +503,8 @@
             dateFields.forEach((field) => {
               flatpickr(`#${field}`, {
                 dateFormat: "Y-m-d",
+                altFormat: "m/d/Y",  
+                altInput: true,
                 onChange: (selectedDates, dateStr) => {
                   this.formData[field] = dateStr;
                   if (field === "recommendedDate") {
@@ -578,6 +580,14 @@
             return ["recommendedDate", "otherDate1", "otherDate2", "otherDate3"]
               .map((field) => this.formData[field])
               .filter(Boolean);
+          },
+
+          formatDate(date) {
+            const dateObj = new Date(date);
+            const month = String(dateObj.getMonth() + 1).padStart(2, "0"); // getMonth() is 0-indexed
+            const day = String(dateObj.getDate()).padStart(2, "0");
+            const year = dateObj.getFullYear();
+            return `${month}/${day}/${year}`;
           },
 
           getDayName(dateString) {
