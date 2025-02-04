@@ -499,11 +499,12 @@
               </div>
             </div>
                 @if($offer->status == '4')
+                  <div class="mt-4">
                     <button
                         type="button"
                         @click="acceptOffer({{ $offer->id }},'accept')"
                         aria-label="Accept Offer"
-                        class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 capitalize"
+                        class="px-4 py-2 bg-green-500 text-white rounded hover:bg-red-600 capitalize"
                     >
                         {{translate('Accept Offer')}}
                     </button>
@@ -515,6 +516,7 @@
                     >
                         {{translate('Reject Offer')}}
                     </button>
+                  </div>
                 @endif
 
 
