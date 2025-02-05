@@ -360,13 +360,33 @@ export default function wizardForm(careerOpportunity = null,businessUnitsData = 
     },
 
     formatBillRate(value) {
+      // this.formData.billRate = this.formatBillingValue(value);
+      if (typeof value !== "string") return;
 
+      let input = document.getElementById("billRate"); // Get the input element
+      let cursorPosition = input.selectionStart; // Store cursor position
 
-      this.formData.billRate = this.formatBillingValue(value);
+      let formattedValue = this.formatBillingValue(value);
+      this.formData.billRate = formattedValue; // Update model
+  
+      this.$nextTick(() => {
+          input.setSelectionRange(cursorPosition, cursorPosition); // Restore cursor position
+      });
     },
 
     formatMaxBillRate(value) {
-      this.formData.maxBillRate = this.formatBillingValue(value);
+      // this.formData.maxBillRate = this.formatBillingValue(value);
+      if (typeof value !== "string") return;
+
+      let input = document.getElementById("maxBillRate"); // Get the input element
+      let cursorPosition = input.selectionStart; // Store cursor position
+
+      let formattedValue = this.formatBillingValue(value);
+      this.formData.maxBillRate = formattedValue; // Update model
+
+      this.$nextTick(() => {
+          input.setSelectionRange(cursorPosition, cursorPosition); // Restore cursor position
+      });
     },
 
     formatEstimatedExpense(value) {
