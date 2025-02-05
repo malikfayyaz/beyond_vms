@@ -226,13 +226,13 @@ class CareerOpportunitiesController extends BaseController
                 // Handle file upload
 
                 $filename = handleFileUpload($request, 'attachment', 'career_opportunities');
-                //dd($validatedData);
                 // Mapping form fields to database column names
                 $mappedData = $this->mapJobData($validatedData, $jobTemplate, $request, $filename);
                // dd($mappedData);
                 $job = CareerOpportunity::create( $mappedData );
                 $job->job_details = $validatednewData; // Save the validated data as JSON
-                $job->save();
+
+            $job->save();
 
                 $this->syncBusinessUnits($request->input('businessUnits'), $job->id);
 
@@ -304,7 +304,6 @@ class CareerOpportunitiesController extends BaseController
         $user = Admin::getAdminIdByUserId(Auth::id());
         $sessionrole = session('selected_role');
         $careerOpportunity = CareerOpportunity::with('careerOpportunitiesBu')->findOrFail($id);
-
         $formBuilderData = FormBuilder::where('type', 1)
         ->where('status', 'active')
         ->first();

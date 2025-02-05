@@ -90,7 +90,7 @@ class CareerOpportunitiesController extends Controller
             ->orderby('id', 'desc');
                 if ($request->has('type')) {
                     $type = $request->input('type');
-                    $status = ''; 
+                    $status = '';
                     switch ($type) {
                         case "All_jobs":
                             $status = ''; // No additional filtering
@@ -211,6 +211,7 @@ class CareerOpportunitiesController extends Controller
      */
     public function store(Request $request)
     {
+
         try {
 
             $dynamicRules = [];
@@ -473,8 +474,8 @@ class CareerOpportunitiesController extends Controller
             'expensesAllowed' => 'required',
             'travelRequired' => 'required',
             'glCode' => 'required',
-            'startDate' => 'required|date_format:Y/m/d',
-            'endDate' => 'required|date_format:Y/m/d',
+            'startDate' => 'required',
+            'endDate' => 'required',
             'workerType' => 'required',
             'clientBillable' => 'required',
             'requireOT' => 'required',
@@ -547,8 +548,8 @@ class CareerOpportunitiesController extends Controller
             'job_code' => $validatedData['job_code'],
             'num_openings' => $validatedData['numberOfPositions'],
             'hire_reason_id' => $validatedData['businessReason'],
-            'start_date' => Carbon::createFromFormat('Y/m/d', $validatedData['startDate'])->format('Y-m-d'),
-            'end_date' => Carbon::createFromFormat('Y/m/d', $validatedData['endDate'])->format('Y-m-d'),
+            'start_date' => Carbon::createFromFormat('d/m/Y', $validatedData['startDate'])->format('d-m-Y'),
+            'end_date' => Carbon::createFromFormat('d/m/Y', $validatedData['endDate'])->format('d-m-Y'),
             // Conditional fields
             'expense_cost' => $validatedData['estimatedExpense'] ?? null,
             'client_name' => $validatedData['clientName'] ?? null,
@@ -575,7 +576,7 @@ class CareerOpportunitiesController extends Controller
         return response()->json([
             'success' => true,
             'message' => $successMessage,
-            'redirect_url' =>  url("client/career-opportunities", $request->job_id) 
+            'redirect_url' =>  url("client/career-opportunities", $request->job_id)
         ]);
 
     }
@@ -588,7 +589,7 @@ class CareerOpportunitiesController extends Controller
         return response()->json([
             'success' => true,
             'message' => $successMessage,
-            'redirect_url' =>  url("client/career-opportunities", $request->job_id) 
+            'redirect_url' =>  url("client/career-opportunities", $request->job_id)
         ]);
     }
 

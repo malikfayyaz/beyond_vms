@@ -11,7 +11,7 @@
             <div >
         <div class="bg-white mx-4 my-8 rounded p-8" x-data='wizardForm({!! json_encode($careerOpportunity, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP) !!},{!! json_encode($businessUnitsData, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP) !!})' x-init="mounted()">
 
-            
+
             @php         $user = Auth::user();
             $sessionrole = session('selected_role');
             @endphp
@@ -249,10 +249,9 @@
                             </label>
                             <select name="pre_candidate" x-ref="preIdentifiedCandidate"
                                     x-model="formData.preIdentifiedCandidate" class="w-full select2-single custom-style"
-                                    data-field="preIdentifiedCandidate" id="preIdentifiedCandidate">
-                                <option value="">Select</option>
-                                <option value="Yes">Yes</option>
+                                    data-field="preIdentifiedCandidate" id="preIdentifiedCandidate" x-init="formData.preIdentifiedCandidate = 'No'">
                                 <option value="No">No</option>
+                                <option value="Yes">Yes</option>
                             </select>
                             <p x-show="showErrors && !isFieldValid('preIdentifiedCandidate')"
                                class="text-red-500 text-sm mt-1" x-text="getErrorMessageById('preIdentifiedCandidate')">
@@ -332,7 +331,7 @@
                endDate: '',
                init() {
                    let startPicker = flatpickr(this.$refs.startPicker, {
-                       dateFormat: 'Y/m/d',
+                       dateFormat: 'd/m/Y',
                        onChange: (selectedDates, dateStr) => {
                          this.formData.startDate = dateStr;
                          endPicker.set('minDate', dateStr);
@@ -340,7 +339,7 @@
                    });
 
                    let endPicker = flatpickr(this.$refs.endPicker, {
-                       dateFormat: 'Y/m/d',
+                       dateFormat: 'd/m/Y',
                        onChange: (selectedDates, dateStr) => {
                          this.formData.endDate = dateStr;
                        }
@@ -353,10 +352,14 @@
                         <div class="flex-1">
                             <label class="block mb-2">Labour Type <span class="text-red-500">*</span></label>
                             <select name="labour_type" x-ref="laborType" x-model="formData.laborType"
-                                    class="w-full select2-single custom-style" data-field="laborType" id="laborType">
-                                <option value="">Select a category</option>
+                                    class="w-full select2-single custom-style" data-field="laborType" id="laborType" x-init="formData.laborType = 29">
                                 @foreach (checksetting(6) as $key => $value)
-                                    <option value="{{ $key }}">{{ $value }}</option>
+                                    <template x-if="formData.preIdentifiedCandidate === 'No' && '{{ $value }}' === 'Sourced'">
+                                        <option value="{{ $key }}" x-bind:selected="formData.laborType === '{{ $key }}'">{{ $value }}</option>
+                                    </template>
+                                    <template x-if="formData.preIdentifiedCandidate === 'Yes'">
+                                        <option value="{{ $key }}" x-bind:selected="formData.laborType === '{{ $key }}'">{{ $value }}</option>
+                                    </template>
                                 @endforeach
                             </select>
                             <p x-show="showErrors && !isFieldValid('laborType')" class="text-red-500 text-sm mt-1"
@@ -393,7 +396,6 @@
                     <!-- Step 2: Fourth row - Text Editor -->
                     <div class="mt-4">
                         <label class="block mb-2">Qualifications/Skills
-                            <span class="text-red-500">*</span></label>
                         <div id="qualificationSkillsEditor" style="height: 300px"></div>
                         <p x-show="showErrors && !isFieldValid('qualificationSkillsEditor')"
                            class="text-red-500 text-sm mt-1" x-text="getErrorMessageById('qualificationSkillsEditor')"></p>
@@ -401,7 +403,6 @@
                     <!-- Step 2: Fifth row - Text Editor -->
                     <div class="mt-4">
                         <label class="block mb-2">Additional Requirements
-                            <span class="text-red-500">*</span></label>
                         <div id="additionalRequirementEditor" style="height: 300px"></div>
                         <p x-show="showErrors && !isFieldValid('additionalRequirementEditor')"
                            class="text-red-500 text-sm mt-1" x-text="getErrorMessageById('additionalRequirementEditor')">
@@ -800,7 +801,7 @@
                             <div class="flex space-x-4 mt-4">
                             <div class="flex-1">
                                 <div class="render-wrap"></div>
-                            </div>  
+                            </div>
                             </div>
                         </div>
                     @endif
@@ -864,7 +865,7 @@
                 const dateFields = document.querySelectorAll('.render-wrap input[type="date"], .render-wrap .date-picker');
                 dateFields.forEach((field) => {
                     flatpickr(field, {
-                        dateFormat: "m/d/Y", 
+                        dateFormat: "m/d/Y",
                         allowInput: true,
                     });
                 });

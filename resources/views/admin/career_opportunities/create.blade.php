@@ -251,12 +251,17 @@
                         <label class="block mb-2">Pre-Identified Candidate?
                             <span class="text-red-500">*</span>
                         </label>
-                        <select name="pre_candidate" x-ref="preIdentifiedCandidate"
+{{--                        <select name="pre_candidate" x-ref="preIdentifiedCandidate"
                             x-model="formData.preIdentifiedCandidate" class="w-full select2-single custom-style"
                             data-field="preIdentifiedCandidate" id="preIdentifiedCandidate">
-                            <option value="">Select</option>
                             <option value="Yes">Yes</option>
                             <option value="No">No</option>
+                        </select>--}}
+                        <select name="pre_candidate" x-ref="preIdentifiedCandidate"
+                                x-model="formData.preIdentifiedCandidate" class="w-full select2-single custom-style"
+                                data-field="preIdentifiedCandidate" id="preIdentifiedCandidate" x-init="formData.preIdentifiedCandidate = 'No'">
+                            <option value="No">No</option>
+                            <option value="Yes">Yes</option>
                         </select>
                         <p x-show="showErrors && !isFieldValid('preIdentifiedCandidate')"
                             class="text-red-500 text-sm mt-1" x-text="getErrorMessageById('preIdentifiedCandidate')">
@@ -357,10 +362,14 @@
                     <div class="flex-1">
                         <label class="block mb-2">Labor Type <span class="text-red-500">*</span></label>
                         <select name="labour_type" x-ref="laborType" x-model="formData.laborType"
-                            class="w-full select2-single custom-style" data-field="laborType" id="laborType">
-                            <option value="">Select a category</option>
+                            class="w-full select2-single custom-style" data-field="laborType" id="laborType" x-init="formData.laborType = 29">
                             @foreach (checksetting(6) as $key => $value)
-                            <option value="{{ $key }}">{{ $value }}</option>
+                                <template x-if="formData.preIdentifiedCandidate === 'No' && '{{ $value }}' === 'Sourced'">
+                                    <option value="{{ $key }}" x-bind:selected="formData.laborType === '{{ $key }}'">{{ $value }}</option>
+                                </template>
+                                <template x-if="formData.preIdentifiedCandidate === 'Yes'">
+                                    <option value="{{ $key }}" x-bind:selected="formData.laborType === '{{ $key }}'">{{ $value }}</option>
+                                </template>
                             @endforeach
                         </select>
                         <p x-show="showErrors && !isFieldValid('laborType')" class="text-red-500 text-sm mt-1"
@@ -569,9 +578,8 @@
                         </select>
                     </div>
                     <div class="flex-1" x-show="formData.subLedgerType">
-                        <label class="block mb-2">Sub Ledger Code <span class="text-red-500 ledger_code__"
-                                style="display:none;">*</span></label>
-                        <input name="ledger_code" type="text" id="ledger_code" x-model="formData.subLedgerCode"
+                        <label class="block mb-2">Sub Ledger Code <span class="text-red-500">*</span></label>
+                        <input name="ledger_code" type="number" id="ledger_code" x-model="formData.subLedgerCode"
                             class="w-full  h-12 px-4 text-gray-500 border border-gray-300 rounded-md shadow-sm focus:outline-none" />
                             <p x-show="showErrors && !isFieldValid('subLedgerCode')" class="text-red-500 text-sm mt-1"
                             x-text="getErrorMessageById('subLedgerCode')"></p>

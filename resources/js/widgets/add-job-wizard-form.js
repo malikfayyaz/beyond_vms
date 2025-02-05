@@ -647,6 +647,7 @@ export default function wizardForm(careerOpportunity = null,businessUnitsData = 
             this.formData.glCode !== "" &&
             this.formData.workerType !== "" &&
             this.formData.clientBillable !== "" &&
+            (this.formData.subLedgerType === "33" ? this.formData.subLedgerCode !== "" : true) &&
             this.formData.requireOT !== "" &&
             this.formData.virtualRemote !== "" &&
             (this.formData.expensesAllowed !== "Yes" ||
