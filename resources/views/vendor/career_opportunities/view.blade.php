@@ -566,7 +566,7 @@
                             </div>
                             @php
                                 $fieldLabels = [
-                                // 'name-field' => 'New name'
+                                    // 'name-field' => 'New name'
                                     'text-FB' => 'Text Field',
                                     'date-FB' => 'Date Field',
                                     'number-FB' => 'Num Field',
