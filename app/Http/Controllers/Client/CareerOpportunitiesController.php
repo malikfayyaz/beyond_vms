@@ -289,8 +289,15 @@ class CareerOpportunitiesController extends Controller
         // Optionally, you can dump the data for debugging purposes
         // dd($job); // Uncomment to check the data structure
 
+        $formBuilder = FormBuilder::where('type', 1)->first(); 
+
+        $formFields = [];
+        if ($formBuilder) {
+            $formFields = json_decode($formBuilder->data, true); 
+        }
+        
         // Return the view and pass the job data to it
-        return view('client.career-opportunities.view', compact('job', 'jobWorkFlow', 'rejectReasons','loginClientid'));
+        return view('client.career-opportunities.view', compact('job', 'jobWorkFlow', 'rejectReasons','loginClientid', 'formFields'));
         //
     }
 

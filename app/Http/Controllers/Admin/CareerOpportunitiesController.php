@@ -293,7 +293,15 @@ class CareerOpportunitiesController extends BaseController
         $admins = Admin::all();
         $clients = Client::all();
         $activityLogs = $job->activities()->with('createdBy')->get();
-        return view('admin.career_opportunities.view', compact('job','jobWorkFlow','rejectReasons','vendors','vendorRelease','admins','clients', 'activityLogs'));
+        
+        $formBuilder = FormBuilder::where('type', 1)->first(); 
+
+        $formFields = [];
+        if ($formBuilder) {
+            $formFields = json_decode($formBuilder->data, true); 
+        }
+        
+        return view('admin.career_opportunities.view', compact('job','jobWorkFlow','rejectReasons','vendors','vendorRelease','admins','clients', 'activityLogs', 'formFields'));
     }
 
     /**
