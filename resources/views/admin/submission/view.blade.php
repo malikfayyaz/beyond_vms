@@ -367,11 +367,13 @@
                               >
                             </h3>
                           </div>
-                         
+                          @php
+                              $fieldLabels = collect($formFields)->pluck('label', 'name')->toArray();
+                          @endphp
                           @foreach ($submissionDetails as $key => $value)
                             <div class="flex items-center justify-between py-3 px-4 border-t">
                               <div class="w-2/4">
-                                <h4 class="font-medium">{{ $key }}:</h4>
+                                <h4 class="font-medium">{{ $fieldLabels[$key] ?? ucfirst(str_replace('_', ' ', $key)) }}:</h4>
                               </div>
                               <div class="w-2/4">
                                 @if(is_array($value))
