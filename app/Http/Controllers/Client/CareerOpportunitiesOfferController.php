@@ -282,9 +282,18 @@ class CareerOpportunitiesOfferController extends Controller
             $log->properties = array_merge($log->properties->toArray(), ['attributes' => $attributes]); // Update properties
 
         }
+
         $workflows = OfferWorkFlow::where('offer_id', $id)->get();
         $offer = CareerOpportunitiesOffer::findOrFail($id);
-        return view('client.offer.view', compact('offer','workflows', 'logs'));
+
+        $formBuilder = FormBuilder::where('type', 3)->first(); 
+
+        $formFields = [];
+        if ($formBuilder) {
+            $formFields = json_decode($formBuilder->data, true); 
+        }
+
+        return view('client.offer.view', compact('offer','workflows', 'logs', 'formFields'));
     }
     public function offerworkflowAccept(Request $request)
     {
