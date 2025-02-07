@@ -368,7 +368,7 @@ export default function wizardForm(careerOpportunity = null,businessUnitsData = 
 
       let formattedValue = this.formatBillingValue(value);
       this.formData.billRate = formattedValue; // Update model
-  
+
       this.$nextTick(() => {
           input.setSelectionRange(cursorPosition, cursorPosition); // Restore cursor position
       });
@@ -652,10 +652,10 @@ export default function wizardForm(careerOpportunity = null,businessUnitsData = 
             this.formData.startDate.trim() !== "" &&
             this.formData.endDate.trim() !== "" &&
             this.formData.jobDescriptionEditor.trim() !== "" &&
-            (this.formData.qualificationSkillsEditor === null ||
-                this.formData.qualificationSkillsEditor.trim() !== "") &&
-            (this.formData.additionalRequirementEditor === null ||
-                this.formData.additionalRequirementEditor.trim() !== "")
+            (this.formData.qualificationSkillsEditor === "" ||
+                this.formData.qualificationSkillsEditor !== "") &&
+            (this.formData.additionalRequirementEditor === "" ||
+                this.formData.additionalRequirementEditor !== "")
           );
         case 3:
           return (
@@ -706,10 +706,10 @@ export default function wizardForm(careerOpportunity = null,businessUnitsData = 
         this.formData.preIdentifiedCandidate !== "" &&
         this.formData.laborType !== "" &&
         this.formData.jobDescriptionEditor.trim() !== "" &&
-          (this.formData.qualificationSkillsEditor === null ||
-              this.formData.qualificationSkillsEditor.trim() !== "") &&
-          (this.formData.additionalRequirementEditor === null ||
-              this.formData.additionalRequirementEditor.trim() !== "") &&
+          (this.formData.qualificationSkillsEditor === "" ||
+              this.formData.qualificationSkillsEditor !== "") &&
+          (this.formData.additionalRequirementEditor === "" ||
+              this.formData.additionalRequirementEditor !== "") &&
         this.formData.division !== "" &&
         this.formData.regionZone !== "" &&
         this.formData.branch !== "" &&

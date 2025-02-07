@@ -216,7 +216,6 @@ class CareerOpportunitiesController extends BaseController
                 }
 
                 $validatednewData = $request->validate($dynamicRules);
-
                 $validatedData = $this->validateJobOpportunity($request);
 
                 $businessUnits = $request->input('businessUnits');
@@ -231,8 +230,7 @@ class CareerOpportunitiesController extends BaseController
                // dd($mappedData);
                 $job = CareerOpportunity::create( $mappedData );
                 $job->job_details = $validatednewData; // Save the validated data as JSON
-
-            $job->save();
+                $job->save();
 
                 $this->syncBusinessUnits($request->input('businessUnits'), $job->id);
 
@@ -293,14 +291,14 @@ class CareerOpportunitiesController extends BaseController
         $admins = Admin::all();
         $clients = Client::all();
         $activityLogs = $job->activities()->with('createdBy')->get();
-        
-        $formBuilder = FormBuilder::where('type', 1)->first(); 
+
+        $formBuilder = FormBuilder::where('type', 1)->first();
 
         $formFields = [];
         if ($formBuilder) {
-            $formFields = json_decode($formBuilder->data, true); 
+            $formFields = json_decode($formBuilder->data, true);
         }
-        
+
         return view('admin.career_opportunities.view', compact('job','jobWorkFlow','rejectReasons','vendors','vendorRelease','admins','clients', 'activityLogs', 'formFields'));
     }
 
@@ -554,8 +552,14 @@ class CareerOpportunitiesController extends BaseController
             'pre_candidate' => $validatedData['preIdentifiedCandidate'],
             'labour_type' => $validatedData['laborType'],
             'description' => $validatedData['jobDescriptionEditor'],
-            'skills' => $validatedData['qualificationSkillsEditor'],
-            'internal_notes' => $validatedData['additionalRequirementEditor'],
+//            'skills' => $validatedData['qualificationSkillsEditor'],
+            'skills' => (!isset($validatedData['qualificationSkillsEditor']) || strtolower($validatedData['qualificationSkillsEditor']) === 'null')
+                ? ''
+                : $validatedData['qualificationSkillsEditor'],
+
+            'internal_notes' => (!isset($validatedData['additionalRequirementEditor']) || strtolower($validatedData['additionalRequirementEditor']) === 'null')
+                ? ''
+                : $validatedData['additionalRequirementEditor'],
             'division_id' => $validatedData['division'],
             'region_zone_id' => $validatedData['regionZone'],
             'branch_id' => $validatedData['branch'],
