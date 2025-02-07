@@ -390,7 +390,19 @@ export default function wizardForm(careerOpportunity = null,businessUnitsData = 
     },
 
     formatEstimatedExpense(value) {
-      this.formData.estimatedExpense = this.formatBillingValue(value);
+      // this.formData.estimatedExpense = this.formatBillingValue(value);
+      let input = document.getElementById("estimatedExpense"); // Get the input element
+
+      if (!input || typeof value !== "string") return; // Prevent errors
+
+      let cursorPosition = input.selectionStart; // Store cursor position
+
+      let formattedValue = this.formatBillingValue(value); // Format the value
+      this.formData.estimatedExpense = formattedValue; // Update model
+
+      this.$nextTick(() => {
+          input.setSelectionRange(cursorPosition, cursorPosition); // Restore cursor position
+      });
     },
 
     isValidEstimatedExpense(value) {
