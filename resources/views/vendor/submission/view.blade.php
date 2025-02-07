@@ -471,17 +471,8 @@
                             </h3>
                           </div>
                           @php
-                              $fieldLabels = [
-                                  // 'name-field' => 'New name'
-                                  'text-FB' => 'Text Field',
-                                  'date-FB' => 'Date Field',
-                                  'number-FB' => 'Num Field',
-                                  'select-FB' => 'Option Field',
-                                  'textarea-FB' => 'Textarea Field',
-                                  // Add more mappings as needed
-                              ];
+                              $fieldLabels = collect($formFields)->pluck('label', 'name')->toArray();
                           @endphp
-
                           @foreach ($submissionDetails as $key => $value)
                             <div class="flex items-center justify-between py-3 px-4 border-t">
                               <div class="w-2/4">

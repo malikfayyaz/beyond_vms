@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\Models\CareerOpportunitySubmission;
 use App\Models\CareerOpportunitiesOffer;
 use Yajra\DataTables\Facades\DataTables;
+use App\Models\FormBuilder;
+
 
 class CareerOpportunitiesSubmissionController extends Controller
 {
@@ -112,7 +114,14 @@ class CareerOpportunitiesSubmissionController extends Controller
         $offer = CareerOpportunitiesOffer::where('submission_id', $submission->id)
         ->orderBy('id', 'DESC')
         ->first();
+        
+        $formBuilder = FormBuilder::where('type', 2)->first(); 
+
+        $formFields = [];
+        if ($formBuilder) {
+            $formFields = json_decode($formBuilder->data, true); 
+        }
         // Return a view or other response with the submission details
-        return view('client.submission.view', compact('submission','offer'));
+        return view('client.submission.view', compact('submission', 'offer', 'formFields'));
     }
 }

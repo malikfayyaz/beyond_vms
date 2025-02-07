@@ -565,21 +565,12 @@
                             </h3>
                             </div>
                             @php
-                                $fieldLabels = [
-                                    // 'name-field' => 'New name'
-                                    'text-FB' => 'Text Field',
-                                    'date-FB' => 'Date Field',
-                                    'number-FB' => 'Num Field',
-                                    'select-FB' => 'Option Field',
-                                    'textarea-FB' => 'Textarea Field',
-                                    // Add more mappings as needed
-                                ];
+                                $fieldLabels = collect($formFields)->pluck('label', 'name')->toArray();
                             @endphp
-
                             @foreach ($jobDetails as $key => $value)
                             <div class="flex items-center justify-between py-4 border-t">
                                 <div class="w-2/4">
-                                <h4 class="font-medium">{{ $fieldLabels[$key] ?? ucfirst(str_replace('_', ' ', $key)) }}:</h4>
+                                    <h4 class="font-medium">{{ $fieldLabels[$key] ?? ucfirst(str_replace('_', ' ', $key)) }}:</h4>
                                 </div>
                                 <div class="w-2/4">
                                 @if(is_array($value))

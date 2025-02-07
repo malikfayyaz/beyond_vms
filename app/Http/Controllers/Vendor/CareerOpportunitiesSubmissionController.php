@@ -319,7 +319,13 @@ class CareerOpportunitiesSubmissionController extends Controller
         ->orderBy('id', 'DESC')
         ->first();
         $rejectReasons =  Setting::where('category_id', 22)->get();
-        return view('vendor.submission.view', compact('submission','offer','rejectReasons'));
+        $formBuilder = FormBuilder::where('type', 2)->first(); 
+
+        $formFields = [];
+        if ($formBuilder) {
+            $formFields = json_decode($formBuilder->data, true); 
+        }
+        return view('vendor.submission.view', compact('submission','offer','rejectReasons', 'formFields'));
     }
 
     /**

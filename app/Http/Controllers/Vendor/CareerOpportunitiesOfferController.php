@@ -17,6 +17,7 @@ use App\Facades\Rateshelper as Rateshelper;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Yajra\DataTables\Facades\DataTables;
+use App\Models\FormBuilder;
 
 class CareerOpportunitiesOfferController extends Controller
 {
@@ -248,7 +249,14 @@ class CareerOpportunitiesOfferController extends Controller
         $workflows = OfferWorkFlow::where('offer_id', $id)->get();
         $offer = CareerOpportunitiesOffer::findOrFail($id);
 
-        return view('vendor.offer.view', compact('offer', 'workflows', 'logs'));
+        $formBuilder = FormBuilder::where('type', 3)->first(); 
+
+        $formFields = [];
+        if ($formBuilder) {
+            $formFields = json_decode($formBuilder->data, true); 
+        }
+
+        return view('vendor.offer.view', compact('offer', 'workflows', 'logs', 'formFields'));
     }
 
     // accept career opportunity offer in the database

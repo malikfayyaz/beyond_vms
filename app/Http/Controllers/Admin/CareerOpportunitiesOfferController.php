@@ -296,7 +296,16 @@ class CareerOpportunitiesOfferController extends BaseController
         $rejectionreason = checksetting(17);
         $workflows = OfferWorkFlow::where('offer_id', $id)->get();
         $offer = CareerOpportunitiesOffer::findOrFail($id);
-        return view('admin.offer.view', compact('offer', 'workflows', 'rejectionreason', 'logs', 'wo_type', 'wo_statusName'));
+
+        
+        $formBuilder = FormBuilder::where('type', 3)->first(); 
+
+        $formFields = [];
+        if ($formBuilder) {
+            $formFields = json_decode($formBuilder->data, true); 
+        }
+        
+        return view('admin.offer.view', compact('offer', 'workflows', 'rejectionreason', 'logs', 'wo_type', 'wo_statusName', 'formFields'));
     }
 
     // Show the form for editing an existing career opportunity offer
