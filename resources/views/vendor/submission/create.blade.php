@@ -340,7 +340,7 @@
                   >
                  <div class="flex-1">
                    <label for="dobDate" class="block mb-2"
-                     >Date of Birth (YYYY/MM/DD):
+                     >Date of Birth:
                      <span class="text-red-500">*</span></label
                    >
                    <input
@@ -1094,7 +1094,7 @@
                   <div class="flex space-x-4 mt-4">
                     <div class="flex-1">
                       <div class="render-wrap"></div>
-                    </div>  
+                    </div>
                   </div>
                 </div>
               @endif
@@ -1141,7 +1141,7 @@
       const dateFields = document.querySelectorAll('.render-wrap input[type="date"], .render-wrap .date-picker');
       dateFields.forEach((field) => {
           flatpickr(field, {
-              dateFormat: "m/d/Y", 
+              dateFormat: "m/d/Y",
               allowInput: true,
           });
       });

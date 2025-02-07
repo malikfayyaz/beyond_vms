@@ -398,7 +398,6 @@ export default function addSubWizarForm() {
               $('#candidateFirstName').val('');
               $('#candidateMiddleName').val('');
               $('#candidateLastName').val('');
-              $('#dobDate').val('');
               $('#lastFourNationalId').val('');
               $('#candidateEmail').val('');
               // console.log("dsfsdf");
@@ -406,7 +405,6 @@ export default function addSubWizarForm() {
               this.formData.candidateFirstName = '';
               this.formData.candidateMiddleName = '';
               this.formData.candidateLastName = '';
-              this.formData.dobDate = this.flatpickrInstance.setDate(new Date(), true);;
               this.formData.lastFourNationalId = '';
               this.formData.candidateEmail = '';
             }

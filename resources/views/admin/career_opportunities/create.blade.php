@@ -364,13 +364,24 @@
                         <select name="labour_type" x-ref="laborType" x-model="formData.laborType"
                             class="w-full select2-single custom-style" data-field="laborType" id="laborType" x-init="formData.laborType = 29">
                             @foreach (checksetting(6) as $key => $value)
-                                <template x-if="formData.preIdentifiedCandidate === 'No' && '{{ $value }}' === 'Sourced'">
-                                    <option value="{{ $key }}" x-bind:selected="formData.laborType === '{{ $key }}'">{{ $value }}</option>
-                                </template>
+                                @if ($value === 'Sourced')
+                                    <template x-if="formData.preIdentifiedCandidate === 'No'">
+                                        <option value="{{ $key }}" x-bind:selected="formData.laborType === '{{ $key }}'">{{ $value }}</option>
+                                    </template>
+                                @endif
+                            @endforeach
+                            @foreach (checksetting(6) as $key => $value)
+                                @if ($value !== 'Sourced')
+                                    <template x-if="formData.preIdentifiedCandidate === 'No' && ('{{ $value }}' === 'Referred' || '{{ $value }}' !== 'Sourced')">
+                                        <option value="{{ $key }}" x-bind:selected="formData.laborType === '{{ $key }}'">{{ $value }}</option>
+                                    </template>
+                                @endif
                                 <template x-if="formData.preIdentifiedCandidate === 'Yes'">
                                     <option value="{{ $key }}" x-bind:selected="formData.laborType === '{{ $key }}'">{{ $value }}</option>
                                 </template>
                             @endforeach
+
+
                         </select>
                         <p x-show="showErrors && !isFieldValid('laborType')" class="text-red-500 text-sm mt-1"
                             x-text="getErrorMessageById('laborType')"></p>
