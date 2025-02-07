@@ -191,14 +191,39 @@ export default function addSubWizarForm() {
     },
 
     formatPayRate(value) {
-      this.formData.payRate = this.formatRateValue(value);
+      // this.formData.payRate = this.formatRateValue(value);
+      if (typeof value !== "string") return;
+
+      let input = document.getElementById("payRate"); // Get the input element
+      if (!input) return; // Prevent errors if element is not found
+
+      let cursorPosition = input.selectionStart; // Store cursor position
+
+      let formattedValue = this.formatRateValue(value); // Format the value
+      this.formData.payRate = formattedValue; // Update model
+
+      this.$nextTick(() => {
+          input.setSelectionRange(cursorPosition, cursorPosition); // Restore cursor position
+      });
       this.validateAllRates();
     },
 
     formatBillRate(value) {
-      this.formData.billRate = this.formatRateValue(value);
-      console.log(this.formData.billRate);
+      // this.formData.billRate = this.formatRateValue(value);
+      // console.log(this.formData.billRate);
+      if (typeof value !== "string") return;
 
+      let input = document.getElementById("billRate"); // Get the input element
+      if (!input) return; // Prevent errors if element is not found
+
+      let cursorPosition = input.selectionStart; // Store cursor position
+
+      let formattedValue = this.formatRateValue(value); // Format the value
+      this.formData.billRate = formattedValue; // Update model
+
+      this.$nextTick(() => {
+          input.setSelectionRange(cursorPosition, cursorPosition); // Restore cursor position
+      });
       this.validateAllRates();
     },
 
