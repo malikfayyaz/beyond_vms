@@ -652,6 +652,7 @@ export default function wizardForm(careerOpportunity = null,businessUnitsData = 
             this.formData.startDate.trim() !== "" &&
             this.formData.endDate.trim() !== "" &&
             this.formData.jobDescriptionEditor.trim() !== "" &&
+            this.formData.jobDescriptionEditor !== "<p><br></p>" &&
             (this.formData.qualificationSkillsEditor === "" ||
                 this.formData.qualificationSkillsEditor !== "") &&
             (this.formData.additionalRequirementEditor === "" ||
@@ -706,6 +707,7 @@ export default function wizardForm(careerOpportunity = null,businessUnitsData = 
         this.formData.preIdentifiedCandidate !== "" &&
         this.formData.laborType !== "" &&
         this.formData.jobDescriptionEditor.trim() !== "" &&
+        this.formData.jobDescriptionEditor !== "<p><br></p>" &&
           (this.formData.qualificationSkillsEditor === "" ||
               this.formData.qualificationSkillsEditor !== "") &&
           (this.formData.additionalRequirementEditor === "" ||

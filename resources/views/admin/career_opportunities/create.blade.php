@@ -416,16 +416,11 @@
                 <div class="mt-4">
                     <label class="block mb-2">Qualifications/Skills
                     <div id="qualificationSkillsEditor" style="height: 300px"></div>
-                    <p x-show="showErrors && !isFieldValid('qualificationSkillsEditor')"
-                        class="text-red-500 text-sm mt-1" x-text="getErrorMessageById('qualificationSkillsEditor')"></p>
                 </div>
                 <!-- Step 2: Fifth row - Text Editor -->
                 <div class="mt-4">
                     <label class="block mb-2">Additional Requirements
                     <div id="additionalRequirementEditor" style="height: 300px"></div>
-                    <p x-show="showErrors && !isFieldValid('additionalRequirementEditor')"
-                        class="text-red-500 text-sm mt-1" x-text="getErrorMessageById('additionalRequirementEditor')">
-                    </p>
                 </div>
                 <!-- Step 2: Sixth row - Attachment -->
                 <div class="mt-4">
