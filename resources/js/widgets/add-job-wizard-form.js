@@ -434,8 +434,22 @@ export default function wizardForm(careerOpportunity = null,businessUnitsData = 
       );
     },
 
+    // formatCost(field) {
+    //   this.formData[field] = this.formatBillingValue(this.formData[field]);
+    // },
     formatCost(field) {
-      this.formData[field] = this.formatBillingValue(this.formData[field]);
+      let input = document.getElementById(field); // Get the input element dynamically
+  
+      if (!input || typeof this.formData[field] !== "string") return; // Prevent errors
+  
+      let cursorPosition = input.selectionStart; // Store cursor position
+  
+      let formattedValue = this.formatBillingValue(this.formData[field]); // Format the value
+      this.formData[field] = formattedValue; // Update model
+  
+      this.$nextTick(() => {
+          input.setSelectionRange(cursorPosition, cursorPosition); // Restore cursor position
+      });
     },
 
     showErrors: false,
