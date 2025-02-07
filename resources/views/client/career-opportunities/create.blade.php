@@ -88,11 +88,23 @@
                                     class="w-full select2-single custom-style" data-field="jobLaborCategory"
                                     id="jobLaborCategory">
                                 <option value="">Select a category</option>
-                                @foreach (checksetting(5) as $key => $value)
-                                    <option value="javascript">JavaScript</option>
-                                    <option value="{{ $key }}">{{ $value }}</option>
+                                @foreach (checksetting(6) as $key => $value)
+                                    @if ($value === 'Sourced')
+                                        <template x-if="formData.preIdentifiedCandidate === 'No'">
+                                            <option value="{{ $key }}" x-bind:selected="formData.laborType === '{{ $key }}'">{{ $value }}</option>
+                                        </template>
+                                    @endif
                                 @endforeach
-
+                                @foreach (checksetting(6) as $key => $value)
+                                    @if ($value !== 'Sourced')
+                                        <template x-if="formData.preIdentifiedCandidate === 'No' && ('{{ $value }}' === 'Referred' || '{{ $value }}' !== 'Sourced')">
+                                            <option value="{{ $key }}" x-bind:selected="formData.laborType === '{{ $key }}'">{{ $value }}</option>
+                                        </template>
+                                    @endif
+                                    <template x-if="formData.preIdentifiedCandidate === 'Yes'">
+                                        <option value="{{ $key }}" x-bind:selected="formData.laborType === '{{ $key }}'">{{ $value }}</option>
+                                    </template>
+                                @endforeach
                             </select>
                             <p x-show="showErrors && !isFieldValid('jobLaborCategory')" class="text-red-500 text-sm mt-1"
                                x-text="getErrorMessageById('jobLaborCategory')"></p>

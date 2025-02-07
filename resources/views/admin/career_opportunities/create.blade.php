@@ -380,8 +380,6 @@
                                     <option value="{{ $key }}" x-bind:selected="formData.laborType === '{{ $key }}'">{{ $value }}</option>
                                 </template>
                             @endforeach
-
-
                         </select>
                         <p x-show="showErrors && !isFieldValid('laborType')" class="text-red-500 text-sm mt-1"
                             x-text="getErrorMessageById('laborType')"></p>
