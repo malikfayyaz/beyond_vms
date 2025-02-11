@@ -260,8 +260,8 @@ export default function addSubWizarForm() {
       const exceedBillRate = parseFloat(this.formData.exceedBillRate);
       const payRate = parseFloat(this.formData.payRate);
       const billRate = parseFloat(this.formData.billRate);
-      console.log(billRate + "dsfsdfsdf");
-      console.log(payRate + "payRate");
+      // console.log(billRate + "dsfsdfsdf");
+      // console.log(payRate + "payRate");
       // if (billRate > payRate) {
       //   this.errors.billRate = `Bill Rate must be at least ${this.formData.payRate}`;
       // } else
@@ -723,6 +723,7 @@ export default function addSubWizarForm() {
             this.isValidNationalId(this.formData.lastFourNationalId)
           );
         case 2:
+          this.validateAllRates();
           return (
             this.isValidPayRate(this.formData.payRate) &&
             this.isValidBillRate(this.formData.billRate) &&
