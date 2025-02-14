@@ -605,23 +605,41 @@ export default function wizardForm(careerOpportunity = null,businessUnitsData = 
     },
 
     initFlatpickr() {
-      flatpickr("#startDate", {
-        dateFormat: "m/d/Y",
-        defaultDate: this.formData.startDate || null,
-        onChange: (selectedDates, dateStr) => {
-          this.formData.startDate = dateStr;
-          this.endDatePicker.set("minDate", dateStr);
-        },
+      this.startDatePicker = flatpickr("#startDate", {
+          dateFormat: "m/d/Y",
+          defaultDate: this.formatDate(this.formData.startDate),
+          onChange: (selectedDates, dateStr) => {
+              this.formData.startDate = dateStr;
+              if (this.endDatePicker) {
+                  this.endDatePicker.set("minDate", dateStr);
+              }
+          },
       });
-
+  
       this.endDatePicker = flatpickr("#endDate", {
-        dateFormat: "m/d/Y",
-        defaultDate: this.formData.endDate || null,
-        onChange: (selectedDates, dateStr) => {
-          this.formData.endDate = dateStr;
-        },
+          dateFormat: "m/d/Y",
+          defaultDate: this.formatDate(this.formData.endDate),
+          minDate: this.formatDate(this.formData.startDate),
+          onChange: (selectedDates, dateStr) => {
+              this.formData.endDate = dateStr;
+          },
       });
     },
+    
+    // Helper function to format date correctly
+    formatDate(dateString) {
+        if (!dateString) return null;
+        const date = new Date(dateString);
+        if (isNaN(date.getTime())) return null;
+        
+        // Convert to MM/DD/YYYY format
+        const month = (date.getMonth() + 1).toString().padStart(2, "0");
+        const day = date.getDate().toString().padStart(2, "0");
+        const year = date.getFullYear();
+    
+        return `${month}/${day}/${year}`;
+    },
+  
 
     nextStep() {
       if (!this.formSubmitted) {
