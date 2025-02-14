@@ -18,6 +18,10 @@ export default function wizardForm(careerOpportunity = null,businessUnitsData = 
     },
 
     isFieldValid(id) {
+        if (id === 'jobDescriptionEditor') { // Compare with id instead of field
+            const editorContent = this.formData.jobDescriptionEditor.trim();
+            return editorContent !== "" && editorContent !== "<p><br></p>";
+        }
       return isFieldValid(id, this.formData, {
         isBusinessUnitValid: () => this.isBusinessUnitValid,
         isValidBillRate: (value) => this.isValidBillRate(value),
@@ -639,6 +643,7 @@ export default function wizardForm(careerOpportunity = null,businessUnitsData = 
             this.isValidMaxBillRate(this.formData.maxBillRate)
           );
         case 2:
+            console.log("Job Description Editor Content:", this.formData.jobDescriptionEditor);
           return (
             this.formData.preIdentifiedCandidate !== "" &&
             (this.formData.preIdentifiedCandidate !== "Yes" ||
@@ -651,8 +656,7 @@ export default function wizardForm(careerOpportunity = null,businessUnitsData = 
             this.formData.laborType !== "" &&
             this.formData.startDate.trim() !== "" &&
             this.formData.endDate.trim() !== "" &&
-            this.formData.jobDescriptionEditor.trim() !== "" &&
-            this.formData.jobDescriptionEditor !== "<p><br></p>" &&
+            (this.formData.jobDescriptionEditor.trim() !== "" && this.formData.jobDescriptionEditor !== "<p><br></p>")  &&
             (this.formData.qualificationSkillsEditor === "" ||
                 this.formData.qualificationSkillsEditor !== "") &&
             (this.formData.additionalRequirementEditor === "" ||
@@ -706,8 +710,7 @@ export default function wizardForm(careerOpportunity = null,businessUnitsData = 
         this.formData.maxBillRate !== "" &&
         this.formData.preIdentifiedCandidate !== "" &&
         this.formData.laborType !== "" &&
-        this.formData.jobDescriptionEditor.trim() !== "" &&
-        this.formData.jobDescriptionEditor !== "<p><br></p>" &&
+        (this.formData.jobDescriptionEditor.trim() !== "" && this.formData.jobDescriptionEditor !== "<p><br></p>") &&
           (this.formData.qualificationSkillsEditor === "" ||
               this.formData.qualificationSkillsEditor !== "") &&
           (this.formData.additionalRequirementEditor === "" ||
