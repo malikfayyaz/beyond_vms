@@ -399,9 +399,16 @@ class CareerOpportunitiesController extends BaseController
             }
 
             $validatednewData = $request->validate($dynamicRules);
-
+            $startDate = $request->input('startDate');
+            $endDate = $request->input('endDate');
+            $formattedStartDate = \DateTime::createFromFormat('Y/m/d', $startDate)->format('m/d/Y');
+            $formattedEndDate = \DateTime::createFromFormat('Y/m/d', $endDate)->format('m/d/Y');
+            $request->merge([
+                'startDate' => $formattedStartDate,
+                'endDate' => $formattedEndDate,
+            ]);
             $validatedData = $this->validateJobOpportunity($request);
-
+//            dd($request->all());
             $job = CareerOpportunity::findOrFail($id);
             $jobTemplate = JobTemplates::findOrFail($validatedData['jobTitle']);
             $filename = handleFileUpload($request, 'attachment', 'career_opportunities', $job->attachment);
@@ -488,8 +495,8 @@ class CareerOpportunitiesController extends BaseController
             'preIdentifiedCandidate' => 'required',
             'laborType' => 'required',
             'jobDescriptionEditor' => 'required',
-            'qualificationSkillsEditor' => 'required',
-            'additionalRequirementEditor' => 'required',
+            'qualificationSkillsEditor' => 'nullable',
+            'additionalRequirementEditor' => 'nullable',
             'division' => 'required',
             'regionZone' => 'required',
             'branch' => 'required',

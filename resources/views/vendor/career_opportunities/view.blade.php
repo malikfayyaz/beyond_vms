@@ -538,7 +538,7 @@
                                 <h4 class="font-medium">{{translate('Job Created at:')}}</h4>
                             </div>
                             <div class="w-2/4">
-                                <p class="font-light">{{ $job->created_at ?? 'N/A' }}</p>
+                                <p class="font-light">{{ formatDateTime($job->created_at ?? 'N/A') }}</p>
                             </div>
                         </div>
                         <div class="flex items-center justify-between py-4 border-t">
