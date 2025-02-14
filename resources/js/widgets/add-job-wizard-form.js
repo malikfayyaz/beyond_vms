@@ -394,7 +394,19 @@ export default function wizardForm(careerOpportunity = null,businessUnitsData = 
     },
 
     formatEstimatedExpense(value) {
-      this.formData.estimatedExpense = this.formatBillingValue(value);
+      // this.formData.estimatedExpense = this.formatBillingValue(value);
+      let input = document.getElementById("estimatedExpense"); // Get the input element
+
+      if (!input || typeof value !== "string") return; // Prevent errors
+
+      let cursorPosition = input.selectionStart; // Store cursor position
+
+      let formattedValue = this.formatBillingValue(value); // Format the value
+      this.formData.estimatedExpense = formattedValue; // Update model
+
+      this.$nextTick(() => {
+          input.setSelectionRange(cursorPosition, cursorPosition); // Restore cursor position
+      });
     },
 
     isValidEstimatedExpense(value) {
@@ -426,8 +438,22 @@ export default function wizardForm(careerOpportunity = null,businessUnitsData = 
       );
     },
 
+    // formatCost(field) {
+    //   this.formData[field] = this.formatBillingValue(this.formData[field]);
+    // },
     formatCost(field) {
-      this.formData[field] = this.formatBillingValue(this.formData[field]);
+      let input = document.getElementById(field); // Get the input element dynamically
+  
+      if (!input || typeof this.formData[field] !== "string") return; // Prevent errors
+  
+      let cursorPosition = input.selectionStart; // Store cursor position
+  
+      let formattedValue = this.formatBillingValue(this.formData[field]); // Format the value
+      this.formData[field] = formattedValue; // Update model
+  
+      this.$nextTick(() => {
+          input.setSelectionRange(cursorPosition, cursorPosition); // Restore cursor position
+      });
     },
 
     showErrors: false,
