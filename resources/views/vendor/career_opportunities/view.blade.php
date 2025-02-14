@@ -204,22 +204,36 @@
                                         <p class="mt-4">UPDATE HIRING MANAGER TO Suzanne Touch</p>
                                         <p class="mt-4">(Justin Stephenson Vacancy)</p>
                                     </div>--}}
-                        <div class="mt-4 rounded p-4 bg-[#F5F7FC]">
-                            <p class="color-[#202124] font-light">{{translate('Internal Notes')}}</p>
-                            <div class="mt-4">
-                                <ul class="color-[#202124] font-light">
-                                    {!! $job->internal_notes !!}
-                                </ul>
+                        @if($job->internal_notes)
+                            <div class="mt-4 rounded p-4 bg-[#F5F7FC]">
+                                <p class="color-[#202124] font-light">{{translate('Internal Notes')}}</p>
+                                <div class="mt-4">
+                                    <ul class="color-[#202124] font-light">
+                                        {!! $job->internal_notes !!}
+                                    </ul>
+                                </div>
                             </div>
-                        </div>
-                        <div class="mt-4 rounded p-4 bg-[#F5F7FC]">
-                            <p class="color-[#202124] font-light">{{translate('Skills')}}</p>
-                            <div class="mt-4">
-                                <ul class="color-[#202124] font-light">
-                                    {!! $job->skills !!}
-                                </ul>
+                        @endif
+                        @if($job->skills)
+                            <div class="mt-4 rounded p-4 bg-[#F5F7FC]">
+                                <p class="color-[#202124] font-light">{{translate('Skills')}}</p>
+                                <div class="mt-4">
+                                    <ul class="color-[#202124] font-light">
+                                        {!! $job->skills !!}
+                                    </ul>
+                                </div>
                             </div>
-                        </div>
+                        @endif
+                        @if($job->description)
+                            <div class="mt-4 rounded p-4 bg-[#F5F7FC]">
+                                <p class="color-[#202124] font-light">{{translate('Job Description')}}</p>
+                                <div class="mt-4">
+                                    <ul class="color-[#202124] font-light">
+                                        {!! $job->description !!}
+                                    </ul>
+                                </div>
+                            </div>
+                        @endif
                         <div class="mt-4 rounded p-4 bg-[#F5F7FC]">
                             <p class="color-[#202124] font-light">
                                 {{translate('Pre-Identified Candidate')}}
