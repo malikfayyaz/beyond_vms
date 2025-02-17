@@ -289,13 +289,13 @@ class CareerOpportunitiesController extends Controller
         // Optionally, you can dump the data for debugging purposes
         // dd($job); // Uncomment to check the data structure
 
-        $formBuilder = FormBuilder::where('type', 1)->first(); 
+        $formBuilder = FormBuilder::where('type', 1)->first();
 
         $formFields = [];
         if ($formBuilder) {
-            $formFields = json_decode($formBuilder->data, true); 
+            $formFields = json_decode($formBuilder->data, true);
         }
-        
+
         // Return the view and pass the job data to it
         return view('client.career-opportunities.view', compact('job', 'jobWorkFlow', 'rejectReasons','loginClientid', 'formFields'));
         //
@@ -394,7 +394,18 @@ class CareerOpportunitiesController extends Controller
             }
 
             $validatednewData = $request->validate($dynamicRules);
-
+            $startDate = $request->input('startDate');
+            $endDate = $request->input('endDate');
+            $startDateObject = \DateTime::createFromFormat('Y/m/d', $startDate);
+            $endDateObject = \DateTime::createFromFormat('Y/m/d', $endDate);
+            if ($startDateObject && $endDateObject) {
+                $formattedStartDate = $startDateObject->format('m/d/Y');
+                $formattedEndDate = $endDateObject->format('m/d/Y');
+                $request->merge([
+                    'startDate' => $formattedStartDate,
+                    'endDate' => $formattedEndDate,
+                ]);
+            }
             $validatedData = $this->validateJobOpportunity($request);
 
             $job = CareerOpportunity::findOrFail($id);
