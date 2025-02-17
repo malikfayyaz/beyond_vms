@@ -1260,6 +1260,7 @@ class CareerOpportunitiesController extends BaseController
             'candidateMiddleName' => 'nullable',
             'job_code' => 'nullable|numeric',
             'timeType' => 'required',
+            'currency' => 'required',
         ]);
 
         $jobTemplate = JobTemplates::findOrFail($validatedData['jobTitle']);
@@ -1299,7 +1300,7 @@ class CareerOpportunitiesController extends BaseController
         $careerOpportunity->user_subclient_id = isset($job) ? $job->user_subclient_id  // If $job exists, use this
                 : Admin::getAdminIdByUserId(Auth::id());
 
-        $careerOpportunity->currency_id = 2;
+        $careerOpportunity->currency_id = $validatedData['currency'];
 
         if ($validatedData['preIdentifiedCandidate'] == 'Yes') {
             $careerOpportunity->pre_current_rate = 10.00;

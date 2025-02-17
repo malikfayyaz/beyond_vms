@@ -150,6 +150,10 @@
                                 <input type="hidden" name="type_of_job" x-model="formData.timeType"
                                     value=38
                                     id="timeType" />
+                                
+                                <input type="hidden" name="currency" x-model="formData.currency"
+                                    value=2
+                                    id="currency" />
 
                             </div>
                     </div> 
@@ -335,7 +339,7 @@
                                     <span class="text-red-500">*</span></label>
                                 <input name="hours_per_day" type="number" x-model="formData.estimatedHoursPerDay"
                                     class="w-full h-12 px-4 text-gray-500 border border-gray-300 rounded-md shadow-sm focus:outline-none"
-                                    min="0" step="0.5" max="8" id="hours_per_day" x-on:change="calculateRate()"/>
+                                    min="0" step="0.5" max="24" id="hours_per_day" x-on:change="calculateRate()"/>
                                 <p x-show="showErrors && !isFieldValid('estimatedHoursPerDay')"
                                     class="text-red-500 text-sm mt-1" x-text="getErrorMessageById('estimatedHoursPerDay')"></p>
                             </div>
@@ -484,6 +488,7 @@
                     billRate: 10,
                     maxBillRate: 20,
                     payment_type: 35,
+                    currency: 2,
                     
                 },
 
