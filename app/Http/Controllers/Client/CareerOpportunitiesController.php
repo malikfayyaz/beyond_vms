@@ -394,18 +394,6 @@ class CareerOpportunitiesController extends Controller
             }
 
             $validatednewData = $request->validate($dynamicRules);
-            $startDate = $request->input('startDate');
-            $endDate = $request->input('endDate');
-            $startDateObject = \DateTime::createFromFormat('Y/m/d', $startDate);
-            $endDateObject = \DateTime::createFromFormat('Y/m/d', $endDate);
-            if ($startDateObject && $endDateObject) {
-                $formattedStartDate = $startDateObject->format('m/d/Y');
-                $formattedEndDate = $endDateObject->format('m/d/Y');
-                $request->merge([
-                    'startDate' => $formattedStartDate,
-                    'endDate' => $formattedEndDate,
-                ]);
-            }
             $validatedData = $this->validateJobOpportunity($request);
 
             $job = CareerOpportunity::findOrFail($id);

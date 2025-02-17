@@ -249,16 +249,15 @@ export default function wizardForm(careerOpportunity = null,businessUnitsData = 
 
 
      // Define the formatDate method
-     formatDate(dateStr) {
-      if (!dateStr) return "";
-      const date = new Date(dateStr);
-      const year = date.getFullYear();
-      const month = String(date.getMonth() + 1).padStart(2, '0');
-      const day = String(date.getDate()).padStart(2, '0');
-      return `${year}/${month}/${day}`;
-    },
-
-    // Business unit script start from here
+      formatDate(dateStr) {
+          if (!dateStr) return "";
+          const date = new Date(dateStr);
+          const year = date.getFullYear();
+          const month = String(date.getMonth() + 1).padStart(2, '0');
+          const day = String(date.getDate()).padStart(2, '0');
+          return `${month}/${day}/${year}`;
+      },
+      // Business unit script start from here
     addBusinessUnit() {
       if (!this.selectedBusinessUnit || !this.budgetPercentage) {
         this.showErrors = true;
@@ -443,14 +442,14 @@ export default function wizardForm(careerOpportunity = null,businessUnitsData = 
     // },
     formatCost(field) {
       let input = document.getElementById(field); // Get the input element dynamically
-  
+
       if (!input || typeof this.formData[field] !== "string") return; // Prevent errors
-  
+
       let cursorPosition = input.selectionStart; // Store cursor position
-  
+
       let formattedValue = this.formatBillingValue(this.formData[field]); // Format the value
       this.formData[field] = formattedValue; // Update model
-  
+
       this.$nextTick(() => {
           input.setSelectionRange(cursorPosition, cursorPosition); // Restore cursor position
       });
@@ -613,7 +612,7 @@ export default function wizardForm(careerOpportunity = null,businessUnitsData = 
           this.endDatePicker.set("minDate", dateStr);
         },
       });
-  
+
       this.endDatePicker = flatpickr("#endDate", {
           dateFormat: "m/d/Y",
           defaultDate:  this.formData.endDate || null,
