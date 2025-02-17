@@ -88,22 +88,9 @@
                                     class="w-full select2-single custom-style" data-field="jobLaborCategory"
                                     id="jobLaborCategory">
                                 <option value="">Select a category</option>
-                                @foreach (checksetting(6) as $key => $value)
-                                    @if ($value === 'Sourced')
-                                        <template x-if="formData.preIdentifiedCandidate === 'No'">
-                                            <option value="{{ $key }}" x-bind:selected="formData.laborType === '{{ $key }}'">{{ $value }}</option>
-                                        </template>
-                                    @endif
-                                @endforeach
-                                @foreach (checksetting(6) as $key => $value)
-                                    @if ($value !== 'Sourced')
-                                        <template x-if="formData.preIdentifiedCandidate === 'No' && ('{{ $value }}' === 'Referred' || '{{ $value }}' !== 'Sourced')">
-                                            <option value="{{ $key }}" x-bind:selected="formData.laborType === '{{ $key }}'">{{ $value }}</option>
-                                        </template>
-                                    @endif
-                                    <template x-if="formData.preIdentifiedCandidate === 'Yes'">
-                                        <option value="{{ $key }}" x-bind:selected="formData.laborType === '{{ $key }}'">{{ $value }}</option>
-                                    </template>
+                                @foreach (checksetting(5) as $key => $value)
+                                    <option value="javascript">JavaScript</option>
+                                    <option value="{{ $key }}">{{ $value }}</option>
                                 @endforeach
                             </select>
                             <p x-show="showErrors && !isFieldValid('jobLaborCategory')" class="text-red-500 text-sm mt-1"
@@ -259,6 +246,12 @@
                             <label class="block mb-2">Pre-Identified Candidate?
                                 <span class="text-red-500">*</span>
                             </label>
+                            {{--                        <select name="pre_candidate" x-ref="preIdentifiedCandidate"
+                                                        x-model="formData.preIdentifiedCandidate" class="w-full select2-single custom-style"
+                                                        data-field="preIdentifiedCandidate" id="preIdentifiedCandidate">
+                                                        <option value="Yes">Yes</option>
+                                                        <option value="No">No</option>
+                                                    </select>--}}
                             <select name="pre_candidate" x-ref="preIdentifiedCandidate"
                                     x-model="formData.preIdentifiedCandidate" class="w-full select2-single custom-style"
                                     data-field="preIdentifiedCandidate" id="preIdentifiedCandidate" x-init="formData.preIdentifiedCandidate = 'No'">
@@ -693,7 +686,7 @@
                                 <span class="text-red-500">*</span></label>
                             <input name="hours_per_day" type="number" x-model="formData.estimatedHoursPerDay"
                                    class="w-full h-12 px-4 text-gray-500 border border-gray-300 rounded-md shadow-sm focus:outline-none"
-                                   min="0" step="0.5" id="hours_per_day" x-on:change="calculateRate()"/>
+                                   min="0"  max="24" step="0.5" id="hours_per_day" x-on:change="calculateRate()"/>
                             <p x-show="showErrors && !isFieldValid('estimatedHoursPerDay')"
                                class="text-red-500 text-sm mt-1" x-text="getErrorMessageById('estimatedHoursPerDay')"></p>
                         </div>
