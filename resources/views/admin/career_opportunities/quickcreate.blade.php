@@ -506,6 +506,17 @@
                     if (fieldId === 'acknowledgement') {
                         // For checkboxes, check if the value is true (checked)
                         return fieldValue === true; 
+                    } else if (fieldId === 'additionalRequirementEditor') {
+                        // Validate additionalRequirementEditor content
+                        const editorContent = this.formData.additionalRequirementEditor.trim();
+                        return editorContent !== "" && editorContent !== "<p><br></p>";
+                    } else if (fieldId === 'buJustification') {
+                        // Validate buJustification content
+                        const editorContent = this.formData.buJustification.trim();
+                        return editorContent !== "" && editorContent !== "<p><br></p>";
+                    } else if (fieldValue === null || fieldValue === undefined) {
+                        // For null or undefined fields, return false
+                        return false; 
                     } else if (typeof fieldValue === 'string') {
                         // For string fields, check if the trimmed value is not empty
                         return fieldValue.trim() !== ""; 
