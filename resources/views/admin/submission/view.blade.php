@@ -306,9 +306,9 @@
                         </div> -->
                         <div class="flex justify-between py-3 px-4">
                           <span class="text-gray-600">{{translate('Preferred Name')}}</span>
-                          <span
-                            class="font-semibold"
-                          ></span>
+                            <span
+                                class="font-semibold"
+                            >{{$submission->preferred_name}}</span>
                         </div>
                         <div class="flex justify-between py-3 px-4">
                           <span class="text-gray-600">{{translate('Gender')}}</span>
@@ -351,7 +351,7 @@
                             class="font-semibold"
                           >{{formatDate($submission->formatted_created_at)}}</span>
                         </div>
-                        
+
                         @if(!empty($submission->submission_details) && $submission->submission_details != '[]')
                           @php
                             $submissionDetails = json_decode($submission->submission_details, true); // Decode JSON into an array

@@ -62,7 +62,7 @@ class CareerOpportunitiesSubmissionController extends Controller
                         break;
                     case 'interview':
                         $submissions->where('resume_status', 5);
-                        break;    
+                        break;
                     case 'rejected':
                         $submissions->where('resume_status', 6);
                         break;
@@ -72,7 +72,7 @@ class CareerOpportunitiesSubmissionController extends Controller
                     case 'hired':
                         $submissions->where('resume_status', 9);
                         break;
-                        
+
                     // Add additional cases as needed
                     default:
                         break; // Show all submissions if no type is specified
@@ -81,7 +81,7 @@ class CareerOpportunitiesSubmissionController extends Controller
 
             return DataTables::of($submissions)
                 ->addColumn('id', function ($row) {
-                    return '<span class="submission-detail-trigger text-blue-500 cursor-pointer" data-id="' 
+                    return '<span class="submission-detail-trigger text-blue-500 cursor-pointer" data-id="'
                         . $row->id . '">' . $row->id . '</span>';
                 })
                 ->addColumn('consultant_name', function($row) {
@@ -319,11 +319,11 @@ class CareerOpportunitiesSubmissionController extends Controller
         ->orderBy('id', 'DESC')
         ->first();
         $rejectReasons =  Setting::where('category_id', 22)->get();
-        $formBuilder = FormBuilder::where('type', 2)->first(); 
+        $formBuilder = FormBuilder::where('type', 2)->first();
 
         $formFields = [];
         if ($formBuilder) {
-            $formFields = json_decode($formBuilder->data, true); 
+            $formFields = json_decode($formBuilder->data, true);
         }
         return view('vendor.submission.view', compact('submission','offer','rejectReasons', 'formFields'));
     }
@@ -421,6 +421,7 @@ class CareerOpportunitiesSubmissionController extends Controller
             'is_legally_authorized' =>$validatedData['needSponsorship'],
             'remote_contractor' =>$validatedData['virtualRemoteCandidate'],
             'retiree' =>$validatedData['workedForGallagher'],
+            'preferred_name' =>$validatedData['preferredName'],
             'capacity' =>$validatedData['gallagherCapacity'],
             'willing_relocate' =>$validatedData['willingToCommute'],
             'emp_msp_account_mngr' =>$validatedData['supplierAccountManager'],
