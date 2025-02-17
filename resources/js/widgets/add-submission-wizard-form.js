@@ -31,7 +31,7 @@ export default function addSubWizarForm() {
           "race",
           "workLocation",
           "preferredName",
-
+          "candidateType",
           "supplierAccountManager",
           "availableDate",
           "needSponsorship",
