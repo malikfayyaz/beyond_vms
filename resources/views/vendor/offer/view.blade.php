@@ -374,7 +374,7 @@
                       <p class="font-light">${{$offer->careerOpportunity->regular_hours_cost}} </p>
                     </div>
                   </div>
-                  @if(!empty($offer->offer_details))
+                  @if(!empty($offer->offer_details) && $offer->offer_details != '[]')
                     @php
                       $offerDetails = json_decode($offer->offer_details, true); // Decode JSON into an array
                     @endphp

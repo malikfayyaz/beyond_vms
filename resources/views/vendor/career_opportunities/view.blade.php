@@ -563,7 +563,7 @@
                                 <p class="font-light">{{ $job->createdBy->name ?? 'N/A' }}</p>
                             </div>
                         </div>
-                        @if(!empty($job->job_details))
+                        @if(!empty($job->job_details) && $job->job_details != '[]')
                             @php
                             $jobDetails = json_decode($job->job_details, true); // Decode JSON into an array
                             @endphp

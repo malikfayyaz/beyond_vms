@@ -352,7 +352,7 @@
                           >{{formatDate($submission->formatted_created_at)}}</span>
                         </div>
                         
-                        @if(!empty($submission->submission_details))
+                        @if(!empty($submission->submission_details) && $submission->submission_details != '[]')
                           @php
                             $submissionDetails = json_decode($submission->submission_details, true); // Decode JSON into an array
                           @endphp
