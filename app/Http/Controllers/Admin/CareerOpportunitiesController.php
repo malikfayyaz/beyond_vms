@@ -1279,7 +1279,7 @@ class CareerOpportunitiesController extends BaseController
         $careerOpportunity->start_date = $validatedData['startDate'];
         $careerOpportunity->end_date = $validatedData['endDate'];
         $careerOpportunity->internal_notes = $validatedData['additionalRequirementEditor'];
-        // $careerOpportunity->business_justification = $validatedData['buJustification'];
+        $careerOpportunity->description = $validatedData['buJustification'];
         // $careerOpportunity->corporate_legal = $validatedData['corporate_legal'];
         // $careerOpportunity->expected_cost = $validatedData['expectedCost'];
         // $careerOpportunity->acknowledgement = $validatedData['acknowledgement'];
