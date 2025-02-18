@@ -227,7 +227,7 @@ class CareerOpportunitiesController extends BaseController
                 $filename = handleFileUpload($request, 'attachment', 'career_opportunities');
                 // Mapping form fields to database column names
                 $mappedData = $this->mapJobData($validatedData, $jobTemplate, $request, $filename);
-               // dd($mappedData);
+               //dd($mappedData);
                 $job = CareerOpportunity::create( $mappedData );
                 $job->job_details = $validatednewData; // Save the validated data as JSON
                 $job->save();
@@ -551,7 +551,6 @@ class CareerOpportunitiesController extends BaseController
             'pre_candidate' => $validatedData['preIdentifiedCandidate'],
             'labour_type' => $validatedData['laborType'],
             'description' => $validatedData['jobDescriptionEditor'],
-//            'skills' => $validatedData['qualificationSkillsEditor'],
             'skills' => (!isset($validatedData['qualificationSkillsEditor']) || strtolower($validatedData['qualificationSkillsEditor']) === 'null')
                 ? ''
                 : $validatedData['qualificationSkillsEditor'],
@@ -576,8 +575,8 @@ class CareerOpportunitiesController extends BaseController
             'job_code' => $validatedData['job_code'],
             'num_openings' => $validatedData['numberOfPositions'],
             'hire_reason_id' => $validatedData['businessReason'],
-            'start_date' => Carbon::createFromFormat('m/d/Y', $validatedData['startDate'])->format('Y-m-d'),
-            'end_date' => Carbon::createFromFormat('m/d/Y', $validatedData['endDate'])->format('Y-m-d'),
+            'start_date' => Carbon::createFromFormat('m/d/Y', $validatedData['startDate'])->format('m/d/Y'),
+            'end_date' => Carbon::createFromFormat('m/d/Y', $validatedData['endDate'])->format('m/d/Y'),
             // Conditional fields
             'expense_cost' => $validatedData['estimatedExpense'] ?? null,
             'client_name' => $validatedData['clientName'] ?? null,

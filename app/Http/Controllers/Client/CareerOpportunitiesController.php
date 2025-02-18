@@ -211,7 +211,6 @@ class CareerOpportunitiesController extends Controller
      */
     public function store(Request $request)
     {
-
         try {
 
             $dynamicRules = [];
@@ -242,7 +241,6 @@ class CareerOpportunitiesController extends Controller
             $validatednewData = $request->validate($dynamicRules);
 
             $validatedData = $this->validateJobOpportunity($request);
-
             $businessUnits = $request->input('businessUnits');
             // dd($businessUnits);
 
@@ -472,8 +470,8 @@ class CareerOpportunitiesController extends Controller
             'preIdentifiedCandidate' => 'required',
             'laborType' => 'required',
             'jobDescriptionEditor' => 'required',
-            'qualificationSkillsEditor' => 'required',
-            'additionalRequirementEditor' => 'required',
+            'qualificationSkillsEditor' => 'nullable',
+            'additionalRequirementEditor' => 'nullable',
             'division' => 'required',
             'regionZone' => 'required',
             'branch' => 'required',
@@ -535,8 +533,13 @@ class CareerOpportunitiesController extends Controller
             'pre_candidate' => $validatedData['preIdentifiedCandidate'],
             'labour_type' => $validatedData['laborType'],
             'description' => $validatedData['jobDescriptionEditor'],
-            'skills' => $validatedData['qualificationSkillsEditor'],
-            'internal_notes' => $validatedData['additionalRequirementEditor'],
+            'skills' => (!isset($validatedData['qualificationSkillsEditor']) || strtolower($validatedData['qualificationSkillsEditor']) === 'null')
+                ? ''
+                : $validatedData['qualificationSkillsEditor'],
+
+            'internal_notes' => (!isset($validatedData['additionalRequirementEditor']) || strtolower($validatedData['additionalRequirementEditor']) === 'null')
+                ? ''
+                : $validatedData['additionalRequirementEditor'],
             'division_id' => $validatedData['division'],
             'region_zone_id' => $validatedData['regionZone'],
             'branch_id' => $validatedData['branch'],
@@ -554,8 +557,8 @@ class CareerOpportunitiesController extends Controller
             'job_code' => $validatedData['job_code'],
             'num_openings' => $validatedData['numberOfPositions'],
             'hire_reason_id' => $validatedData['businessReason'],
-            'start_date' => Carbon::createFromFormat('d/m/Y', $validatedData['startDate'])->format('d-m-Y'),
-            'end_date' => Carbon::createFromFormat('d/m/Y', $validatedData['endDate'])->format('d-m-Y'),
+            'start_date' => (new \DateTime(\DateTime::createFromFormat('d/m/Y', $validatedData['startDate'])->format('m/d/Y')))->format('m/d/Y'),
+            'end_date' => (new \DateTime(\DateTime::createFromFormat('d/m/Y', $validatedData['endDate'])->format('m/d/Y')))->format('m/d/Y'),
             // Conditional fields
             'expense_cost' => $validatedData['estimatedExpense'] ?? null,
             'client_name' => $validatedData['clientName'] ?? null,
