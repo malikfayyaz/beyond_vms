@@ -1305,9 +1305,9 @@ class CareerOpportunitiesController extends BaseController
             $careerOpportunity->pre_current_rate = 10.00;
         }
 
+        $careerOpportunity->jobStatus = 3;
         $careerOpportunity->gl_code_id = 15;
         $careerOpportunity->hire_reason_id = 37;
-        $careerOpportunity->jobStatus = 1;
         $careerOpportunity->payment_type = $validatedData['payment_type'];
         $careerOpportunity->job_type = 10;
         $careerOpportunity->labour_type = 30;
@@ -1328,8 +1328,6 @@ class CareerOpportunitiesController extends BaseController
 
 
         Rateshelper::calculateJobEstimates($careerOpportunity);
-        $jobWorkflow = new JobWorkflowUpdate();
-        $jobWorkflow->createJobWorkflow($careerOpportunity);
 
         session()->flash('success', 'Job saved successfully!');
         return response()->json([

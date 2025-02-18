@@ -39,7 +39,7 @@
                                 if ($careerOpportunity !="") {
                                     $jobTemplates = \App\Models\JobTemplates::where([
                                         ['cat_id', $careerOpportunity->cat_id],
-                                        ['profile_worker_type_id', 10],
+                                        ['profile_worker_type_id', 11],
                                         ['status', 'Active']
                                     ])->get(['id', 'job_title']);
                                 }
@@ -798,7 +798,7 @@
 
                 submitForm() {
                     this.showErrors = true;
-                    
+                    console.log('Form Data:', this.formData.bill_rate);
                     for (const field in this.formData) {
                         if (!this.isFieldValid(field)) {
                             console.log(`Validation failed for ${field}`);
