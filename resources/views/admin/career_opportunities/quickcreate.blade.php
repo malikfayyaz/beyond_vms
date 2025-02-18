@@ -272,11 +272,12 @@
                         <div class="mt-4">
                             <div class="mt-4 block">
                                 <label class="block mb-2">Additional Requirements
-                                    <span class="text-red-500">*</span></label>
+                                    <!-- <span class="text-red-500">*</span> -->
+                                </label>
                                 <div id="additionalRequirementEditor" style="height: 300px"></div>
-                                <p x-show="showErrors && !isFieldValid('additionalRequirementEditor')"
+                                <!-- <p x-show="showErrors && !isFieldValid('additionalRequirementEditor')"
                                     class="text-red-500 text-sm mt-1" x-text="getErrorMessageById('additionalRequirementEditor')">
-                                </p>
+                                </p> -->
                             </div>
 
                             <div class="mt-4 block">
@@ -511,7 +512,7 @@
                 isFieldValid(fieldId) {
                     const fieldValue = this.formData[fieldId];
                     
-                    if (['candidateMiddleName', 'jobTitleEmailSignature'].includes(fieldId)) {
+                    if (['candidateMiddleName', 'jobTitleEmailSignature', 'additionalRequirementEditor'].includes(fieldId)) {
                         return true; 
                     }
                     if (fieldId === 'candidateFirstName' || fieldId === 'candidateLastName' || fieldId === 'candidatePhone' || fieldId === 'candidateEmail') {
@@ -522,10 +523,6 @@
                     if (fieldId === 'acknowledgement') {
                         // For checkboxes, check if the value is true (checked)
                         return fieldValue === true; 
-                    } else if (fieldId === 'additionalRequirementEditor') {
-                        // Validate additionalRequirementEditor content
-                        const editorContent = this.formData.additionalRequirementEditor.trim();
-                        return editorContent !== "" && editorContent !== "<p><br></p>";
                     } else if (fieldId === 'buJustification') {
                         // Validate buJustification content
                         const editorContent = this.formData.buJustification.trim();

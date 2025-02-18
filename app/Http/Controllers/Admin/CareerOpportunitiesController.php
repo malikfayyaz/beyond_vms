@@ -1239,7 +1239,7 @@ class CareerOpportunitiesController extends BaseController
             'workerType' => 'required',
             'startDate' => 'required|date',
             'endDate' => 'required|date',
-            'additionalRequirementEditor' => 'required',
+            'additionalRequirementEditor' => 'nullable',
             'buJustification' => 'required',
             'corporate_legal' => 'required',
             'expectedCost' => 'required_if:corporate_legal,Yes|nullable|numeric',
