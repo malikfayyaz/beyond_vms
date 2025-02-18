@@ -137,24 +137,35 @@
                         </div>
                             <div class="hidden-fields"> 
                                 <input type="hidden" name="min_bill_rate" x-model="formData.billRate"
-                                    value=10
+                                    value="10"
                                     id="billRate" />
                                 <input type="hidden" name="max_bill_rate" x-model="formData.maxBillRate"
-                                    value=20
+                                    value="20"
                                     id="maxBillRate" />
                             
                                 <input type="hidden" name="payment_type" x-model="formData.payment_type"
-                                    value=35
+                                    value="35"
                                     id="payment_type" />
                                 
                                 <input type="hidden" name="type_of_job" x-model="formData.timeType"
-                                    value=38
+                                    value="38"
                                     id="timeType" />
                                 
                                 <input type="hidden" name="currency" x-model="formData.currency"
-                                    value=2
+                                    value="2"
                                     id="currency" />
+                                    
+                                <input id="regular_cost" type="hidden" x-model="formData.regularCost" />
 
+                                <input id="single_resource_cost" type="hidden" x-model="formData.singleResourceCost" />
+                                
+                                <input id="all_resources_span" type="hidden" x-model="formData.allResourcesRegularCost" />
+
+                                <input id="all_resources_input" type="hidden" x-model="formData.allResourcesCost" />
+
+                                <input id="regular_hours" type="hidden" value="8" x-model="formData.regularHours" />
+
+                                <input id="numOfWeeks" type="hidden" x-model="formData.numberOfWeeks" value="0 Weeks 1 Days" />
                             </div>
                     </div> 
                     
@@ -489,7 +500,12 @@
                     maxBillRate: 20,
                     payment_type: 35,
                     currency: 2,
-                    
+                    regularCost: "",
+                    singleResourceCost: "",
+                    allResourcesRegularCost: "",
+                    allResourcesCost: "",
+                    regularHours: "",
+                    numberOfWeeks: "",
                 },
 
                 isFieldValid(fieldId) {
@@ -506,6 +522,17 @@
                     if (fieldId === 'acknowledgement') {
                         // For checkboxes, check if the value is true (checked)
                         return fieldValue === true; 
+                    } else if (fieldId === 'additionalRequirementEditor') {
+                        // Validate additionalRequirementEditor content
+                        const editorContent = this.formData.additionalRequirementEditor.trim();
+                        return editorContent !== "" && editorContent !== "<p><br></p>";
+                    } else if (fieldId === 'buJustification') {
+                        // Validate buJustification content
+                        const editorContent = this.formData.buJustification.trim();
+                        return editorContent !== "" && editorContent !== "<p><br></p>";
+                    } else if (fieldValue === null || fieldValue === undefined) {
+                        // For null or undefined fields, return false
+                        return false; 
                     } else if (typeof fieldValue === 'string') {
                         // For string fields, check if the trimmed value is not empty
                         return fieldValue.trim() !== ""; 
@@ -684,10 +711,13 @@
                                 this.formData.job_code = $('#job_code').val();
                             }, 500);
                         };
+                        
                         $('.businessUnitSel').on('change', () => {
                          this.selBU();
                         });
+                        
                         this.calculateRate = () => {
+                            console.log('calculateRate');
                             var bill_rate =  $('#billRate').val();
                             var payment_type =  $('#payment_type').val();
                             var hours_per_week = $('#workDaysPerWeek').val();
@@ -728,21 +758,21 @@
                                 }
                                 /*          let url = `/admin/job-rates/`;*/
                             const updates = {
-                                // '#regular_cost': { type: 'value', field: 'regularBillRate' },
-                                // '#single_resource_cost': { type: 'value', field: 'singleResourceCost' },
-                                // '#all_resources_span': { type: 'value', field: 'regularBillRateAll'},
-                                // '#all_resources_input': { type: 'value', field: 'allResourceCost' },
-                                // '#regular_hours': { type: 'value', field: 'totalHours'},
-                                // '#numOfWeeks': { type: 'value', field: 'numOfWeeks' }
+                                '#regular_cost': { type: 'value', field: 'regularBillRate' },
+                                '#single_resource_cost': { type: 'value', field: 'singleResourceCost' },
+                                '#all_resources_span': { type: 'value', field: 'regularBillRateAll'},
+                                '#all_resources_input': { type: 'value', field: 'allResourceCost' },
+                                '#regular_hours': { type: 'value', field: 'totalHours'},
+                                '#numOfWeeks': { type: 'value', field: 'numOfWeeks' }
                             };
                             ajaxCall(url, 'POST', [[updateElements, ['response', updates]]], data);
                             setTimeout(() => {
-                                // this.formData.regularCost =  $('#regular_cost').val();
-                                //  this.formData.singleResourceCost = $('#single_resource_cost').val();
-                                // this.formData.allResourcesRegularCost = $('#all_resources_span').val();
-                                // this.formData.regularHours =  $('#regular_hours').val();
-                                // this.formData.allResourcesCost = $('#all_resources_input').val();
-                                // this.formData.numberOfWeeks = $('#numOfWeeks').val();
+                                this.formData.regularCost =  $('#regular_cost').val();
+                                this.formData.singleResourceCost = $('#single_resource_cost').val();
+                                this.formData.allResourcesRegularCost = $('#all_resources_span').val();
+                                this.formData.regularHours =  $('#regular_hours').val();
+                                this.formData.allResourcesCost = $('#all_resources_input').val();
+                                this.formData.numberOfWeeks = $('#numOfWeeks').val();
                             }, 500);
                         };
 
