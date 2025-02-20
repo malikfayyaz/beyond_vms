@@ -12,6 +12,67 @@
 
         <div class="mx-2 my-4 rounded px-8 w-full flex justify-end items-center gap-4 ">
 
+            @if($contract->latestBudgetRequest())
+                <!-- Additional Budget Flyout Button -->
+                <div  x-data="{isOpen: false,
+                    showModal: false,
+                    modalType: null,
+                    selectedUser: 'user',
+                    comment: ''
+                }">
+                <a href="javascript:void(0)"
+                            @click="isOpen = true;"
+                            class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
+                        >
+                            <i class="fas fa-exclamation-circle text-red-500 text-xl"></i>
+                            <span class="mx-2">{{translate('Pending Additional Budget Request')}}</span>
+                            <span class="text-blue-500 font-semibold text-red-500 text-xl">{{translate('View')}}</span>
+                        </a>
+                    <div
+                    x-show="isOpen"
+                    x-transition:enter="transition ease-out duration-300"
+                    x-transition:enter-start="opacity-0"
+                    x-transition:enter-end="opacity-100"
+                    x-transition:leave="transition ease-in duration-300"
+                    x-transition:leave-start="opacity-100"
+                    x-transition:leave-end="opacity-0"
+                    @click="isOpen = false"
+                    class="fixed inset-0 bg-black bg-opacity-50 z-40"
+                    ></div>
+                    <x-contract-additional :budgetRequest="$contract->latestBudgetRequest()"  />
+                    </div>
+            @endif
+
+            @if($contract->latestApprovedExtensionRequest())
+                <!-- contractExtensionRequest Flyout Button -->
+                <div  x-data="{isOpen: false,
+                    showModal: false,
+                    modalType: null,
+                    selectedUser: 'user',
+                    comment: ''
+                }">
+                <a href="javascript:void(0)"
+                            @click="isOpen = true;"
+                            class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
+                        >
+                            <i class="fas fa-exclamation-circle text-red-500 text-xl"></i>
+                            <span class="mx-2">{{translate('Contract Extension Request')}}</span>
+                            <span class="text-blue-500 font-semibold text-red-500 text-xl">{{translate('View')}}</span>
+                        </a>
+                    <div
+                    x-show="isOpen"
+                    x-transition:enter="transition ease-out duration-300"
+                    x-transition:enter-start="opacity-0"
+                    x-transition:enter-end="opacity-100"
+                    x-transition:leave="transition ease-in duration-300"
+                    x-transition:leave-start="opacity-100"
+                    x-transition:leave-end="opacity-0"
+                    @click="isOpen = false"
+                    class="fixed inset-0 bg-black bg-opacity-50 z-40"
+                    ></div>
+                    <x-contract-extension :extensionRequest="$contract->latestApprovedExtensionRequest()"  />
+                    </div>
+            @endif
             @if($contract->latestRateEditRequest())
                 <!-- Additional Budget Flyout Button -->
                 <div  x-data="{isOpen: false,
@@ -26,7 +87,7 @@
                         >
                             <i class="fas fa-exclamation-circle text-red-500 text-xl"></i>
                             <span class="mx-2">{{translate('Pending Rate Change Request')}}</span>
-                            <span class="text-blue-500 font-semibold text-red-500 text-xl">View')}}</span>
+                            <span class="text-blue-500 font-semibold text-red-500 text-xl">{{translate('View')}}</span>
                         </a>
                     <div
                     x-show="isOpen"
