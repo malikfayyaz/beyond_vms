@@ -466,6 +466,7 @@ class CommonController extends Controller
     }
     public function ContractExtensionWorkflow(Request $request)
     {
+        $sessionrole = session('selected_role');
         $actionType = $request->input('actionType');
         $validated = $request->validate([
             'rowId' => 'required|integer',
@@ -490,7 +491,7 @@ class CommonController extends Controller
         return response()->json([
             'success' => true,
             'message' => $message,
-            'redirect_url' => route('admin.contracts.show', ['contract' => $contractext->contract_id]),
+            'redirect_url' => route("$sessionrole.contracts.show", ['contract' => $contractext->contract_id]),
         ]);
 
 
@@ -543,6 +544,7 @@ class CommonController extends Controller
     }
     public function ContractBudgetWorkflow(Request $request)
     {
+        $sessionrole = session('selected_role');
         $actionType = $request->input('actionType');
         $validated = $request->validate([
             'rowId' => 'required|integer',
@@ -570,7 +572,7 @@ class CommonController extends Controller
         return response()->json([
             'success' => true,
             'message' => $message,
-            'redirect_url' => route('admin.contracts.show', ['contract' => $contractbudgetrqst->contract_id]),
+            'redirect_url' => route("$sessionrole.contracts.show", ['contract' => $contractbudgetrqst->contract_id]),
         ]);
 
 

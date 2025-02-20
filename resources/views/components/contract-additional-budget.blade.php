@@ -232,7 +232,7 @@
                         >
                             <!-- Header -->
                             <div class="flex items-center justify-between border-b p-4">
-                                <h2 class="text-xl font-semibold"><!--Reject--> Accept Candidate</h2>
+                                <h2 class="text-xl font-semibold"><!--Reject-->Additional Budget Request</h2>
                                 <button
                                     @click="openModal = false"
                                     class="text-gray-400 hover:text-gray-600 bg-transparent hover:bg-transparent"
