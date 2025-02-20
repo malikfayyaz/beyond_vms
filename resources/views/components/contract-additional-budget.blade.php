@@ -20,7 +20,7 @@
                         <h2 class="text-lg font-semibold">Additional Budget Request (<span  >{{$budgetRequest->id}}</span>)</h2>
                           <button
                             @click="isOpen = false"
-                            class="text-gray-500 hover:text-gray-700"
+                            class="bg-white rounded-sm text-gray-500 hover:text-gray-700"
                           >
                             <i class="fas fa-times"></i>
                           </button>
