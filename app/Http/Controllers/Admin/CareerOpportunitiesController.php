@@ -407,6 +407,7 @@ class CareerOpportunitiesController extends BaseController
                 $filename = $job->attachment;
             }
             $mappedData = $this->mapJobData($validatedData, $jobTemplate, $request, $filename,$job );
+           
             $job->update($mappedData);
             $job->job_details = $validatednewData; // Save the validated data as JSON
             $job->save();
@@ -543,7 +544,7 @@ class CareerOpportunitiesController extends BaseController
             'user_id' => isset($job) ? $job->user_id  : Admin::getAdminIdByUserId(Auth::id()),
             'user_type' => isset($job) ? $job->user_type  : 1,
             'interview_process' => 'Yes',
-            'job_type' => 10,
+            'job_type' => isset($job) ? $job->workerType->id : 10,
             'jobstep2_complete' => 1,
             'jobStatus' => isset($job) ? $job->jobStatus : 1,
             'max_bill_rate' => $validatedData['maxBillRate'],
