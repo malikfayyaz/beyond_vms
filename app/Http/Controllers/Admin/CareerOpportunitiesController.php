@@ -400,7 +400,6 @@ class CareerOpportunitiesController extends BaseController
 
             $validatednewData = $request->validate($dynamicRules);
             $validatedData = $this->validateJobOpportunity($request);
-//            dd($request->all());
             $job = CareerOpportunity::findOrFail($id);
             $jobTemplate = JobTemplates::findOrFail($validatedData['jobTitle']);
             $filename = handleFileUpload($request, 'attachment', 'career_opportunities', $job->attachment);
@@ -1309,12 +1308,12 @@ class CareerOpportunitiesController extends BaseController
         $careerOpportunity->gl_code_id = 15;
         $careerOpportunity->hire_reason_id = 37;
         $careerOpportunity->payment_type = $validatedData['payment_type'];
-        $careerOpportunity->job_type = 10;
+        $careerOpportunity->job_type = 11;
         $careerOpportunity->labour_type = 30;
         $careerOpportunity->min_bill_rate = $validatedData['billRate'];
         $careerOpportunity->max_bill_rate = $validatedData['maxBillRate'];
         $careerOpportunity->type_of_job = $validatedData['timeType'];
-    //    dd($careerOpportunity);
+        //    dd($careerOpportunity);
         $careerOpportunity->save();
 
         $businessUnits = [

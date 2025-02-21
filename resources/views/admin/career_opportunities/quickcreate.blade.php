@@ -651,7 +651,7 @@
                     if (window.$) {
                         $('#jobLaborCategory').on('change', () => {
                             var labour_type = $('#jobLaborCategory').val();
-                            var type = 10;
+                            var type = 11;
                             let url = `/load-market-job-template/${labour_type}/${type}`;
 
                             ajaxCall(url, 'GET', [[updateStatesDropdown, ['response', 'jobTitle']]]);
