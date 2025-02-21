@@ -331,29 +331,7 @@
 
                     </div>
                     <!-- Step 2: Second row form fields -->
-                    <div class="flex space-x-4 mt-4" x-data="{
-               startDate: '',
-               endDate: '',
-               init() {
-                   let startPicker = flatpickr(this.$refs.startPicker, {
-                       dateFormat: 'm/d/Y',
-                       onChange: (selectedDates, dateStr) => {
-                         this.formData.startDate = dateStr;
-                         endPicker.set('minDate', dateStr);
-                       }
-                   });
-
-                   let endPicker = flatpickr(this.$refs.endPicker, {
-                       dateFormat: 'm/d/Y',
-                       onChange: (selectedDates, dateStr) => {
-                         this.formData.endDate = dateStr;
-                       }
-                   });
-
-                   this.$watch('startDate', value => startPicker.setDate(value));
-                   this.$watch('endDate', value => endPicker.setDate(value));
-               }
-           }">
+                    <div class="flex space-x-4 mt-4" >
                         <div class="flex-1">
                             <label class="block mb-2">Labour Type <span class="text-red-500">*</span></label>
                             <select name="labour_type" x-ref="laborType" x-model="formData.laborType"

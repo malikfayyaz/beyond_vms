@@ -607,21 +607,25 @@ export default function wizardForm(careerOpportunity = null,businessUnitsData = 
       },
 
       initFlatpickr() {
-          flatpickr("#startDate", {
-              dateFormat: "m/d/Y",
-              defaultDate: this.parseDate(this.formData.startDate), // Use parseDate function
-              onChange: (selectedDates, dateStr) => {
-                  this.formData.startDate = dateStr;
-                  this.endDatePicker.set("minDate", dateStr);
-              },
-          });
-
-          this.endDatePicker = flatpickr("#endDate", {
-              dateFormat: "m/d/Y",
-              onChange: (selectedDates, dateStr) => {
-                  this.formData.endDate = dateStr;
-              },
-          });
+        this.startDatePicker = flatpickr("#startDate", {
+            dateFormat: "m/d/Y",
+            defaultDate: this.formatDate(this.formData.startDate),
+            onChange: (selectedDates, dateStr) => {
+                this.formData.startDate = dateStr;
+                if (this.endDatePicker) {
+                    this.endDatePicker.set("minDate", dateStr);
+                }
+            },
+        });
+    
+        this.endDatePicker = flatpickr("#endDate", {
+            dateFormat: "m/d/Y",
+            defaultDate: this.formatDate(this.formData.endDate),
+            minDate: this.formatDate(this.formData.startDate),
+            onChange: (selectedDates, dateStr) => {
+                this.formData.endDate = dateStr;
+            },
+        });
       },
 
     nextStep() {
