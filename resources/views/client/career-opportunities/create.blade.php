@@ -336,7 +336,7 @@
                endDate: '',
                init() {
                    let startPicker = flatpickr(this.$refs.startPicker, {
-                       dateFormat: 'd/m/Y',
+                       dateFormat: 'm/d/Y',
                        onChange: (selectedDates, dateStr) => {
                          this.formData.startDate = dateStr;
                          endPicker.set('minDate', dateStr);
@@ -344,7 +344,7 @@
                    });
 
                    let endPicker = flatpickr(this.$refs.endPicker, {
-                       dateFormat: 'd/m/Y',
+                       dateFormat: 'm/d/Y',
                        onChange: (selectedDates, dateStr) => {
                          this.formData.endDate = dateStr;
                        }
