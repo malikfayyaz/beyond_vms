@@ -141,7 +141,7 @@ class CareerOpportunitiesController extends BaseController
                      >
                        <i class="fas fa-eye"></i>
                      </a>';
-                     $editRoute = ($row->jobStatus == 3) 
+                     $editRoute = ($row->workerType->id == 11) 
                         ? route('admin.quedit', $row->id)
                         : route('admin.career-opportunities.edit', $row->id);
 
