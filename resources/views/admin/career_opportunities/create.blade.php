@@ -5,7 +5,7 @@
 @include('admin.layouts.partials.dashboard_side_bar')
 <div class="ml-16">
     @include('admin.layouts.partials.header')
-    <div class="bg-white mx-4 my-8 rounded p-8" x-data='wizardForm({!! json_encode($careerOpportunity, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP) !!},{!! json_encode($businessUnitsData, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP) !!}, {{ isset($careerOpportunity->workerType->id) ? $careerOpportunity->workerType->id : 10 }})' x-init="mounted()">
+    <div class="bg-white mx-4 my-8 rounded p-8" x-data='wizardForm({!! json_encode($careerOpportunity, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP) !!},{!! json_encode($businessUnitsData, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP) !!})' x-init="mounted()">
 
     <!-- Success Notification -->
         @include('admin.layouts.partials.alerts')
@@ -103,12 +103,11 @@
                             x-text="getErrorMessageById('jobLaborCategory')"></p>
                     </div>
                     @php
-                        $workerTypeId = $careerOpportunity?->workerType->id ?? 10;
                         $jobTemplates = [];
                         if ($careerOpportunity !="") {
                             $jobTemplates = \App\Models\JobTemplates::where([
                                 ['cat_id', $careerOpportunity->cat_id],
-                                ['profile_worker_type_id', $workerTypeId],
+                                ['profile_worker_type_id', 10],
                                 ['status', 'Active']
                             ])->get(['id', 'job_title']);
                         }
@@ -743,7 +742,7 @@
                         Budget Details ( Maximum budget is used)
                     </h3>
                     <p class="text-base">
-                        Other Details: {{'Duration'.$careerOpportunity->date_range}}
+                        Other Details: Duration 08/16/2024 - 08/20/2024
                     </p>
                 </div>
                 <!-- Step 4: Third row form fields -->

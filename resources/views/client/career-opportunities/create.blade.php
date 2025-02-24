@@ -331,7 +331,29 @@
 
                     </div>
                     <!-- Step 2: Second row form fields -->
-                    <div class="flex space-x-4 mt-4" >
+                    <div class="flex space-x-4 mt-4" x-data="{
+               startDate: '',
+               endDate: '',
+               init() {
+                   let startPicker = flatpickr(this.$refs.startPicker, {
+                       dateFormat: 'd/m/Y',
+                       onChange: (selectedDates, dateStr) => {
+                         this.formData.startDate = dateStr;
+                         endPicker.set('minDate', dateStr);
+                       }
+                   });
+
+                   let endPicker = flatpickr(this.$refs.endPicker, {
+                       dateFormat: 'd/m/Y',
+                       onChange: (selectedDates, dateStr) => {
+                         this.formData.endDate = dateStr;
+                       }
+                   });
+
+                   this.$watch('startDate', value => startPicker.setDate(value));
+                   this.$watch('endDate', value => endPicker.setDate(value));
+               }
+           }">
                         <div class="flex-1">
                             <label class="block mb-2">Labour Type <span class="text-red-500">*</span></label>
                             <select name="labour_type" x-ref="laborType" x-model="formData.laborType"
@@ -707,7 +729,7 @@
                             Budget Details ( Maximum budget is used)
                         </h3>
                         <p class="text-base">
-                            Other Details: {{'Duration'.$job->date_range}}
+                            Other Details: Duration 08/16/2024 - 08/20/2024
                         </p>
                     </div>
                     <!-- Step 4: Third row form fields -->
