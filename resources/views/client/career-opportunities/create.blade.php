@@ -729,7 +729,7 @@
                             Budget Details ( Maximum budget is used)
                         </h3>
                         <p class="text-base">
-                            Other Details: Duration 08/16/2024 - 08/20/2024
+                            Other Details: {{'Duration'.$job->date_range}}
                         </p>
                     </div>
                     <!-- Step 4: Third row form fields -->
