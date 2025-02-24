@@ -452,11 +452,7 @@
                               class="w-full h-12 px-4 text-gray-500 border rounded-md shadow-sm focus:outline-none pl-7"
                               type="text"
                               placeholder="Select start date"
-                              @focus="flatpickr($refs.startDate, {
-                                dateFormat: 'm/d/Y', // Format as YYYY/MM/DD
-                                defaultDate: formData.startDate, // Pre-fill with existing date
-                                onChange: (selectedDates, dateStr) => formData.startDate = dateStr
-                            })"
+                            
                             />
                             <p
                               class="text-red-500 text-sm mt-1"
@@ -475,11 +471,7 @@
                               class="w-full h-12 px-4 text-gray-500 border rounded-md shadow-sm focus:outline-none pl-7"
                               type="text"
                               placeholder="Select end date"
-                              @focus="flatpickr($refs.endDate, {
-                                dateFormat: 'm/d/Y', // Format as YYYY/MM/DD
-                                defaultDate: formData.endDate, // Pre-fill with existing date
-                                onChange: (selectedDates, dateStr) => formData.endDate = dateStr
-                            })"
+                             
                             />
                             <p
                               class="text-red-500 text-sm mt-1"
@@ -888,6 +880,7 @@
           initDatePickers() {
             const startPicker = flatpickr("#startDate", {
               dateFormat: "m/d/Y",
+              defaultDate: this.formData.startDate,
               onChange: (selectedDates, dateStr) => {
                 this.formData.startDate = dateStr;
                 this.formData.startDateError = "";
@@ -905,6 +898,7 @@
 
             const endPicker = flatpickr("#endDate", {
               dateFormat: "m/d/Y",
+              defaultDate: this.formData.endDate,
               onChange: (selectedDates, dateStr) => {
                 this.formData.endDate = dateStr;
                 this.formData.endDateError = "";

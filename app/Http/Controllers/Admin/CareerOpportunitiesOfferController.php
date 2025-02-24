@@ -153,8 +153,8 @@ class CareerOpportunitiesOfferController extends BaseController
 
          // Define your validation rules
          $rules = [
-            'startDate' => 'required|date_format:Y/m/d',
-            'endDate' => 'required|date_format:Y/m/d',
+            'startDate' => 'required|date_format:m/d/Y',
+            'endDate' => 'required|date_format:m/d/Y',
             'approvingManager' => 'required|integer',
             'markup' => 'required',
             'submissionid' => 'required|integer',
@@ -221,9 +221,9 @@ class CareerOpportunitiesOfferController extends BaseController
             "remote_option" =>$validatedData['remote'],
             // "notes" =>$validatedData['notes'],
             "start_date" =>!empty($validatedData['startDate'])
-            ? Carbon::createFromFormat('Y/m/d', $validatedData['startDate'])->format('Y-m-d')  : null,
+            ? Carbon::createFromFormat('m/d/Y', $validatedData['startDate'])->format('Y-m-d')  : null,
             "end_date" =>!empty($validatedData['endDate'])
-            ? Carbon::createFromFormat('Y/m/d', $validatedData['endDate'])->format('Y-m-d')  : null,
+            ? Carbon::createFromFormat('m/d/Y', $validatedData['endDate'])->format('Y-m-d')  : null,
          ];
          $offerCreate = CareerOpportunitiesOffer::create( $mapedData );
          $offerCreate->offer_details = $validatednewData; // Save the validated data as JSON
