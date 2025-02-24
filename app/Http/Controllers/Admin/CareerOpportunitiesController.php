@@ -1350,6 +1350,7 @@ class CareerOpportunitiesController extends BaseController
         return view('admin.career_opportunities.quickcreate', [
             'careerOpportunity' => $careerOpportunity,
             'sessionrole' => $sessionrole,
+            'editIndex' => $id
         ]);
     }
 

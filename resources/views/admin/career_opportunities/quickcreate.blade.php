@@ -16,7 +16,7 @@
         <script>
             var sessionrole = "{{ $sessionrole }}";
         </script>
-        <div class="bg-white mx-4 my-8 rounded p-8" x-data='quickcreate({!! json_encode($careerOpportunity, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP) !!})' x-init="mounted()">
+        <div class="bg-white mx-4 my-8 rounded p-8" x-data='quickcreate({!! json_encode($careerOpportunity, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP) !!}, {{ $editIndex ?? "null" }})' x-init="mounted()">
             <form @submit.prevent="submitForm" id="quickaddjob" method="POST">
                 <div>
                     <div class="my-4 border rounded shadow px-4 pt-4 pb-8">
@@ -464,10 +464,11 @@
         </div>  
     </div>
     <script>
-        function quickcreate(careerOpportunity = null) {
-            console.log('quickcreate');
+        function quickcreate(careerOpportunity = null, editIndex) {
+            console.log(careerOpportunity);
             return {
                 careerOpportunity,
+                editIndex,
                 showErrors: false,
                 
                 
@@ -580,6 +581,7 @@
                 },
 
                 init() {
+                    
                     this.initSelect2();
                     this.initQuill([
                         '#additionalRequirementEditor',
@@ -590,6 +592,9 @@
                 initSelect2() {
                     $(".select2-single").each((index, element) => {
                         const fieldName = $(element).data("field");
+                        if (this.formData[fieldName]) {
+                            $(element).val(this.formData[fieldName]);
+                        }
                         $(element)
                             .select2({
                             width: "100%",
