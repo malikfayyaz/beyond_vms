@@ -453,7 +453,7 @@
                               type="text"
                               placeholder="Select start date"
                               @focus="flatpickr($refs.startDate, {
-                                dateFormat: 'Y/m/d', // Format as YYYY/MM/DD
+                                dateFormat: 'm/d/Y', // Format as YYYY/MM/DD
                                 defaultDate: formData.startDate, // Pre-fill with existing date
                                 onChange: (selectedDates, dateStr) => formData.startDate = dateStr
                             })"
@@ -476,7 +476,7 @@
                               type="text"
                               placeholder="Select end date"
                               @focus="flatpickr($refs.endDate, {
-                                dateFormat: 'Y/m/d', // Format as YYYY/MM/DD
+                                dateFormat: 'm/d/Y', // Format as YYYY/MM/DD
                                 defaultDate: formData.endDate, // Pre-fill with existing date
                                 onChange: (selectedDates, dateStr) => formData.endDate = dateStr
                             })"
@@ -787,8 +787,8 @@
       document.addEventListener("alpine:init", () => {
         Alpine.data("createOffer", () => ({
           formData: {
-                      startDate: '{{ old('startDate',  $submission->careerOpportunity->start_date ? \Carbon\Carbon::parse( $submission->careerOpportunity->start_date)->format('Y/m/d') : '') }}',
-                      endDate: '{{ old('endDate',  $submission->careerOpportunity->end_date ? \Carbon\Carbon::parse( $submission->careerOpportunity->end_date)->format('Y/m/d') : '') }}',
+                      startDate: '{{ old('startDate',  $submission->careerOpportunity->start_date ? \Carbon\Carbon::parse( $submission->careerOpportunity->start_date)->format('m/d/Y') : '') }}',
+                      endDate: '{{ old('endDate',  $submission->careerOpportunity->end_date ? \Carbon\Carbon::parse( $submission->careerOpportunity->end_date)->format('m/d/Y') : '') }}',
                       approvingManager: '{{ old('approvingManager', $submission->careerOpportunity->hiring_manager ?? '') }}',
                       markup: '{{ old('markup', $submission->markup ?? '0') }}',
                       submissionid: '{{ old("submissionid", $submission->id ?? "0") }}',
@@ -887,7 +887,7 @@
 
           initDatePickers() {
             const startPicker = flatpickr("#startDate", {
-              dateFormat: "Y/m/d",
+              dateFormat: "m/d/Y",
               onChange: (selectedDates, dateStr) => {
                 this.formData.startDate = dateStr;
                 this.formData.startDateError = "";
@@ -904,7 +904,7 @@
             });
 
             const endPicker = flatpickr("#endDate", {
-              dateFormat: "Y/m/d",
+              dateFormat: "m/d/Y",
               onChange: (selectedDates, dateStr) => {
                 this.formData.endDate = dateStr;
                 this.formData.endDateError = "";

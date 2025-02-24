@@ -112,9 +112,9 @@ class CareerOpportunitiesOfferController extends BaseController
         $formBuilderData = FormBuilder::where('type', 3)
         ->where('status', 'active')
         ->first();
-        
+
         $submission =  CareerOpportunitySubmission::findOrFail($id);
-        
+
         return view('admin.offer.create',[
             'submission'=>$submission,
             'formBuilderData' => $formBuilderData,
@@ -297,14 +297,14 @@ class CareerOpportunitiesOfferController extends BaseController
         $workflows = OfferWorkFlow::where('offer_id', $id)->get();
         $offer = CareerOpportunitiesOffer::findOrFail($id);
 
-        
-        $formBuilder = FormBuilder::where('type', 3)->first(); 
+
+        $formBuilder = FormBuilder::where('type', 3)->first();
 
         $formFields = [];
         if ($formBuilder) {
-            $formFields = json_decode($formBuilder->data, true); 
+            $formFields = json_decode($formBuilder->data, true);
         }
-        
+
         return view('admin.offer.view', compact('offer', 'workflows', 'rejectionreason', 'logs', 'wo_type', 'wo_statusName', 'formFields'));
     }
 
