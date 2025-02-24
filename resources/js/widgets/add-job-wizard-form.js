@@ -5,13 +5,13 @@ import {
 } from "./validationMessages.js";
 
 
-export default function wizardForm(careerOpportunity = null,businessUnitsData = null, type) {
+export default function wizardForm(careerOpportunity = null,businessUnitsData = null,) {
   return {
     currentStep: 1,
     showErrors: false,
     showSuccessMessage: false,
     formSubmitted: false,
-    type: type || 10,
+    
     // Validation Error Messages start from here
     errorMessages,
     getErrorMessageById(id) {
@@ -107,7 +107,7 @@ export default function wizardForm(careerOpportunity = null,businessUnitsData = 
       if (window.$) {
         $('#jobLaborCategory').on('change', () => {
           var labour_type = $('#jobLaborCategory').val();
-          var type = this.type || 10;
+          var type = 10;
           let url = `/load-market-job-template/${labour_type}/${type}`;
 
           ajaxCall(url, 'GET', [[updateStatesDropdown, ['response', 'jobTitle']]]);
