@@ -16,8 +16,8 @@ class RatesController extends BaseController
         // Sanitize input
         $billRate = removeComma($request->input('bill_rate'));
         $otherAmountSum = removeComma($request->input('other_amount_sum'));
-        $startDay = Carbon::parse($request->input('start_date'))->format('Y-m-d');
-        $endDay = Carbon::parse($request->input('end_date'))->format('Y-m-d');
+        $startDay = Carbon::createFromFormat('m/d/Y', $request->input('start_date'))->format('Y-m-d');
+        $endDay = Carbon::createFromFormat('m/d/Y', $request->input('end_date'))->format('Y-m-d');
         $hoursPerDay = $request->input('hours_per_day');
         $daysPerWeek = $request->input('days_per_week');
         $opening = $request->input('opening');

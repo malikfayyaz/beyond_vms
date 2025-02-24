@@ -5,12 +5,13 @@ import {
 } from "./validationMessages.js";
 
 
-export default function wizardForm(careerOpportunity = null,businessUnitsData = null) {
+export default function wizardForm(careerOpportunity = null,businessUnitsData = null, type) {
   return {
     currentStep: 1,
     showErrors: false,
     showSuccessMessage: false,
     formSubmitted: false,
+    type: type || 10,
     // Validation Error Messages start from here
     errorMessages,
     getErrorMessageById(id) {
@@ -106,7 +107,7 @@ export default function wizardForm(careerOpportunity = null,businessUnitsData = 
       if (window.$) {
         $('#jobLaborCategory').on('change', () => {
           var labour_type = $('#jobLaborCategory').val();
-          var type = 10;
+          var type = this.type || 10;
           let url = `/load-market-job-template/${labour_type}/${type}`;
 
           ajaxCall(url, 'GET', [[updateStatesDropdown, ['response', 'jobTitle']]]);
@@ -607,21 +608,25 @@ export default function wizardForm(careerOpportunity = null,businessUnitsData = 
       },
 
       initFlatpickr() {
-          flatpickr("#startDate", {
-              dateFormat: "m/d/Y",
-              defaultDate: this.parseDate(this.formData.startDate), // Use parseDate function
-              onChange: (selectedDates, dateStr) => {
-                  this.formData.startDate = dateStr;
-                  this.endDatePicker.set("minDate", dateStr);
-              },
-          });
-
-          this.endDatePicker = flatpickr("#endDate", {
-              dateFormat: "m/d/Y",
-              onChange: (selectedDates, dateStr) => {
-                  this.formData.endDate = dateStr;
-              },
-          });
+        this.startDatePicker = flatpickr("#startDate", {
+            dateFormat: "m/d/Y",
+            defaultDate: this.formatDate(this.formData.startDate),
+            onChange: (selectedDates, dateStr) => {
+                this.formData.startDate = dateStr;
+                if (this.endDatePicker) {
+                    this.endDatePicker.set("minDate", dateStr);
+                }
+            },
+        });
+    
+        this.endDatePicker = flatpickr("#endDate", {
+            dateFormat: "m/d/Y",
+            defaultDate: this.formatDate(this.formData.endDate),
+            minDate: this.formatDate(this.formData.startDate),
+            onChange: (selectedDates, dateStr) => {
+                this.formData.endDate = dateStr;
+            },
+        });
       },
 
     nextStep() {

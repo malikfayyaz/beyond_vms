@@ -20,7 +20,7 @@
                         <h2 class="text-lg font-semibold">Additional Budget Request (<span  >{{$budgetRequest->id}}</span>)</h2>
                           <button
                             @click="isOpen = false"
-                            class="text-gray-500 hover:text-gray-700"
+                            class="bg-white rounded-sm text-gray-500 hover:text-gray-700"
                           >
                             <i class="fas fa-times"></i>
                           </button>
@@ -232,7 +232,7 @@
                         >
                             <!-- Header -->
                             <div class="flex items-center justify-between border-b p-4">
-                                <h2 class="text-xl font-semibold"><!--Reject--> Accept Candidate</h2>
+                                <h2 class="text-xl font-semibold"><!--Reject-->Additional Budget Request</h2>
                                 <button
                                     @click="openModal = false"
                                     class="text-gray-400 hover:text-gray-600 bg-transparent hover:bg-transparent"

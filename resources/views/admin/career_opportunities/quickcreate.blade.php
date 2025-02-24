@@ -8,6 +8,11 @@
         @php         $user = Auth::user();
         $sessionrole = session('selected_role');
         @endphp
+        <style>
+            .disabled\:bg-disable:disabled{
+                background-color: rgb(229 231 235 / var(--tw-bg-opacity)) !important;
+            }
+        </style>
         <script>
             var sessionrole = "{{ $sessionrole }}";
         </script>
@@ -39,7 +44,7 @@
                                 if ($careerOpportunity !="") {
                                     $jobTemplates = \App\Models\JobTemplates::where([
                                         ['cat_id', $careerOpportunity->cat_id],
-                                        ['profile_worker_type_id', 10],
+                                        ['profile_worker_type_id', 11],
                                         ['status', 'Active']
                                     ])->get(['id', 'job_title']);
                                 }
@@ -272,11 +277,12 @@
                         <div class="mt-4">
                             <div class="mt-4 block">
                                 <label class="block mb-2">Additional Requirements
-                                    <span class="text-red-500">*</span></label>
+                                    <!-- <span class="text-red-500">*</span> -->
+                                </label>
                                 <div id="additionalRequirementEditor" style="height: 300px"></div>
-                                <p x-show="showErrors && !isFieldValid('additionalRequirementEditor')"
+                                <!-- <p x-show="showErrors && !isFieldValid('additionalRequirementEditor')"
                                     class="text-red-500 text-sm mt-1" x-text="getErrorMessageById('additionalRequirementEditor')">
-                                </p>
+                                </p> -->
                             </div>
 
                             <div class="mt-4 block">
@@ -394,14 +400,14 @@
                             <div class="flex-1"></div>
                             <div class="flex-1"></div>
                         </div>
-                        <div x-show="formData.preIdentifiedCandidate === 'Yes'" class="mt-4">
+                        <div class="mt-4">
                             <div class="flex space-x-4 mb-4">
                                 <div class="flex-1">
                                     <label class="block mb-2">Candidate First Name
                                         <span class="text-red-500">*</span></label>
                                     <input type="text" name="pre_name" x-model="formData.candidateFirstName"
-                                        class="w-full h-12 px-4 text-gray-500 border border-gray-300 rounded-md shadow-sm focus:outline-none"
-                                        placeholder="Enter first name" id="candidateFirstName" />
+                                        class="w-full h-12 px-4 text-gray-500 border border-gray-300 rounded-md shadow-sm focus:outline-none disabled:bg-disable"
+                                        placeholder="Enter first name" id="candidateFirstName"  :disabled="formData.preIdentifiedCandidate !== 'Yes'"/>
                                     <p x-show="showErrors && !isFieldValid('candidateFirstName')"
                                         class="text-red-500 text-sm mt-1" x-text="getErrorMessageById('candidateFirstName')">
                                     </p>
@@ -409,15 +415,15 @@
                                 <div class="flex-1">
                                     <label class="block mb-2">Candidate Middle Name</label>
                                     <input name="pre_middle_name" type="text" x-model="formData.candidateMiddleName"
-                                        class="w-full h-12 px-4 text-gray-500 border border-gray-300 rounded-md shadow-sm focus:outline-none"
-                                        placeholder="Enter middle name" />
+                                        class="w-full h-12 px-4 text-gray-500 border border-gray-300 rounded-md shadow-sm focus:outline-none disabled:bg-disable"
+                                        placeholder="Enter middle name" :disabled="formData.preIdentifiedCandidate !== 'Yes'" />
                                 </div>
                                 <div class="flex-1">
                                     <label class="block mb-2">Candidate Last Name
                                         <span class="text-red-500">*</span></label>
                                     <input name="pre_last_name" type="text" x-model="formData.candidateLastName"
-                                        class="w-full h-12 px-4 text-gray-500 border border-gray-300 rounded-md shadow-sm focus:outline-none"
-                                        placeholder="Enter last name" id="candidateLastName" />
+                                        class="w-full h-12 px-4 text-gray-500 border border-gray-300 rounded-md shadow-sm focus:outline-none disabled:bg-disable"
+                                        placeholder="Enter last name" id="candidateLastName" :disabled="formData.preIdentifiedCandidate !== 'Yes'"/>
                                     <p x-show="showErrors && !isFieldValid('candidateLastName')"
                                         class="text-red-500 text-sm mt-1" x-text="getErrorMessageById('candidateLastName')"></p>
                                 </div>
@@ -428,8 +434,8 @@
                                         <span class="text-red-500">*</span></label>
                                     <input name="candidate_phone" type="tel" x-model="formData.candidatePhone"
                                         x-on:input="formatPhoneNumber($event.target)"
-                                        class="w-full h-12 px-4 text-gray-500 border border-gray-300 rounded-md shadow-sm focus:outline-none"
-                                        placeholder="(XXXX) XXX-XXXX" id="candidatePhone" />
+                                        class="w-full h-12 px-4 text-gray-500 border border-gray-300 rounded-md shadow-sm focus:outline-none disabled:bg-disable"
+                                        placeholder="(XXXX) XXX-XXXX" id="candidatePhone" :disabled="formData.preIdentifiedCandidate !== 'Yes'"/>
                                     <p x-show="showErrors && !isFieldValid('candidatePhone')" class="text-red-500 text-sm mt-1"
                                         x-text="getErrorMessageById('candidatePhone')"></p>
                                 </div>
@@ -437,8 +443,8 @@
                                     <label class="block mb-2">Candidate Email
                                         <span class="text-red-500">*</span></label>
                                     <input name="candidate_email" type="email" x-model="formData.candidateEmail"
-                                        class="w-full h-12 px-4 text-gray-500 border border-gray-300 rounded-md shadow-sm focus:outline-none"
-                                        placeholder="Enter email" id="candidateEmail" />
+                                        class="w-full h-12 px-4 text-gray-500 border border-gray-300 rounded-md shadow-sm focus:outline-none disabled:bg-disable"
+                                        placeholder="Enter email" id="candidateEmail" :disabled="formData.preIdentifiedCandidate !== 'Yes'"/>
                                     <p x-show="showErrors && !isFieldValid('candidateEmail')" class="text-red-500 text-sm mt-1"
                                         x-text="getErrorMessageById('candidateEmail')"></p>
                                 </div>
@@ -511,7 +517,7 @@
                 isFieldValid(fieldId) {
                     const fieldValue = this.formData[fieldId];
                     
-                    if (['candidateMiddleName', 'jobTitleEmailSignature'].includes(fieldId)) {
+                    if (['candidateMiddleName', 'jobTitleEmailSignature', 'additionalRequirementEditor'].includes(fieldId)) {
                         return true; 
                     }
                     if (fieldId === 'candidateFirstName' || fieldId === 'candidateLastName' || fieldId === 'candidatePhone' || fieldId === 'candidateEmail') {
@@ -522,10 +528,6 @@
                     if (fieldId === 'acknowledgement') {
                         // For checkboxes, check if the value is true (checked)
                         return fieldValue === true; 
-                    } else if (fieldId === 'additionalRequirementEditor') {
-                        // Validate additionalRequirementEditor content
-                        const editorContent = this.formData.additionalRequirementEditor.trim();
-                        return editorContent !== "" && editorContent !== "<p><br></p>";
                     } else if (fieldId === 'buJustification') {
                         // Validate buJustification content
                         const editorContent = this.formData.buJustification.trim();
@@ -649,7 +651,7 @@
                     if (window.$) {
                         $('#jobLaborCategory').on('change', () => {
                             var labour_type = $('#jobLaborCategory').val();
-                            var type = 10;
+                            var type = 11;
                             let url = `/load-market-job-template/${labour_type}/${type}`;
 
                             ajaxCall(url, 'GET', [[updateStatesDropdown, ['response', 'jobTitle']]]);
@@ -801,7 +803,7 @@
 
                 submitForm() {
                     this.showErrors = true;
-                    
+                    console.log('Form Data:', this.formData.bill_rate);
                     for (const field in this.formData) {
                         if (!this.isFieldValid(field)) {
                             console.log(`Validation failed for ${field}`);

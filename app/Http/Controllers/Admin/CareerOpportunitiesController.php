@@ -400,7 +400,6 @@ class CareerOpportunitiesController extends BaseController
 
             $validatednewData = $request->validate($dynamicRules);
             $validatedData = $this->validateJobOpportunity($request);
-//            dd($request->all());
             $job = CareerOpportunity::findOrFail($id);
             $jobTemplate = JobTemplates::findOrFail($validatedData['jobTitle']);
             $filename = handleFileUpload($request, 'attachment', 'career_opportunities', $job->attachment);
@@ -408,6 +407,7 @@ class CareerOpportunitiesController extends BaseController
                 $filename = $job->attachment;
             }
             $mappedData = $this->mapJobData($validatedData, $jobTemplate, $request, $filename,$job );
+           
             $job->update($mappedData);
             $job->job_details = $validatednewData; // Save the validated data as JSON
             $job->save();
@@ -544,7 +544,7 @@ class CareerOpportunitiesController extends BaseController
             'user_id' => isset($job) ? $job->user_id  : Admin::getAdminIdByUserId(Auth::id()),
             'user_type' => isset($job) ? $job->user_type  : 1,
             'interview_process' => 'Yes',
-            'job_type' => 10,
+            'job_type' => $job?->workerType->id ?? 10,
             'jobstep2_complete' => 1,
             'jobStatus' => isset($job) ? $job->jobStatus : 1,
             'max_bill_rate' => $validatedData['maxBillRate'],
@@ -1239,7 +1239,7 @@ class CareerOpportunitiesController extends BaseController
             'workerType' => 'required',
             'startDate' => 'required|date',
             'endDate' => 'required|date',
-            'additionalRequirementEditor' => 'required',
+            'additionalRequirementEditor' => 'nullable',
             'buJustification' => 'required',
             'corporate_legal' => 'required',
             'expectedCost' => 'required_if:corporate_legal,Yes|nullable|numeric',
@@ -1279,7 +1279,7 @@ class CareerOpportunitiesController extends BaseController
         $careerOpportunity->start_date = $validatedData['startDate'];
         $careerOpportunity->end_date = $validatedData['endDate'];
         $careerOpportunity->internal_notes = $validatedData['additionalRequirementEditor'];
-        // $careerOpportunity->business_justification = $validatedData['buJustification'];
+        $careerOpportunity->description = $validatedData['buJustification'];
         // $careerOpportunity->corporate_legal = $validatedData['corporate_legal'];
         // $careerOpportunity->expected_cost = $validatedData['expectedCost'];
         // $careerOpportunity->acknowledgement = $validatedData['acknowledgement'];
@@ -1305,16 +1305,16 @@ class CareerOpportunitiesController extends BaseController
             $careerOpportunity->pre_current_rate = 10.00;
         }
 
+        $careerOpportunity->jobStatus = 3;
         $careerOpportunity->gl_code_id = 15;
         $careerOpportunity->hire_reason_id = 37;
-        $careerOpportunity->jobStatus = 1;
         $careerOpportunity->payment_type = $validatedData['payment_type'];
-        $careerOpportunity->job_type = 10;
+        $careerOpportunity->job_type = 11;
         $careerOpportunity->labour_type = 30;
         $careerOpportunity->min_bill_rate = $validatedData['billRate'];
         $careerOpportunity->max_bill_rate = $validatedData['maxBillRate'];
         $careerOpportunity->type_of_job = $validatedData['timeType'];
-    //    dd($careerOpportunity);
+        //    dd($careerOpportunity);
         $careerOpportunity->save();
 
         $businessUnits = [
@@ -1328,8 +1328,6 @@ class CareerOpportunitiesController extends BaseController
 
 
         Rateshelper::calculateJobEstimates($careerOpportunity);
-        $jobWorkflow = new JobWorkflowUpdate();
-        $jobWorkflow->createJobWorkflow($careerOpportunity);
 
         session()->flash('success', 'Job saved successfully!');
         return response()->json([
