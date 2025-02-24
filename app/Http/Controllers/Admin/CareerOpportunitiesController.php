@@ -140,12 +140,16 @@ class CareerOpportunitiesController extends BaseController
                        class="text-blue-500 hover:text-blue-700 mr-2 bg-transparent hover:bg-transparent"
                      >
                        <i class="fas fa-eye"></i>
-                     </a>
-                     <a href="' . route('admin.career-opportunities.edit', $row->id) . '"
-                       class="text-green-500 hover:text-green-700 mr-2 bg-transparent hover:bg-transparent"
-                     >
-                       <i class="fas fa-edit"></i>
                      </a>';
+                     $editRoute = ($row->jobStatus == 3) 
+                        ? route('admin.quedit', $row->id)
+                        : route('admin.career-opportunities.edit', $row->id);
+
+                    $btn .= '<a href="' . $editRoute . '"
+                    class="text-green-500 hover:text-green-700 mr-2 bg-transparent hover:bg-transparent"
+                    >
+                    <i class="fas fa-edit"></i>
+                    </a>';
                     $deleteBtn = '<form action="' . route('admin.career-opportunities.destroy', $row->id) . '" method="POST" style="display: inline-block;" onsubmit="return confirm(\'Are you sure?\');">
                      ' . csrf_field() . method_field('DELETE') . '
                      <button type="submit" class="text-red-500 hover:text-red-700 bg-transparent hover:bg-transparent">
@@ -278,6 +282,7 @@ class CareerOpportunitiesController extends BaseController
             'glCode',
             'activities.createdBy',
             'category')->findOrFail($id);
+            
         $jobWorkFlow = JobWorkFlow::where('job_id', $id)->orderby('approval_number', 'ASC')->get();
         $rejectReasons =  Setting::where('category_id', 9)->get();
         $vendors = Vendor::all();
@@ -328,7 +333,7 @@ class CareerOpportunitiesController extends BaseController
             'sessionrole' => $sessionrole,
             'formBuilderData' => $formBuilderData,
             'oldFormData' => $oldFormData,
-        ] );
+        ]);
     }
 
     /**
@@ -1334,6 +1339,17 @@ class CareerOpportunitiesController extends BaseController
             'success' => true,
             'message' => 'Job saved successfully!',
             'redirect_url' => route('admin.career-opportunities.index') // Redirect back URL for AJAX
+        ]);
+    }
+
+    public function quickedit(string $id){ 
+        $user = Admin::getAdminIdByUserId(Auth::id());
+        $sessionrole = session('selected_role');
+        $careerOpportunity = CareerOpportunity::with('careerOpportunitiesBu')->findOrFail($id);
+        
+        return view('admin.career_opportunities.quickcreate', [
+            'careerOpportunity' => $careerOpportunity,
+            'sessionrole' => $sessionrole,
         ]);
     }
 

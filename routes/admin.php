@@ -191,5 +191,8 @@ Route::middleware(['user_role:admin'])->group(function () {
 
         Route::get('job/quick_create', [CareerOpportunitiesController::class, 'quickcreate'])->name('job.quickcreate');
         Route::post('quickjob-store', [CareerOpportunitiesController::class, 'quickJobStore'])->name('quickjob.store');
+        Route::get('quickjob-edit/{id}', [CareerOpportunitiesController::class, 'quickedit'])->name('quedit');
+
+        
     });
 });
