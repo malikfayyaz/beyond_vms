@@ -5,7 +5,7 @@ import {
 } from "./validationMessages.js";
 
 
-export default function wizardForm(careerOpportunity = null,businessUnitsData = null,) {
+export default function wizardForm(careerOpportunity = null,businessUnitsData = null) {
   return {
     currentStep: 1,
     showErrors: false,
