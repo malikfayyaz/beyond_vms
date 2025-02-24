@@ -1,4 +1,4 @@
-<?php 
+<?php
 namespace App\Http\Controllers\Admin;
 
 use Illuminate\Routing\Controller as BaseController;
@@ -11,13 +11,24 @@ class RatesController extends BaseController
     {
         $data = [];
 
-        
+
 
         // Sanitize input
         $billRate = removeComma($request->input('bill_rate'));
         $otherAmountSum = removeComma($request->input('other_amount_sum'));
-        $startDay = Carbon::createFromFormat('m/d/Y', $request->input('start_date'))->format('Y-m-d');
-        $endDay = Carbon::createFromFormat('m/d/Y', $request->input('end_date'))->format('Y-m-d');
+        if($request->input('start_date')){
+            $startDay = Carbon::createFromFormat('m/d/Y', $request->input('start_date'))->format('Y-m-d');
+        }
+        else
+        {
+            $startDay = '';
+        }
+        if($request->input('end_date')){
+            $endDay = Carbon::createFromFormat('m/d/Y', $request->input('end_date'))->format('Y-m-d');
+        }
+        else{
+            $endDay = '';
+        }
         $hoursPerDay = $request->input('hours_per_day');
         $daysPerWeek = $request->input('days_per_week');
         $opening = $request->input('opening');
@@ -47,5 +58,5 @@ class RatesController extends BaseController
         return response()->json($data);
     }
 
-    
+
 }

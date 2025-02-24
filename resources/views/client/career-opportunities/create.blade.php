@@ -568,8 +568,7 @@
                         </select>
                     </div>
                     <div class="flex-1" x-show="formData.subLedgerType">
-                        <label class="block mb-2">Sub Ledger Code  <span class="text-red-500 ledger_code__"
-                                >*</span></label>
+                        <label class="block mb-2">Sub Ledger Code <span class="text-red-500">*</span></label>
                         <input name="ledger_code" type="text" id="ledger_code" x-model="formData.subLedgerCode"
                             class="w-full  h-12 px-4 text-gray-500 border border-gray-300 rounded-md shadow-sm focus:outline-none" />
                             <p x-show="showErrors && !isFieldValid('subLedgerCode')" class="text-red-500 text-sm mt-1"
@@ -729,7 +728,7 @@
                             Budget Details ( Maximum budget is used)
                         </h3>
                         <p class="text-base">
-                            Other Details: Duration 08/16/2024 - 08/20/2024
+                        <p x-show="formData.startDate && formData.endDate">Duration: <span x-text="formData.startDate"></span> - <span x-text="formData.endDate"></span></p>
                         </p>
                     </div>
                     <!-- Step 4: Third row form fields -->
