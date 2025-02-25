@@ -1356,7 +1356,117 @@ class CareerOpportunitiesController extends BaseController
     }
 
     public function quickupdate(Request $request, $id){
-        dd($id);
+        // Find the job or fail
+        $careerOpportunity = CareerOpportunity::findOrFail($id);
+
+        // Validate only the fields you need to update
+        $validatedData = $request->validate([
+            'jobLaborCategory' => 'required',
+            'jobTitle' => 'required',
+            'hiringManager' => 'required',
+            'jobLevel' => 'required',
+            'workLocation' => 'required',
+            'virtualRemote' => 'required',
+            'businessUnit' => 'required',
+            'division' => 'required',
+            'regionZone' => 'required',
+            'branch' => 'required',
+            'workerType' => 'required',
+            'startDate' => 'required|date',
+            'endDate' => 'required|date',
+            'additionalRequirementEditor' => 'nullable',
+            'buJustification' => 'required',
+            'corporate_legal' => 'required',
+            'expectedCost' => 'required_if:corporate_legal,Yes|nullable|numeric',
+            'acknowledgement' => 'required|in:true,false',
+            'estimatedHoursPerDay' => 'required|numeric',
+            'workDaysPerWeek' => 'required|numeric',
+            'numberOfPositions' => 'required|numeric',
+            'preIdentifiedCandidate' => 'required',
+            'billRate' => 'required',
+            'maxBillRate' => 'required',
+            'candidateFirstName' => 'required_if:preIdentifiedCandidate,Yes|nullable|string',
+            'candidateLastName' => 'required_if:preIdentifiedCandidate,Yes|nullable|string',
+            'candidatePhone' => 'required_if:preIdentifiedCandidate,Yes|nullable|string',
+            'candidateEmail' => 'required_if:preIdentifiedCandidate,Yes|nullable|email',
+            'payment_type' => 'required',
+            'jobTitleEmailSignature' => 'nullable',
+            'candidateMiddleName' => 'nullable',
+            'job_code' => 'nullable|numeric',
+            'timeType' => 'required',
+            'currency' => 'required',
+        ]);
+
+        $jobTemplate = JobTemplates::findOrFail($validatedData['jobTitle']);
+        // $job = CareerOpportunity::find($id);
+        
+        $updateData = [
+            'cat_id' => $validatedData['jobLaborCategory'],
+            'template_id' => $validatedData['jobTitle'],
+            'hiring_manager' => $validatedData['hiringManager'],
+            'job_level' => $validatedData['jobLevel'],
+            'job_code' => $validatedData['job_code'],
+            'location_id' => $validatedData['workLocation'],
+            'remote_option' => $validatedData['virtualRemote'],
+            'division_id' => $validatedData['division'],
+            'region_zone_id' => $validatedData['regionZone'],
+            'branch_id' => $validatedData['branch'],
+            'worker_type_id' => $validatedData['workerType'],
+            'start_date' => $validatedData['startDate'],
+            'end_date' => $validatedData['endDate'],
+            'internal_notes' => $validatedData['additionalRequirementEditor'],
+            'description' => $validatedData['buJustification'],
+            'hours_per_day' => $validatedData['estimatedHoursPerDay'],
+            'day_per_week' => $validatedData['workDaysPerWeek'],
+            'num_openings' => $validatedData['numberOfPositions'],
+            'pre_candidate' => $validatedData['preIdentifiedCandidate'],
+            'pre_name' => $validatedData['candidateFirstName'],
+            'pre_middle_name' => $validatedData['candidateMiddleName'],
+            'pre_last_name' => $validatedData['candidateLastName'],
+            'candidate_phone' => $validatedData['candidatePhone'],
+            'candidate_email' => $validatedData['candidateEmail'],
+            'alternative_job_title' => $validatedData['jobTitleEmailSignature'],
+            'title' => $jobTemplate->job_title,
+            'user_id' => isset($careerOpportunity) ? $careerOpportunity->user_id : Admin::getAdminIdByUserId(Auth::id()),
+            'user_type' => isset($careerOpportunity) ? $careerOpportunity->user_type : 1,
+            'user_subclient_id' => isset($careerOpportunity) ? $careerOpportunity->user_subclient_id : Admin::getAdminIdByUserId(Auth::id()),
+            'currency_id' => $validatedData['currency'],
+            'jobStatus' => isset($careerOpportunity) ? $careerOpportunity->jobStatus : 3,
+            'gl_code_id' => isset($careerOpportunity) ? $careerOpportunity->gl_code_id : 15,
+            'hire_reason_id' => isset($careerOpportunity) ? $careerOpportunity->hire_reason_id : 37,
+            'payment_type' => $validatedData['payment_type'],
+            'job_type' => isset($careerOpportunity) ? $careerOpportunity->job_type : 11,
+            'labour_type' => isset($careerOpportunity) ? $careerOpportunity->labour_type : 30,
+            'min_bill_rate' => $validatedData['billRate'],
+            'max_bill_rate' => $validatedData['maxBillRate'],
+            'type_of_job' => $validatedData['timeType'],
+        ];
+    
+        // Conditionally add `pre_current_rate`
+        if ($validatedData['preIdentifiedCandidate'] == 'Yes') {
+            $updateData['pre_current_rate'] = 10.00; // Replace with actual rate if dynamic
+        }
+
+        $careerOpportunity->update($updateData);
+
+        $businessUnits = [
+            [
+                'id' => $validatedData['businessUnit'],
+                'percentage' => 100,
+            ]
+        ];
+
+        $this->syncBusinessUnits($businessUnits, $careerOpportunity->id);
+        
+        Rateshelper::calculateJobEstimates($careerOpportunity);
+
+        session()->flash('success', 'Job updated successfully!');
+        
+        return response()->json([
+            'success' => true,
+            'message' => 'Job updated successfully!',
+            'redirect_url' => route('admin.career-opportunities.index') // Redirect back URL for AJAX
+        ]);
     }
 
 }

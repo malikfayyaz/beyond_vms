@@ -334,7 +334,7 @@
                             <div class="flex-1">
                                 <div class="flex items-center">
                                     <input type="checkbox" id="acknowledgement" x-model="formData.acknowledgement" 
-                                        class="w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500" />
+                                        class="w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500" x-on:change="calculateRate()" />
                                     <label for="acknowledgement" class="ml-3 text-gray-700">
                                         I understand that any employee who misrepresents any of the information above in efforts to bypass the formal contracting and vetting process will be subject to discipline, up to and including termination of employment.
                                         <span class="text-red-500">*</span>
@@ -845,9 +845,8 @@
                     //     console.log(`${key}: ${value}`);
                     // }
                     
-                    const methodtype = '{{ isset($editIndex) ? 'PUT' : 'POST' }}';
+                    const methodtype = 'POST';
                     const url = '{{ isset($editIndex) ? "/admin/quickjob-update/" . $editIndex : "/admin/quickjob-store" }}';
-                    // console.log('URL:', url);
                     ajaxCall(url,methodtype, [[onSuccess, ['response']]], formData);
                     
                 },
