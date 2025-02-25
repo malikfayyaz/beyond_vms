@@ -4,7 +4,7 @@
 @include('client.layouts.partials.dashboard_side_bar')
 <div class="ml-16">
     @include('client.layouts.partials.header')
-    
+
     <div class="bg-white mx-4 my-8 rounded p-8">
     @include('client.layouts.partials.alerts')
           <!-- Cards -->
@@ -13,7 +13,7 @@
               <div class="w-full space-y-4">
                 <!-- First Tab-->
                 <div
-                
+
                   x-data="{
                           id: 1,
                           get expanded() {
@@ -23,7 +23,7 @@
                               this.active = value ? this.id : null
                           },
                       }"
-                    
+
                   role="region"
                   class="bg-white"
                 >
@@ -451,11 +451,6 @@
                               class="w-full h-12 px-4 text-gray-500 border rounded-md shadow-sm focus:outline-none pl-7"
                               type="text"
                               placeholder="Select start date"
-                              @focus="flatpickr($refs.startDate, {
-                                dateFormat: 'Y/m/d', // Format as YYYY/MM/DD
-                                defaultDate: formData.startDate, // Pre-fill with existing date
-                                onChange: (selectedDates, dateStr) => formData.startDate = dateStr
-                            })"
                             />
                             <p
                               class="text-red-500 text-sm mt-1"
@@ -474,11 +469,6 @@
                               class="w-full h-12 px-4 text-gray-500 border rounded-md shadow-sm focus:outline-none pl-7"
                               type="text"
                               placeholder="Select end date"
-                              @focus="flatpickr($refs.endDate, {
-                                dateFormat: 'Y/m/d', // Format as YYYY/MM/DD
-                                defaultDate: formData.endDate, // Pre-fill with existing date
-                                onChange: (selectedDates, dateStr) => formData.endDate = dateStr
-                            })"
                             />
                             <p
                               class="text-red-500 text-sm mt-1"
@@ -501,7 +491,7 @@
                                 Select timesheet approving manager
                               </option>
                               @foreach ($clients_hiring as $key => $value)
-                            <option value="{{ $value->id }}" 
+                            <option value="{{ $value->id }}"
                             {{ $value->id == $submission->careerOpportunity->hiring_manager ? 'selected' : '' }}>{{  $value->first_name.' '.$value->last_name; }}</option>
                             @endforeach
                             </select>
@@ -545,7 +535,7 @@
                               <option value="">Select work type remote?</option>
                               <option value="Yes">Yes</option>
                               <option value="No">No</option>
-                             
+
                             </select>
                             <p
                               class="text-red-500 text-sm mt-1"
@@ -654,7 +644,7 @@
                                 type="text"
                                 class="w-full h-12 px-4 text-gray-500 border rounded-md shadow-sm focus:outline-none pl-7"
                                 placeholder="00.00"
-                             
+
                                 x-model="formData.overTime"
                                 disabled
                                 id="overTime"
@@ -742,7 +732,7 @@
                           <div class="flex space-x-4 mt-4">
                             <div class="flex-1">
                               <div class="render-wrap"></div>
-                            </div>  
+                            </div>
                           </div>
                         </div>
                       @endif
@@ -775,7 +765,7 @@
           const dateFields = document.querySelectorAll('.render-wrap input[type="date"], .render-wrap .date-picker');
           dateFields.forEach((field) => {
               flatpickr(field, {
-                  dateFormat: "m/d/Y", 
+                  dateFormat: "m/d/Y",
                   allowInput: true,
               });
           });
@@ -786,8 +776,8 @@
       document.addEventListener("alpine:init", () => {
         Alpine.data("createOffer", () => ({
           formData: {
-                      startDate: '{{ old('startDate',  $submission->careerOpportunity->start_date ? \Carbon\Carbon::parse( $submission->careerOpportunity->start_date)->format('Y/m/d') : '') }}',
-                      endDate: '{{ old('endDate',  $submission->careerOpportunity->end_date ? \Carbon\Carbon::parse( $submission->careerOpportunity->end_date)->format('Y/m/d') : '') }}',
+                      startDate: '{{ old('startDate',  $submission->careerOpportunity->start_date ? \Carbon\Carbon::parse( $submission->careerOpportunity->start_date)->format('m/d/Y') : '') }}',
+                      endDate: '{{ old('endDate',  $submission->careerOpportunity->end_date ? \Carbon\Carbon::parse( $submission->careerOpportunity->end_date)->format('m/d/Y') : '') }}',
                       approvingManager: '{{ old('approvingManager', $submission->careerOpportunity->hiring_manager ?? '') }}',
                       markup: '{{ old('markup', $submission->markup ?? '0') }}',
                       submissionid: '{{ old("submissionid", $submission->id ?? "0") }}',
@@ -807,7 +797,7 @@
                       billRateError: "",
                       payRateError: "",
           },
-             
+
               calculateRates(event){
                       var bill_rate = document.getElementById("billRate").value;
                       var payRateElement = document.getElementById("payRate");
@@ -820,10 +810,10 @@
                       }
 
                       pay_rate = parseFloat(pay_rate); // Ensure it's a number
-                    
+
 
                       // console.log(markup);
-                      
+
                       // $('#pay_rate_error_message').html('');
 
                       if (pay_rate == '') {
@@ -835,16 +825,16 @@
                       // Append form data
                       data.append('pay_rate', pay_rate);
                       data.append('bill_rate', bill_rate);
-                    
+
                       data.append('markup', this.formData.markup);
                       data.append('submission_id', this.formData.submissionid);
 
                       // Determine which field was changed
-                    
+
                       data.append('type', event);
-                  
+
                         // console.log(this.formData); return false;
-                        
+
                       // AJAX call to update fields based on pay rate or bill rate change
                       const updates = {
                           '#billRate': { type: 'value', field: 'billRate' },
@@ -873,11 +863,11 @@
                               // Clear the interval
                               clearInterval(intervalId);
                       }, 100);
-                     
-                   
+
+
               },
 
-           
+
 
           init() {
             this.initDatePickers();
@@ -886,7 +876,8 @@
 
           initDatePickers() {
             const startPicker = flatpickr("#startDate", {
-              dateFormat: "Y/m/d",
+              dateFormat: "m/d/Y",
+              defaultDate: this.formData.startDate,
               onChange: (selectedDates, dateStr) => {
                 this.formData.startDate = dateStr;
                 this.formData.startDateError = "";
@@ -903,7 +894,8 @@
             });
 
             const endPicker = flatpickr("#endDate", {
-              dateFormat: "Y/m/d",
+              dateFormat: "m/d/Y",
+              defaultDate: this.formData.endDate,
               onChange: (selectedDates, dateStr) => {
                 this.formData.endDate = dateStr;
                 this.formData.endDateError = "";
@@ -911,7 +903,7 @@
             });
           },
 
-         
+
 
           initSelect2() {
             this.$nextTick(() => {
@@ -955,8 +947,8 @@
 
           formatRate(field, event) {
             const input = event.target;
-            
-            
+
+
             const cursorPosition = input.selectionStart;
             console.log(cursorPosition);
             const lengthBefore = this.formData[field].length;
@@ -1015,10 +1007,10 @@
               ] = `Please enter a valid rate in the format 00.00`;
             } else {
               this.formData[`${field}Error`] = "";
-              
+
             }
           },
-          
+
 
           validateForm(e) {
             let isValid = true;
@@ -1094,5 +1086,5 @@
         }));
       });
     </script>
-    
+
 @endsection

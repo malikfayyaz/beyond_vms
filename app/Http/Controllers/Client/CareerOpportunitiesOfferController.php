@@ -110,9 +110,9 @@ class CareerOpportunitiesOfferController extends Controller
         $formBuilderData = FormBuilder::where('type', 3)
         ->where('status', 'active')
         ->first();
-        
+
         $submission =  CareerOpportunitySubmission::findOrFail($id);
-        
+
         return view('client.offer.create',[
             'submission'=>$submission,
             'formBuilderData'=>$formBuilderData
@@ -147,11 +147,11 @@ class CareerOpportunitiesOfferController extends Controller
         }
 
         $validatednewData = $request->validate($dynamicRules);
-        
+
          // Define your validation rules
          $rules = [
-            'startDate' => 'required|date_format:Y/m/d',
-            'endDate' => 'required|date_format:Y/m/d',
+            'startDate' => 'required|date_format:m/d/Y',
+            'endDate' => 'required|date_format:m/d/Y',
             'approvingManager' => 'required|integer',
             'markup' => 'required',
             'submissionid' => 'required|integer',
@@ -218,9 +218,9 @@ class CareerOpportunitiesOfferController extends Controller
             "remote_option" =>$validatedData['remote'],
             // "notes" =>$validatedData['notes'],
             "start_date" =>!empty($validatedData['startDate'])
-            ? Carbon::createFromFormat('Y/m/d', $validatedData['startDate'])->format('Y-m-d')  : null,
+            ? Carbon::createFromFormat('m/d/Y', $validatedData['startDate'])->format('Y-m-d')  : null,
             "end_date" =>!empty($validatedData['endDate'])
-            ? Carbon::createFromFormat('Y/m/d', $validatedData['endDate'])->format('Y-m-d')  : null,
+            ? Carbon::createFromFormat('m/d/Y', $validatedData['endDate'])->format('Y-m-d')  : null,
          ];
          $offerCreate = CareerOpportunitiesOffer::create( $mapedData );
          $offerCreate->offer_details = $validatednewData; // Save the validated data as JSON
@@ -286,11 +286,11 @@ class CareerOpportunitiesOfferController extends Controller
         $workflows = OfferWorkFlow::where('offer_id', $id)->get();
         $offer = CareerOpportunitiesOffer::findOrFail($id);
 
-        $formBuilder = FormBuilder::where('type', 3)->first(); 
+        $formBuilder = FormBuilder::where('type', 3)->first();
 
         $formFields = [];
         if ($formBuilder) {
-            $formFields = json_decode($formBuilder->data, true); 
+            $formFields = json_decode($formBuilder->data, true);
         }
 
         return view('client.offer.view', compact('offer','workflows', 'logs', 'formFields'));
