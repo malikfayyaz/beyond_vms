@@ -457,7 +457,11 @@
                 <div class="flex justify-end mt-6">
                     <button type="submit"
                         class="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600">
-                        Submit
+                        @if(isset($editIndex))
+                            Update
+                        @else
+                            Submit
+                        @endif
                     </button>
                 </div>
             </form>
@@ -475,6 +479,7 @@
                 formData: {
                     jobLaborCategory: careerOpportunity?.cat_id || "",
                     jobTitle: careerOpportunity?.template_id || "",
+                    job_code:careerOpportunity?.job_code || "",
                     hiringManager: careerOpportunity?.hiring_manager || "",
                     jobLevel: careerOpportunity?.job_level || "",
                     workLocation: careerOpportunity?.location_id || "",
@@ -487,7 +492,7 @@
                     startDate: careerOpportunity?.start_date || "",
                     endDate: careerOpportunity?.end_date || "",
                     additionalRequirementEditor: careerOpportunity?.internal_notes || "",
-                    buJustification: careerOpportunity?.business_justification || "",
+                    buJustification: careerOpportunity?.description || "",
                     corporate_legal: careerOpportunity?.corporate_legal || "",
                     expectedCost: careerOpportunity?.expected_cost || "",
                     acknowledgement: careerOpportunity?.acknowledgement || "",
@@ -500,9 +505,9 @@
                     candidateLastName: careerOpportunity?.pre_last_name || "",
                     candidatePhone: careerOpportunity?.candidate_phone || "",
                     candidateEmail: careerOpportunity?.candidate_email || "",
-                    jobTitleEmailSignature: "",
+                    jobTitleEmailSignature: careerOpportunity?.alternative_job_title || "",
                     timeType: 38,
-                    businessUnit: "",
+                    businessUnit: "{{ $buId ?? null }}",
                     billRate: 10,
                     maxBillRate: 20,
                     payment_type: 35,
@@ -808,7 +813,7 @@
 
                 submitForm() {
                     this.showErrors = true;
-                    console.log('Form Data:', this.formData.bill_rate);
+                    // console.log('Form Data:', this.formData.bill_rate);
                     for (const field in this.formData) {
                         if (!this.isFieldValid(field)) {
                             console.log(`Validation failed for ${field}`);
@@ -840,8 +845,9 @@
                     //     console.log(`${key}: ${value}`);
                     // }
                     
-                    const methodtype = 'POST';
-                    url = `/admin/quickjob-store`;
+                    const methodtype = '{{ isset($editIndex) ? 'PUT' : 'POST' }}';
+                    const url = '{{ isset($editIndex) ? "/admin/quickjob-update/" . $editIndex : "/admin/quickjob-store" }}';
+                    // console.log('URL:', url);
                     ajaxCall(url,methodtype, [[onSuccess, ['response']]], formData);
                     
                 },

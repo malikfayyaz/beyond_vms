@@ -1346,12 +1346,17 @@ class CareerOpportunitiesController extends BaseController
         $user = Admin::getAdminIdByUserId(Auth::id());
         $sessionrole = session('selected_role');
         $careerOpportunity = CareerOpportunity::with('careerOpportunitiesBu')->findOrFail($id);
-        
+        $buId = $careerOpportunity->careerOpportunitiesBu->first()->bu_unit ?? null;
         return view('admin.career_opportunities.quickcreate', [
             'careerOpportunity' => $careerOpportunity,
             'sessionrole' => $sessionrole,
-            'editIndex' => $id
+            'editIndex' => $id,
+            'buId' => $buId
         ]);
+    }
+
+    public function quickupdate(Request $request, $id){
+        dd($id);
     }
 
 }
