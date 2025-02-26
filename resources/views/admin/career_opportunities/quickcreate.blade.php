@@ -334,7 +334,7 @@
                             <div class="flex-1">
                                 <div class="flex items-center">
                                     <input type="checkbox" id="acknowledgement" x-model="formData.acknowledgement" 
-                                        class="w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500" />
+                                        class="w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500" x-on:change="calculateRate()" />
                                     <label for="acknowledgement" class="ml-3 text-gray-700">
                                         I understand that any employee who misrepresents any of the information above in efforts to bypass the formal contracting and vetting process will be subject to discipline, up to and including termination of employment.
                                         <span class="text-red-500">*</span>
@@ -457,7 +457,11 @@
                 <div class="flex justify-end mt-6">
                     <button type="submit"
                         class="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600">
-                        Submit
+                        @if(isset($editIndex))
+                            Update
+                        @else
+                            Submit
+                        @endif
                     </button>
                 </div>
             </form>
@@ -475,6 +479,7 @@
                 formData: {
                     jobLaborCategory: careerOpportunity?.cat_id || "",
                     jobTitle: careerOpportunity?.template_id || "",
+                    job_code:careerOpportunity?.job_code || "",
                     hiringManager: careerOpportunity?.hiring_manager || "",
                     jobLevel: careerOpportunity?.job_level || "",
                     workLocation: careerOpportunity?.location_id || "",
@@ -487,7 +492,7 @@
                     startDate: careerOpportunity?.start_date || "",
                     endDate: careerOpportunity?.end_date || "",
                     additionalRequirementEditor: careerOpportunity?.internal_notes || "",
-                    buJustification: careerOpportunity?.business_justification || "",
+                    buJustification: careerOpportunity?.description || "",
                     corporate_legal: careerOpportunity?.corporate_legal || "",
                     expectedCost: careerOpportunity?.expected_cost || "",
                     acknowledgement: careerOpportunity?.acknowledgement || "",
@@ -500,9 +505,9 @@
                     candidateLastName: careerOpportunity?.pre_last_name || "",
                     candidatePhone: careerOpportunity?.candidate_phone || "",
                     candidateEmail: careerOpportunity?.candidate_email || "",
-                    jobTitleEmailSignature: "",
+                    jobTitleEmailSignature: careerOpportunity?.alternative_job_title || "",
                     timeType: 38,
-                    businessUnit: "",
+                    businessUnit: "{{ $buId ?? null }}",
                     billRate: 10,
                     maxBillRate: 20,
                     payment_type: 35,
@@ -808,7 +813,7 @@
 
                 submitForm() {
                     this.showErrors = true;
-                    console.log('Form Data:', this.formData.bill_rate);
+                    // console.log('Form Data:', this.formData.bill_rate);
                     for (const field in this.formData) {
                         if (!this.isFieldValid(field)) {
                             console.log(`Validation failed for ${field}`);
@@ -841,7 +846,7 @@
                     // }
                     
                     const methodtype = 'POST';
-                    url = `/admin/quickjob-store`;
+                    const url = '{{ isset($editIndex) ? "/admin/quickjob-update/" . $editIndex : "/admin/quickjob-store" }}';
                     ajaxCall(url,methodtype, [[onSuccess, ['response']]], formData);
                     
                 },
