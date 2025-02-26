@@ -141,7 +141,7 @@ class CareerOpportunitiesController extends BaseController
                      >
                        <i class="fas fa-eye"></i>
                      </a>';
-                     $editRoute = ($row->workerType->id == 11) 
+                     $editRoute = ($row->workerType->id == 11)
                         ? route('admin.quedit', $row->id)
                         : route('admin.career-opportunities.edit', $row->id);
 
@@ -282,7 +282,7 @@ class CareerOpportunitiesController extends BaseController
             'glCode',
             'activities.createdBy',
             'category')->findOrFail($id);
-            
+
         $jobWorkFlow = JobWorkFlow::where('job_id', $id)->orderby('approval_number', 'ASC')->get();
         $rejectReasons =  Setting::where('category_id', 9)->get();
         $vendors = Vendor::all();
@@ -412,7 +412,7 @@ class CareerOpportunitiesController extends BaseController
                 $filename = $job->attachment;
             }
             $mappedData = $this->mapJobData($validatedData, $jobTemplate, $request, $filename,$job );
-           
+
             $job->update($mappedData);
             $job->job_details = $validatednewData; // Save the validated data as JSON
             $job->save();
@@ -580,8 +580,8 @@ class CareerOpportunitiesController extends BaseController
             'job_code' => $validatedData['job_code'],
             'num_openings' => $validatedData['numberOfPositions'],
             'hire_reason_id' => $validatedData['businessReason'],
-            'start_date' => Carbon::createFromFormat('m/d/Y', $validatedData['startDate'])->format('m/d/Y'),
-            'end_date' => Carbon::createFromFormat('m/d/Y', $validatedData['endDate'])->format('m/d/Y'),
+            'start_date' => Carbon::createFromFormat('m/d/Y', $validatedData['startDate'])->format('Y-m-d'),
+            'end_date' => Carbon::createFromFormat('m/d/Y', $validatedData['endDate'])->format('Y-m-d'),
             // Conditional fields
             'expense_cost' => $validatedData['estimatedExpense'] ?? null,
             'client_name' => $validatedData['clientName'] ?? null,
@@ -1342,11 +1342,11 @@ class CareerOpportunitiesController extends BaseController
         ]);
     }
 
-    public function quickedit(string $id){ 
+    public function quickedit(string $id){
         $user = Admin::getAdminIdByUserId(Auth::id());
         $sessionrole = session('selected_role');
         $careerOpportunity = CareerOpportunity::with('careerOpportunitiesBu')->findOrFail($id);
-        
+
         return view('admin.career_opportunities.quickcreate', [
             'careerOpportunity' => $careerOpportunity,
             'sessionrole' => $sessionrole,

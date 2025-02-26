@@ -478,8 +478,8 @@ class CareerOpportunitiesController extends Controller
             'expensesAllowed' => 'required',
             'travelRequired' => 'required',
             'glCode' => 'required',
-            'startDate' => 'required',
-            'endDate' => 'required',
+            'startDate' => 'required|date_format:m/d/Y',
+            'endDate' => 'required|date_format:m/d/Y',
             'workerType' => 'required',
             'clientBillable' => 'required',
             'requireOT' => 'required',
@@ -557,9 +557,9 @@ class CareerOpportunitiesController extends Controller
             'job_code' => $validatedData['job_code'],
             'num_openings' => $validatedData['numberOfPositions'],
             'hire_reason_id' => $validatedData['businessReason'],
-            'start_date' => (new \DateTime(\DateTime::createFromFormat('d/m/Y', $validatedData['startDate'])->format('m/d/Y')))->format('m/d/Y'),
-            'end_date' => (new \DateTime(\DateTime::createFromFormat('d/m/Y', $validatedData['endDate'])->format('m/d/Y')))->format('m/d/Y'),
-            // Conditional fields
+            'start_date' => (new \DateTime(\DateTime::createFromFormat('m/d/Y', $validatedData['startDate'])->format('Y-m-d')))->format('Y-m-d'),
+            'end_date' => (new \DateTime(\DateTime::createFromFormat('m/d/Y', $validatedData['endDate'])->format('Y-m-d')))->format('Y-m-d'),
+        // Conditional fields
             'expense_cost' => $validatedData['estimatedExpense'] ?? null,
             'client_name' => $validatedData['clientName'] ?? null,
             'pre_name' => $validatedData['candidateFirstName'] ?? null,
