@@ -496,7 +496,7 @@
                     endDate: careerOpportunity?.end_date || "",
                     additionalRequirementEditor: careerOpportunity?.internal_notes || "",
                     buJustification: careerOpportunity?.description || "",
-                    corporate_legal: careerOpportunity?.corporate_legal || "",
+                    corporate_legal: careerOpportunity?.expected_cost ? "Yes" : "",
                     expectedCost: careerOpportunity?.expected_cost || "",
                     acknowledgement: careerOpportunity?.acknowledgement || "",
                     estimatedHoursPerDay: careerOpportunity?.hours_per_day || "",

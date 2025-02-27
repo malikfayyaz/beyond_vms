@@ -1286,7 +1286,7 @@ class CareerOpportunitiesController extends BaseController
         $careerOpportunity->internal_notes = $validatedData['additionalRequirementEditor'];
         $careerOpportunity->description = $validatedData['buJustification'];
         // $careerOpportunity->corporate_legal = $validatedData['corporate_legal'];
-        // $careerOpportunity->expected_cost = $validatedData['expectedCost'];
+        $careerOpportunity->expected_cost = $validatedData['expectedCost'];
         // $careerOpportunity->acknowledgement = $validatedData['acknowledgement'];
         $careerOpportunity->hours_per_day = $validatedData['estimatedHoursPerDay'];
         $careerOpportunity->day_per_week = $validatedData['workDaysPerWeek'];
@@ -1398,8 +1398,7 @@ class CareerOpportunitiesController extends BaseController
         ]);
 
         $jobTemplate = JobTemplates::findOrFail($validatedData['jobTitle']);
-        // $job = CareerOpportunity::find($id);
-
+        
         $updateData = [
             'cat_id' => $validatedData['jobLaborCategory'],
             'template_id' => $validatedData['jobTitle'],
@@ -1440,6 +1439,7 @@ class CareerOpportunitiesController extends BaseController
             'min_bill_rate' => $validatedData['billRate'],
             'max_bill_rate' => $validatedData['maxBillRate'],
             'type_of_job' => $validatedData['timeType'],
+            'expected_cost' => $validatedData['expectedCost'],
         ];
 
         // Conditionally add `pre_current_rate`
