@@ -12,6 +12,9 @@
             .disabled\:bg-disable:disabled{
                 background-color: rgb(229 231 235 / var(--tw-bg-opacity)) !important;
             }
+            #job_code{
+                background-color: rgb(229 231 235 / var(--tw-bg-opacity)) !important;
+            }
         </style>
         <script>
             var sessionrole = "{{ $sessionrole }}";
