@@ -1308,6 +1308,12 @@ class CareerOpportunitiesController extends BaseController
 
         if ($validatedData['preIdentifiedCandidate'] == 'Yes') {
             $careerOpportunity->pre_current_rate = 10.00;
+        } elseif ($validatedData['preIdentifiedCandidate'] == 'No') {
+            $careerOpportunity->pre_name = null;
+            $careerOpportunity->pre_middle_name = null;
+            $careerOpportunity->pre_last_name = null;
+            $careerOpportunity->candidate_phone = null;
+            $careerOpportunity->candidate_email = null;
         }
 
         $careerOpportunity->jobStatus = 3;
@@ -1445,6 +1451,13 @@ class CareerOpportunitiesController extends BaseController
         // Conditionally add `pre_current_rate`
         if ($validatedData['preIdentifiedCandidate'] == 'Yes') {
             $updateData['pre_current_rate'] = 10.00; // Replace with actual rate if dynamic
+        } elseif ($validatedData['preIdentifiedCandidate'] == 'No') {
+            // Clear candidate-related fields
+            $updateData['pre_name'] = null;
+            $updateData['pre_middle_name'] = null;
+            $updateData['pre_last_name'] = null;
+            $updateData['candidate_phone'] = null;
+            $updateData['candidate_email'] = null;
         }
 
         $careerOpportunity->update($updateData);

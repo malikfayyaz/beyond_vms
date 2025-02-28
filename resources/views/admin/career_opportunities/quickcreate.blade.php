@@ -337,7 +337,7 @@
                             <div class="flex-1">
                                 <div class="flex items-center">
                                     <input type="checkbox" id="acknowledgement" x-model="formData.acknowledgement" 
-                                        class="w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500" x-on:change="calculateRate()" />
+                                        class="w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500" />
                                     <label for="acknowledgement" class="ml-3 text-gray-700">
                                         I understand that any employee who misrepresents any of the information above in efforts to bypass the formal contracting and vetting process will be subject to discipline, up to and including termination of employment.
                                         <span class="text-red-500">*</span>
@@ -498,7 +498,7 @@
                     buJustification: careerOpportunity?.description || "",
                     corporate_legal: careerOpportunity?.expected_cost ? "Yes" : "",
                     expectedCost: careerOpportunity?.expected_cost || "",
-                    acknowledgement: careerOpportunity?.acknowledgement || "",
+                    acknowledgement: careerOpportunity?.expected_cost ? true : false,
                     estimatedHoursPerDay: careerOpportunity?.hours_per_day || "",
                     workDaysPerWeek: careerOpportunity?.day_per_week || "",
                     numberOfPositions: careerOpportunity?.num_openings || "",
