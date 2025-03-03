@@ -254,7 +254,7 @@
                         <h3 class="text-xl font-bold p-2 mb-2 border-b">Job Duration</h3>
                         <div class="flex space-x-4 mt-4">
                             <div class="flex-1">
-                                <label for="startDate" class="block mb-2">Choose Start Date:
+                                <label for="startDate" class="block mb-2">Choose Start Date
                                     <span class="text-red-500">*</span></label>
                                 <input name="start_date" id="startDate"
                                     class="w-full h-12 px-4 text-gray-500 border border-gray-300 rounded-md shadow-sm focus:outline-none pl-7"
@@ -264,7 +264,7 @@
                                     x-text="getErrorMessageById('startDate')"></p>
                             </div>
                             <div class="flex-1">
-                                <label for="endDate" class="block mb-2">Choose End Date: <span
+                                <label for="endDate" class="block mb-2">Choose End Date <span
                                         class="text-red-500">*</span></label>
                                 <input name="end_date" id="endDate"
                                     class="w-full h-12 px-4 text-gray-500 border border-gray-300 rounded-md shadow-sm focus:outline-none pl-7"
