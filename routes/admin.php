@@ -194,6 +194,7 @@ Route::middleware(['user_role:admin'])->group(function () {
         Route::get('quickjob-edit/{id}', [CareerOpportunitiesController::class, 'quickedit'])->name('quedit');
         Route::post('quickjob-update/{id}', [CareerOpportunitiesController::class, 'quickupdate'])->name('qupdate');
 
+        Route::get('contract/quick_create', [CareerOpportunitiesContractController::class, 'quickcreate'])->name('contract.quickcreate');
         
     });
 });

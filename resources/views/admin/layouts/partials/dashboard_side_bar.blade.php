@@ -248,6 +248,12 @@
                                 {{translate('Create Job')}}
                             </a>
                         </li>
+                        <li class="{{ request()->routeIs('users') ? 'active' : '' }}">
+                            <a href="{{ route('admin.contract.quickcreate') }}"
+                                class="flex items-center w-full p-2 text-white transition duration-75 pl-11 hover:bg-gray-700">
+                                {{translate('Create Contract')}}
+                            </a>
+                        </li>
                     </ul>
 
                 </li>

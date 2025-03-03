@@ -784,5 +784,8 @@ class CareerOpportunitiesContractController extends BaseController
     }
     // ratechange 
     
+    public function quickcreate(){
+        dd("test");
+    }
 
 }
