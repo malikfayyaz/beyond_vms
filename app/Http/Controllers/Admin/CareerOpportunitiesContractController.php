@@ -785,7 +785,12 @@ class CareerOpportunitiesContractController extends BaseController
     // ratechange 
     
     public function quickcreate(){
-        dd("test");
+        
+        $pwt_jobs = CareerOpportunity::whereHas('workerType', function ($query) {
+            $query->where('id', 11);
+        })->get();
+        
+        return view('admin.contract.quickcreate',['pwt_jobs' => $pwt_jobs,]);
     }
 
 }
