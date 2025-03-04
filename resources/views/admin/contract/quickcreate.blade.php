@@ -11,6 +11,11 @@
         <script>
             var sessionrole = "{{ $sessionrole }}";
         </script>
+        <style>
+            #hireManager{
+                background-color: rgb(229 231 235 / var(--tw-bg-opacity)) !important;
+            }
+        </style>
 
         <div class="bg-white mx-4 my-8 rounded p-8" x-data='quickcreate({{ $editIndex ?? "null" }})'  x-init="mounted()">
             <form @submit.prevent="submitForm" id="quickaddjob" method="POST">
@@ -36,18 +41,11 @@
                             
                             <div class="flex-1">
                                 <label class="block mb-2">Hiring Manager <span class="text-red-500">*</span></label>
-                                @php $clients_hiring = \App\Models\Client::where('profile_status', 1)
-                                ->orderBy('first_name', 'ASC')
-                                ->get(); @endphp
-                                <select x-ref="hiringManager" name="hiring_manager" x-model="formData.hiringManager"
-                                    class="w-full select2-single custom-style" data-field="hiringManager" id="hiringManager">
-                                    <option value="">Select Hiring Manager</option>
-                                    @foreach ($clients_hiring as $key => $value)
-                                    <option value="{{ $value->id }}">{{  $value->first_name.' '.$value->last_name; }}</option>
-                                    @endforeach
-                                </select>
-                                <p x-show="showErrors && !isFieldValid('hiringManager')" class="text-red-500 text-sm mt-1"
-                                    x-text="getErrorMessageById('hiringManager')"></p>
+                                <input x-ref="hireManager" name="hiring_manager" x-model="formData.hireManager"
+                                    class="w-full h-12 px-4 text-gray-500 border border-gray-300 rounded-md shadow-sm focus:outline-none" data-field="hireManager" id="hireManager" disabled>
+                            
+                                <p x-show="showErrors && !isFieldValid('hireManager')" class="text-red-500 text-sm mt-1"
+                                    x-text="getErrorMessageById('hireManager')"></p>
                             </div>
                        
                             <div class="flex-1">
@@ -266,7 +264,8 @@
 
                 formData: {
                     jobProfile: '',
-                    hiringManager: '',
+                    hireManager: '',
+                    hireManagerId: '',
                     workLocation: '',
                     vendor: '',
                     accManager: '',
@@ -334,7 +333,7 @@
                 getErrorMessageById(fieldId) {
                     const errorMessages = {
                         jobProfile: 'Please select a job profile',
-                        hiringManager: 'Please select a hiring manager',
+                        hireManager: 'Please select a hiring manager',
                         workLocation: 'Please select a work location',
                         vendor: 'Please select a vendor',
                         subDate: 'Please select a submission date',
@@ -354,7 +353,9 @@
                 init() {
                     this.initSelect2();
                     this.initFlatpickr();
+                    this.initJobProfileChangeListener();
                 },
+
                 initSelect2() {
                     $(".select2-single").each((index, element) => {
                         const fieldName = $(element).data("field");
@@ -401,6 +402,12 @@
                     });
                 },
 
+                initJobProfileChangeListener() {
+                    $('#jobProfile').on('change', () => {
+                        this.updateHiringManager();
+                    });
+                },
+
                 mounted() {
                     console.log(window.$); // Verify jQuery is available
                     if (window.$) {
@@ -425,6 +432,28 @@
                     }
                     input.value = phoneNumber;
                 },
+
+                updateHiringManager() {
+                    const jobProfileId = $('#jobProfile').val();
+                    if (jobProfileId) {
+                        const url = `/admin/get-hiring-manager/${jobProfileId}`;
+                        
+
+                        ajaxCall(url, 'GET', [[this.updateManager.bind(this), ['response', 'hiringManager']]]);
+                    } else {
+                        this.formData.hireManager = ""; // Clear if no job profile selected
+                    }
+                },
+                updateManager(response) {
+                    if (response.success && response.hiringManager) {
+                        const manager = response.hiringManager;
+                        this.formData.hireManagerId = manager.id;
+                        this.formData.hireManager = `${manager.first_name} ${manager.middle_name ?? ''} ${manager.last_name}`.trim();
+                    } else {
+                        this.formData.hireManager = ""; // Clear if no valid response
+                    }
+                },
+
                 
                 submitForm() {
                     this.showErrors = true;
@@ -456,6 +485,7 @@
 
 
                     // const methodtype = 'POST';
+                    // const url =
                     
                     // ajaxCall(url,methodtype, [[onSuccess, ['response']]], formData);
                 },

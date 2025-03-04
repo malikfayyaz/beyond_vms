@@ -793,4 +793,19 @@ class CareerOpportunitiesContractController extends BaseController
         return view('admin.contract.quickcreate',['pwt_jobs' => $pwt_jobs,]);
     }
 
+    public function getHiringManager($id)
+    {
+        $jobProfile = CareerOpportunity::find($id);
+        
+        if ($jobProfile) {
+            return response()->json([
+                'success' => true,
+                'hiringManager' => $jobProfile->hiringManager
+            ]);
+        }
+
+        return response()->json(['success' => false]);
+    }
+
+
 }
