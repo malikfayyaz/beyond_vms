@@ -22,6 +22,7 @@
                     </div>
                 </div>
               @endif
+            @if($job->workerType->id != 11)
             <div class="flex justify-between items-center mb-6">
                 <h2 class="text-2xl font-bold"></h2>
                 <div class="flex space-x-2">
@@ -33,6 +34,7 @@
                     </form>
                 </div>
             </div>
+            @endif
             <div class="mb-4">
                 <ul
                     class="grid grid-flow-col text-center text-gray-500 bg-gray-100 rounded-lg p-1"
@@ -48,7 +50,7 @@
 
                         </a>
                     </li>
-
+                    @if($job->workerType->id != 11)
                     <li class="flex justify-center">
                         <a
                         @click="tab = 'jobworkflow'"
@@ -60,7 +62,7 @@
 
                         </a>
                     </li>
-
+                    @endif
                 </ul>
             </div>
             <div class="flex w-full gap-4" x-show="tab === 'activejobs'">
@@ -572,6 +574,14 @@
                         </div>
                         <div class="w-2/4">
                             <p class="font-light">{{ $job->max_bill_rate }}</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center justify-between py-4 border-t">
+                        <div class="w-2/4">
+                            <h4 class="font-medium">{{translate('Expected Total Cost of Engagement:')}}</h4>
+                        </div>
+                        <div class="w-2/4">
+                            <p class="font-light">{{ $job->expected_cost }}</p>
                         </div>
                     </div>
                     <div class="flex items-center justify-between py-4 border-y">

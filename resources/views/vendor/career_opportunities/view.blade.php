@@ -529,6 +529,14 @@
                                 <p class="font-light">{{ $job->max_bill_rate }}</p>
                             </div>
                         </div>
+                        <div class="flex items-center justify-between py-4 border-t">
+                            <div class="w-2/4">
+                                <h4 class="font-medium">{{translate('Expected Total Cost of Engagement:')}}</h4>
+                            </div>
+                            <div class="w-2/4">
+                                <p class="font-light">{{ $job->expected_cost }}</p>
+                            </div>
+                        </div>
                         <div class="flex items-center justify-between py-4 border-y">
                             <div class="w-2/4">
                                 <h4 class="font-medium">{{translate('Time Type:')}}</h4>

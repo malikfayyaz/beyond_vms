@@ -115,7 +115,7 @@
 
                 </a>
               </li>
-
+              @if($job->workerType->id != 11)
               <li class="flex justify-center">
                 <a
                 @click="tab = 'jobworkflow'"
@@ -127,6 +127,7 @@
 
                 </a>
               </li>
+                @endif
                <li class="flex justify-center" x-data="{ status: {{ $job->jobStatus }} }" x-show="status === 3 || status === 11 || status === 13">
                 <a
                 @click="tab = 'vendorrelease'"
@@ -351,13 +352,14 @@
                           </button>
                       </div>
                     </div>
-
+                      @if($job->workerType->id != 11)
                       <form action="{{ route('admin.career-opportunities.copy', $job->id) }}" method="POST" style="display: inline-block;">
                           @csrf
                           <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 capitalize">
                               {{translate('Copy Career Opportunity')}}<i class="fas fa-copy"></i>
                           </button>
                       </form>
+                      @endif
                   </div>
               </div>
           <div class="flex w-full gap-4">
@@ -872,7 +874,15 @@
                     <p class="font-light">{{ $job->max_bill_rate }}</p>
                 </div>
               </div>
-              <div class="flex items-center justify-between py-4 border-y">
+                <div class="flex items-center justify-between py-4 border-t">
+                    <div class="w-2/4">
+                        <h4 class="font-medium">{{translate('Expected Total Cost of Engagement:')}}</h4>
+                    </div>
+                    <div class="w-2/4">
+                        <p class="font-light">{{ $job->expected_cost }}</p>
+                    </div>
+                </div>
+                <div class="flex items-center justify-between py-4 border-y">
                 <div class="w-2/4">
                   <h4 class="font-medium">{{translate('Time Type:')}}</h4>
                 </div>
@@ -1041,8 +1051,6 @@
         </div>
     </div>
       </div>
-
-
       <div x-show="tab === 'jobworkflow'"   class="flex w-full gap-4">
          <div
           class="w-100 p-[30px] rounded border"
