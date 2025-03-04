@@ -30,7 +30,7 @@ class CareerOpportunitiesContractController extends Controller
 
             $clientId = Client::getClientIdByUserId(Auth::id());
             $data = CareerOpportunitiesContract::with('hiringManager','careerOpportunity','workOrder.vendor','location');
-            
+
             if ($request->has('type')) {
                 $type = $request->input('type');
                 switch ($type) {
@@ -54,7 +54,7 @@ class CareerOpportunitiesContractController extends Controller
                         break; // Show all submissions if no type is specified
                 }
             }
-            
+
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('status', function ($row) {
@@ -90,20 +90,9 @@ class CareerOpportunitiesContractController extends Controller
                        class="text-blue-500 hover:text-blue-700 mr-2 bg-transparent hover:bg-transparent"
                      >
                        <i class="fas fa-eye"></i>
-                     </a>
-                     <a href="' . route('client.contracts.edit', $row->id) . '"
-                       class="text-green-500 hover:text-green-700 mr-2 bg-transparent hover:bg-transparent"
-                     >
-                       <i class="fas fa-edit"></i>
                      </a>';
-                    $deleteBtn = '<form action="' . route('client.contracts.destroy', $row->id) . '" method="POST" style="display: inline-block;" onsubmit="return confirm(\'Are you sure?\');">
-                     ' . csrf_field() . method_field('DELETE') . '
-                     <button type="submit" class="text-red-500 hover:text-red-700 bg-transparent hover:bg-transparent">
-                         <i class="fas fa-trash"></i>
-                     </button>
-                   </form>';
 
-                    return $btn . $deleteBtn;
+                    return $btn;
                 })
                 ->rawColumns(['career_opportunity','action'])
                 ->make(true);
