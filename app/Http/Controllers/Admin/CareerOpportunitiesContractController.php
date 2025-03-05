@@ -800,9 +800,9 @@ class CareerOpportunitiesContractController extends BaseController
             'hireManagerId' => 'required|integer',
             'workLocation' => 'required|integer',
             'vendor' => 'required|integer',
-            'subDate' => 'required|date_format:m/d/Y',
-            'offStartDate' => 'required|date_format:m/d/Y',
-            'offEndDate' => 'required|date_format:m/d/Y',
+            'subDate' => 'required|date_format:Y-m-d',
+            'offStartDate' => 'required|date_format:Y-m-d',
+            'offEndDate' => 'required|date_format:Y-m-d',
             'newExist' => 'required|integer',
             'phyLocation' => 'required|integer',
             'candidateFirstName' => 'required_if:newExist,1|nullable|string',
@@ -812,8 +812,10 @@ class CareerOpportunitiesContractController extends BaseController
             'candidateEmail' => 'required_if:newExist,1|nullable|email',
             'existingCandidate' => 'required_if:newExist,2|nullable|integer',
         ]);
-
-        dd($validatedData);
+        
+        dd($validatedData['offEndDate']);
+        
+        $job = CareerOpportunity::find($validatedData['jobProfile']);
 
     }
 

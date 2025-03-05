@@ -381,7 +381,9 @@
 
                 initFlatpickr() {
                     flatpickr("#subDate", {
-                        dateFormat: "m/d/Y",
+                        dateFormat: "Y-m-d",
+                        altInput: true,
+                        altFormat: "m/d/Y",
                         defaultDate: this.formData.subDate,
                         onChange: (selectedDates, dateStr, instance) => {
                             this.formData.subDate = dateStr;
@@ -389,7 +391,9 @@
                     });
 
                     flatpickr("#offStartDate", {
-                        dateFormat: "m/d/Y",
+                        dateFormat: "Y-m-d",
+                        altInput: true,
+                        altFormat: "m/d/Y",
                         defaultDate: this.formData.offStartDate,
                         onChange: (selectedDates, dateStr, instance) => {
                             this.formData.offStartDate = dateStr;
@@ -398,7 +402,9 @@
                     });
 
                     this.offEndDate = flatpickr("#offEndDate", {
-                        dateFormat: "m/d/Y",
+                        dateFormat: "Y-m-d",
+                        altInput: true,
+                        altFormat: "m/d/Y",
                         defaultDate: this.formData.offEndDate || null,
                         onChange: (selectedDates, dateStr) => {
                         this.formData.offEndDate = dateStr;
