@@ -793,6 +793,30 @@ class CareerOpportunitiesContractController extends BaseController
         return view('admin.contract.quickcreate',['pwt_jobs' => $pwt_jobs,]);
     }
 
+    public function quickContractStore(Request $request){
+        $validatedData = $request->validate([
+            'jobProfile' => 'required|integer',
+            'hireManager' => 'required|string',
+            'hireManagerId' => 'required|integer',
+            'workLocation' => 'required|integer',
+            'vendor' => 'required|integer',
+            'subDate' => 'required|date_format:m/d/Y',
+            'offStartDate' => 'required|date_format:m/d/Y',
+            'offEndDate' => 'required|date_format:m/d/Y',
+            'newExist' => 'required|integer',
+            'phyLocation' => 'required|integer',
+            'candidateFirstName' => 'required_if:newExist,1|nullable|string',
+            'candidateMiddleName' => 'nullable|string',
+            'candidateLastName' => 'required_if:newExist,1|nullable|string',
+            'candidatePhone' => 'required_if:newExist,1|nullable|string',
+            'candidateEmail' => 'required_if:newExist,1|nullable|email',
+            'existingCandidate' => 'required_if:newExist,2|nullable|integer',
+        ]);
+
+        dd($validatedData);
+
+    }
+
     public function getHiringManager($id)
     {
         $jobProfile = CareerOpportunity::find($id);

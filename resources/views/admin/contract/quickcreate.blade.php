@@ -293,6 +293,10 @@
                         this.formData.existingCandidate = "";
                        
                         if (['candidateFirstName', 'candidateLastName', 'candidatePhone', 'candidateEmail'].includes(fieldId)) {
+                            if (fieldId === 'candidatePhone') {
+                                const phonePattern = /^\(\d{4}\) \d{3}-\d{4}$/;
+                                return phonePattern.test(fieldValue);
+                            }
                             return fieldValue && fieldValue.trim() !== "";
                         }
                         
@@ -343,7 +347,7 @@
                         phyLocation: 'Please select a physical work location',
                         candidateFirstName: 'Please enter candidate first name',
                         candidateLastName: 'Please enter candidate last name',
-                        candidatePhone: 'Please enter candidate phone number',
+                        candidatePhone: 'Please enter valid candidate phone number',
                         candidateEmail: 'Please enter candidate email',
                         existingCandidate: 'Please select an existing candidate',
                     };
@@ -395,9 +399,9 @@
 
                     this.offEndDate = flatpickr("#offEndDate", {
                         dateFormat: "m/d/Y",
-                        defaultDate: this.formData.endDate || null,
+                        defaultDate: this.formData.offEndDate || null,
                         onChange: (selectedDates, dateStr) => {
-                        this.formData.endDate = dateStr;
+                        this.formData.offEndDate = dateStr;
                         },
                     });
                 },
@@ -431,6 +435,7 @@
                         phoneNumber = `(${phoneNumber.slice(0, 4)}) ${phoneNumber.slice(4)}`;
                     }
                     input.value = phoneNumber;
+                    
                 },
 
                 updateHiringManager() {
@@ -467,14 +472,7 @@
                     
                     let formData = new FormData();
                     Object.keys(this.formData).forEach((key) => {
-                    if (Array.isArray(this.formData[key])) {
-                        // If the key is an array (like businessUnits), handle each item
-                        this.formData[key].forEach((item, index) => {
-                        formData.append(`${key}[${index}]`, JSON.stringify(item));
-                        });
-                    } else {
                         formData.append(key, this.formData[key]);
-                    }
                     });
 
                     // Debugging: Log all form data entries
@@ -484,10 +482,10 @@
                     // }
 
 
-                    // const methodtype = 'POST';
-                    // const url =
-                    
-                    // ajaxCall(url,methodtype, [[onSuccess, ['response']]], formData);
+                    const methodtype = 'POST';
+                    const url ="{{ route('admin.contract.qs') }}";
+
+                    ajaxCall(url,methodtype, [[onSuccess, ['response']]], formData);
                 },
                 
             };
