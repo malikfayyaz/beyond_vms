@@ -20,6 +20,7 @@ use App\Models\CareerOpportunitiesContract;
 use App\Models\contractAdditionalBudget;
 use Yajra\DataTables\Facades\DataTables;
 use App\Models\CareerOpportunitiesWorkorder;
+use App\Models\CareerOpportunitySubmission;
 use App\Models\ContractRate;
 use App\Models\Consultant;
 use App\Models\ContractExtensionRequest;
@@ -813,11 +814,103 @@ class CareerOpportunitiesContractController extends BaseController
             'existingCandidate' => 'required_if:newExist,2|nullable|integer',
         ]);
         
-        dd($validatedData['offEndDate']);
-        
         $job = CareerOpportunity::find($validatedData['jobProfile']);
+        if (!$job) {
+            Log::error('Job profile not found for ID: ' . $validatedData['jobProfile']);
+            return redirect()->back()->withErrors(['jobProfile' => 'Job profile not found.']);
+        }
 
+        // Process the data and create the contract
+        try {
+            // Create or update candidate
+            if ($validatedData['newExist'] == 1) {
+                $candidate = $this->createCandidate($validatedData);
+            } else {
+                $candidate = $this->fetchExistingCandidate($validatedData['existingCandidate']);
+            }
+
+            // Create submission, offer, and work order
+            $submission = $this->createSubmission($validatedData, $job, $candidate);
+            $offer = $this->createOffer($validatedData, $job, $candidate, $submission);
+            $workOrder = $this->createWorkOrder($validatedData, $job, $candidate, $submission, $offer);
+
+            session()->flash('success', 'Contract created!');
+            return response()->json([
+                'success' => true,
+                'message' => 'Contract created!',
+                'redirect_url' => route('admin.contracts.index') // Redirect back URL for AJAX
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'An error occurred while creating the contract.',
+                'error' => $e->getMessage() // Optional: Include the error message for debugging
+            ], 500);
+        }
     }
+
+    private function createCandidate($data)
+    {
+        // Logic to create a new candidate
+        // Example:
+        return Consultant::create([
+            'first_name' => $data['candidateFirstName'],
+            'middle_name' => $data['candidateMiddleName'],
+            'last_name' => $data['candidateLastName'],
+            'phone' => $data['candidatePhone'],
+            'email' => $data['candidateEmail'],
+            // Add other fields as needed
+        ]);
+    }
+
+    private function fetchExistingCandidate($candidateId)
+    {
+        // Logic to fetch an existing candidate
+        return Consultant::findOrFail($candidateId);
+    }
+
+    private function createSubmission($data, $job, $candidate)
+    {
+        // Logic to create a submission
+        return CareerOpportunitySubmission::create([
+            'career_opportunity_id' => $job->id,
+            'candidate_id' => $candidate->id,
+            'resume_status' => 9,
+            'estimate_start_date' => $data['subDate'],
+            'vendor_id' => $data['vendor'],
+            // Add other fields as needed
+        ]);
+    }
+
+    private function createOffer($data, $job, $candidate, $submission)
+    {
+        // Logic to create an offer
+        return CareerOpportunitiesOffer::create([
+            'career_opportunity_id' => $job->id,
+            'candidate_id' => $candidate->id,
+            'submission_id' => $submission->id,
+            'status' => 1,
+            'start_date' => $data['offStartDate'],
+            'end_date' => $data['offEndDate'],
+            // Add other fields as needed
+        ]);
+    }
+
+    private function createWorkOrder($data, $job, $candidate, $submission, $offer)
+    {
+        // Logic to create a work order
+        return CareerOpportunitiesWorkorder::create([
+            'career_opportunity_id' => $job->id,
+            'candidate_id' => $candidate->id,
+            'submission_id' => $submission->id,
+            'offer_id' => $offer->id,
+            'status' => 1,
+            'work_location' => $data['workLocation'],
+            // Add other fields as needed
+        ]);
+    }
+
+    
 
     public function getHiringManager($id)
     {
