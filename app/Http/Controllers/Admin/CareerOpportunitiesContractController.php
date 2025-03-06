@@ -10,6 +10,7 @@ use Illuminate\Support\Carbon;
 use App\Facades\Rateshelper as Rateshelper;
 use App\Facades\CareerOpportunitiesContract as contractHelper;
 use App\Models\Admin;
+use App\Models\User;
 use App\Models\CareerOpportunitiesOffer;
 use App\Models\CareerOpportunity;
 use App\Models\ContractNote;
@@ -29,7 +30,10 @@ use App\Models\TimesheetProject;
 use App\Models\ContractRateEditRequest;
 use App\Models\CareerOpportunitiesBu;
 use App\Models\ContractRatesEditWorkflow;
-
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 
 class CareerOpportunitiesContractController extends BaseController
 {
@@ -819,6 +823,7 @@ class CareerOpportunitiesContractController extends BaseController
             Log::error('Job profile not found for ID: ' . $validatedData['jobProfile']);
             return redirect()->back()->withErrors(['jobProfile' => 'Job profile not found.']);
         }
+        // dd($job);
 
         // Process the data and create the contract
         try {
@@ -833,6 +838,23 @@ class CareerOpportunitiesContractController extends BaseController
             $submission = $this->createSubmission($validatedData, $job, $candidate);
             $offer = $this->createOffer($validatedData, $job, $candidate, $submission);
             $workOrder = $this->createWorkOrder($validatedData, $job, $candidate, $submission, $offer);
+
+            $contract = CareerOpportunitiesContract::create([
+                'career_opportunity_id' => $job->id,
+                'candidate_id' => $candidate->id,
+                'submission_id' => $submission->id,
+                'offer_id' => $offer->id,
+                'workorder_id' => $workOrder->id,
+                'status' => 1,
+                'start_date' => $validatedData['offStartDate'],
+                'end_date' => $validatedData['offEndDate'],
+                'hiring_manager_id' => $validatedData['hireManagerId'],
+                'location_id' => $validatedData['workLocation'],
+                'created_by' => Admin::getAdminIdByUserId(\Auth::id()),
+                'vendor_id' => $validatedData['vendor'], 
+                'created_by_type' => 1,
+                
+            ]);
 
             session()->flash('success', 'Contract created!');
             return response()->json([
@@ -851,16 +873,44 @@ class CareerOpportunitiesContractController extends BaseController
 
     private function createCandidate($data)
     {
-        // Logic to create a new candidate
-        // Example:
-        return Consultant::create([
-            'first_name' => $data['candidateFirstName'],
-            'middle_name' => $data['candidateMiddleName'],
-            'last_name' => $data['candidateLastName'],
-            'phone' => $data['candidatePhone'],
-            'email' => $data['candidateEmail'],
-            // Add other fields as needed
-        ]);
+          // Start a database transaction
+        DB::beginTransaction();
+
+        try {
+            // Create the User
+            $user = User::create([
+                'name' => trim($data['candidateFirstName'] . ' ' . $data['candidateLastName']),
+                'email' => $data['candidateEmail'],
+                'password' => Hash::make($data['password'] ?? Str::random(12)), // Generate a random password if not provided
+                'role' => 'Consultant',
+                'profile_status' => 1,
+            ]);
+
+            // Create the Consultant
+            $consultant = Consultant::create([
+                'first_name' => $data['candidateFirstName'],
+                'middle_name' => $data['candidateMiddleName'],
+                'last_name' => $data['candidateLastName'],
+                'phone' => $data['candidatePhone'],
+                'user_id' => $user->id, 
+                'dob' => '1990-11-01',
+            ]);
+
+            // Commit the transaction
+            DB::commit();
+
+            return $consultant;
+
+        } catch (\Exception $e) {
+            // Rollback the transaction on error
+            DB::rollBack();
+
+            // Log the error
+            Log::error('Error creating candidate: ' . $e->getMessage());
+
+            // Re-throw the exception for further handling
+            throw $e;
+        }
     }
 
     private function fetchExistingCandidate($candidateId)
@@ -878,6 +928,17 @@ class CareerOpportunitiesContractController extends BaseController
             'resume_status' => 9,
             'estimate_start_date' => $data['subDate'],
             'vendor_id' => $data['vendor'],
+            'created_by_user' => Admin::getAdminIdByUserId(\Auth::id()),
+            'location_id' => $data['workLocation'],
+            'markup' => 0,
+            'actuall_markup' => 0,
+            'vendor_bill_rate' => 0,
+            'candidate_pay_rate' => 0,
+            'bill_rate' => 0,
+            'over_time_rate' => 0,
+            'client_over_time_rate' => 0,
+            'double_time_rate' => 0,
+            'client_double_time_rate' => 0,
             // Add other fields as needed
         ]);
     }
@@ -892,6 +953,9 @@ class CareerOpportunitiesContractController extends BaseController
             'status' => 1,
             'start_date' => $data['offStartDate'],
             'end_date' => $data['offEndDate'],
+            'hiring_manager_id' => $data['hireManagerId'],
+            'vendor_id' => $data['vendor'],
+            'location_id' => $data['workLocation'],
             // Add other fields as needed
         ]);
     }
@@ -905,7 +969,16 @@ class CareerOpportunitiesContractController extends BaseController
             'submission_id' => $submission->id,
             'offer_id' => $offer->id,
             'status' => 1,
-            'work_location' => $data['workLocation'],
+            'vendor_id' => $data['vendor'],
+            'location_id' => $data['workLocation'],
+            'hiring_manager_id' => $data['hireManagerId'],
+            'approval_manager' => $data['hireManagerId'],
+            'job_level' => $job->job_level,
+            'division_id' => $job->division_id,
+            'created_by_type' => 1,
+            'created_by_id' => Admin::getAdminIdByUserId(\Auth::id()),
+            'start_date' => $data['offStartDate'],
+            'end_date' => $data['offEndDate'],
             // Add other fields as needed
         ]);
     }
