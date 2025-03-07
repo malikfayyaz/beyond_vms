@@ -218,14 +218,27 @@
                             </div>
                             <div class="flex space-x-4 mb-4">
                                 <div class="flex-1">
-                                    <label class="block mb-2">Candidate Phone
+                                    <label class="block mb-2">Date of Birth (MM/DD)
                                         <span class="text-red-500">*</span></label>
-                                    <input name="candidate_phone" type="tel" x-model="formData.candidatePhone"
-                                        x-on:input="formatPhoneNumber($event.target)"
-                                        class="w-full h-12 px-4 text-gray-500 border border-gray-300 rounded-md shadow-sm focus:outline-none "
-                                        placeholder="(XXXX) XXX-XXXX" id="candidatePhone"/>
-                                    <p x-show="showErrors && !isFieldValid('candidatePhone')" class="text-red-500 text-sm mt-1"
-                                        x-text="getErrorMessageById('candidatePhone')"></p>
+                                    <input name="candidateDob" id="candidateDob"
+                                        class="w-full h-12 px-4 text-gray-500 border border-gray-300 rounded-md shadow-sm focus:outline-none pl-7"
+                                        x-ref="candidateDob" type="text" x-model="formData.candidateDob"
+                                        placeholder="Select Candidate DOB" />
+                                    <p x-show="showErrors && !isFieldValid('candidateDob')" class="text-red-500 text-sm mt-1"
+                                        x-text="getErrorMessageById('candidateDob')"></p>
+                                </div>
+                                <div class="flex-1">
+                                    <label class="block mb-2">Last 4 Numbers of National ID
+                                        <span class="text-red-500">*</span></label>
+                                    <input name="candidateNatNum" id="candidateNatNum"
+                                        class="w-full h-12 px-4 text-gray-500 border border-gray-300 rounded-md shadow-sm focus:outline-none pl-7"
+                                        x-ref="candidateNatNum" type="num" x-model="formData.candidateNatNum"
+                                        placeholder="Enter Last 4 Digits" 
+                                        maxlength="4"
+                                        pattern="\d{4}" 
+                                        @input="formData.candidateNatNum = formData.candidateNatNum.replace(/\D/g, '').slice(0, 4)" />
+                                    <p x-show="showErrors && !isFieldValid('candidateNatNum')" class="text-red-500 text-sm mt-1"
+                                        x-text="getErrorMessageById('candidateNatNum')"></p>
                                 </div>
                                 <div class="flex-1">
                                     <label class="block mb-2">Candidate Email
@@ -235,8 +248,6 @@
                                         placeholder="Enter email" id="candidateEmail"/>
                                     <p x-show="showErrors && !isFieldValid('candidateEmail')" class="text-red-500 text-sm mt-1"
                                         x-text="getErrorMessageById('candidateEmail')"></p>
-                                </div>
-                                <div class="flex-1">
                                 </div>
                             </div>
                         </div>
@@ -277,7 +288,8 @@
                     candidateFirstName: '',
                     candidateMiddleName: '',
                     candidateLastName: '',
-                    candidatePhone: '',
+                    candidateDob: '',
+                    candidateNatNum: '',
                     candidateEmail: '',
                     existingCandidate: '',
                 },
@@ -292,11 +304,7 @@
                     if (this.formData.newExist === "1") { 
                         this.formData.existingCandidate = "";
                        
-                        if (['candidateFirstName', 'candidateLastName', 'candidatePhone', 'candidateEmail'].includes(fieldId)) {
-                            if (fieldId === 'candidatePhone') {
-                                const phonePattern = /^\(\d{4}\) \d{3}-\d{4}$/;
-                                return phonePattern.test(fieldValue);
-                            }
+                        if (['candidateFirstName', 'candidateLastName', 'candidateDob', 'candidateNatNum','candidateEmail'].includes(fieldId)) {
                             return fieldValue && fieldValue.trim() !== "";
                         }
                         
@@ -307,14 +315,15 @@
                         this.formData.candidateFirstName = "";
                         this.formData.candidateMiddleName = "";
                         this.formData.candidateLastName = "";
-                        this.formData.candidatePhone = "";
+                        this.formData.candidateDob = "";
+                        this.formData.candidateNatNum = "";
                         this.formData.candidateEmail = "";
                        
                         if (['existingCandidate'].includes(fieldId)) {
                             return fieldValue && fieldValue.trim() !== "";
                         }
 
-                        if (['candidateFirstName', 'candidateLastName', 'candidatePhone', 'candidateEmail'].includes(fieldId)) {
+                        if (['candidateFirstName', 'candidateLastName', 'candidateDob', 'candidateNatNum','candidateEmail'].includes(fieldId)) {
                             return true;
                         }
                     }
@@ -347,7 +356,8 @@
                         phyLocation: 'Please select a physical work location',
                         candidateFirstName: 'Please enter candidate first name',
                         candidateLastName: 'Please enter candidate last name',
-                        candidatePhone: 'Please enter valid candidate phone number',
+                        candidateDob: 'Please select candidate date of birth',
+                        candidateNatNum: 'Please enter last 4 digits of national ID',
                         candidateEmail: 'Please enter candidate email',
                         existingCandidate: 'Please select an existing candidate',
                     };
@@ -390,6 +400,19 @@
                         },
                     });
 
+                    flatpickr("#candidateDob", {
+                        dateFormat: "Y-m-d",
+                        altInput: true,
+                        altFormat: "m/d",
+                        defaultDate: this.formData.candidateDob,
+                        onReady: function (selectedDates, dateStr, instance) {
+                            instance.currentYearElement.style.display = "none"; // Hide year selector
+                        },
+                        onChange: (selectedDates, dateStr, instance) => {
+                            this.formData.candidateDob = dateStr;
+                        },
+                    });
+
                     flatpickr("#offStartDate", {
                         dateFormat: "Y-m-d",
                         altInput: true,
@@ -425,23 +448,6 @@
                     } else {
                         console.error("jQuery is not available. Please make sure jQuery is loaded before this script.");
                     }
-                },
-
-                formatPhoneNumber(input) {
-                    let phoneNumber = input.value.replace(/\D/g, "");
-                    if (phoneNumber.length > 10) {
-                        phoneNumber = phoneNumber.slice(0, 10);
-                    }
-                    if (phoneNumber.length >= 6) {
-                        phoneNumber = `(${phoneNumber.slice(0, 4)}) ${phoneNumber.slice(
-                        4,
-                        7
-                        )}-${phoneNumber.slice(7)}`;
-                    } else if (phoneNumber.length >= 4) {
-                        phoneNumber = `(${phoneNumber.slice(0, 4)}) ${phoneNumber.slice(4)}`;
-                    }
-                    input.value = phoneNumber;
-                    
                 },
 
                 updateHiringManager() {
@@ -486,7 +492,6 @@
                     // for (let [key, value] of formData.entries()) {
                     //     console.log(`${key}: ${value}`);
                     // }
-
 
                     const methodtype = 'POST';
                     const url ="{{ route('admin.contract.qs') }}";

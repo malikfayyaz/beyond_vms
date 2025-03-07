@@ -813,11 +813,14 @@ class CareerOpportunitiesContractController extends BaseController
             'candidateFirstName' => 'required_if:newExist,1|nullable|string',
             'candidateMiddleName' => 'nullable|string',
             'candidateLastName' => 'required_if:newExist,1|nullable|string',
-            'candidatePhone' => 'required_if:newExist,1|nullable|string',
+            'candidateDob' => 'required_if:newExist,1|nullable|date_format:Y-m-d',
+            'candidateNatNum' => 'required_if:newExist,1|nullable|string|regex:/^\d{4}$/',
             'candidateEmail' => 'required_if:newExist,1|nullable|email',
             'existingCandidate' => 'required_if:newExist,2|nullable|integer',
         ]);
         
+        $validatedData['candidateDob'] = Carbon::parse($validatedData['candidateDob'])->format('0000-m-d');
+
         $job = CareerOpportunity::find($validatedData['jobProfile']);
         if (!$job) {
             Log::error('Job profile not found for ID: ' . $validatedData['jobProfile']);
@@ -893,10 +896,10 @@ class CareerOpportunitiesContractController extends BaseController
                     'first_name' => $data['candidateFirstName'],
                     'middle_name' => $data['candidateMiddleName'],
                     'last_name' => $data['candidateLastName'],
-                    'phone' => $data['candidatePhone'],
                     'user_id' => $user->id, 
                     'profile_status' => 1,
-                    'dob' => '1990-11-01',
+                    'national_id' => $data['candidateNatNum'],
+                    'dob' => $data['candidateDob'],
                     'unique_id' => generateUniqueUserCode(),
                 ]);
             });
