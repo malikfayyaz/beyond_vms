@@ -823,7 +823,6 @@ class CareerOpportunitiesContractController extends BaseController
             Log::error('Job profile not found for ID: ' . $validatedData['jobProfile']);
             return redirect()->back()->withErrors(['jobProfile' => 'Job profile not found.']);
         }
-        // dd($job);
 
         // Process the data and create the contract
         try {
@@ -873,42 +872,40 @@ class CareerOpportunitiesContractController extends BaseController
 
     private function createCandidate($data)
     {
-          // Start a database transaction
-        DB::beginTransaction();
-
         try {
-            // Create the User
-            $user = User::create([
-                'name' => trim($data['candidateFirstName'] . ' ' . $data['candidateLastName']),
-                'email' => $data['candidateEmail'],
-                'password' => Hash::make($data['password'] ?? Str::random(12)), // Generate a random password if not provided
-                'role' => 'Consultant',
-                'profile_status' => 1,
-            ]);
+            return DB::transaction(function () use ($data) {
+                // Check if user already exists
+                if (User::where('email', $data['candidateEmail'])->exists()) {
+                    throw new \Exception('A user with this email already exists.');
+                }
 
-            // Create the Consultant
-            $consultant = Consultant::create([
-                'first_name' => $data['candidateFirstName'],
-                'middle_name' => $data['candidateMiddleName'],
-                'last_name' => $data['candidateLastName'],
-                'phone' => $data['candidatePhone'],
-                'user_id' => $user->id, 
-                'dob' => '1990-11-01',
-            ]);
+                // Create the User
+                $user = new User();
+                $user->name = trim($data['candidateFirstName'] . ' ' . $data['candidateLastName']);
+                $user->email = $data['candidateEmail'];
+                $user->password = Hash::make($data['password'] ?? Str::random(12));
+                $user->is_consultant = 1;
+                $user->save();
+                // $user = User::create([
+                //     'name' => trim($data['candidateFirstName'] . ' ' . $data['candidateLastName']),
+                //     'email' => $data['candidateEmail'],
+                //     'password' => Hash::make($data['password'] ?? Str::random(12)), // Generate a random password if not provided
+                //     'is_consultant' => 1,
+                // ]);
 
-            // Commit the transaction
-            DB::commit();
-
-            return $consultant;
-
+                // Create the Consultant
+                return Consultant::create([
+                    'first_name' => $data['candidateFirstName'],
+                    'middle_name' => $data['candidateMiddleName'],
+                    'last_name' => $data['candidateLastName'],
+                    'phone' => $data['candidatePhone'],
+                    'user_id' => $user->id, 
+                    'profile_status' => 1,
+                    'dob' => '1990-11-01',
+                ]);
+            });
         } catch (\Exception $e) {
-            // Rollback the transaction on error
-            DB::rollBack();
-
-            // Log the error
-            Log::error('Error creating candidate: ' . $e->getMessage());
-
-            // Re-throw the exception for further handling
+            Log::error('Error creating candidate', ['exception' => $e]);
             throw $e;
         }
     }
