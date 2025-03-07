@@ -875,23 +875,18 @@ class CareerOpportunitiesContractController extends BaseController
         try {
             return DB::transaction(function () use ($data) {
                 // Check if user already exists
-                if (User::where('email', $data['candidateEmail'])->exists()) {
-                    throw new \Exception('A user with this email already exists.');
-                }
+                // if (User::where('email', $data['candidateEmail'])->exists()) {
+                //     throw new \Exception('A user with this email already exists.');
+                // }
 
                 // Create the User
-                $user = new User();
-                $user->name = trim($data['candidateFirstName'] . ' ' . $data['candidateLastName']);
-                $user->email = $data['candidateEmail'];
-                $user->password = Hash::make($data['password'] ?? Str::random(12));
+                $user = User::create([
+                    'name' => trim($data['candidateFirstName'] . ' ' . $data['candidateLastName']),
+                    'email' => $data['candidateEmail'],
+                    'password' => Hash::make($data['password'] ?? Str::random(12)), // Generate a random password if not provided
+                ]);
                 $user->is_consultant = 1;
                 $user->save();
-                // $user = User::create([
-                //     'name' => trim($data['candidateFirstName'] . ' ' . $data['candidateLastName']),
-                //     'email' => $data['candidateEmail'],
-                //     'password' => Hash::make($data['password'] ?? Str::random(12)), // Generate a random password if not provided
-                //     'is_consultant' => 1,
-                // ]);
 
                 // Create the Consultant
                 return Consultant::create([
