@@ -821,7 +821,7 @@ class CareerOpportunitiesContractController extends BaseController
         $job = CareerOpportunity::find($validatedData['jobProfile']);
         if (!$job) {
             Log::error('Job profile not found for ID: ' . $validatedData['jobProfile']);
-            return redirect()->back()->withErrors(['jobProfile' => 'Job profile not found.']);
+            return redirect()->back()->withErrors(['jobProfile' => 'Job not found.']);
         }
 
         // Process the data and create the contract
@@ -897,6 +897,7 @@ class CareerOpportunitiesContractController extends BaseController
                     'user_id' => $user->id, 
                     'profile_status' => 1,
                     'dob' => '1990-11-01',
+                    'unique_id' => generateUniqueUserCode(),
                 ]);
             });
         } catch (\Exception $e) {
@@ -931,6 +932,7 @@ class CareerOpportunitiesContractController extends BaseController
             'client_over_time_rate' => 0,
             'double_time_rate' => 0,
             'client_double_time_rate' => 0,
+            
             // Add other fields as needed
         ]);
     }
