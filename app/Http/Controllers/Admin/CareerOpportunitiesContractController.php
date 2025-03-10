@@ -843,27 +843,11 @@ class CareerOpportunitiesContractController extends BaseController
             $offer = $this->createOffer($validatedData, $job, $candidate, $submission);
             $workOrder = $this->createWorkOrder($validatedData, $job, $candidate, $submission, $offer);
 
-            $contract = CareerOpportunitiesContract::create([
-                'career_opportunity_id' => $job->id,
-                'candidate_id' => $candidate->id,
-                'submission_id' => $submission->id,
-                'offer_id' => $offer->id,
-                'workorder_id' => $workOrder->id,
-                'status' => 1,
-                'start_date' => $validatedData['offStartDate'],
-                'end_date' => $validatedData['offEndDate'],
-                'hiring_manager_id' => $validatedData['hireManagerId'],
-                'location_id' => $validatedData['workLocation'],
-                'created_by' => Admin::getAdminIdByUserId(\Auth::id()),
-                'vendor_id' => $validatedData['vendor'], 
-                'created_by_type' => 1,
-                
-            ]);
 
-            session()->flash('success', 'Contract created!');
+            session()->flash('success', 'Workorder created successfully!');
             return response()->json([
                 'success' => true,
-                'message' => 'Contract created!',
+                'message' => 'Workorder created successfully!',
                 'redirect_url' => route('admin.contracts.index') // Redirect back URL for AJAX
             ]);
         } catch (\Exception $e) {
@@ -928,6 +912,7 @@ class CareerOpportunitiesContractController extends BaseController
             'vendor_id' => $data['vendor'],
             'created_by_user' => Admin::getAdminIdByUserId(\Auth::id()),
             'location_id' => $data['workLocation'],
+            'category_id' => $job->cat_id,
             'markup' => 0,
             'actuall_markup' => 0,
             'vendor_bill_rate' => 0,
@@ -955,6 +940,9 @@ class CareerOpportunitiesContractController extends BaseController
             'hiring_manager_id' => $data['hireManagerId'],
             'vendor_id' => $data['vendor'],
             'location_id' => $data['workLocation'],
+            'created_by_type' => 1,
+            'created_by_id' => Admin::getAdminIdByUserId(\Auth::id()),
+            'offer_accept_date' => now(),
             // Add other fields as needed
         ]);
     }
@@ -977,7 +965,18 @@ class CareerOpportunitiesContractController extends BaseController
             'created_by_type' => 1,
             'created_by_id' => Admin::getAdminIdByUserId(\Auth::id()),
             'start_date' => $data['offStartDate'],
+            'modified_by_type' => 1,
+            'modified_by_id' => Admin::getAdminIdByUserId(\Auth::id()),
+            'start_date' => $data['offStartDate'],
             'end_date' => $data['offEndDate'],
+            'approval_manager' => $data['hireManagerId'],
+            'job_level' => $job->job_level,
+            'job_type' => $job->job_type,
+            'on_board_status' => 0,
+            'expenses_allowed' => $job->expenses_allowed,
+            'single_resource_job_approved_budget' => $job->single_resource_total_cost,
+            // 'created_at' => now(),
+            // 'original_start_date' => now(),
             // Add other fields as needed
         ]);
     }

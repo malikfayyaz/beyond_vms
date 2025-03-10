@@ -31,7 +31,7 @@
                                     id="jobProfile">
                                     <option value="">Select a profile</option>
                                     @foreach ($pwt_jobs as $job)
-                                        <option value="{{ $job->id }}">{{ $job->title }}</option>
+                                        <option value="{{ $job->id }}">{{ $job->title }} ({{ $job->id }}) </option>
                                     @endforeach
 
                                 </select>
