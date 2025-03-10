@@ -819,7 +819,9 @@ class CareerOpportunitiesContractController extends BaseController
             'existingCandidate' => 'required_if:newExist,2|nullable|integer',
         ]);
         
-        $validatedData['candidateDob'] = Carbon::parse($validatedData['candidateDob'])->format('0000-m-d');
+        if (!empty($validatedData['candidateDob'])) {
+            $validatedData['candidateDob'] = Carbon::parse($validatedData['candidateDob'])->format('0000-m-d');
+        }
 
         $job = CareerOpportunity::find($validatedData['jobProfile']);
         if (!$job) {
