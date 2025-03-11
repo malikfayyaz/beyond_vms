@@ -793,7 +793,7 @@ class CareerOpportunitiesContractController extends BaseController
         
         $pwt_jobs = CareerOpportunity::whereHas('workerType', function ($query) {
             $query->where('id', 11);
-        })->get();
+        })->latest()->get();
         
         return view('admin.contract.quickcreate',['pwt_jobs' => $pwt_jobs,]);
     }
@@ -907,7 +907,7 @@ class CareerOpportunitiesContractController extends BaseController
         return CareerOpportunitySubmission::create([
             'career_opportunity_id' => $job->id,
             'candidate_id' => $candidate->id,
-            'resume_status' => 9,
+            'resume_status' => 11,
             'estimate_start_date' => $data['subDate'],
             'vendor_id' => $data['vendor'],
             'created_by_user' => Admin::getAdminIdByUserId(\Auth::id()),
@@ -934,7 +934,7 @@ class CareerOpportunitiesContractController extends BaseController
             'career_opportunity_id' => $job->id,
             'candidate_id' => $candidate->id,
             'submission_id' => $submission->id,
-            'status' => 1,
+            'status' => 3,
             'start_date' => $data['offStartDate'],
             'end_date' => $data['offEndDate'],
             'hiring_manager_id' => $data['hireManagerId'],

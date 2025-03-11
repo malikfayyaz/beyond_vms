@@ -314,13 +314,13 @@
                           <span class="text-gray-600">{{translate('Gender')}}</span>
                           <span
                             class="font-semibold"
-                          >{{$submission->consultant->genDer->title}}</span>
+                          >{{$submission->consultant?->genDer?->title ?? 'N/A' }}</span>
                         </div>
                         <div class="flex justify-between py-3 px-4">
                           <span class="text-gray-600">{{translate('Race')}}</span>
                           <span
                             class="font-semibold"
-                          >{{$submission->consultant->race->title}}</span>
+                          >{{$submission->consultant?->race?->title ?? 'N/A' }}</span>
                         </div>
                         <div class="flex justify-between py-3 px-4">
                           <span class="text-gray-600"
@@ -484,7 +484,7 @@
                 </p>
               </object>
             @else
-              <p>No resume available.')}}</p>
+              <p>{{translate('No resume available.')}} </p>
             @endif
             </div>
           </div>
