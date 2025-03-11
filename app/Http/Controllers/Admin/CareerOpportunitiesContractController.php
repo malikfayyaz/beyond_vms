@@ -943,6 +943,7 @@ class CareerOpportunitiesContractController extends BaseController
             'created_by_type' => 1,
             'modified_by_type' => 1,
             'created_by_id' => Admin::getAdminIdByUserId(\Auth::id()),
+            'modified_by_id' => Admin::getAdminIdByUserId(\Auth::id()),
             'offer_accept_date' => now(),
             // Add other fields as needed
         ]);

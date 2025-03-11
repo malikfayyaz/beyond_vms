@@ -379,7 +379,7 @@
                       <span class="capitalize">{{translate('Workorder info')}}</span>
                     </button>
                   </li>
-                  @if($workorder->status==1)
+                  @if($workorder->status==1 && $job->workerType->id == 10)
                   <li>
                     <button
                       :id="$id('tab', whichChild($el.parentElement, $refs.tablist))"
@@ -579,7 +579,7 @@
                           $disabled = false;
                         }
                         @endphp
-                  @if($workorder->status==1)
+                  @if($workorder->status==1 && $job->workerType->id == 10)
                   <section
                     x-show="isSelected($id('tab', whichChild($el, $el.parentElement)))"
                     :aria-labelledby="$id('tab', whichChild($el, $el.parentElement))"
@@ -934,7 +934,7 @@
                       <p><b>{{translate('Reviewed Date:')}}</b> 10/03/2024</p>
                     </div>
                     @else
-                    <p>{{translate('Background verification still not submitted for review.')}}</p>
+                    <p class="p-4">{{translate('Background verification still not submitted for review.')}}</p>
                     @endif
                   </section>
                 </div>
