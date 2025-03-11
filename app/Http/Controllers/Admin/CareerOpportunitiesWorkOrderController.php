@@ -180,8 +180,9 @@ class CareerOpportunitiesWorkOrderController extends Controller
             $log->properties = array_merge($log->properties->toArray(), ['attributes' => $attributes]);
         }
         $workorder = CareerOpportunitiesWorkorder::findOrFail($id);
+        $job = CareerOpportunity::findOrFail($workorder->career_opportunity_id);
         $rejectReasons =  Setting::where('category_id', 27)->get();
-        return view('admin.workorder.view', compact('workorder','rejectReasons','logs'));
+        return view('admin.workorder.view', compact('workorder','rejectReasons','logs','job'));
     }
 public function withdrawWorkorder(Request $request)
 {

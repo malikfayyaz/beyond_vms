@@ -236,89 +236,91 @@
                   }  ?></p>
                   </div>
                 </div>
-                <h3 class="flex items-center gap-2 my-4 bg-">
-                  <i
-                    class="fa-regular fa-message"
-                    :style="{'color': 'var(--primary-color)'}"
-                  ></i>
-                  <span :style="{'color': 'var(--primary-color)'}"
-                    >{{translate('Pay Rate (For Candidate)')}}</span
-                  >
-                </h3>
-                <div class="flex items-center justify-between py-4 border-t">
-                  <div class="w-2/4">
-                    <h4 class="font-medium capitalize">{{translate('Pay rate:')}}</h4>
+                @if($job->workerType->id == 10)
+                  <h3 class="flex items-center gap-2 my-4 bg-">
+                    <i
+                      class="fa-regular fa-message"
+                      :style="{'color': 'var(--primary-color)'}"
+                    ></i>
+                    <span :style="{'color': 'var(--primary-color)'}"
+                      >{{translate('Pay Rate (For Candidate)')}}</span
+                    >
+                  </h3>
+                  <div class="flex items-center justify-between py-4 border-t">
+                    <div class="w-2/4">
+                      <h4 class="font-medium capitalize">{{translate('Pay rate:')}}</h4>
+                    </div>
+                    <div class="w-2/4">
+                      <p class="font-light">${{$workorder->wo_pay_rate}}</p>
+                    </div>
                   </div>
-                  <div class="w-2/4">
-                    <p class="font-light">${{$workorder->wo_pay_rate}}</p>
+                  <div class="flex items-center justify-between py-4 border-t">
+                    <div class="w-2/4">
+                      <h4 class="font-medium capitalize">{{translate('Over time rate:')}}</h4>
+                    </div>
+                    <div class="w-2/4">
+                      <p class="font-light">${{$workorder->wo_over_time}}</p>
+                    </div>
                   </div>
-                </div>
-                <div class="flex items-center justify-between py-4 border-t">
-                  <div class="w-2/4">
-                    <h4 class="font-medium capitalize">{{translate('Over time rate:')}}</h4>
-                  </div>
-                  <div class="w-2/4">
-                    <p class="font-light">${{$workorder->wo_over_time}}</p>
-                  </div>
-                </div>
-                <h3 class="flex items-center gap-2 my-4 bg-">
-                  <i
-                    class="fa-solid fa-cash-register"
-                    :style="{'color': 'var(--primary-color)'}"
-                  ></i>
+                  <h3 class="flex items-center gap-2 my-4 bg-">
+                    <i
+                      class="fa-solid fa-cash-register"
+                      :style="{'color': 'var(--primary-color)'}"
+                    ></i>
 
-                  <span
-                    class="capitalize"
-                    :style="{'color': 'var(--primary-color)'}"
-                  >
-                    {{translate('Bill Rate (For Vendor)')}}</span
-                  >
-                </h3>
-                <div class="flex items-center justify-between py-4 border-t">
-                  <div class="w-2/4">
-                    <h4 class="font-medium capitalize">{{translate('Bill rate:')}}</h4>
+                    <span
+                      class="capitalize"
+                      :style="{'color': 'var(--primary-color)'}"
+                    >
+                      {{translate('Bill Rate (For Vendor)')}}</span
+                    >
+                  </h3>
+                  <div class="flex items-center justify-between py-4 border-t">
+                    <div class="w-2/4">
+                      <h4 class="font-medium capitalize">{{translate('Bill rate:')}}</h4>
+                    </div>
+                    <div class="w-2/4">
+                      <p class="font-light">${{$workorder->vendor_bill_rate}}</p>
+                    </div>
                   </div>
-                  <div class="w-2/4">
-                    <p class="font-light">${{$workorder->vendor_bill_rate}}</p>
+                  <div class="flex items-center justify-between py-4 border-t">
+                    <div class="w-2/4">
+                      <h4 class="font-medium capitalize">{{translate('Over time rate:')}}</h4>
+                    </div>
+                    <div class="w-2/4">
+                      <p class="font-light">${{$workorder->vendor_overtime_rate}}</p>
+                    </div>
                   </div>
-                </div>
-                <div class="flex items-center justify-between py-4 border-t">
-                  <div class="w-2/4">
-                    <h4 class="font-medium capitalize">{{translate('Over time rate:')}}</h4>
-                  </div>
-                  <div class="w-2/4">
-                    <p class="font-light">${{$workorder->vendor_overtime_rate}}</p>
-                  </div>
-                </div>
-                <h3 class="flex items-center gap-2 my-4 bg-">
-                  <i
-                    class="fa-solid fa-cash-register"
-                    :style="{'color': 'var(--primary-color)'}"
-                  ></i>
+                  <h3 class="flex items-center gap-2 my-4 bg-">
+                    <i
+                      class="fa-solid fa-cash-register"
+                      :style="{'color': 'var(--primary-color)'}"
+                    ></i>
 
-                  <span
-                    class="capitalize"
-                    :style="{'color': 'var(--primary-color)'}"
-                  >
-                    {{translate('Bill Rate (For Client)')}}</span
-                  >
-                </h3>
-                <div class="flex items-center justify-between py-4 border-t">
-                  <div class="w-2/4">
-                    <h4 class="font-medium capitalize">{{translate('Bill Rate:')}}</h4>
+                    <span
+                      class="capitalize"
+                      :style="{'color': 'var(--primary-color)'}"
+                    >
+                      {{translate('Bill Rate (For Client)')}}</span
+                    >
+                  </h3>
+                  <div class="flex items-center justify-between py-4 border-t">
+                    <div class="w-2/4">
+                      <h4 class="font-medium capitalize">{{translate('Bill Rate:')}}</h4>
+                    </div>
+                    <div class="w-2/4">
+                      <p class="font-light">${{$workorder->wo_bill_rate}}</p>
+                    </div>
                   </div>
-                  <div class="w-2/4">
-                    <p class="font-light">${{$workorder->wo_bill_rate}}</p>
+                  <div class="flex items-center justify-between py-4 border-t">
+                    <div class="w-2/4">
+                      <h4 class="font-medium capitalize">{{translate('Over time rate:')}}</h4>
+                    </div>
+                    <div class="w-2/4">
+                      <p class="font-light">${{$workorder->wo_client_over_time}}</p>
+                    </div>
                   </div>
-                </div>
-                <div class="flex items-center justify-between py-4 border-t">
-                  <div class="w-2/4">
-                    <h4 class="font-medium capitalize">{{translate('Over time rate:')}}</h4>
-                  </div>
-                  <div class="w-2/4">
-                    <p class="font-light">${{$workorder->wo_client_over_time}}</p>
-                  </div>
-                </div>
+                @endif
               </div>
             </div>
             <!-- Right Column -->
@@ -377,7 +379,7 @@
                       <span class="capitalize">{{translate('Workorder info')}}</span>
                     </button>
                   </li>
-                  @if($workorder->status==1)
+                  @if($workorder->status==1 && $job->workerType->id == 10)
                   <li>
                     <button
                       :id="$id('tab', whichChild($el.parentElement, $refs.tablist))"

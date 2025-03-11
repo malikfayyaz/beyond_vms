@@ -941,6 +941,7 @@ class CareerOpportunitiesContractController extends BaseController
             'vendor_id' => $data['vendor'],
             'location_id' => $data['workLocation'],
             'created_by_type' => 1,
+            'modified_by_type' => 1,
             'created_by_id' => Admin::getAdminIdByUserId(\Auth::id()),
             'offer_accept_date' => now(),
             // Add other fields as needed
