@@ -379,7 +379,7 @@
                       <span class="capitalize">{{translate('Workorder info')}}</span>
                     </button>
                   </li>
-                  @if($workorder->status==1 && $job->workerType->id == 10)
+                  @if($workorder->status==1)
                   <li>
                     <button
                       :id="$id('tab', whichChild($el.parentElement, $refs.tablist))"
@@ -497,7 +497,7 @@
                             x-text="workOrderInfo.vendorName"
                           ></span>
                         </div>
-                        <div class="flex justify-between py-3 px-4">
+                        <div class="flex justify-between py-3 px-4" x-show="workOrderInfo.jobType === 'CW'">
                           <span class="text-gray-600 capitalize"
                             >{{translate('Job Type:')}}</span
                           >
@@ -506,7 +506,7 @@
                             x-text="workOrderInfo.jobType"
                           ></span>
                         </div>
-                        <div class="flex justify-between py-3 px-4">
+                        <div class="flex justify-between py-3 px-4" x-show="workOrderInfo.jobType === 'CW'">
                           <span class="text-gray-600 capitalize"
                             >{{translate('Secondary Job Title:')}}</span
                           >
@@ -524,7 +524,7 @@
                             x-text="workOrderInfo.hiringManager"
                           ></span>
                         </div>
-                        <div class="flex justify-between py-3 px-4">
+                        <div class="flex justify-between py-3 px-4" x-show="workOrderInfo.jobType === 'CW'">
                           <span class="text-gray-600 capitalize"
                             >{{translate('GL Account:')}}</span
                           >
@@ -542,7 +542,7 @@
                             x-text="workOrderInfo.locationTax"
                           ></span>
                         </div>
-                        <div class="flex justify-between py-3 px-4">
+                        <div class="flex justify-between py-3 px-4" x-show="workOrderInfo.jobType === 'CW'">
                           <span class="text-gray-600 capitalize"
                             >{{translate('Total Estimated Cost:')}}</span
                           >
@@ -551,9 +551,18 @@
                             x-text="workOrderInfo.totalEstimatedCost"
                           ></span>
                         </div>
-                        <div class="flex justify-between py-3 px-4">
+                        <div class="flex justify-between py-3 px-4" x-show="workOrderInfo.jobType === 'CW'">
                           <span class="text-gray-600 capitalize"
                             >{{translate('Regular Hours Estimated cost:')}}</span
+                          >
+                          <span
+                            class="font-semibold"
+                            x-text="workOrderInfo.regularHoursEstimatedCost"
+                          ></span>
+                        </div>
+                        <div class="flex justify-between py-3 px-4" x-show="workOrderInfo.jobType === 'PWT'">
+                          <span class="text-gray-600 capitalize"
+                            >{{translate('Expected Total Cost of Engagement:')}}</span
                           >
                           <span
                             class="font-semibold"
