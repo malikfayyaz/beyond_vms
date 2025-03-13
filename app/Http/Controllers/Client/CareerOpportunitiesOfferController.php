@@ -285,6 +285,7 @@ class CareerOpportunitiesOfferController extends Controller
 
         $workflows = OfferWorkFlow::where('offer_id', $id)->get();
         $offer = CareerOpportunitiesOffer::findOrFail($id);
+        $job = $offer->careerOpportunity;
 
         $formBuilder = FormBuilder::where('type', 3)->first();
 
@@ -293,7 +294,7 @@ class CareerOpportunitiesOfferController extends Controller
             $formFields = json_decode($formBuilder->data, true);
         }
 
-        return view('client.offer.view', compact('offer','workflows', 'logs', 'formFields'));
+        return view('client.offer.view', compact('offer', 'workflows', 'logs', 'formFields', 'job'));
     }
     public function offerworkflowAccept(Request $request)
     {

@@ -327,85 +327,20 @@
                   </div>
                 </div>
                 <!-- Right Column -->
-                <div
-                  class="w-1/2 p-[30px] rounded border"
-                  :style="{'border-color': 'var(--primary-color)'}"
-                >
-                  <h3 class="flex items-center gap-2 mb-4">
-                    <i
-                      class="fa-regular fa-money-bill-1"
-                      :style="{'color': 'var(--primary-color)'}"
-                    ></i
-                    ><span :style="{'color': 'var(--primary-color)'}"
-                      >{{translate('Offer Rates')}}</span
+                @if($job->workerType->id != 11)
+                  <div
+                    class="w-1/2 p-[30px] rounded border"
+                    :style="{'border-color': 'var(--primary-color)'}"
                     >
-                  </h3>
-                  <div class="flex items-center justify-between py-4 border-t">
-                    <h3 class="flex items-center gap-2">
+                    <h3 class="flex items-center gap-2 mb-4">
                       <i
-                        class="fa-solid fa-cash-register"
+                        class="fa-regular fa-money-bill-1"
                         :style="{'color': 'var(--primary-color)'}"
                       ></i
                       ><span :style="{'color': 'var(--primary-color)'}"
-                        >{{translate('Bill Rate (For Vendor)')}}</span
+                        >{{translate('Offer Rates')}}</span
                       >
                     </h3>
-                  </div>
-                  <div class="flex items-center justify-between py-4 border-t">
-                    <div class="w-2/4">
-                      <h4 class="font-medium">{{translate('Bill Rate:')}}</h4>
-                    </div>
-                    <div class="w-2/4">
-                      <p class="font-light">${{$offer->offer_bill_rate}} </p>
-                    </div>
-                  </div>
-                  <div class="flex items-center justify-between py-4 border-t">
-                    <div class="w-2/4">
-                      <h4 class="font-medium">{{translate('Over Time Rate:')}}</h4>
-                    </div>
-                    <div class="w-2/4">
-                      <p class="font-light">${{$offer->over_time}}</p>
-                    </div>
-                  </div>
-                  <div class="flex items-center justify-between py-4 border-t">
-                    <h3 class="flex items-center gap-2">
-                      <i
-                        class="fa-solid fa-cash-register"
-                        :style="{'color': 'var(--primary-color)'}"
-                      ></i
-                      ><span :style="{'color': 'var(--primary-color)'}"
-                        >{{translate('Bill Rate (For Client)')}}</span
-                      >
-                    </h3>
-                  </div>
-                  <div class="flex items-center justify-between py-4 border-y">
-                    <div class="w-2/4">
-                      <h4 class="font-medium">{{translate('Bill Rate:')}}</h4>
-                    </div>
-                    <div class="w-2/4">
-                      <p class="font-light">${{$offer->vendor_bill_rate}}</p>
-                    </div>
-                  </div>
-                  <div class="flex items-center justify-between py-4 border-y">
-                    <div class="w-2/4">
-                      <h4 class="font-medium">{{translate('Over Time Rate:')}}</h4>
-                    </div>
-                    <div class="w-2/4">
-                      <p class="font-light">${{$offer->vendor_overtime}}</p>
-                    </div>
-                  </div>
-                  <div class="flex items-center justify-between py-4 border-y">
-                    <div class="w-2/4">
-                      <h4 class="font-medium">{{translate('Regular Hours Estimated Cost:')}}</h4>
-                    </div>
-                    <div class="w-2/4">
-                      <p class="font-light">${{$offer->careerOpportunity->regular_hours_cost}} </p>
-                    </div>
-                  </div>
-                  @if(!empty($offer->offer_details) && $offer->offer_details != '[]')
-                    @php
-                      $offerDetails = json_decode($offer->offer_details, true); // Decode JSON into an array
-                    @endphp
                     <div class="flex items-center justify-between py-4 border-t">
                       <h3 class="flex items-center gap-2">
                         <i
@@ -413,31 +348,98 @@
                           :style="{'color': 'var(--primary-color)'}"
                         ></i
                         ><span :style="{'color': 'var(--primary-color)'}"
-                          >{{translate('Additional Data')}}</span
+                          >{{translate('Bill Rate (For Vendor)')}}</span
                         >
                       </h3>
                     </div>
-                    @php
-                        $fieldLabels = collect($formFields)->pluck('label', 'name')->toArray();
-                    @endphp
-                    @foreach ($offerDetails as $key => $value)
-                      <div class="flex items-center justify-between py-4 border-t">
-                        <div class="w-2/4">
-                          <h4 class="font-medium">{{ $fieldLabels[$key] ?? ucfirst(str_replace('_', ' ', $key)) }}:</h4>
-                        </div>
-                        <div class="w-2/4">
-                          @if(is_array($value))
-                              {{-- Handle array values --}}
-                              <p class="font-light">{{ implode(', ', $value) }}</p>
-                          @else
-                              {{-- Handle scalar values --}}
-                              <p class="font-light">{{ $value }}</p>
-                          @endif
-                        </div>
+                    <div class="flex items-center justify-between py-4 border-t">
+                      <div class="w-2/4">
+                        <h4 class="font-medium">{{translate('Bill Rate:')}}</h4>
                       </div>
-                    @endforeach
-                  @endif
-                </div>
+                      <div class="w-2/4">
+                        <p class="font-light">${{$offer->offer_bill_rate}} </p>
+                      </div>
+                    </div>
+                    <div class="flex items-center justify-between py-4 border-t">
+                      <div class="w-2/4">
+                        <h4 class="font-medium">{{translate('Over Time Rate:')}}</h4>
+                      </div>
+                      <div class="w-2/4">
+                        <p class="font-light">${{$offer->over_time}}</p>
+                      </div>
+                    </div>
+                    <div class="flex items-center justify-between py-4 border-t">
+                      <h3 class="flex items-center gap-2">
+                        <i
+                          class="fa-solid fa-cash-register"
+                          :style="{'color': 'var(--primary-color)'}"
+                        ></i
+                        ><span :style="{'color': 'var(--primary-color)'}"
+                          >{{translate('Bill Rate (For Client)')}}</span
+                        >
+                      </h3>
+                    </div>
+                    <div class="flex items-center justify-between py-4 border-y">
+                      <div class="w-2/4">
+                        <h4 class="font-medium">{{translate('Bill Rate:')}}</h4>
+                      </div>
+                      <div class="w-2/4">
+                        <p class="font-light">${{$offer->vendor_bill_rate}}</p>
+                      </div>
+                    </div>
+                    <div class="flex items-center justify-between py-4 border-y">
+                      <div class="w-2/4">
+                        <h4 class="font-medium">{{translate('Over Time Rate:')}}</h4>
+                      </div>
+                      <div class="w-2/4">
+                        <p class="font-light">${{$offer->vendor_overtime}}</p>
+                      </div>
+                    </div>
+                    <div class="flex items-center justify-between py-4 border-y">
+                      <div class="w-2/4">
+                        <h4 class="font-medium">{{translate('Regular Hours Estimated Cost:')}}</h4>
+                      </div>
+                      <div class="w-2/4">
+                        <p class="font-light">${{$offer->careerOpportunity->regular_hours_cost}} </p>
+                      </div>
+                    </div>
+                    @if(!empty($offer->offer_details) && $offer->offer_details != '[]')
+                      @php
+                        $offerDetails = json_decode($offer->offer_details, true); // Decode JSON into an array
+                      @endphp
+                      <div class="flex items-center justify-between py-4 border-t">
+                        <h3 class="flex items-center gap-2">
+                          <i
+                            class="fa-solid fa-cash-register"
+                            :style="{'color': 'var(--primary-color)'}"
+                          ></i
+                          ><span :style="{'color': 'var(--primary-color)'}"
+                            >{{translate('Additional Data')}}</span
+                          >
+                        </h3>
+                      </div>
+                      @php
+                          $fieldLabels = collect($formFields)->pluck('label', 'name')->toArray();
+                      @endphp
+                      @foreach ($offerDetails as $key => $value)
+                        <div class="flex items-center justify-between py-4 border-t">
+                          <div class="w-2/4">
+                            <h4 class="font-medium">{{ $fieldLabels[$key] ?? ucfirst(str_replace('_', ' ', $key)) }}:</h4>
+                          </div>
+                          <div class="w-2/4">
+                            @if(is_array($value))
+                                {{-- Handle array values --}}
+                                <p class="font-light">{{ implode(', ', $value) }}</p>
+                            @else
+                                {{-- Handle scalar values --}}
+                                <p class="font-light">{{ $value }}</p>
+                            @endif
+                          </div>
+                        </div>
+                      @endforeach
+                    @endif
+                  </div>
+                @endif
               </div>
               <div
                 class="p-[30px] rounded border mt-4"
